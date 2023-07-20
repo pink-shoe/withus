@@ -24,6 +24,7 @@ export default defineConfig({
       styles: '/src/styles',
       types: '/src/types',
       utils: '/src/utils',
+      apis: '/src/apis',
     },
   },
 });
