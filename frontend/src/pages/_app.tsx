@@ -21,8 +21,8 @@ export default function App() {
   const e = () => navigate('/posts/:id/deep', { params: { id: 'e' } });
 
   return (
-    <section style={{ margin: 24 }}>
-      <header style={{ display: 'flex', gap: 24 }}>
+    <section className='h-screen'>
+      {/* <header style={{ display: 'flex', gap: 24 }}>
         <Link to='/'>Home</Link>
         <Link to={{ pathname: '/about' }}>About</Link>
         <Link to='/posts'>Posts</Link>
@@ -37,7 +37,7 @@ export default function App() {
           Global modal at /about
         </button>
         <button onClick={e}>navigate to</button>
-      </header>
+      </header> */}
 
       <main>
         <Outlet />
