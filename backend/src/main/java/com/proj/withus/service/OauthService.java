@@ -87,7 +87,7 @@ public class OauthService {
 
             conn.setRequestMethod("GET");
             conn.setDoOutput(true);
-            conn.setRequestProperty("Authorization", "Bearer " + token); //전송할 header 작성, access_token전송
+            conn.setRequestProperty("Authorization", "Bearer " + token); //전송할 header 작성, access_token 전송
 
             //결과 코드가 200이라면 성공
             int responseCode = conn.getResponseCode();
@@ -116,16 +116,16 @@ public class OauthService {
 //            kakaoUserInfo.setNickname(profile.getAsJsonObject().get("nickname").getAsString());
             kakaoUserInfo.setProfileImgUrl(profile.getAsJsonObject().get("profile_image_url").getAsString());
 //            kakaoUserInfo.setThumnailImgUrl(profile.getAsJsonObject().get("thumbnail_image_url").getAsString());
-            kakaoUserInfo.setHasBirthDay(kakaoAccount.getAsJsonObject().get("has_birthday").getAsBoolean());
-            kakaoUserInfo.setHasGender(kakaoAccount.getAsJsonObject().get("has_gender").getAsBoolean());
-
-            if (kakaoUserInfo.isHasBirthDay()) {
-                kakaoUserInfo.setBirthday(kakaoAccount.getAsJsonObject().get("birthday").getAsString());
-            }
-
-            if (kakaoUserInfo.isHasGender()) {
-                kakaoUserInfo.setGender(kakaoAccount.getAsJsonObject().get("gender").getAsString());
-            }
+//            kakaoUserInfo.setHasBirthDay(kakaoAccount.getAsJsonObject().get("has_birthday").getAsBoolean());
+//            kakaoUserInfo.setHasGender(kakaoAccount.getAsJsonObject().get("has_gender").getAsBoolean());
+//
+//            if (kakaoUserInfo.isHasBirthDay()) {
+//                kakaoUserInfo.setBirthday(kakaoAccount.getAsJsonObject().get("birthday").getAsString());
+//            }
+//
+//            if (kakaoUserInfo.isHasGender()) {
+//                kakaoUserInfo.setGender(kakaoAccount.getAsJsonObject().get("gender").getAsString());
+//            }
 
             log.info(kakaoUserInfo.toString());
         } catch (IOException e) {
