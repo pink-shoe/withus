@@ -1,5 +1,4 @@
 import { useMatch } from 'react-router-dom';
-
 import { useParams } from '../../../router';
 
 export default function Id() {
