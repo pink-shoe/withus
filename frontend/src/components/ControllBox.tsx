@@ -112,7 +112,7 @@ export const ControllBarPresenter: FC<IPresenterProps> = ({
   };
   return (
     <div className='w-full flex justify-center'>
-      <div className=' absolute bottom-3 flex gap-3 justify-center items-center'>
+      <div className='w-full absolute bottom-3 flex gap-3 justify-center items-center'>
         <button
           className={` w-16 h-16 rounded-full p-3 ${micStatus ? ' bg-[#D3D3D3]' : 'bg-[#FF7B7B]'}`}
           onClick={onChangeMicStatus}
@@ -170,9 +170,25 @@ export const ControllBarPresenter: FC<IPresenterProps> = ({
             )}
           </button>
         )}
+
         <button className={` w-16 h-16 rounded-full p-3 bg-red-500`} onClick={onClickExit}>
           <FontAwesomeIcon icon={faDoorOpen} color={'white'} fontSize={`2rem`} />
         </button>
+        {type === 'master' ? (
+          <button
+            className={` whitespace-nowrap w-fit h-16 rounded p-3 bg-[#112364] text-white font-bold text-lg`}
+            onClick={() => {}}
+          >
+            시작하기
+          </button>
+        ) : (
+          <button
+            className={` whitespace-nowrap w-fit h-16 rounded p-3 bg-[#112364] text-white font-bold text-lg`}
+            onClick={() => {}}
+          >
+            준비하기
+          </button>
+        )}
       </div>
 
       {/* <AlertSnackbar
