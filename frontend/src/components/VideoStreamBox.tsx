@@ -1,8 +1,4 @@
-// import { Box } from "@mui/system";
 import React, { FC } from 'react';
-// import { Typography, useTheme } from "@mui/material";
-// import VideocamOffIcon from "@mui/icons-material/VideocamOff";
-// import MicOffIcon from "@mui/icons-material/MicOff";
 
 interface IProps {
   name: string;
@@ -25,9 +21,8 @@ export const VideoStreamBox: FC<IProps> = ({
   return (
     <div>
       {children}
-
-      <div>
-        <div>
+      <div className=' relative top-[-25px] left-[-5px] pb-3'>
+        <div className=' text-right'>
           {name}
           {me && ' (나)'}
         </div>

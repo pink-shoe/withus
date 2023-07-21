@@ -179,7 +179,7 @@ export const useOpenvidu = (userId: number, gameRoomId: string) => {
   );
 
   const streamList = useMemo(
-    () => [{ streamManager: publisher, userId }, ...subscribers],
+    () => [{ streamManager: publisher, userId, userName: 'name' + userId }, ...subscribers],
     [publisher, subscribers, userId]
   );
 

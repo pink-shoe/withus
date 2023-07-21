@@ -95,7 +95,7 @@ export default function WaitingRoom() {
   const [pickStuffModalOpen, setPickStuffModalOpen] = useState(false);
   const [showSnack, setShowSnack] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
-
+  const [chatStatus, setChatStatus] = useState<boolean>();
   // useWebSocket({
   //   onConnect(frame, client) {
   //     let flag = true;
@@ -159,50 +159,45 @@ export default function WaitingRoom() {
     'SessionA'
   );
 
+  const onChangeChatStatus = (chatStatus: boolean) => {
+    setChatStatus(!chatStatus);
+  };
+
   return (
-    <div className='container'>
-      <div>
-        <div>
-          <div>
-            <div>
-              <video autoPlay={true} id='video' />
-              {publisher && (
-                <div>
-                  {/* {streamList &&
-                    [0, 1].map((it, idx) => ( */}
-                  <div className='flex w-screen h-screen'>
-                    <div>
-                      {streamList?.map((stream: any, idx: number) => {
-                        console.log('stream' + stream);
-                        const userInfo = streamList.find((it: any) => it.userId === stream.userId);
-                        console.log('userInfo' + userInfo);
-                        return (
-                          <div>
-                            <VideoStream
-                              streamManager={stream.streamManager}
-                              name={userInfo!.userName}
-                              me={userInfo!.userId === userId}
-                              balance={
-                                balanceResult.find((it) => it.user_id === userInfo!.userId)?.result
-                              }
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                  {/* ))} */}
-                </div>
-              )}
-            </div>
-            <div />
-            <ControllBar
-              type={isMaster ? 'master' : 'normal'}
-              onChangeMicStatus={onChangeMicStatus}
-              onChangeCameraStatus={onChangeCameraStatus}
-            />
-          </div>
+    <section className={`flex overflow-y-hidden  justify-between h-screen`}>
+      {/* 참가자 목록 */}
+      <div id='participantsList' className='w-fit max-w-[1/6]'>
+        <div className='bg-[#112364] p-3 text-white whitespace-nowrap font-bold text-xl'>
+          현재 플레이어(1)
         </div>
+        <div className='bg-white h-full'>
+          {streamList.map((stream, idx) => {
+            console.log(stream);
+            return <div className=' border-bottom border-b-2 p-3'>{stream.userName}</div>;
+          })}
+        </div>
+      </div>
+      {/* openvidu 화면 */}
+      <div className=' h-full flex flex-col justify-between'>
+        {publisher && (
+          <div className='relative top-36'>
+            {streamList?.map((stream: any, idx: number) => {
+              const userInfo = streamList.find((it: any) => it.userId === stream.userId);
+              return (
+                userInfo.userId === userId && (
+                  <div className='w-full'>
+                    <VideoStream
+                      streamManager={stream.streamManager}
+                      name={userInfo!.userName}
+                      me={userInfo!.userId === userId}
+                    />
+                  </div>
+                )
+              );
+            })}
+          </div>
+        )}
+
         {/* <div>
           <div>
             <VolumeController />
@@ -235,6 +230,12 @@ export default function WaitingRoom() {
             )}
           </div>
         </div> */}
+        <ControllBar
+          type={isMaster ? 'master' : 'normal'}
+          onChangeMicStatus={onChangeMicStatus}
+          onChangeCameraStatus={onChangeCameraStatus}
+          onChangeChatStatus={onChangeChatStatus}
+        />
       </div>
       {/* <AlertSnackbar
         open={showSnack}
@@ -251,6 +252,16 @@ export default function WaitingRoom() {
         />
       )}
       {pickStuffModalOpen && <PickStuffModal isOpened={pickStuffModalOpen} />} */}
-    </div>
+      {chatStatus ? (
+        <div id='participantsList' className=' w-80'>
+          <div className='text-center bg-[#112364] p-3 text-white whitespace-nowrap font-bold text-xl'>
+            채팅창
+          </div>
+          <div className='bg-white h-full'></div>
+        </div>
+      ) : (
+        <div></div>
+      )}
+    </section>
   );
 }

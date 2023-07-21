@@ -11,18 +11,10 @@ interface IProps {
   streamManager: StreamManager;
   name: string;
   me: boolean;
-  balance?: boolean;
 }
 
-export const VideoStream: FC<IProps> = ({ streamManager, name, me, balance }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+export const VideoStream: FC<IProps> = ({ streamManager, name, me }) => {
   const { videoRef, speaking, micStatus, videoStatus } = useStream(streamManager);
-  //   useFaceMask(videoRef.current, canvasRef.current, avatarPath);
-
-  //   const theme = useTheme();
-
-  //   const balanceA = useSelector((state: any) => state.meeting.balanceA);
-  //   const balanceB = useSelector((state: any) => state.meeting.balanceB);
 
   return (
     <VideoStreamBox
@@ -43,31 +35,6 @@ export const VideoStream: FC<IProps> = ({ streamManager, name, me, balance }) =>
           objectFit: 'cover',
         }}
       />
-      {/* <canvas
-        id='faceCanvas'
-        ref={canvasRef}
-        tabIndex={1}
-        style={{
-          width: '100%',
-          height: '100%',
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          left: 0,
-          bottom: 0,
-          objectFit: 'cover',
-          borderRadius: '10px',
-          backgroundImage: `url(가상배경.png)`,
-        }}
-      /> */}
-
-      {/* {balance !== undefined && (
-        <div>
-          <div>
-            <div>{balance ? 'A' : 'B'}</div>
-          </div>
-        </div>
-      )} */}
     </VideoStreamBox>
   );
 };
