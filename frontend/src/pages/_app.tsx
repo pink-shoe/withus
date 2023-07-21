@@ -21,7 +21,7 @@ export default function App() {
   const e = () => navigate('/posts/:id/deep', { params: { id: 'e' } });
 
   return (
-    <section style={{ margin: 24 }}>
+    <section style={{ margin: 0 }}>
       <header style={{ display: 'flex', gap: 24 }}>
         <Link to='/'>Home</Link>
         <Link to='/login'>두현's test</Link>

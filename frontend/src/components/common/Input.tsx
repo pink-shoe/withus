@@ -20,7 +20,7 @@ function Input({ type, label, placeholder, value, version }: InputProps) {
 
   return (
     <div className='sm:col-span-2 m-4'>
-      <label className='block text-sm font-semibold leading-6 text-gray-900'>{label}</label>
+      <label className='block text-xl font-semibold leading-6 text-gray-900'>{label}</label>
       <div className='mt-2.5 '>
         <input className={windcss} type={type} id={label} name={label} placeholder={placeholder} />
       </div>
