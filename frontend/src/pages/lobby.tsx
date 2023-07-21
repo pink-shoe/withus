@@ -6,6 +6,7 @@ import SelectBox from '../components/common/SelectBox';
 export default function Lobby() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMake, setModalMake] = useState(false);
+  const [joinCode, setCode] = useState('');
   
 
   const openModal = () => {
@@ -21,6 +22,11 @@ export default function Lobby() {
   const closemakeModal = () => {
     setModalMake(false);
   };
+
+  const saveCode = event => {
+    setCode(event.target.value);
+    console.log(event.target.value);
+  }
 
   const MOPTIONS = [
     { value: 'cooperation', name: '협동전' },
@@ -65,8 +71,9 @@ export default function Lobby() {
               <p className='text-indigo-900 font-bold text-3xl mb-10 text-center'>참여 코드</p>
               <div className='flex mb-7'>
                 <span className='me-5 font-semibold text-xl flex items-center'>참여코드</span>
-                <input className='p-2 border-2 w-[17.5rem] border-blue-800 rounded-md text-center focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500' type="text" />
+                <input className='p-2 border-2 w-[17.5rem] border-blue-800 rounded-md text-center focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 placeholder:text-slate-400' placeholder='참여코드 입력' type="text" value={joinCode} onChange={saveCode} />
               </div>
+              <span>{joinCode}</span>
             </Modal>
           </Fragment>
         </div>
