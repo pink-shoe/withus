@@ -13,8 +13,16 @@
     "outDir": "./dist",
     "baseUrl": "./src",
     "paths": {
+      "@src/*":["src/*"],
       "@components/*":["components/*"],
-      "@pages/*":["pages/*"]
+      "@pages/*":["pages/*"],
+      "hooks/*":["hooks/*"],
+      "lib/*":["lib/*"],
+      "stores/*":["stores/*"],
+      "types/*":["types/*"],
+      "utils/*":["utils/*"],
+      "apis/*":["apis/*"],
+      "common/*":["common/*"]
     },
 
     /* Bundler mode */
