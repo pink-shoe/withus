@@ -15,7 +15,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': '/src',
+      '@src': '/src',
       '@components': '/src/components',
       hooks: '/src/hooks',
       lib: '/src/lib',
@@ -25,6 +25,8 @@ export default defineConfig({
       types: '/src/types',
       utils: '/src/utils',
       apis: '/src/apis',
+      common: '/src/components/common',
+      router: '/src/router.ts',
     },
   },
 });
