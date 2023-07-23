@@ -1,13 +1,13 @@
 import React, { Fragment, useState } from 'react';
 import Header from '../components/common/Header';
 import Modal from '../components/common/Modal';
-import SelectBox from '../components/common/SelectBox';
+import SelectMood from '../components/common/SelectMood';
+import SelectRound from '../components/common/SelectRound';
 
 export default function Lobby() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMake, setModalMake] = useState(false);
   const [joinCode, setCode] = useState('');
-  
 
   const openModal = () => {
     setModalOpen(true);
@@ -21,19 +21,22 @@ export default function Lobby() {
   };
   const closemakeModal = () => {
     setModalMake(false);
+    setCode('')
   };
 
   const saveCode = event => {
     setCode(event.target.value);
-    console.log(event.target.value);
+    console.log(joinCode)
   }
 
   const MOPTIONS = [
+    { value: 'mood_choice', name: '모드 선택' },
     { value: 'cooperation', name: '협동전' },
     { value: 'competition', name: '팀전' },
   ];
 
   const ROPTIONS = [
+    { value: 'round_choice', name: '라운드 선택' },
     { value: 'three', name: '3' },
     { value: 'five', name: '5' },
   ];
@@ -43,7 +46,7 @@ export default function Lobby() {
       <header>
         <Header />
       </header>
-      <div className='h-screen bg-gradient-to-b from-sky-900 to-pink-700'>
+      <div className='h-screen bg-gradient-to-b from-sky-900 to-pink-800'>
         <div className=' w-full h-[220px] text-5xl text-center items-center flex justify-center font-bold text-white'>[] with us</div>
         <div className='flex flex-auto justify-center content-center'>
           <Fragment>
@@ -52,7 +55,7 @@ export default function Lobby() {
               <p className='text-indigo-900 font-bold text-3xl mb-10 text-center'>방 설정</p>
               <div className='flex my-7'>
                 <span className='me-5 font-semibold text-xl flex items-center'>게임모드</span>
-                <SelectBox options={MOPTIONS}></SelectBox>
+                <SelectMood options={MOPTIONS}></SelectMood>
               </div>
               {/* <div className='flex mb-7'>
                 <span className='me-5 font-semibold text-xl flex items-center'>비밀번호</span>
@@ -60,7 +63,7 @@ export default function Lobby() {
               </div> */}
               <div className='flex mb-10'>
                 <span className='me-5 font-semibold text-xl flex items-center'>게임진행</span>
-                <SelectBox options={ROPTIONS}></SelectBox>
+                <SelectRound options={ROPTIONS}></SelectRound>
                 <span className='me-5 font-semibold text-xl flex items-center ms-2'>판</span>
               </div>
             </Modal>
