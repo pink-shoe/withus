@@ -24,21 +24,21 @@ export default function Lobby() {
     setCode('')
   };
 
-  const saveCode = event => {
+  const saveCode = (event : any) => {
     setCode(event.target.value);
     console.log(joinCode)
   }
 
   const MOPTIONS = [
     { value: 'mood_choice', name: '모드 선택' },
-    { value: 'cooperation', name: '협동전' },
-    { value: 'competition', name: '팀전' },
+    { value: 'coop', name: '협동전' },
+    // { value: 'team', name: '팀전' },
   ];
 
   const ROPTIONS = [
     { value: 'round_choice', name: '라운드 선택' },
-    { value: 'three', name: '3' },
-    { value: 'five', name: '5' },
+    // { value: 3, name: '3' },
+    { value: 5, name: '5' },
   ];
 
   return (

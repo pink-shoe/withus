@@ -10,7 +10,6 @@ export default function Header() {
         {/* <FontAwesomeIcon icon={faDoorOpen} size="2xl" style={{color: "#fcfcfc",}} /> */}
         <FontAwesomeIcon icon={faDoorOpen} size="2xl" style={{color: "#fcfcfc",}} className='me-1.5' />
         <FontAwesomeIcon icon={faCircleUser} size="2xl" style={{color: "#fcfcfc",}} className='ms-1.5' />
-
       </span>
     </div>
   );
