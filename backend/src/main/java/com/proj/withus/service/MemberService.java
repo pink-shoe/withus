@@ -1,34 +1,35 @@
 package com.proj.withus.service;
 
+import com.proj.withus.domain.Member;
+import com.proj.withus.domain.dto.GoogleUserInfo;
+import com.proj.withus.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.proj.withus.config.provider.GoogleUserInfo;
-import com.proj.withus.domain.Member;
-import com.proj.withus.repository.MemberRepository;
+import java.time.LocalDateTime;
 
 @Service
-public class UserService {
+public class MemberService {
 
-	@Autowired
-	private MemberRepository memberRepository;
+    @Autowired
+    private MemberRepository memberRepository;
 
-	public void googleLogin(GoogleUserInfo userInfo) {
-		Member exist = memberRepository.findByEmail(userInfo.getEmail());
+    public void saveGoogle(GoogleUserInfo userInfo, String accessToken) {
+        Member exist = memberRepository.findByEmail(userInfo.getEmail());
 
-		if (exist == null) {
-			Member newUser = new Member();
-			newUser.setId(2L);
-			newUser.setEmail(userInfo.getEmail());
-			newUser.setNickname(userInfo.getName());
-			newUser.setPassword(null);
-			newUser.setLoginType("google");
-			newUser.setAccessToken(null);
-			newUser.setToken(null);
-			newUser.setCreatedAt(null);
-			newUser.setDeletedAt(null);
-			memberRepository.save(newUser);
-		}
+        if (exist == null) {
+            Member member = new Member();
+            member.setId(1L);
+            member.setEmail(userInfo.getEmail());
+            member.setNickname(userInfo.getName());
+            member.setPassword(null);
+            member.setLoginType("google");
+            member.setAccessToken(accessToken);
+            member.setToken(null);
+            member.setCreatedAt(LocalDateTime.now().toString());
+            member.setDeletedAt(null);
+            memberRepository.save(member);
+        }
 
-	}
+    }
 }
