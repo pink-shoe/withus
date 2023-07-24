@@ -97,7 +97,7 @@ export const useOpenvidu = (userId: number, gameRoomId: string) => {
       setSubscribers((prev) => {
         return [
           ...prev.filter((it) => it.userId !== +data.userId),
-          { streamManager: subscriber, userId: +data.userId },
+          { streamManager: subscriber, userId: +data.userId, userName: 'name' + data.userId },
         ];
       });
     });

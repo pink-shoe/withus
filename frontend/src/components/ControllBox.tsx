@@ -112,7 +112,7 @@ export const ControllBarPresenter: FC<IPresenterProps> = ({
   };
   return (
     <div className='w-full flex justify-center'>
-      <div className='w-full absolute bottom-3 flex gap-3 justify-center items-center'>
+      <div className='bottom-3 flex flex-wrap gap-3 justify-center items-center'>
         <button
           className={` w-16 h-16 rounded-full p-3 ${micStatus ? ' bg-[#D3D3D3]' : 'bg-[#FF7B7B]'}`}
           onClick={onChangeMicStatus}

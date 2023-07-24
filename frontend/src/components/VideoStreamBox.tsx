@@ -21,7 +21,7 @@ export const VideoStreamBox: FC<IProps> = ({
   return (
     <div>
       {children}
-      <div className=' relative top-[-25px] left-[-5px] pb-3'>
+      <div className=''>
         <div className=' text-right'>
           {name}
           {me && ' (나)'}
