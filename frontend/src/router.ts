@@ -6,6 +6,8 @@ import { components, hooks, utils } from '@generouted/react-router/client'
 export type Path =
   | `/`
   | `/about`
+  | `/gamerooms`
+  | `/gamerooms/:id`
   | `/login`
   | `/posts`
   | `/posts/:id`
@@ -17,6 +19,7 @@ export type Path =
   | `/waitingrooms/:id`
 
 export type Params = {
+  '/gamerooms/:id': { id: string }
   '/posts/:id': { id: string }
   '/posts/:id/:pid?': { id: string; pid?: string }
   '/posts/:id/deep': { id: string }

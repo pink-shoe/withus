@@ -217,7 +217,7 @@ export default function WaitingRoom() {
     console.log('test', messageList);
   }, [messageList]);
   return (
-    <section className={`w-full flex overflow-y-hidden  justify-between h-screen`}>
+    <section className={`w-full flex  justify-between min-h-screen max-h-fit`}>
       {/* 참가자 목록 */}
       <div id='participantsList' className='w-fit max-w-[1/6]'>
         <div className='bg-[#112364] p-3 text-white whitespace-nowrap font-bold text-xl'>
@@ -237,19 +237,17 @@ export default function WaitingRoom() {
       {/* openvidu 화면 */}
       <div className=' h-full flex flex-col justify-between pb-5'>
         {publisher && (
-          <div className='relative top-36'>
+          <div className='relative top-36 grid grid-rows-2 grid-cols-2'>
             {streamList?.map((stream: any, idx: number) => {
               // const userInfo = streamList.find((it: any) => it.userId === stream.userId);
               return (
-                stream.userId === userId && (
-                  <div className='w-full'>
-                    <VideoStream
-                      streamManager={stream.streamManager}
-                      name={stream.userName}
-                      me={stream.userId === userId}
-                    />
-                  </div>
-                )
+                <div className=''>
+                  <VideoStream
+                    streamManager={stream.streamManager}
+                    name={stream.userName}
+                    me={stream.userId === userId}
+                  />
+                </div>
               );
             })}
           </div>

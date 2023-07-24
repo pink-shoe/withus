@@ -20,13 +20,13 @@ export const VideoStreamBox: FC<IProps> = ({
   //   const theme = useTheme();
   return (
     <div>
-      {children}
-      <div className=''>
-        <div className=' text-right'>
+      <div className='w-full '>
+        <div className='absolute '>
           {name}
           {me && ' (나)'}
         </div>
       </div>
+      {children}
 
       <div>
         {!micStatus && <div style={{ width: '32px', color: 'red' }} />}
