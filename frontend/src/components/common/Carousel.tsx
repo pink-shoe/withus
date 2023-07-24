@@ -29,8 +29,8 @@ export default function Carousel({
         className='flex transition-transform ease-out duration-500'
         style={{ transform: `translateX(-${curr * 100}%)` }}
       >
-        {slides.map((img) => (
-          <img src={img} alt='' />
+        {slides.map((img, index) => (
+          <img key={index} src={img} alt='' />
         ))}
       </div>
       <div className='absolute inset-0 flex items-center justify-between p-4'>
@@ -52,10 +52,10 @@ export default function Carousel({
         <div className='flex items-center justify-center gap-2'>
           {slides.map((_, i) => (
             <div
-              className={`
-              transition-all w-3 h-3 bg-white rounded-full
-              ${curr === i ? 'p-2' : 'bg-opacity-50'}
-            `}
+              key={i}
+              className={`transition-all w-3 h-3 bg-white rounded-full${
+                curr === i ? 'p-2' : 'bg-opacity-50'
+              }`}
             />
           ))}
         </div>

@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@generouted/react-router": "^1.15.1",
-    "@headlessui/react": "^1.7.15",
+    "@headlessui/react": "^1.7.15", 
     "@heroicons/react": "^2.0.18",
     "@types/node": "^20.4.2",
     "@types/react-router-dom": "^5.3.3",
@@ -19,9 +19,9 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-feather": "^2.0.10",
+    "react-google-login": "^5.2.2",
     "react-query": "^3.39.3",
-    "react-router-dom": "^6.14.2",
-    "tw-elements": "1.0.0-beta2"
+    "react-router-dom": "^6.14.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.14",

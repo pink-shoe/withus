@@ -1,4 +1,12 @@
-export default function Button({ version }: { version?: number }) {
+import React from 'react';
+
+interface ButtonProps {
+  version?: number;
+  onClick?: () => void;
+  children: React.ReactNode;
+}
+
+export default function Button({ version, onClick, children }: ButtonProps) {
   let windcss: string = 'rounded w-full  border-2  bg-violet-600  hover:border-indigo-500/100';
 
   if (version == 1) {
@@ -8,8 +16,8 @@ export default function Button({ version }: { version?: number }) {
 
   return (
     <div className='flex justify-center'>
-      <button type='button' className={windcss}>
-        TEST버튼
+      <button type='button' className={windcss} onClick={onClick}>
+        {children}
       </button>
     </div>
   );
