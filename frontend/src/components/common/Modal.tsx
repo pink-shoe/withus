@@ -1,3 +1,6 @@
+// 모든 모달의 토대
+// 모달창과 닫기 버튼, 시작 버튼을 포함하고 있음
+
 import React, { Fragment } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
@@ -5,6 +8,10 @@ import GameStart from '../common/GameStart';
 
 export default function Modal(props : any) {
   const { open, close } = props;
+
+  const sendContent = () => {
+    console.log()
+  }
 
   return (
     <div>
@@ -14,7 +21,7 @@ export default function Modal(props : any) {
             <div className='bg-slate-50 w-[31rem] rounded-lg px-5 py-3'>
               <header className='flex justify-end'><FontAwesomeIcon icon={faXmark} size="xl" onClick={close} className='cursor-pointer hover:text-red-500' /></header>
               <div className='mx-3 my-3'>{props.children}</div>
-              <div className='flex justify-center my-9'>
+              <div className='flex justify-center mt-10 mb-7'>
                 <GameStart />
               </div>
             </div>
