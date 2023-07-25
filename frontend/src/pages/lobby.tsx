@@ -1,8 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import Header from '../components/common/Header';
 import Modal from '../components/common/Modal';
-import SelectMood from '../components/common/SelectMood';
-import SelectRound from '../components/common/SelectRound';
+import RoomSetting from '../components/common/RoomSetting';
 
 export default function Lobby() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -41,7 +40,15 @@ export default function Lobby() {
     { value: 5, name: '5' },
   ];
 
-  
+  const [myMood, setMyMood] = useState('');
+  const [myRound, setMyRound] = useState('');
+  const getMood = (myMood : any) => {
+    setMyMood(myMood);
+  }
+  const getRound = (myRound : any) => {
+    setMyRound(myRound);
+  }
+
   return (
     <Fragment>
       <header>
@@ -52,23 +59,9 @@ export default function Lobby() {
         <div className='flex flex-auto justify-center content-center'>
           <Fragment>
             <button onClick={openModal} className='bg-red-600 hover:bg-red-800 me-5 aspect-square h-96 rounded-xl font-semibold text-2xl text-white'>방 만들기</button>
-            <Modal open={modalOpen} close={closeModal}>
-              <p className='text-indigo-900 font-bold text-3xl mb-10 text-center'>방 설정</p>
-              <div className='flex my-7'>
-                <span className='me-5 font-semibold text-xl flex items-center'>게임모드</span>
-                <SelectMood options={MOPTIONS}></SelectMood>
-              </div>
-              {/* <div className='flex mb-7'>
-                <span className='me-5 font-semibold text-xl flex items-center'>비밀번호</span>
-                <input className='p-2 border-2 w-[17.5rem] border-blue-800 rounded-md text-center focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500' type="password" />
-              </div> */}
-              <div className='flex mb-10'>
-                <span className='me-5 font-semibold text-xl flex items-center'>게임진행</span>
-                <SelectRound options={ROPTIONS}></SelectRound>
-                <span className='me-5 font-semibold text-xl flex items-center ms-2'>판</span>
-              </div>
-            </Modal>
+            <RoomSetting modalOpen={modalOpen} closeModal={closeModal}></RoomSetting>
           </Fragment>
+          <RoomSetting />
           <Fragment>
             <button onClick={makeModal} className='bg-green-600 hover:bg-green-700 ms-5 aspect-square h-96 rounded-xl font-semibold text-2xl text-white'>참여하기</button>
             <Modal open={modalMake} close={closemakeModal}>
