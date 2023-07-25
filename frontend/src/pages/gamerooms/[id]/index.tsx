@@ -1,8 +1,8 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
+import html2canvas from 'html2canvas';
+import saveAs from 'file-saver';
 // import { ChatRoom } from "../components/chat/ChatRoom";
-// import { Box, Grid } from "@mui/material";
 // import { ControllBar } from '@components/session/ControllBar';
-// import { grey } from "@mui/material/colors";
 // import { useDispatch, useSelector } from "react-redux";
 // import {
 //   setBalanceA,
@@ -13,9 +13,9 @@ import React, { FC, useEffect, useMemo, useState } from 'react';
 // import { MeetingRoomInfoRes } from "../apis/response/sessionRes";
 import { VideoStream } from '@components/VideoStream';
 // import { useWebSocket } from "../hooks/useWebSocket";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { IUser, getStreamManager, setStreamManager, useOpenvidu } from 'hooks/useOpenvidu';
-import { ControllBar } from '@components/ControllBox';
+import { ControllBarContainer } from '@components/controllBar/ControllBarContainer';
 // import { AvatimeApi } from "../apis/avatimeApi";
 // import { VolumeController } from "../components/VolumeController";
 // import { useBGM } from "../hooks/useBGM";
@@ -51,11 +51,18 @@ export let localUser: IUser;
 //   ],
 // };
 export default function WaitingRoom() {
+  const location = useLocation();
+
+  const currentPath = location.pathname.slice(
+    location.pathname.lastIndexOf('/') + 1,
+    location.pathname.length
+  );
+
   const headCount = useState();
-  const [roomId, setRoomId] = useState<string>('SessionA');
+  const [roomId, setRoomId] = useState<string>(currentPath);
   const [userId, setUserId] = useState<number>(Math.floor(Math.random() * 100));
-  const isMaster = useState();
-  const navigate = useNavigate();
+  const [isMaster, setIsMaster] = useState<boolean>(true);
+  // const navigate = useNavigate();
 
   // const [gameRoomInfo, setgameRoomInfo] = useState<IGameRoomInfo>({
   //   gameUserInfoList: {
@@ -95,6 +102,8 @@ export default function WaitingRoom() {
   const [showSnack, setShowSnack] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
   const [chatStatus, setChatStatus] = useState<boolean>();
+  const [readyStatus, setReadyStatus] = useState<boolean>(false);
+
   // useWebSocket({
   //   onConnect(frame, client) {
   //     let flag = true;
@@ -155,7 +164,7 @@ export default function WaitingRoom() {
 
   const { publisher, streamList, onChangeCameraStatus, onChangeMicStatus } = useOpenvidu(
     userId!,
-    'SessionA'
+    roomId
   );
   const [messageList, setMessageList] = useState<any[]>([]);
   const [message, setMessage] = useState('');
@@ -167,6 +176,9 @@ export default function WaitingRoom() {
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
+  };
+  const onChangeReadyStatus = (readyStatus: boolean) => {
+    setReadyStatus(!readyStatus);
   };
   const sendMessage = () => {
     if (message) {
@@ -216,14 +228,32 @@ export default function WaitingRoom() {
   useEffect(() => {
     console.log('test', messageList);
   }, [messageList]);
+
+  const divRef = useRef<HTMLDivElement>(null);
+
+  const handleDownload = async () => {
+    if (!divRef.current) return;
+
+    try {
+      const div = divRef.current;
+      const canvas = await html2canvas(div);
+      canvas.toBlob((blob) => {
+        if (blob !== null) {
+          saveAs(blob, 'result.png');
+        }
+      });
+    } catch (error) {
+      console.error('Error converting div to image:', error);
+    }
+  };
   return (
     <section className={`w-full flex  justify-between min-h-screen max-h-fit`}>
       {/* 참가자 목록 */}
-      <div id='participantsList' className='w-fit max-w-[1/6]'>
+      <div id='participantsList' className='w-fit max-w-[1/6] bg-white'>
         <div className='bg-[#112364] p-3 text-white whitespace-nowrap font-bold text-xl'>
           현재 플레이어({streamList.length})
         </div>
-        <div className='bg-white h-full'>
+        <div className='bg-white'>
           {streamList.map((stream, idx) => {
             console.log(streamList);
             return (
@@ -235,23 +265,28 @@ export default function WaitingRoom() {
         </div>
       </div>
       {/* openvidu 화면 */}
-      <div className=' h-full flex flex-col justify-between pb-5'>
-        {publisher && (
-          <div className='relative top-36 grid grid-rows-2 grid-cols-2'>
-            {streamList?.map((stream: any, idx: number) => {
-              // const userInfo = streamList.find((it: any) => it.userId === stream.userId);
-              return (
-                <div className=''>
-                  <VideoStream
-                    streamManager={stream.streamManager}
-                    name={stream.userName}
-                    me={stream.userId === userId}
-                  />
-                </div>
-              );
-            })}
-          </div>
-        )}
+      <div className=' w-1/2 h-full flex flex-col justify-between items-center pb-5'>
+        <header className=''>
+          <div className=' text-white font-extrabold text-6xl text-center py-10'>[] with us</div>
+        </header>
+        <div className='aspect-[4/3]'>
+          {publisher && (
+            <div ref={divRef} className='aspect-[4/3] grid grid-flow-dense grid-rows-2 grid-cols-2'>
+              {streamList?.map((stream: any, idx: number) => {
+                // const userInfo = streamList.find((it: any) => it.userId === stream.userId);
+                return (
+                  <div className='w-full h-full'>
+                    <VideoStream
+                      streamManager={stream.streamManager}
+                      name={stream.userName}
+                      me={stream.userId === userId}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
 
         {/* <div>
           <div>
@@ -285,12 +320,16 @@ export default function WaitingRoom() {
             )}
           </div>
         </div> */}
-        <ControllBar
-          type={isMaster ? 'master' : 'normal'}
-          onChangeMicStatus={onChangeMicStatus}
-          onChangeCameraStatus={onChangeCameraStatus}
-          onChangeChatStatus={onChangeChatStatus}
-        />
+        <div className=' p-3'>
+          <ControllBarContainer
+            isHost={isMaster}
+            onChangeMicStatus={onChangeMicStatus}
+            onChangeCameraStatus={onChangeCameraStatus}
+            onChangeChatStatus={onChangeChatStatus}
+            onChangeReadyStatus={onChangeReadyStatus}
+          />
+        </div>
+        <button onClick={handleDownload}>다운로드</button>
       </div>
       {/* <AlertSnackbar
         open={showSnack}
@@ -308,13 +347,13 @@ export default function WaitingRoom() {
       )}
       {pickStuffModalOpen && <PickStuffModal isOpened={pickStuffModalOpen} />} */}
       {chatStatus ? (
-        <div id='participantsList' className=' w-80'>
-          <div className='text-center bg-[#112364] p-3 text-white whitespace-nowrap font-bold text-xl'>
+        <div id='participantsList' className=' w-80 h-full flex flex-col bg-white justify-between'>
+          <div className=' text-center bg-[#112364] p-3 text-white whitespace-nowrap font-bold text-xl'>
             채팅창
           </div>
-          <div className='bg-white h-full'>
-            <div className='w-full h-5/6'></div>
-            <div className='flex w-full justify-center items-center'>
+          <div className='w-full h-[90%] p-3'></div>
+          <div className='  bg-white'>
+            <div className='  flex w-full justify-center items-center'>
               <input
                 className='w-full p-2 border-2 border-blue-800 rounded-md text-center focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 placeholder:text-slate-400'
                 placeholder='메세지를 입력해주세요.'
