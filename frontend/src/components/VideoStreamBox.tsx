@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMicrophoneSlash, faVideoSlash } from '@fortawesome/free-solid-svg-icons';
 interface IProps {
   name: string;
   speaking: boolean;
@@ -17,20 +18,26 @@ export const VideoStreamBox: FC<IProps> = ({
   me,
   children,
 }) => {
-  //   const theme = useTheme();
   return (
-    <div>
-      <div className='w-full '>
-        <div className='absolute '>
+    <div className='w-full h-full'>
+      {children}
+      <div className=' px-3 relative bottom-7 h-7 text-white flex justify-between bg-transparent bg-blue-700 bg-opacity-50'>
+        <div className='h-7  leading-7'>
           {name}
           {me && ' (나)'}
         </div>
-      </div>
-      {children}
-
-      <div>
-        {!micStatus && <div style={{ width: '32px', color: 'red' }} />}
-        {!videoStatus && <div style={{ width: '32px', color: 'red' }} />}
+        <div>
+          {!micStatus ? (
+            <FontAwesomeIcon icon={faMicrophoneSlash} color={'red'} fontSize={'16px'} />
+          ) : (
+            <></>
+          )}
+          {!videoStatus ? (
+            <FontAwesomeIcon icon={faVideoSlash} color={'red'} fontSize={'16px'} />
+          ) : (
+            <></>
+          )}
+        </div>
       </div>
     </div>
   );

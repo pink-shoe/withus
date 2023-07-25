@@ -1,10 +1,7 @@
-import React, { FC } from 'react';
-import { useRef } from 'react';
-// import { useFaceMask } from "../../hooks/useFaceMesh";
+import { FC } from 'react';
 import { StreamManager } from 'openvidu-browser';
 import { useStream } from '../hooks/useStream';
 import { VideoStreamBox } from './VideoStreamBox';
-// import { Box, Tooltip, Typography, useTheme } from "@mui/material";
 // import { useSelector } from 'react-redux';
 
 interface IProps {
@@ -31,7 +28,7 @@ export const VideoStream: FC<IProps> = ({ streamManager, name, me }) => {
         style={{
           width: '100%',
           height: '100%',
-          borderRadius: '10px',
+          borderRadius: '0px',
           objectFit: 'contain',
         }}
       />
