@@ -31,6 +31,9 @@ public class OauthService {
     @Value("${spring.security.oauth2.client.registration.google.client-secret}")
     private String clientSecret;
 
+    @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
+    private String redirectUri;
+
     @Autowired
     private MemberService memberService;
 
@@ -43,7 +46,7 @@ public class OauthService {
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
         requestBody.add("code", authorizationCode);
         requestBody.add("grant_type", "authorization_code");
-        requestBody.add("redirect_uri", "http://localhost:8080/api/oauth2/code/google"); // OAuth2 리다이렉트 URL
+        requestBody.add("redirect_uri", redirectUri); // OAuth2 리다이렉트 URL
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(requestBody, headers);
 
@@ -73,10 +76,12 @@ public class OauthService {
                 Map.class
         );
 
+        System.out.println(response.getBody().toString());
         GoogleUserInfo userInfo = new GoogleUserInfo();
 
         userInfo.setName(response.getBody().get("name").toString());
         userInfo.setEmail(response.getBody().get("email").toString());
+        userInfo.setProfile(response.getBody().get("picture").toString());
 
         memberService.saveGoogle(userInfo, accessToken);
         return response.getBody().toString();

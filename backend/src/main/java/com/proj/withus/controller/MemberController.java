@@ -16,22 +16,12 @@ public class MemberController {
 
     private final OauthService oauthService;
 
-    @GetMapping("/login")
-    public String login() {
-        return "<a href=\"\">Google Login</a>";
-    }
-
     @ResponseBody
-    @GetMapping("/google/login")
-    public ResponseEntity<?> googleLogin(@RequestParam String code) {
-        log.info("code : " + code);
-        log.info("user info: ");
+    @GetMapping("/auth/google/callback")
+    public ResponseEntity<?> googleLogin(@RequestParam(name = "code") String code) {
         String accessToken = oauthService.getGoogleAccessToken(code);
         String userInfo = oauthService.getGoogleUserInfo(accessToken);
-        System.out.println("-----------------------------");
-        System.out.printf("accessToken: " + accessToken);
-        System.out.printf("user info: " + userInfo);
-        System.out.println("-----------------------------");
+
         return ResponseEntity.ok(userInfo);
     }
 }
