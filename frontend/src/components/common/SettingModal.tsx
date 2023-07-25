@@ -8,14 +8,16 @@ import SelectBox from './SelectBox';
 import GameStartButton from './GameStartButton';
 
 export default function RoomSetting(props : any) {
-  const [myMode, setMyMode] = useState('');
-  const [myRound, setMyRound] = useState('');
+  const {openModal, closeModal, children} = props;
 
-  const getMode = (myMode: any) => {
-    setMyMode(myMode);
+  const [mode, setMode] = useState('');
+  const [round, setRound] = useState(0);
+
+  const chooseMode = (mode: string) => {
+    setMode(mode);
   };
-  const getRound = (myRound: any) => {
-    setMyRound(myRound);
+  const chooseRound = (round: number) => {
+    setRound(round);
   };
 
   const MOPTIONS = [
@@ -33,22 +35,22 @@ export default function RoomSetting(props : any) {
   return (
     <Fragment>
       <Fragment>
-        <Modal myMode={myMode} myRound={myRound} open={props.modalOpen} close={props.closeModal}>
+        <Modal mode={mode} round={round} openModal={openModal} closeModal={closeModal}>
           <p className='text-indigo-900 font-bold text-3xl mb-10 text-center'>방 설정</p>
           <div className='flex my-7'>
             <span className='me-5 font-semibold text-xl flex items-center'>게임모드</span>
-            <SelectBox getContent={getMode} options={MOPTIONS}></SelectBox>
+            <SelectBox chooseSetting={chooseMode} options={MOPTIONS}></SelectBox>
           </div>
           <div className='flex mb-7'>
             <span className='me-5 font-semibold text-xl flex items-center'>게임진행</span>
-            <SelectBox getContent={getRound} options={ROPTIONS}></SelectBox>
+            <SelectBox chooseSetting={chooseRound} options={ROPTIONS}></SelectBox>
             <span className='me-5 font-semibold text-xl flex items-center ms-2'>판</span>
           </div>
           <div>
-            {props.children}
+            {children}
           </div>
           <div className='flex justify-center'>
-            <GameStartButton myMode={myMode} myRound={myRound} />
+            <GameStartButton mode={mode} round={round} />
           </div>
         </Modal>
       </Fragment>
