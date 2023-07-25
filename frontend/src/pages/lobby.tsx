@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import Header from '../components/common/Header';
 import Modal from '../components/common/Modal';
-import RoomSetting from '../components/common/RoomSetting';
+import SettingModal from '../components/common/SettingModal';
 
 export default function Lobby() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -29,7 +29,7 @@ export default function Lobby() {
   }
 
   const MOPTIONS = [
-    { value: 'mood_choice', name: '모드 선택' },
+    { value: 'mode_choice', name: '모드 선택' },
     { value: 'coop', name: '협동전' },
     // { value: 'team', name: '팀전' },
   ];
@@ -40,10 +40,10 @@ export default function Lobby() {
     { value: 5, name: '5' },
   ];
 
-  const [myMood, setMyMood] = useState('');
+  const [myMode, setMyMode] = useState('');
   const [myRound, setMyRound] = useState('');
-  const getMood = (myMood : any) => {
-    setMyMood(myMood);
+  const getMode = (myMode : any) => {
+    setMyMode(myMode);
   }
   const getRound = (myRound : any) => {
     setMyRound(myRound);
@@ -59,9 +59,8 @@ export default function Lobby() {
         <div className='flex flex-auto justify-center content-center'>
           <Fragment>
             <button onClick={openModal} className='bg-red-600 hover:bg-red-800 me-5 aspect-square h-96 rounded-xl font-semibold text-2xl text-white'>방 만들기</button>
-            <RoomSetting modalOpen={modalOpen} closeModal={closeModal}></RoomSetting>
+            <SettingModal modalOpen={modalOpen} closeModal={closeModal}></SettingModal>
           </Fragment>
-          <RoomSetting />
           <Fragment>
             <button onClick={makeModal} className='bg-green-600 hover:bg-green-700 ms-5 aspect-square h-96 rounded-xl font-semibold text-2xl text-white'>참여하기</button>
             <Modal open={modalMake} close={closemakeModal}>

@@ -1,4 +1,4 @@
-// 게임 전까지 Header
+// 대기실 입장 전까지 Header
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDoorOpen, faCircleUser } from "@fortawesome/free-solid-svg-icons";
 

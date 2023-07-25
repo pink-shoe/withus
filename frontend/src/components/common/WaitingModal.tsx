@@ -1,7 +1,7 @@
 // 초대하기 기능까지 포함한 모달창
 
 import React, { Fragment, useState } from 'react';
-import RoomSetting from './RoomSetting';
+import SettingModal from './SettingModal';
 import TextCopy from './TextCopy';
 
 export default function WaitingModal() {
@@ -30,8 +30,8 @@ export default function WaitingModal() {
   return (
     <Fragment>
       <button onClick={openModal} className='bg-violet-800 hover:bg-indigo-950 w-60 h-10 rounded-md font-semibold text-lg text-white'>대기실 방 설정</button>
-      <RoomSetting modalOpen={modalOpen} closeModal={closeModal}>
-        <div className='flex mb-2'>
+      <SettingModal modalOpen={modalOpen} closeModal={closeModal}>
+        <div className='flex mb-8'>
           <span className='me-5 font-semibold text-xl flex items-center'>초대하기</span>
           <div className='w-[19.5rem]'>
             <div>
@@ -44,7 +44,7 @@ export default function WaitingModal() {
             </div>
           </div>
         </div>
-      </RoomSetting>
+      </SettingModal>
     </Fragment>
   );
 }
