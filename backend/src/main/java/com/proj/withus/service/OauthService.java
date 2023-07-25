@@ -2,11 +2,15 @@ package com.proj.withus.service;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.proj.withus.domain.Member;
 import com.proj.withus.domain.dto.KakaoUserInfo;
+import com.proj.withus.repository.OauthRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -16,10 +20,15 @@ import java.net.URL;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class OauthService {
+
+    private final OauthRepository oauthRepository;
 
     public String getKakaoAccessToken(String code) {
         String accessToken = "";
+        String refreshToken = "";
+        String idToken = "";
         String reqURL = "https://kauth.kakao.com/oauth/token";
 
         try {
@@ -30,7 +39,7 @@ public class OauthService {
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
 
-            // POST 요처에 필요로 요구하는 파라미터를 스트림을 통해 전송
+            // POST 요청에 필요로 요구하는 파라미터를 스트림을 통해 전송
             BufferedWriter bw = new BufferedWriter((new OutputStreamWriter(conn.getOutputStream())));
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
@@ -58,8 +67,17 @@ public class OauthService {
             JsonElement element = parser.parse(result);
 
             accessToken = element.getAsJsonObject().get("access_token").getAsString();
+            refreshToken = element.getAsJsonObject().get("refresh_token").getAsString();
+
+//            idToken = element.getAsJsonObject().get("id_token").getAsString();
 
             log.info("access_token : " + accessToken);
+            System.out.println("-------------------------------");
+            System.out.println("access_token : " + accessToken);
+            System.out.println("refresh_token : " + refreshToken);
+//            System.out.println("id_token: " + idToken);
+            System.out.println("-------------------------------");
+
 
             bw.close();
         } catch (IOException e) {
@@ -112,9 +130,19 @@ public class OauthService {
             JsonElement profile = kakaoAccount.getAsJsonObject().get("profile");
 
             //dto에 저장하기
-            kakaoUserInfo.setId(element.getAsJsonObject().get("id").getAsLong());
+            Long kakaoId = element.getAsJsonObject().get("id").getAsLong(); // @Id 태그 때문에 직접 id값을 넣을 수 없음
+//            kakaoUserInfo.setId(element.getAsJsonObject().get("id").getAsLong());
+            System.out.println(kakaoId.toString());
+            try {
+                kakaoUserInfo.setEmail(kakaoAccount.getAsJsonObject().get("email").getAsString());
+            } catch (NullPointerException e) {
+                kakaoUserInfo.setEmail(kakaoId.toString() + "@kakao.com"); // 그래서 임시적으로 {고유id@kakao.com} 형식으로 넣음
+            }
+            kakaoUserInfo.setNickname(profile.getAsJsonObject().get("nickname").getAsString());
+            kakaoUserInfo.setLoginType("kakao");
+
 //            kakaoUserInfo.setNickname(profile.getAsJsonObject().get("nickname").getAsString());
-            kakaoUserInfo.setProfileImgUrl(profile.getAsJsonObject().get("profile_image_url").getAsString());
+//            kakaoUserInfo.setProfileImgUrl(profile.getAsJsonObject().get("profile_image_url").getAsString());
 //            kakaoUserInfo.setThumnailImgUrl(profile.getAsJsonObject().get("thumbnail_image_url").getAsString());
 //            kakaoUserInfo.setHasBirthDay(kakaoAccount.getAsJsonObject().get("has_birthday").getAsBoolean());
 //            kakaoUserInfo.setHasGender(kakaoAccount.getAsJsonObject().get("has_gender").getAsBoolean());
@@ -126,8 +154,15 @@ public class OauthService {
 //            if (kakaoUserInfo.isHasGender()) {
 //                kakaoUserInfo.setGender(kakaoAccount.getAsJsonObject().get("gender").getAsString());
 //            }
+            Member kakaoMember = new Member();
+            kakaoMember.setId(kakaoUserInfo.getId());
+            kakaoMember.setEmail(kakaoUserInfo.getEmail());
+            kakaoMember.setNickname(kakaoUserInfo.getNickname());
+            kakaoMember.setLoginType(kakaoUserInfo.getLoginType());
 
+            oauthRepository.save(kakaoMember);
             log.info(kakaoUserInfo.toString());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
