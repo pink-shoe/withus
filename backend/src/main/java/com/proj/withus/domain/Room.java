@@ -28,8 +28,8 @@ public class Room {
     @OneToMany(mappedBy = "room")
     private List<GameResult> gameResults = new ArrayList<>();
 
-    @OneToOne(mappedBy = "room")
-    private Player player;
+    @OneToMany(mappedBy = "room")
+    private List<Player> players = new ArrayList<>();
 
     @OneToOne(mappedBy = "room", fetch = FetchType.LAZY)
     @JoinColumn(name = "gamelog_id")
