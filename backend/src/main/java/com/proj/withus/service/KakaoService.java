@@ -9,19 +9,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
-public class OauthService {
+public class KakaoService {
 
     private final OauthRepository oauthRepository;
 
@@ -83,14 +80,6 @@ public class OauthService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        catch (ProtocolException e) {
-//            throw new RuntimeException(e);
-//        } catch (MalformedURLException e) {
-//            throw new RuntimeException(e);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-
         return accessToken;
     }
 
@@ -112,8 +101,6 @@ public class OauthService {
             log.info("responseCode : " + responseCode);
 
             //요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
-//            String result = getRequestResult(conn);
-
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
             String line = "";
@@ -132,28 +119,10 @@ public class OauthService {
             //dto에 저장하기
             Long kakaoId = element.getAsJsonObject().get("id").getAsLong(); // @Id 태그 때문에 직접 id값을 넣을 수 없음
 //            kakaoUserInfo.setId(element.getAsJsonObject().get("id").getAsLong());
-            System.out.println(kakaoId.toString());
-            try {
-                kakaoUserInfo.setEmail(kakaoAccount.getAsJsonObject().get("email").getAsString());
-            } catch (NullPointerException e) {
-                kakaoUserInfo.setEmail(kakaoId.toString() + "@kakao.com"); // 그래서 임시적으로 {고유id@kakao.com} 형식으로 넣음
-            }
+            kakaoUserInfo.setEmail(kakaoAccount.getAsJsonObject().get("email").getAsString());
             kakaoUserInfo.setNickname(profile.getAsJsonObject().get("nickname").getAsString());
             kakaoUserInfo.setLoginType("kakao");
 
-//            kakaoUserInfo.setNickname(profile.getAsJsonObject().get("nickname").getAsString());
-//            kakaoUserInfo.setProfileImgUrl(profile.getAsJsonObject().get("profile_image_url").getAsString());
-//            kakaoUserInfo.setThumnailImgUrl(profile.getAsJsonObject().get("thumbnail_image_url").getAsString());
-//            kakaoUserInfo.setHasBirthDay(kakaoAccount.getAsJsonObject().get("has_birthday").getAsBoolean());
-//            kakaoUserInfo.setHasGender(kakaoAccount.getAsJsonObject().get("has_gender").getAsBoolean());
-//
-//            if (kakaoUserInfo.isHasBirthDay()) {
-//                kakaoUserInfo.setBirthday(kakaoAccount.getAsJsonObject().get("birthday").getAsString());
-//            }
-//
-//            if (kakaoUserInfo.isHasGender()) {
-//                kakaoUserInfo.setGender(kakaoAccount.getAsJsonObject().get("gender").getAsString());
-//            }
             Member kakaoMember = new Member();
             kakaoMember.setId(kakaoUserInfo.getId());
             kakaoMember.setEmail(kakaoUserInfo.getEmail());
