@@ -15,6 +15,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new ValidTokenInterceptor())
                 .addPathPatterns("/**")
-                .addPathPatterns("/api/oauth/**");
+                .excludePathPatterns("/api/oauth/**") // real pattern
+                .excludePathPatterns("/kakao/login"); // practice pattern
     }
 }
