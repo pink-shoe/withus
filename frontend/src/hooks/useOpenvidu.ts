@@ -4,80 +4,81 @@ import { getToken } from 'apis/openviduApi';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 export interface IUser {
   connectionId: string;
-  audioActive: boolean;
-  videoActive: boolean;
-  screenShareActive: boolean;
-  nickname: string;
+  // audioActive: boolean;
+  // videoActive: boolean;
+  // screenShareActive: boolean;
+  // nickname: string;
+  userId: number;
   streamManager?: any;
-  type: string;
+  // type: string;
 }
-const isAudioActive = (user: IUser) => {
-  return user.audioActive;
-};
+// const isAudioActive = (user: IUser) => {
+//   return user.audioActive;
+// };
 
-const isVideoActive = (user: IUser) => {
-  return user.videoActive;
-};
+// const isVideoActive = (user: IUser) => {
+//   return user.videoActive;
+// };
 
-const isScreenShareActive = (user: IUser) => {
-  return user.screenShareActive;
-};
+// const isScreenShareActive = (user: IUser) => {
+//   return user.screenShareActive;
+// };
 
 const getConnectionId = (user: IUser) => {
   return user.connectionId;
 };
 
-const getNickname = (user: IUser) => {
-  return user.nickname;
-};
+// const getNickname = (user: IUser) => {
+//   return user.nickname;
+// };
 
-const getStreamManager = (user: IUser) => {
-  return user.streamManager;
-};
+// const getStreamManager = (user: IUser) => {
+//   return user.streamManager;
+// };
 
-const isLocal = (user: IUser) => {
-  return user.type === 'local';
-};
-const isRemote = (user: IUser) => {
-  return !isLocal(user);
-};
-const setAudioActive = (user: IUser, isAudioActive: boolean) => {
-  user.audioActive = isAudioActive;
-  return user;
-};
-const setVideoActive = (user: IUser, isVideoActive: boolean) => {
-  user.videoActive = isVideoActive;
-  return user;
-};
+// const isLocal = (user: IUser) => {
+//   return user.type === 'local';
+// };
+// const isRemote = (user: IUser) => {
+//   return !isLocal(user);
+// };
+// const setAudioActive = (user: IUser, isAudioActive: boolean) => {
+//   user.audioActive = isAudioActive;
+//   return user;
+// };
+// const setVideoActive = (user: IUser, isVideoActive: boolean) => {
+//   user.videoActive = isVideoActive;
+//   return user;
+// };
 
-const setScreenShareActive = (user: IUser, isScreenShareActive: boolean) => {
-  user.screenShareActive = isScreenShareActive;
-  return user;
-};
-const setStreamManager = (user: IUser, streamManager: any) => {
-  user.streamManager = streamManager;
-  return user;
-};
+// const setScreenShareActive = (user: IUser, isScreenShareActive: boolean) => {
+//   user.screenShareActive = isScreenShareActive;
+//   return user;
+// };
+// const setStreamManager = (user: IUser, streamManager: any) => {
+//   user.streamManager = streamManager;
+//   return user;
+// };
 
 const setConnectionId = (user: IUser, conecctionId: string) => {
   user.connectionId = conecctionId;
   return user;
 };
-const setNickname = (user: IUser, nickname: string) => {
-  user.nickname = nickname;
-  return user;
-};
-const setType = (user: IUser, type: string) => {
-  if (type === 'local' || type === 'remote') {
-    user.type = type;
-  }
-  return user;
-};
+// const setNickname = (user: IUser, nickname: string) => {
+//   user.nickname = nickname;
+//   return user;
+// };
+// const setType = (user: IUser, type: string) => {
+//   if (type === 'local' || type === 'remote') {
+//     user.type = type;
+//   }
+//   return user;
+// };
 export const useOpenvidu = (userId: number, gameRoomId: string) => {
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [publisher, setPublisher] = useState<any>();
   const [session, setSession] = useState<any>();
-
+  const [userName, setUserName] = useState<string>('name' + userId);
   const leaveSession = useCallback(() => {
     if (session) {
       session.disconnect();
@@ -178,9 +179,27 @@ export const useOpenvidu = (userId: number, gameRoomId: string) => {
     [publisher]
   );
 
+  // const sendSignalUserChanged = (session: any, data: any) => {
+  //   const signalOptions = {
+  //     data: JSON.stringify(data),
+  //     type: 'userChanged',
+  //   };
+  //   console.log(session);
+  //   session!.signal(signalOptions);
+  // };
+
+  const onChangeUserName = useCallback(
+    (nickname: string) => {
+      setUserName(nickname!);
+      console.log(publisher);
+      // sendSignalUserChanged({ nickname: nickname! });
+    },
+    [userName]
+  );
+
   const streamList = useMemo(
-    () => [{ streamManager: publisher, userId, userName: 'name' + userId }, ...subscribers],
-    [publisher, subscribers, userId]
+    () => [{ streamManager: publisher, userId, userName }, ...subscribers],
+    [publisher, subscribers, userId, userName]
   );
 
   return {
@@ -188,24 +207,25 @@ export const useOpenvidu = (userId: number, gameRoomId: string) => {
     streamList,
     onChangeCameraStatus,
     onChangeMicStatus,
+    onChangeUserName,
   };
 };
 
 export {
-  isAudioActive,
-  isLocal,
-  isRemote,
-  isScreenShareActive,
-  isVideoActive,
+  // isAudioActive,
+  // isLocal,
+  // isRemote,
+  // isScreenShareActive,
+  // isVideoActive,
   getConnectionId,
-  getNickname,
-  getStreamManager,
+  // getNickname,
+  // getStreamManager,
   getToken,
-  setAudioActive,
+  // setAudioActive,
   setConnectionId,
-  setNickname,
-  setScreenShareActive,
-  setStreamManager,
-  setType,
-  setVideoActive,
+  // setNickname,
+  // setScreenShareActive,
+  // setStreamManager,
+  // setType,
+  // setVideoActive,
 };
