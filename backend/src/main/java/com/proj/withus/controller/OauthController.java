@@ -1,10 +1,8 @@
 package com.proj.withus.controller;
 
-import com.proj.withus.service.OauthService;
-import lombok.AllArgsConstructor;
+import com.proj.withus.service.KakaoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,31 +15,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class OauthController {
 
-    private final OauthService oauthService;
+    private final KakaoService oauthService;
 
     @ResponseBody
     @GetMapping("/kakao/login")
-    public void kakaoCalllback(@RequestParam String code) {
+    public ResponseEntity<String> kakaoCallback(@RequestParam String code) {
         log.info("code : " + code);
 
         String token = oauthService.getKakaoAccessToken(code);
         log.info("user info : " + oauthService.getKakaoUserInfo(token));
-
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
     @GetMapping("/")
     public String index() {
-        return "<html>\n" +
-                "<head>\n" +
-                "    <meta charset=\"UTF-8\">\n" +
-                "    <title>Kakao Login</title>\n" +
-                "</head>\n" +
-                "<body>\n" +
-                "<a href=\"https://kauth.kakao.com/oauth/authorize?response_type=code&cx`lient_id=7ea82d8a610fe51bcf3eca267069b264&redirect_uri=http://localhost:8080/kakao/login\">\n" +
-                "    Kakao 로그인\n" +
-                "</a>\n" +
-                "</body>\n" +
-                "</html>";
+        return "(temp)index page";
     }
 
     @GetMapping("/temp")

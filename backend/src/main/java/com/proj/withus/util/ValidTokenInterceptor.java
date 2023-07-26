@@ -11,11 +11,6 @@ import java.net.URL;
 @Slf4j
 public class ValidTokenInterceptor implements HandlerInterceptor {
 
-//    public void printHeaderToken(HttpServletRequest request) {
-//        String token = request.getHeader("Authorization").substring(7);
-//        System.out.println("header is :" + token);
-//    }
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object Handler) throws Exception {
         try {
@@ -36,7 +31,7 @@ public class ValidTokenInterceptor implements HandlerInterceptor {
                 return false;
             }
         } catch (Exception e) {
-            System.out.println("exception");
+            log.info("interceptor exception");
             return false;
         }
 
