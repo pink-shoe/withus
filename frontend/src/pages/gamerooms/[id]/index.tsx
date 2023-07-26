@@ -13,8 +13,8 @@ import saveAs from 'file-saver';
 // import { MeetingRoomInfoRes } from "../apis/response/sessionRes";
 import { VideoStream } from '@components/VideoStream';
 // import { useWebSocket } from "../hooks/useWebSocket";
-import { useLocation, useNavigate } from 'react-router-dom';
-import { IUser, getStreamManager, setStreamManager, useOpenvidu } from 'hooks/useOpenvidu';
+import { useLocation } from 'react-router-dom';
+import { IUser, useOpenvidu } from 'hooks/useOpenvidu';
 import { ControllBarContainer } from '@components/controllBar/ControllBarContainer';
 // import { AvatimeApi } from "../apis/avatimeApi";
 // import { VolumeController } from "../components/VolumeController";
@@ -50,7 +50,7 @@ export let localUser: IUser;
 //     },
 //   ],
 // };
-export default function WaitingRoom() {
+export default function GameRoom() {
   const location = useLocation();
 
   const currentPath = location.pathname.slice(
@@ -92,15 +92,15 @@ export default function WaitingRoom() {
   //   // );
   // }, [dispatch, meetingRoomInfo, navigate, roomId]);
 
-  const [opened, setOpened] = useState<boolean[]>([true, true]);
-  const cntOpened = opened.filter((it) => it).length;
+  // const [opened, setOpened] = useState<boolean[]>([true, true]);
+  // const cntOpened = opened.filter((it) => it).length;
 
-  const [lastPickModalOpen, setLastPickModalOpen] = useState(false);
-  const [balanceGameModalOpen, setBalanceGameModalOpen] = useState(false);
-  const [balanceResult, setBalanceResult] = useState<any[]>([]);
-  const [pickStuffModalOpen, setPickStuffModalOpen] = useState(false);
-  const [showSnack, setShowSnack] = useState(false);
-  const [snackMessage, setSnackMessage] = useState('');
+  // const [lastPickModalOpen, setLastPickModalOpen] = useState(false);
+  // const [balanceGameModalOpen, setBalanceGameModalOpen] = useState(false);
+  // const [balanceResult, setBalanceResult] = useState<any[]>([]);
+  // const [pickStuffModalOpen, setPickStuffModalOpen] = useState(false);
+  // const [showSnack, setShowSnack] = useState(false);
+  // const [snackMessage, setSnackMessage] = useState('');
   const [chatStatus, setChatStatus] = useState<boolean>();
   const [readyStatus, setReadyStatus] = useState<boolean>(false);
 
@@ -351,7 +351,12 @@ export default function WaitingRoom() {
           <div className=' text-center bg-[#112364] p-3 text-white whitespace-nowrap font-bold text-xl'>
             채팅창
           </div>
-          <div className='w-full h-[90%] p-3'></div>
+          <div className='w-full h-[90%] p-3'>
+            {messageList.map((message, i) => {
+              console.log(message);
+              return <div>{message}</div>;
+            })}
+          </div>
           <div className='  bg-white'>
             <div className='  flex w-full justify-center items-center'>
               <input

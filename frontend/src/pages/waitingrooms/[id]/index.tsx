@@ -1,40 +1,9 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
-// import { ChatRoom } from "../components/chat/ChatRoom";
-// import { ControllBar } from '@components/session/ControllBar';
-// import { useDispatch, useSelector } from "react-redux";
-// import {
-//   setBalanceA,
-//   setBalanceB,
-//   setBalanceId,
-//   setUserInfoList,
-// } from "../stores/slices/meetingSlice";
-// import { MeetingRoomInfoRes } from "../apis/response/sessionRes";
+import { useEffect, useState } from 'react';
 import { VideoStream } from '@components/VideoStream';
-// import { useWebSocket } from "../hooks/useWebSocket";
-import { useLocation, useNavigate } from 'react-router-dom';
-import { IUser, getStreamManager, setStreamManager, useOpenvidu } from 'hooks/useOpenvidu';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen } from '@fortawesome/free-solid-svg-icons'; // import { AvatimeApi } from "../apis/avatimeApi";
+import { useLocation } from 'react-router-dom';
+import { IUser, useOpenvidu } from 'hooks/useOpenvidu';
 import { ControllBarContainer } from '@components/controllBar/ControllBarContainer';
-// import { VolumeController } from "../components/VolumeController";
-// import { useBGM } from "../hooks/useBGM";
-// import { AlertSnackbar } from "../components/AlertSnackbar";
-// import { FinalPickModal } from "../components/session/modal/FinalPickModal";
-// import { BalanceGameModal } from "../components/session/modal/BalanceGameModal";
-// import { PickStuffModal } from "../components/session/modal/PickStuffModal";
-
-// interface IProps {}
-
-// interface IUserInfo {
-//   userId: number;
-//   userName: string;
-//   token: string;
-// }
-
-// interface IGameRoomInfo {
-//   gameUserInfoList: IUserInfo[];
-// }
-export let localUser: IUser;
+import ParticipantsContainer from '@components/participantsList/ParticipantListContainer';
 export default function WaitingRoom() {
   const location = useLocation();
 
@@ -43,51 +12,14 @@ export default function WaitingRoom() {
     location.pathname.length
   );
 
-  // const headCount = useState();
   const [roomId, setRoomId] = useState<string>(currentPath);
   const [userId, setUserId] = useState<number>(Math.floor(Math.random() * 100));
   const [isMaster, setIsMaster] = useState<boolean>(false);
-  // const navigate = useNavigate();
-
-  // const [gameRoomInfo, setgameRoomInfo] = useState<IGameRoomInfo>({
-  //   gameUserInfoList: {
-  //     userId: 0,
-  //     nickname: 'test',
-  //   },
-  // });
-  // const gameRoomInfo = USER_INFO_DATA;
-  // useEffect(() => {
-  //   setgameRoomInfo(USER_INFO_DATA);
-  //   console.log(gameRoomInfo);
-  // }, []);
-  // useEffect(() => {
-  //   if (meetingRoomInfo) {
-  //     return;
-  //   }
-
-  //   // AvatimeApi.getInstance().getMeetingRoomInfo(
-  //   //   { meetingroom_id: roomId },
-  //   //   {
-  //   //     onSuccess: (data) => {
-  //   //       setMeetingRoomInfo(data);
-  //   //       dispatch(setUserInfoList(data.meeting_user_info_list));
-  //   //     },
-  //   //     navigate,
-  //   //   }
-  //   // );
-  // }, [dispatch, meetingRoomInfo, navigate, roomId]);
-
-  // const [opened, setOpened] = useState<boolean[]>([true, true]);
-  // const cntOpened = opened.filter((it) => it).length;
-
-  // const [lastPickModalOpen, setLastPickModalOpen] = useState(false);
-  // const [balanceGameModalOpen, setBalanceGameModalOpen] = useState(false);
-  // const [balanceResult, setBalanceResult] = useState<any[]>([]);
-  // const [pickStuffModalOpen, setPickStuffModalOpen] = useState(false);
-  // const [showSnack, setShowSnack] = useState(false);
-  // const [snackMessage, setSnackMessage] = useState('');
+  const [userName, setUserName] = useState('name' + userId);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
   const [readyStatus, setReadyStatus] = useState<boolean>(false);
+  const [isEditUserName, setIsEditUserName] = useState<boolean>(false);
+
   // useWebSocket({
   //   onConnect(frame, client) {
   //     let flag = true;
@@ -164,21 +96,30 @@ export default function WaitingRoom() {
   const onChangeReadyStatus = (readyStatus: boolean) => {
     setReadyStatus(!readyStatus);
   };
+  const onChangeUserName = (userName: string) => {
+    setUserName(userName);
+  };
+  const onChangeIsEditUserName = (isEditUserName: boolean) => {
+    setIsEditUserName(!isEditUserName);
+  };
   const sendMessage = () => {
     if (message) {
       let msg = message.replace(/ +(?= )/g, '');
       if (msg !== '' && msg !== ' ') {
         {
-          streamList?.map((stream: any, idx: number) => {
-            stream.userId === userId &&
-              stream.streamManager.stream.session.signal({
-                data: JSON.stringify({
-                  message: message,
-                  nickname: 'name' + userId,
-                  streamId: stream.streamManager.stream.streamId,
-                }),
-              });
+          publisher.signal({
+            data: JSON.stringify({
+              message: message,
+              nickname: userName,
+              streamId: publisher.stream.streamId,
+            }),
           });
+          // streamList?.map((stream: any, idx: number) => {
+          //   stream.userId === userId &&
+          //     stream.streamManager.stream.session.signal({
+
+          //     });
+          // });
         }
       }
     }
@@ -186,118 +127,51 @@ export default function WaitingRoom() {
   };
 
   const receiveMessage = () => {
-    // streamList &&
-    // console.log('test', streamList);
-    streamList?.map((stream: any, idx: number) => {
-      // console.log('test', stream.streamManager);
-      let msgList = messageList;
-      stream.userId === userId &&
-        stream.streamManager &&
-        stream.streamManager.stream.session.on('signal:chat', (e: any) => {
-          console.log('test', e);
-          const data = JSON.parse(e.data);
-          msgList.push({
-            connectionId: e.from.connectionId,
-            nickname: data.nickname,
-            message: data.message,
-          });
-          console.log('test', msgList);
-        });
-      setMessageList(msgList);
+    let msgList = messageList;
+
+    publisher.stream.session.on('signal:chat', (e: any) => {
+      console.log('test', e);
+      const data = JSON.parse(e.data);
+      msgList.push({
+        connectionId: e.from.connectionId,
+        nickname: data.nickname,
+        message: data.message,
+      });
+      console.log('test', msgList);
     });
   };
+
   useEffect(() => {
     receiveMessage();
-  }, [streamList]);
-  // useEffect(() => {
-  //   console.log('test', messageList);
-  // }, [messageList]);
+  });
 
-  // useEffect(() => {
-  //   console.log(isMaster, readyStatus);
-  // }, [readyStatus]);
   return (
     <section className={`w-full flex overflow-y-hidden  justify-between h-screen`}>
       {/* 참가자 목록 */}
-      <div id='participantsList' className='w-fit max-w-[1/6] bg-white'>
-        <div className='bg-[#112364] p-3 text-white whitespace-nowrap font-bold text-xl'>
-          현재 플레이어({streamList.length})
-        </div>
-        <div className='bg-white h-full w-full text-justify'>
-          {streamList.map((stream, idx) => {
-            console.log(streamList);
-            return (
-              <div
-                key={idx}
-                className='flex justify-between items-center w-full text-justify border-bottom border-b-2 p-3'
-              >
-                <div>{stream.userName}</div>
-                {stream.userId === userId && (
-                  <button>
-                    <FontAwesomeIcon icon={faPen} />
-                  </button>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      <ParticipantsContainer
+        userId={userId}
+        userName={userName}
+        onChangeUserName={onChangeUserName}
+        publisher={publisher}
+        streamList={streamList}
+        readyStatus={readyStatus}
+        onChangeIsEditUserName={onChangeIsEditUserName}
+      />
       {/* openvidu 화면 */}
       <div className=' h-full flex flex-col justify-between pb-5'>
         <header className=''>
           <div className=' text-white font-extrabold text-6xl text-center py-10'>[] with us</div>
         </header>
         {publisher && (
-          <div className=''>
-            {streamList?.map((stream: any, idx: number) => {
-              // const userInfo = streamList.find((it: any) => it.userId === stream.userId);
-              return (
-                stream.userId === userId && (
-                  <div className='w-full'>
-                    <VideoStream
-                      streamManager={stream.streamManager}
-                      name={stream.userName}
-                      me={stream.userId === userId}
-                    />
-                  </div>
-                )
-              );
-            })}
+          <div className='w-full'>
+            <VideoStream
+              streamManager={publisher.streamManager}
+              name={publisher.userName}
+              me={publisher.userId === userId}
+            />
           </div>
         )}
 
-        {/* <div>
-          <div>
-            <VolumeController />
-            <div />
-            {meetingRoomInfo && (
-              <ChatRoom
-                chatType='all'
-                isOpened={opened[0]}
-                onClickHeader={() => {
-                  setOpened((prev) => [!prev[0], prev[1]]);
-                }}
-                maxHeight={opened[0] && cntOpened === 1 ? '100%' : '50%'}
-                chattingRoomId={meetingRoomInfo.chattingroom_id}
-              />
-            )}
-            {meetingRoomInfo && (
-              <ChatRoom
-                chatType='gender'
-                isOpened={opened[1]}
-                onClickHeader={() => {
-                  setOpened((prev) => [prev[0], !prev[1]]);
-                }}
-                maxHeight={opened[1] && cntOpened === 1 ? '100%' : '50%'}
-                chattingRoomId={
-                  gender === 'M'
-                    ? meetingRoomInfo.men_chattingroom_id
-                    : meetingRoomInfo.women_chattingroom_id
-                }
-              />
-            )}
-          </div>
-        </div> */}
         <div className=' p-3'>
           <ControllBarContainer
             isHost={isMaster}
@@ -308,21 +182,7 @@ export default function WaitingRoom() {
           />
         </div>
       </div>
-      {/* <AlertSnackbar
-        open={showSnack}
-        onClose={() => setShowSnack(false)}
-        message={snackMessage}
-        alertColor='info'
-        type='alert'
-      />
-      {lastPickModalOpen && <FinalPickModal isOpened={lastPickModalOpen} />}
-      {balanceGameModalOpen && (
-        <BalanceGameModal
-          isOpened={balanceGameModalOpen}
-          onClose={() => setBalanceGameModalOpen(false)}
-        />
-      )}
-      {pickStuffModalOpen && <PickStuffModal isOpened={pickStuffModalOpen} />} */}
+
       {chatStatus ? (
         <div id='participantsList' className=' w-80'>
           <div className='text-center bg-[#112364] p-3 text-white whitespace-nowrap font-bold text-xl'>
