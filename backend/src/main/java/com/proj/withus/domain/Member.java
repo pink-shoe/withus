@@ -25,17 +25,16 @@ public class Member {
 
     private String loginType;
 
-    private String token;
-
-    private String accessToken;
-
     private String createdAt;
 
     private String deletedAt;
 
-    @OneToMany(mappedBy = "member")
-    private List<Album> albums = new ArrayList<>();
+    @OneToOne(mappedBy = "member")
+    private Album album;
 
     @OneToMany(mappedBy = "member")
     private List<Room> rooms = new ArrayList<>();
+
+    @OneToOne(mappedBy = "member")
+    private Player player;
 }

@@ -17,6 +17,11 @@ public class GameResult {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    private String imgUrl;
+    private int round;
 
+    private String captureUrl;
+
+    private boolean isCorrect;
+
+    private int correctRate;
 }

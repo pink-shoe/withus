@@ -24,8 +24,6 @@ public class MemberService {
             member.setNickname(userInfo.getName());
             member.setPassword(null);
             member.setLoginType("google");
-            member.setAccessToken(accessToken);
-            member.setToken(null);
             member.setCreatedAt(LocalDateTime.now().toString());
             member.setDeletedAt(null);
             memberRepository.save(member);
