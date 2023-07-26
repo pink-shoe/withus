@@ -25,10 +25,11 @@ public class Room {
 
     private int round;
 
-    private String password;
-
     @OneToMany(mappedBy = "room")
     private List<GameResult> gameResults = new ArrayList<>();
+
+    @OneToMany(mappedBy = "room")
+    private List<Player> players = new ArrayList<>();
 
     @OneToOne(mappedBy = "room", fetch = FetchType.LAZY)
     @JoinColumn(name = "gamelog_id")
