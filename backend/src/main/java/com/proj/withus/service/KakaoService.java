@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.proj.withus.domain.Member;
 import com.proj.withus.domain.dto.KakaoUserInfo;
-import com.proj.withus.repository.OauthRepository;
+import com.proj.withus.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ import java.net.URL;
 @Transactional
 public class KakaoService {
 
-    private final OauthRepository oauthRepository;
+    private final MemberRepository memberRepository;
 
     public String getKakaoAccessToken(String code) {
         String accessToken = "";
@@ -67,14 +67,6 @@ public class KakaoService {
             refreshToken = element.getAsJsonObject().get("refresh_token").getAsString();
 
 //            idToken = element.getAsJsonObject().get("id_token").getAsString();
-
-            log.info("access_token : " + accessToken);
-            System.out.println("-------------------------------");
-            System.out.println("access_token : " + accessToken);
-            System.out.println("refresh_token : " + refreshToken);
-//            System.out.println("id_token: " + idToken);
-            System.out.println("-------------------------------");
-
 
             bw.close();
         } catch (IOException e) {
@@ -129,7 +121,7 @@ public class KakaoService {
             kakaoMember.setNickname(kakaoUserInfo.getNickname());
             kakaoMember.setLoginType(kakaoUserInfo.getLoginType());
 
-            oauthRepository.save(kakaoMember);
+            memberRepository.save(kakaoMember);
             log.info(kakaoUserInfo.toString());
 
         } catch (IOException e) {
