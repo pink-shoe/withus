@@ -14,13 +14,17 @@ public class UserService {
     private MemberRepository memberRepository;
 
     public Member getMemberInfo(Long id) {
-        return memberRepository.findById(id).get();
+        return memberRepository.findById(id).orElse(null);
     }
 
     public Member updateMember(Long id, String nickname) {
         // nickname 유효성 검사
+
         Member find = getMemberInfo(id);
-        // 찾은 유저가 없으면 예외처리
+
+        if (find == null) {
+            return null;
+        }
 
         find.setNickname(nickname);
 
@@ -29,7 +33,8 @@ public class UserService {
         return find;
     }
 
-    public void deleteMember(Long id) {
+    public Member deleteMember(Long id) {
         memberRepository.deleteById(id);
+        return memberRepository.findById(id).get();
     }
 }
