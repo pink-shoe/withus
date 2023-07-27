@@ -27,26 +27,26 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    private ResponseEntity<Member> getMemberInfo(@RequestHeader("Authorization") String token) {
+    private ResponseEntity<?> getMemberInfo(@RequestHeader("Authorization") String token) {
         // jwt token -> access token, id
         Long id = 2L;
         Member memberInfo = userService.getMemberInfo(id);
 
         if (memberInfo == null) {
-            return ResponseEntity.badRequest().body(null);
+            return new ResponseEntity<>("유저 정보 찾지 못함", HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok().body(memberInfo);
     }
 
     @PatchMapping
-    private ResponseEntity<Member> updateMemberInfo(@RequestHeader("Authorization") String token, @RequestBody() String nickname) {
+    private ResponseEntity<?> updateMemberInfo(@RequestHeader("Authorization") String token, @RequestBody() String nickname) {
         // jwt token -> access token, id
         Long id = 2L;
 
         Member updatedInfo = userService.updateMember(id, nickname);
 
         if (updatedInfo == null) {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>("유저 정보 찾을 수 없음", HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok().body(updatedInfo);
     }
@@ -58,7 +58,7 @@ public class UserController {
         Member deleted = userService.deleteMember(id);
 
         if (deleted != null) {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>("유저 탈퇴 안됨", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity(HttpStatus.OK);
     }
