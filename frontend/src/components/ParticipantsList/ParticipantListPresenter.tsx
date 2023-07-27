@@ -32,7 +32,7 @@ export const ParticipantsPresenter: FC<IParticiPantsPresenterProps> = ({
   saveUserName,
 }) => {
   return (
-    <div id='participantsList' className='w-fit max-w-[1/6] bg-white'>
+    <div id='participantsList' className=' w-52 bg-white'>
       <div className='bg-[#112364] p-3 text-white whitespace-nowrap font-bold text-xl'>
         현재 플레이어({streamList.length})
       </div>
@@ -63,7 +63,7 @@ export const ParticipantsPresenter: FC<IParticiPantsPresenterProps> = ({
                 ) : (
                   <>
                     <input
-                      className='w-full'
+                      className='w-full truncate'
                       type='text'
                       value={stream.userName + ' (나)'}
                       onChange={onChangeUserName}

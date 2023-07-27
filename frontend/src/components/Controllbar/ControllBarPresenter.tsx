@@ -66,13 +66,13 @@ export const ControllBarPresenter: FC<IControllBarPresenterProps> = ({
           )}
         </button>
         <button
-          className={` w-16 h-16 rounded-full p-3 ${chatStatus ? ' bg-[#D3D3D3]' : 'bg-[#FF7B7B]'}`}
+          className={` w-16 h-16 rounded-full p-3 ${chatStatus ? ' bg-[#FF7B7B]' : 'bg-[#D3D3D3]'}`}
           onClick={onChangeChatStatus}
         >
           {chatStatus ? (
-            <FontAwesomeIcon icon={faComment} color={'black'} fontSize={`2rem`} />
-          ) : (
             <FontAwesomeIcon icon={faCommentSlash} color={'white'} fontSize={`2rem`} />
+          ) : (
+            <FontAwesomeIcon icon={faComment} color={'black'} fontSize={`2rem`} />
           )}
         </button>
         {isHost && (
