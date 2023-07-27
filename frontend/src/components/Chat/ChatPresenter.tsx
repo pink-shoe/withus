@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { useOpenvidu } from 'hooks/useOpenvidu';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPaperPlane } from '@fortawesome/free-regular-svg-icons';
 interface IChatPresenterProps {
   chatStatus: boolean;
   messageList: any[];
@@ -25,7 +24,7 @@ export default function ChatPresenter({
             채팅창
           </div>
           {/* <div className='bg-white h-full'> */}
-          <div className='w-full h-5/6 flex flex-col'>
+          <div className='w-full h-5/6 flex flex-col overflow-auto'>
             {messageList.map((msg, idx) => (
               <div
                 key={idx}
@@ -42,20 +41,34 @@ export default function ChatPresenter({
                   {msg.nickname}{' '}
                   {msg.connectionId === publisher.stream.connection.connectionId ? '(나)' : '(님)'}
                 </div>
-                <div>{msg.message}</div>
+                <div
+                  className={
+                    'border-2 rounded-lg p-2 w-11/12 text-justify whitespace-break-spaces ' +
+                    `${
+                      msg.connectionId === publisher.stream.connection.connectionId
+                        ? ' bg-white'
+                        : ' bg-[#ede4fd]'
+                    }`
+                  }
+                >
+                  {msg.message}
+                </div>
               </div>
             ))}
           </div>
           <div className='flex w-full justify-center items-center'>
-            <input
-              className='w-full p-2 border-2 border-blue-800 rounded-md text-center focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 placeholder:text-slate-400'
+            <textarea
+              className='w-full p-2 border-2 border-blue-800 rounded-md text-justify focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 placeholder:text-slate-400'
               placeholder='메세지를 입력해주세요.'
-              type='text'
+              // type='text'
               value={message}
               onChange={onChangeMessage}
             />
-            <button className='whitespace-nowrap' onClick={onClickSendMsg}>
-              전송
+            <button
+              className='whitespace-nowrap border-2 rounded-md border-[#112364] p-4'
+              onClick={onClickSendMsg}
+            >
+              <FontAwesomeIcon icon={faPaperPlane} color={'#112364'} fontSize={'28px'} />
             </button>
           </div>
         </div>
