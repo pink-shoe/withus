@@ -38,7 +38,7 @@ export default function Layout() {
   }
 
   return (
-    <div className="bg-[url('/src/assets/background2.jpg')] bg-cover">
+    <div className="bg-[url('/src/assets/background1.jpg')] bg-cover">
       <Logo />
       <div className='flex justify-center space-x-4 m-4'>
         <button className='bg-white' onClick={() => setShowLoginForm(false)}>

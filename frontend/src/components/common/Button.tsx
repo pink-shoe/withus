@@ -2,7 +2,7 @@ import React from 'react';
 
 interface ButtonProps {
   version?: number;
-  onClick?: () => void;
+  onClick?: () => any;
   children: React.ReactNode;
 }
 
