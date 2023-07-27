@@ -4,8 +4,6 @@ package com.proj.withus.service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.proj.withus.domain.Member;
-import com.proj.withus.domain.dto.GoogleUserInfo;
-import com.proj.withus.domain.dto.KakaoUserInfo;
 import com.proj.withus.domain.dto.SocialMemberInfo;
 import com.proj.withus.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -199,7 +197,7 @@ public class SocialServiceImpl implements SocialService {
 
         SocialMemberInfo googleUserInfo = new SocialMemberInfo();
 
-        googleUserInfo.setNickname(response.getBody().get("nickname").toString());
+        googleUserInfo.setNickname(response.getBody().get("name").toString());
         googleUserInfo.setEmail(response.getBody().get("email").toString());
         googleUserInfo.setLoginType("google");
 
