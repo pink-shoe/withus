@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { VideoStream } from '@components/VideoStream';
 import { useLocation } from 'react-router-dom';
 import { useOpenvidu } from 'hooks/useOpenvidu';
-import { ControllBarContainer } from '@components/controllBar/ControllBarContainer';
-import ParticipantsContainer from '@components/participantsList/ParticipantListContainer';
+import { ControllBarContainer } from '@components/ControllBar/ControllBarContainer';
+import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
 import ChatContainer from '@components/Chat/ChatContainer';
 export default function WaitingRoom() {
   const location = useLocation();
@@ -54,9 +54,9 @@ export default function WaitingRoom() {
         type={'WAIT'}
       />
       {/* openvidu 화면 */}
-      <div className=' h-full flex flex-col justify-between pb-5'>
+      <div className=' h-full flex flex-col justify-between'>
         <header className=''>
-          <div className=' text-white font-extrabold text-6xl text-center py-10'>[] with us</div>
+          <div className=' text-white font-extrabold text-6xl text-center py-3'>[] with us</div>
         </header>
         <div className='aspect-[4/3]'>
           {publisher && (

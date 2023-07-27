@@ -4,8 +4,8 @@ import saveAs from 'file-saver';
 import { VideoStream } from '@components/VideoStream';
 import { useLocation } from 'react-router-dom';
 import { useOpenvidu } from 'hooks/useOpenvidu';
-import { ControllBarContainer } from '@components/controllBar/ControllBarContainer';
-import ParticipantsContainer from '@components/participantsList/ParticipantListContainer';
+import { ControllBarContainer } from '@components/ControllBar/ControllBarContainer';
+import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
 import ChatContainer from '@components/Chat/ChatContainer';
 export default function GameRoom() {
   const location = useLocation();
@@ -59,7 +59,7 @@ export default function GameRoom() {
     }
   };
   return (
-    <section className={`w-full flex justify-between h-full min-h-screen`}>
+    <section className={`w-full flex justify-between  h-screen`}>
       {/* 참가자 목록 */}
       <ParticipantsContainer
         userId={userId}
@@ -72,9 +72,9 @@ export default function GameRoom() {
         type={'GAME'}
       />
       {/* openvidu 화면 */}
-      <div className=' w-1/2 h-full flex flex-col justify-between items-center pb-5'>
+      <div className=' w-1/2 h-full flex flex-col justify-between items-center'>
         <header className=''>
-          <div className=' text-white font-extrabold text-6xl text-center py-10'>[] with us</div>
+          <div className=' text-white font-extrabold text-6xl text-center py-3'>[] with us</div>
         </header>
         <div className='aspect-[4/3]'>
           {publisher && (
