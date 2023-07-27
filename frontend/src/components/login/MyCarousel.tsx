@@ -13,7 +13,7 @@ export default function MyCarousel() {
   return (
     <SmallContainer>
       <div className='flex justify-center relative'>
-        <div className='max-w-lg mx-auto my-4'>
+        <div className='max-w-lg m-2'>
           <Carousel slides={slides} guidelines={guidelines} />
         </div>
       </div>

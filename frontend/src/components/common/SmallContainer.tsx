@@ -6,7 +6,8 @@ interface ContainerProps {
 
 export default function SmallContainer({ children }: ContainerProps) {
   return (
-    <div className='lg:flex lg:flex-col m-4 gap-4 rounded-lg border-4 border-black w-full h-auto bg-white '>
+    <div className='rounded-lg h-auto bg-white '>
+    {/* <div className='lg:flex lg:flex-col m-4 gap-4 rounded-lg border-4 border-black w-full h-auto bg-white '> */}
       {children}
     </div>
   );

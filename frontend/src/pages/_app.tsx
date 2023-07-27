@@ -23,7 +23,7 @@ export default function App() {
 
   return (
     <section style={{ margin: 0 }}>
-      <header style={{ display: 'flex', gap: 24 }}>
+      {/* <header style={{ display: 'flex', gap: 24 }}>
         <Link to='/'>Home</Link>
         <Link to='/login'>두현's test</Link>
         <Link to={{ pathname: '/about' }}>About</Link>
@@ -42,7 +42,7 @@ export default function App() {
           Global modal at /about
         </button>
         <button onClick={e}>navigate to</button>
-      </header>
+      </header> */}
 
       <main>
         <Outlet />
