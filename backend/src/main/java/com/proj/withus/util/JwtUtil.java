@@ -54,12 +54,12 @@ public class JwtUtil {
         }
     }
 
-    public String extractMemberId(String jwtToken) {
+    public Long extractMemberId(String jwtToken) {
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(jwtToken)
                 .getBody();
 
-        return claims.get("memberId", String.class);
+        return claims.get("memberId", Long.class);
     }
 }
