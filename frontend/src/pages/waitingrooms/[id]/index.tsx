@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { VideoStream } from '@components/VideoStream';
 import { useLocation } from 'react-router-dom';
 import { useOpenvidu } from 'hooks/useOpenvidu';
-import { ControllBarContainer } from '@components/ControllBar/ControllBarContainer';
+import { ControllBarContainer } from '@components/Controllbar/ControllBarContainer';
 import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
 import ChatContainer from '@components/Chat/ChatContainer';
 export default function WaitingRoom() {
