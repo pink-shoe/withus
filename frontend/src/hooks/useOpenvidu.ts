@@ -1,79 +1,21 @@
 import { OpenVidu } from 'openvidu-browser';
-// import { getToken } from '../utils/api/openviduApi';
 import { getToken } from 'apis/openviduApi';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 export interface IUser {
   connectionId: string;
-  // audioActive: boolean;
-  // videoActive: boolean;
-  // screenShareActive: boolean;
-  // nickname: string;
   userId: number;
   streamManager?: any;
-  // type: string;
 }
-// const isAudioActive = (user: IUser) => {
-//   return user.audioActive;
-// };
-
-// const isVideoActive = (user: IUser) => {
-//   return user.videoActive;
-// };
-
-// const isScreenShareActive = (user: IUser) => {
-//   return user.screenShareActive;
-// };
 
 const getConnectionId = (user: IUser) => {
   return user.connectionId;
 };
 
-// const getNickname = (user: IUser) => {
-//   return user.nickname;
-// };
-
-// const getStreamManager = (user: IUser) => {
-//   return user.streamManager;
-// };
-
-// const isLocal = (user: IUser) => {
-//   return user.type === 'local';
-// };
-// const isRemote = (user: IUser) => {
-//   return !isLocal(user);
-// };
-// const setAudioActive = (user: IUser, isAudioActive: boolean) => {
-//   user.audioActive = isAudioActive;
-//   return user;
-// };
-// const setVideoActive = (user: IUser, isVideoActive: boolean) => {
-//   user.videoActive = isVideoActive;
-//   return user;
-// };
-
-// const setScreenShareActive = (user: IUser, isScreenShareActive: boolean) => {
-//   user.screenShareActive = isScreenShareActive;
-//   return user;
-// };
-// const setStreamManager = (user: IUser, streamManager: any) => {
-//   user.streamManager = streamManager;
-//   return user;
-// };
-
 const setConnectionId = (user: IUser, conecctionId: string) => {
   user.connectionId = conecctionId;
   return user;
 };
-// const setNickname = (user: IUser, nickname: string) => {
-//   user.nickname = nickname;
-//   return user;
-// };
-// const setType = (user: IUser, type: string) => {
-//   if (type === 'local' || type === 'remote') {
-//     user.type = type;
-//   }
-//   return user;
-// };
+
 export const useOpenvidu = (userId: number, gameRoomId: string) => {
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [publisher, setPublisher] = useState<any>();
@@ -117,11 +59,7 @@ export const useOpenvidu = (userId: number, gameRoomId: string) => {
     getToken(String(gameRoomId)).then((token) => {
       console.log(gameRoomId, token);
       session!
-        .connect(
-          token,
-          // { clientData: userId }
-          JSON.stringify({ userId })
-        )
+        .connect(token, JSON.stringify({ userId }))
         .then(async () => {
           await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
           const devices = await openVidu.getDevices();
@@ -179,15 +117,6 @@ export const useOpenvidu = (userId: number, gameRoomId: string) => {
     [publisher]
   );
 
-  // const sendSignalUserChanged = (session: any, data: any) => {
-  //   const signalOptions = {
-  //     data: JSON.stringify(data),
-  //     type: 'userChanged',
-  //   };
-  //   console.log(session);
-  //   session!.signal(signalOptions);
-  // };
-
   const onChangeUserName = useCallback(
     (nickname: string) => {
       setUserName(nickname!);
@@ -197,35 +126,76 @@ export const useOpenvidu = (userId: number, gameRoomId: string) => {
     [userName]
   );
 
+  const sendMessage = (message: string) => {
+    if (session && publisher && message) {
+      let msg = message.replace(/ +(?= )/g, '');
+      if (msg !== '' && msg !== ' ') {
+        {
+          session
+            .signal({
+              data: JSON.stringify({
+                message: message,
+                nickname: userName,
+                streamId: publisher.stream.streamId,
+              }),
+              type: 'chat',
+            })
+            .then(() => {
+              console.log('Message successfully sent');
+            })
+            .catch((err: any) => {
+              console.error(err);
+            });
+        }
+      }
+    }
+  };
+
+  const receiveMessage = useCallback(
+    (messageList: any[]) => {
+      if (session && publisher) {
+        let msgList = messageList;
+        session
+          .on('signal:chat', (e: any) => {
+            console.log(e.data);
+            console.log(e.from);
+            console.log(e.type);
+            // const data = JSON.parse(e.data);
+            // msgList.push({
+            //   connectionId: e.from.connectionId,
+            //   nickname: data.nickname,
+            //   message: data.message,
+            // });
+          })
+          .then(() => {
+            console.log('Message successfully received');
+          })
+          .catch((err: any) => {
+            console.error(err);
+          });
+        // onChangeMsgList(msgList);
+        return msgList;
+      }
+      // return messageList;
+    },
+    [publisher]
+  );
+
   const streamList = useMemo(
     () => [{ streamManager: publisher, userId, userName }, ...subscribers],
     [publisher, subscribers, userId, userName]
   );
 
   return {
+    session,
     publisher,
     streamList,
     onChangeCameraStatus,
     onChangeMicStatus,
     onChangeUserName,
+    receiveMessage,
+    sendMessage,
   };
 };
 
-export {
-  // isAudioActive,
-  // isLocal,
-  // isRemote,
-  // isScreenShareActive,
-  // isVideoActive,
-  getConnectionId,
-  // getNickname,
-  // getStreamManager,
-  getToken,
-  // setAudioActive,
-  setConnectionId,
-  // setNickname,
-  // setScreenShareActive,
-  // setStreamManager,
-  // setType,
-  // setVideoActive,
-};
+export { getConnectionId, getToken, setConnectionId };
