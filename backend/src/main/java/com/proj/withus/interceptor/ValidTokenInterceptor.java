@@ -1,5 +1,6 @@
 package com.proj.withus.interceptor;
 
+import com.proj.withus.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -15,9 +16,13 @@ public class ValidTokenInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object Handler) throws Exception {
 
         // Jwt 인증 확인
-        JwtUtil
-
-
+        JwtUtil jwtUtil = new JwtUtil();
+        String jwt = jwtUtil.generateJwtToken(12345678L);
+        System.out.println("jwt: " + jwt);
+        boolean jwt_validation = jwtUtil.validateJwtToken(jwt);
+        System.out.println("isValid: " + jwt_validation);
+        String id = jwtUtil.extractMemberId(jwt);
+        System.out.println("member id: " + id);
 
 
 //        String path = request.getRequestURI();

@@ -1,12 +1,17 @@
 package com.proj.withus.util;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JwtUtil {
 
-    private final String SECRET_KEY = "withussecretkey";
+    private final String SECRET_KEY = "withussecretkeywithussecretkeywithussecretkeywithussecretkey";
     private final long EXPIRATION_TIME = 9000000; // 9,000,000ms == 150분
 
 //    public String getMemberIdForJwt(String email) {} // 이건 MemberRepository에 담는 것이 의미상 맞을 듯
@@ -14,15 +19,18 @@ public class JwtUtil {
     public String generateJwtToken(Long memberId) { // String으로 변환해서 받아야하는지 확인 필요
         // 현재 시간 기준으로 토큰 만료 시간 설정
         Date expirationDate = new Date(System.currentTimeMillis() + EXPIRATION_TIME);
+        Date now = new Date();
 
-        // JWT token 생성
-        JwtBuilder builder = Jwts.builder()
-                .setId(memberId.toString())
-                .setIssuedAt(new Date())
+        // payload에 저장할 정보 설정
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("memberId", memberId.toString());
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
                 .setExpiration(expirationDate)
-                .signWith(SignatureAlgorithm.ES256, SECRET_KEY);
-
-        return builder.compact(); // 최종적인 JWT 토큰을 문자열로 return;
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .compact();
     }
 
     public boolean validateJwtToken(String jwtToken) {

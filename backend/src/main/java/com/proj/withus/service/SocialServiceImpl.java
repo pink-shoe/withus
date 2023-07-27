@@ -143,7 +143,8 @@ public class SocialServiceImpl implements SocialService {
             kakaoMember.setLoginType(kakaoUserInfo.getLoginType());
 
             memberRepository.save(kakaoMember);
-            log.info(kakaoUserInfo.toString());
+            Long id = memberRepository.findByEmail(kakaoMember.getEmail()).getId();
+
 
         } catch (IOException e) {
             e.printStackTrace();
