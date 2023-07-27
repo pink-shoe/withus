@@ -49,4 +49,13 @@ public class JwtUtil {
             return false;
         }
     }
+
+    public String extractMemberId(String jwtToken) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(jwtToken)
+                .getBody();
+
+        return claims.get("memberId", String.class);
+    }
 }

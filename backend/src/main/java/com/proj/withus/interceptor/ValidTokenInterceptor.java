@@ -14,6 +14,12 @@ public class ValidTokenInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object Handler) throws Exception {
 
+        // Jwt 인증 확인
+        JwtUtil
+
+
+
+
 //        String path = request.getRequestURI();
 //        System.out.println("URL 요청 처리 // : " + path);
 
