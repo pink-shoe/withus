@@ -6,5 +6,5 @@ export default function Id() {
   const { id } = useParams('/posts/:id');
   const match = useMatch('/posts/:id');
 
-  return <h1>Id</h1>;
+  return <h1>Id 이것도 나옴?</h1>;
 }

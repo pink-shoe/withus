@@ -1,10 +1,11 @@
 import React from 'react';
 import Input from '../common/Input';
 import Button from '../common/Button';
-import Container from '@components/common/Container';
+import SmallContainer from '@components/common/SmallContainer';
 import Kakaologin from './KakaoLogin';
 import Naverlogin from './NaverLogin';
 import GoogleSocialLogin from './GoogleSocialLogin';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 interface GuestLoginProps {
   email: string;
@@ -21,18 +22,10 @@ function SocialLogin({
   onEmailPasswordChange,
   onSocialLoginClick,
 }: GuestLoginProps) {
-  const handleGoogleLoginSuccess = (response: any) => {
-    // Handle successful login here
-    console.log('Logged in with Google:', response);
-  };
-
-  const handleGoogleLoginFailure = (error: any) => {
-    // Handle login failure here
-    console.error('Google Login Error:', error);
-  };
+  const GOOGLE_REST_API_KEY = import.meta.env.VITE_GoogleClient_ID;
 
   return (
-    <Container>
+    <SmallContainer>
       <Input
         label='이메일'
         type='email'
@@ -42,19 +35,19 @@ function SocialLogin({
       />
       <Input
         label='비밀 번호'
-        type='text'
+        type='password'
         value={emailPassword}
-        placeholder='placeholder test'
+        placeholder='비밀번호 입력'
         onChange={onEmailPasswordChange}
       />
       <Button onClick={onSocialLoginClick}>로그인</Button>
       <Kakaologin />
       <Naverlogin />
-      <GoogleSocialLogin
-        onSuccess={handleGoogleLoginSuccess}
-        onFailure={handleGoogleLoginFailure}
-      />
-    </Container>
+      <GoogleOAuthProvider clientId={`${GOOGLE_REST_API_KEY}`}>
+        <GoogleSocialLogin />
+      </GoogleOAuthProvider>
+      ;
+    </SmallContainer>
   );
 }
 

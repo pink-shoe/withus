@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom';
 import { Modals } from '@generouted/react-router';
 
 import { Link, useModals, useNavigate, useParams } from '../router';
+import Page404 from './Page404';
 
 export const Catch = () => {
   return <div>Something went wrong... Caught at _app error boundary</div>;
@@ -33,6 +34,9 @@ export default function App() {
         <Link to='/posts/:id' params={{ id: 'id' }}>
           Posts by id
         </Link>
+        <Link to='/kakao'> kakao </Link>
+        <Link to='/mypage'> mypage </Link>
+        <Link to='/Page404'> Page404</Link>
         <button onClick={() => modals.open('/modal')}>Global modal at current route</button>
         <button onClick={() => modals.open('/modal', { at: '/about' })}>
           Global modal at /about

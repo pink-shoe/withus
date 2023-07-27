@@ -53,9 +53,10 @@ export default function Carousel({
           {slides.map((_, i) => (
             <div
               key={i}
-              className={`transition-all w-3 h-3 bg-white rounded-full${
+              className={`transition-all w-3 h-3 rounded-full ${
                 curr === i ? 'p-2' : 'bg-opacity-50'
               }`}
+              style={{ backgroundColor: curr === i ? 'black' : 'white' }} // 현재 이미지의 번호에만 색상 적용
             />
           ))}
         </div>

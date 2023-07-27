@@ -1,34 +1,24 @@
-import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
+import { GoogleLogin } from '@react-oauth/google';
+import { useNavigate } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
 
-interface GoogleLoginProps {
-  onSuccess: (response: GoogleLoginResponse | GoogleLoginResponseOffline) => void;
-  onFailure: (error: any) => void;
-}
-
-function GoogleSocialLogin({ onSuccess, onFailure }: GoogleLoginProps) {
-  // 'YOUR_GOOGLE_CLIENT_ID' 는 Google Client id로 변경
-  const googleClientId = 'YOUR_GOOGLE_CLIENT_ID';
-
-  function handleGoogleLoginSuccess(response: GoogleLoginResponse | GoogleLoginResponseOffline) {
-    console.log('Google Login Success:', response);
-    onSuccess(response);
-  }
-
-  function handleGoogleLoginFailure(error: any) {
-    console.error('Google Login Error:', error);
-    onFailure(error);
-  }
+export default function GoogleSocialLogin() {
+  const navigate = useNavigate();
 
   return (
     <GoogleLogin
-      className='flex justify-center w-48 h-auto'
-      clientId={googleClientId}
-      buttonText='Login with Google'
-      onSuccess={handleGoogleLoginSuccess}
-      onFailure={handleGoogleLoginFailure}
-      cookiePolicy={'single_host_origin'}
+      onSuccess={(credentialResponse) => {
+        const credential: string = credentialResponse.credential!;
+        console.log(jwtDecode(credential));
+
+        // credentail에서 받은 데이터 서버로 넘겨서 로그인 확인 하고
+        //
+
+        navigate('/');
+      }}
+      onError={() => {
+        console.log('Login Failed');
+      }}
     />
   );
 }
-
-export default GoogleSocialLogin;
