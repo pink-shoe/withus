@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import com.proj.withus.domain.Member;
 import com.proj.withus.domain.dto.SocialMemberInfo;
 import com.proj.withus.repository.MemberRepository;
+import com.proj.withus.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ public class SocialServiceImpl implements SocialService {
 
 //    private final MemberServiceImpl memberService;
     private final MemberRepository memberRepository;
+    private JwtUtil jwtUtil;
 
     @Override
     public String getKakaoAccessToken(String code) {
@@ -96,9 +98,10 @@ public class SocialServiceImpl implements SocialService {
     }
 
     @Override
-    public SocialMemberInfo getKakaoMemberInfo(String token) {
+    public Long getKakaoMemberInfo(String token) {
         String reqURL = "https://kapi.kakao.com/v2/user/me";
-        SocialMemberInfo kakaoUserInfo = new SocialMemberInfo();
+        SocialMemberInfo kakaoMemberInfo = new SocialMemberInfo();
+        Long memberId = -1L;
 
         //access_token을 이용하여 사용자 정보 조회
         try {
@@ -131,26 +134,25 @@ public class SocialServiceImpl implements SocialService {
 
             //dto에 저장하기
             Long kakaoId = element.getAsJsonObject().get("id").getAsLong(); // @Id 태그 때문에 직접 id값을 넣을 수 없음
-//            kakaoUserInfo.setId(element.getAsJsonObject().get("id").getAsLong());
-            kakaoUserInfo.setEmail(kakaoAccount.getAsJsonObject().get("email").getAsString());
-            kakaoUserInfo.setNickname(profile.getAsJsonObject().get("nickname").getAsString());
-            kakaoUserInfo.setLoginType("kakao");
+//            kakaoMemberInfo.setId(element.getAsJsonObject().get("id").getAsLong());
+            kakaoMemberInfo.setEmail(kakaoAccount.getAsJsonObject().get("email").getAsString());
+            kakaoMemberInfo.setNickname(profile.getAsJsonObject().get("nickname").getAsString());
+            kakaoMemberInfo.setLoginType("kakao");
 
             Member kakaoMember = new Member();
-//            kakaoMember.setId(kakaoUserInfo.getId());
-            kakaoMember.setEmail(kakaoUserInfo.getEmail());
-            kakaoMember.setNickname(kakaoUserInfo.getNickname());
-            kakaoMember.setLoginType(kakaoUserInfo.getLoginType());
+//            kakaoMember.setId(kakaoMemberInfo.getId());
+            kakaoMember.setEmail(kakaoMemberInfo.getEmail());
+            kakaoMember.setNickname(kakaoMemberInfo.getNickname());
+            kakaoMember.setLoginType(kakaoMemberInfo.getLoginType());
 
             memberRepository.save(kakaoMember);
-            Long id = memberRepository.findByEmail(kakaoMember.getEmail()).getId();
-
+            memberId = memberRepository.findByEmail(kakaoMember.getEmail()).getId();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return kakaoUserInfo;
+        return memberId;
     }
 
     @Override
@@ -213,9 +215,15 @@ public class SocialServiceImpl implements SocialService {
         return response.getBody().toString(); // kakao return값과 다르긴 한데, 이 return값을 사용하진 않을 것 같음
     }
 
+    @Override
+    public void joinMember(Member member) {
+        memberRepository.save(member);
+    }
+
     // email에 해당하는 memberId(pk)를 반환
     @Override
     public Long getMemberIdForJwt(String email) {
         return memberRepository.findByEmail(email).getId();
     }
+
 }
