@@ -5,6 +5,7 @@ import { faPenToSquare, faFloppyDisk } from '@fortawesome/free-regular-svg-icons
 export let localUser: IUser;
 
 interface IParticiPantsPresenterProps {
+  type: 'WAIT' | 'GAME';
   streamList: IStreamList[];
   userId: number;
   userName: string;
@@ -20,6 +21,7 @@ interface IStreamList {
   userName: string;
 }
 export const ParticipantsPresenter: FC<IParticiPantsPresenterProps> = ({
+  type,
   streamList,
   userId,
   userName,
@@ -34,7 +36,7 @@ export const ParticipantsPresenter: FC<IParticiPantsPresenterProps> = ({
       <div className='bg-[#112364] p-3 text-white whitespace-nowrap font-bold text-xl'>
         현재 플레이어({streamList.length})
       </div>
-      <div className='bg-white h-full w-full text-justify'>
+      <div className='bg-white w-full text-justify'>
         {streamList.map((stream, idx) => {
           return (
             <div
@@ -50,9 +52,13 @@ export const ParticipantsPresenter: FC<IParticiPantsPresenterProps> = ({
                       value={userName}
                       onChange={onChangeUserName}
                     />
-                    <button onClick={saveUserName}>
-                      <FontAwesomeIcon icon={faFloppyDisk} />
-                    </button>
+                    {type === 'WAIT' ? (
+                      <button onClick={saveUserName}>
+                        <FontAwesomeIcon icon={faFloppyDisk} />
+                      </button>
+                    ) : (
+                      <div></div>
+                    )}
                   </>
                 ) : (
                   <>
@@ -63,10 +69,13 @@ export const ParticipantsPresenter: FC<IParticiPantsPresenterProps> = ({
                       onChange={onChangeUserName}
                       disabled
                     />
-
-                    <button onClick={editUserName}>
-                      <FontAwesomeIcon icon={faPenToSquare} />
-                    </button>
+                    {type === 'WAIT' ? (
+                      <button onClick={editUserName}>
+                        <FontAwesomeIcon icon={faPenToSquare} />
+                      </button>
+                    ) : (
+                      <div></div>
+                    )}
                   </>
                 )
               ) : (

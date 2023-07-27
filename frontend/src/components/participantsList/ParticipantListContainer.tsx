@@ -3,6 +3,7 @@ import { ParticipantsPresenter } from './ParticipantListPresenter';
 
 // export let localUser: IUser;
 interface IParticipantsContainerProps {
+  type: 'WAIT' | 'GAME';
   userId: number;
   userName: string;
   onChangeUserName: (username: string) => void;
@@ -12,6 +13,7 @@ interface IParticipantsContainerProps {
   onChangeIsEditUserName: (status: boolean) => void;
 }
 export default function ParticipantsContainer({
+  type,
   userId,
   userName: uname,
   publisher,
@@ -44,6 +46,7 @@ export default function ParticipantsContainer({
 
   return (
     <ParticipantsPresenter
+      type={type}
       readyStatus={readyStatus}
       streamList={streamList}
       userId={userId}
