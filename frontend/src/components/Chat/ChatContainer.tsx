@@ -28,23 +28,22 @@ export default function ChatContainer({
 
   const receiveMessage = () => {
     if (session && publisher) {
-      let msgList = messageList;
       publisher.stream.session.on('signal:chat', (e: any) => {
-        console.log('test', e);
         const data = JSON.parse(e.data);
-        msgList.push({
-          connectionId: e.from.connectionId,
-          nickname: data.nickname,
-          message: data.message,
-        });
-        console.log('test', msgList);
+        setMessageList((msgList) => [
+          ...msgList,
+          { connectionId: e.from.connectionId, nickname: data.nickname, message: data.message },
+        ]);
       });
-      setMessageList(msgList);
     }
   };
   useEffect(() => {
     session && publisher && receiveMessage();
   }, [session, publisher]);
+
+  useEffect(() => {
+    console.log(messageList);
+  }, [receiveMessage]);
 
   return (
     <ChatPresenter
