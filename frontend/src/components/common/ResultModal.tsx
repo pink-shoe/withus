@@ -2,6 +2,7 @@
 // 현재 진행 중
 import { Fragment, useState } from 'react';
 import Modal from './Modal';
+import picture1 from '@src/assets/loopy2.jpg'
 
 export default function ResultModal() {
   const [modalStatus, setModalStatus] = useState(false);
@@ -22,8 +23,13 @@ export default function ResultModal() {
         <div className='text-center text-indigo-900 font-bold text-3xl mb-10'>🏆게임결과🏆</div>
         <div className='overflow-y-auto h-96'>
           <Fragment>
-            <span className='font-semibold text-xl flex items-center'>ROUND 1</span>
-            <div>
+            <div className='flex space-x-2'>
+              <span>
+                <span className='font-semibold text-xl'>ROUND 1</span>
+                <div className='flex justify-center align-bottom'>유사도</div>
+              </span>
+              <div className='w-40 h-32 bg-slate-500 rounded-lg'></div>
+              <img className='w-40 h-32 rounded-lg display: inline' src={picture1} />
             </div>
           </Fragment>
         </div>
