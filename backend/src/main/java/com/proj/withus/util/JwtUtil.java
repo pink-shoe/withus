@@ -4,17 +4,20 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class JwtUtil {
 
     private final String SECRET_KEY = "withussecretkeywithussecretkeywithussecretkeywithussecretkey";
     private final long EXPIRATION_TIME = 9000000; // 9,000,000ms == 150분
 
     public String generateJwtToken(Long memberId) { // String으로 변환해서 받아야하는지 확인 필요
+
         // 현재 시간 기준으로 토큰 만료 시간 설정
         Date expirationDate = new Date(System.currentTimeMillis() + EXPIRATION_TIME);
         Date now = new Date();
@@ -23,12 +26,15 @@ public class JwtUtil {
         Map<String, Object> claims = new HashMap<>();
         claims.put("memberId", memberId.toString());
 
-        return Jwts.builder()
+        String tempJwtToken = Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
+        System.out.println(tempJwtToken);
+
+        return tempJwtToken;
     }
 
     public boolean validateJwtToken(String jwtToken) {
@@ -55,11 +61,14 @@ public class JwtUtil {
     }
 
     public Long extractMemberId(String jwtToken) {
+        System.out.println("jwtToken: " + jwtToken); //
+        jwtToken = jwtToken.substring(7);
+        System.out.println("jwtToken: " + jwtToken); //
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(jwtToken)
                 .getBody();
 
-        return claims.get("memberId", Long.class);
+        return Long.parseLong(claims.get("memberId", String.class));
     }
 }
