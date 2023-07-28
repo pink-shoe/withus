@@ -48,7 +48,7 @@ export default function GameRoom() {
 
     try {
       const div = divRef.current;
-      const canvas = await html2canvas(div);
+      const canvas = await html2canvas(div, { scale: 1 });
       canvas.toBlob((blob) => {
         if (blob !== null) {
           saveAs(blob, 'result.png');
@@ -103,7 +103,7 @@ export default function GameRoom() {
             onChangeReadyStatus={onChangeReadyStatus}
           />
         </div>
-        {/* <button onClick={handleDownload}>다운로드</button> */}
+        <button onClick={handleDownload}>다운로드</button>
       </div>
       <ChatContainer
         chatStatus={chatStatus}
