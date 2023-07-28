@@ -6,6 +6,7 @@ import com.proj.withus.repository.AlbumRepository;
 import com.proj.withus.repository.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,17 +21,17 @@ public class AlbumService {
 
     public Long getAlbum(Long memberId) {
         Album find = albumRepository.findAlbumByMemberId(memberId);
-
         if (find != null) {
             return find.getId();
         }
         return null;
     }
 
-    public List<Image> getImages(Long memberId) {
-        return imageRepository.findImagesByAlbumId(memberId);
+    public List<Image> getImages(Long albumId) {
+        return imageRepository.findImagesByAlbumId(albumId);
     }
 
+    @Transactional
     public Image deleteImage(Long imgId) {
         imageRepository.deleteImageById(imgId);
 

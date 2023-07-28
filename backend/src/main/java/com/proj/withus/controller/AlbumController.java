@@ -28,7 +28,6 @@ public class AlbumController {
         Long albumId = albumService.getAlbum(memberId);
         if (albumId != null) {
             List<Image> albums = albumService.getImages(albumId);
-
             return ResponseEntity.ok(albums);
         }
         return new ResponseEntity<>("앨범이 존재하지 않음", HttpStatus.BAD_REQUEST);
@@ -37,7 +36,7 @@ public class AlbumController {
     @DeleteMapping("/{img_id}")
     public ResponseEntity<?> deleteImage(@PathVariable("img_id") Long imgId, @RequestHeader("Authorization") String token) {
         // token
-        Image deleted = albumService.deleteImage(imgId);
+        Image deleted = albumService.deleteImage((Long) imgId);
 
         if (deleted == null) {
             return new ResponseEntity(HttpStatus.OK);
