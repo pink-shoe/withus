@@ -18,6 +18,7 @@ function KakaoRedirection() {
         const ACCESS_TOKEN = r.data.accessToken;
         // 토큰을 받아서 처리하는 과정을 쓴다.
         // 로컬 스트로지에 저장하는게 보안상 취약하다하니 테스트만 고고.
+
         localStorage.setItem('token', ACCESS_TOKEN); // 토큰도 저장
         localStorage.setItem('name', r.data.user_name); // 이름도 저장.
 

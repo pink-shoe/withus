@@ -1,7 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import generouted from '@generouted/react-router/plugin';
+<<<<<<< HEAD
 
+=======
+>>>>>>> f4332943ded6777b22b81f801dd0bea070b2506a
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
