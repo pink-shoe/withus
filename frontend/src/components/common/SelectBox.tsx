@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 
 // chooseSetting은 SettingModal의 chooseMode와 chooseRound에 해당
-interface iSelectBoxProps {
+interface ISelectBoxProps {
   chooseSetting: any;
   options: {
     value: string | number;
@@ -10,7 +10,7 @@ interface iSelectBoxProps {
   }[];
 };
 
-export default function SelectBox({ chooseSetting, options }: iSelectBoxProps) {
+export default function SelectBox({ chooseSetting, options }: ISelectBoxProps) {
   const [setting, setSetting] = useState('');
 
   // 선택한 옵션으로 세팅이 변경되는 기능

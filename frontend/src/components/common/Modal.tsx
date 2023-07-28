@@ -4,13 +4,13 @@ import React, { Fragment } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
-interface iModalProps {
+interface IModalProps {
   openModal: boolean;
   closeModal: React.MouseEventHandler<SVGSVGElement>;
   children: React.ReactNode;
 };
 
-export default function Modal({ openModal, closeModal, children }: iModalProps) {
+export default function Modal({ openModal, closeModal, children }: IModalProps) {
   return (
     <div>
       {openModal ? (

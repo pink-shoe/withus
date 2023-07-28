@@ -8,7 +8,7 @@ import SelectBox from './SelectBox';
 import GameStartButton from './GameStartButton';
 import TextCopy from './TextCopy';
 
-interface iSettingModalProps {
+interface ISettingModalProps {
   isInviteAreaOpen: boolean;
   openModal: boolean;
   closeModal: React.MouseEventHandler<SVGSVGElement>;
@@ -20,7 +20,7 @@ export default function SettingModal({
   openModal,
   closeModal,
   children,
-}: iSettingModalProps) {
+}: ISettingModalProps) {
   const [mode, setMode] = useState('');
   const [round, setRound] = useState(0);
 
