@@ -2,6 +2,7 @@ package com.proj.withus.service;
 
 import com.proj.withus.domain.Album;
 import com.proj.withus.domain.Image;
+import com.proj.withus.domain.Member;
 import com.proj.withus.repository.AlbumRepository;
 import com.proj.withus.repository.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,28 @@ public class AlbumService {
     @Autowired
     private ImageRepository imageRepository;
 
+    public void createAlbum(Member member) {
+        if (albumRepository.findAlbumByMemberId(member.getId()) == null) {
+            Album album = new Album();
+            album.setMember(member);
+            albumRepository.save(album);
+        }
+//        return albumRepository.save(album).getId();
+    }
+
     public Long getAlbum(Long memberId) {
         Album find = albumRepository.findAlbumByMemberId(memberId);
         if (find != null) {
             return find.getId();
         }
         return null;
+    }
+
+    @Transactional
+    public Album deleteAlbum(Long memberId) {
+        albumRepository.deleteByMemberId(memberId);
+
+        return albumRepository.findAlbumByMemberId(memberId);
     }
 
     public List<Image> getImages(Long albumId) {

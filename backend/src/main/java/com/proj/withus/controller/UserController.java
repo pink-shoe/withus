@@ -1,5 +1,7 @@
 package com.proj.withus.controller;
 
+import com.proj.withus.domain.Album;
+import com.proj.withus.service.AlbumService;
 import com.proj.withus.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AlbumService albumService;
 
     private JwtUtil jwtUtil = new JwtUtil();
 
@@ -54,11 +59,17 @@ public class UserController {
     @DeleteMapping
     private ResponseEntity deleteMemberInfo(@RequestHeader("Authorization") String jwtToken) {
         Long memberId = jwtUtil.extractMemberId(jwtToken);
-        Member deleted = userService.deleteMember(memberId);
 
+        Album deletedAlbum = albumService.deleteAlbum(memberId);
+        if (deletedAlbum != null) {
+            return new ResponseEntity("앨범 삭제 안됨", HttpStatus.BAD_REQUEST);
+        }
+
+        Member deleted = userService.deleteMember(memberId);
         if (deleted != null) {
             return new ResponseEntity<>("유저 탈퇴 안됨", HttpStatus.BAD_REQUEST);
         }
+
         return new ResponseEntity(HttpStatus.OK);
     }
 }
