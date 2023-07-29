@@ -35,6 +35,6 @@ public class UserService {
 
     public Member deleteMember(Long id) {
         memberRepository.deleteById(id);
-        return memberRepository.findById(id).get();
+        return memberRepository.findById(id).orElse(null);
     }
 }

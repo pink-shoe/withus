@@ -2,6 +2,7 @@ package com.proj.withus.controller;
 
 import com.proj.withus.domain.Image;
 import com.proj.withus.service.AlbumService;
+import com.proj.withus.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,11 @@ public class AlbumController {
     @Autowired
     private AlbumService albumService;
 
+    private final JwtUtil jwtUtil = new JwtUtil();
+
     @GetMapping
-    public ResponseEntity<?> showAlbums(@RequestHeader("Authorization") String token) {
-        // token 변환
-        Long memberId = 1L;
+    public ResponseEntity<?> showAlbums(@RequestHeader("Authorization") String jwtToken) {
+        Long memberId = jwtUtil.extractMemberId(jwtToken);
 
         Long albumId = albumService.getAlbum(memberId);
         if (albumId != null) {
@@ -34,8 +36,9 @@ public class AlbumController {
     }
 
     @DeleteMapping("/{img_id}")
-    public ResponseEntity<?> deleteImage(@PathVariable("img_id") Long imgId, @RequestHeader("Authorization") String token) {
-        // token
+    public ResponseEntity<?> deleteImage(@PathVariable("img_id") Long imgId, @RequestHeader("Authorization") String jwtToken) {
+//        Long memberId = jwtUtil.extractMemberId(jwtToken);
+
         Image deleted = albumService.deleteImage((Long) imgId);
 
         if (deleted == null) {

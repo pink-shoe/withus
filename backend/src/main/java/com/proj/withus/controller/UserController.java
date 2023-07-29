@@ -1,5 +1,6 @@
 package com.proj.withus.controller;
 
+import com.proj.withus.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +27,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    private JwtUtil jwtUtil = new JwtUtil();
+
     @GetMapping
-    private ResponseEntity<?> getMemberInfo(@RequestHeader("Authorization") String token) {
-        // jwt token -> access token, id
-        Long id = 2L;
-        Member memberInfo = userService.getMemberInfo(id);
+    private ResponseEntity<?> getMemberInfo(@RequestHeader("Authorization") String jwtToken) {
+        Long memberId = jwtUtil.extractMemberId(jwtToken);
+        Member memberInfo = userService.getMemberInfo(memberId);
 
         if (memberInfo == null) {
             return new ResponseEntity<>("유저 정보 찾지 못함", HttpStatus.BAD_REQUEST);
@@ -39,11 +41,9 @@ public class UserController {
     }
 
     @PatchMapping
-    private ResponseEntity<?> updateMemberInfo(@RequestHeader("Authorization") String token, @RequestBody() String nickname) {
-        // jwt token -> access token, id
-        Long id = 2L;
-
-        Member updatedInfo = userService.updateMember(id, nickname);
+    private ResponseEntity<?> updateMemberInfo(@RequestHeader("Authorization") String jwtToken, @RequestBody String nickname) {
+        Long memberId = jwtUtil.extractMemberId(jwtToken);
+        Member updatedInfo = userService.updateMember(memberId, nickname);
 
         if (updatedInfo == null) {
             return new ResponseEntity<>("유저 정보 찾을 수 없음", HttpStatus.BAD_REQUEST);
@@ -52,10 +52,9 @@ public class UserController {
     }
 
     @DeleteMapping
-    private ResponseEntity deleteMemberInfo(@RequestHeader("Authorization") String token) {
-        // jwt token -> access token, id
-        Long id = 2L;
-        Member deleted = userService.deleteMember(id);
+    private ResponseEntity deleteMemberInfo(@RequestHeader("Authorization") String jwtToken) {
+        Long memberId = jwtUtil.extractMemberId(jwtToken);
+        Member deleted = userService.deleteMember(memberId);
 
         if (deleted != null) {
             return new ResponseEntity<>("유저 탈퇴 안됨", HttpStatus.BAD_REQUEST);
