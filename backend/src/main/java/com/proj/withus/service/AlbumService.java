@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -29,6 +30,19 @@ public class AlbumService {
 
     public List<Image> getImages(Long albumId) {
         return imageRepository.findImagesByAlbumId(albumId);
+    }
+
+    public Image saveImage(Long memberId, String imgUrl) {
+        Long albumId = getAlbum(memberId);
+        if (albumId == null) {
+            return null;
+        }
+        Image image = new Image();
+        image.setImgUrl(imgUrl);
+        image.setAlbum(albumRepository.findAlbumByMemberId(memberId));
+        image.setSavedAt(LocalDateTime.now().toString());
+        Long imgId = imageRepository.save(image).getId();
+        return imageRepository.findImageById(imgId);
     }
 
     @Transactional

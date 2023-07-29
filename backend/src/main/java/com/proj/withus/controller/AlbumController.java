@@ -35,6 +35,24 @@ public class AlbumController {
         return new ResponseEntity<>("앨범이 존재하지 않음", HttpStatus.BAD_REQUEST);
     }
 
+    @PostMapping("/image/save")
+    public ResponseEntity<?> saveImages(@RequestHeader("Authorization") String jwtToken, @RequestBody() List<String> imageUrls) {
+        Long memberId = jwtUtil.extractMemberId(jwtToken);
+
+//        Long albumId = albumService.getAlbum(memberId);
+//        if (albumId == null) {
+//            return new ResponseEntity<>("앨범이 존재하지 않음", HttpStatus.BAD_REQUEST);
+//        }
+
+        for (String imgUrl : imageUrls) {
+            Image saved = albumService.saveImage(memberId, imgUrl);
+            if (saved == null) {
+                return new ResponseEntity<>("사진이 정상적으로 저장되지 않음", HttpStatus.BAD_REQUEST);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @DeleteMapping("/{img_id}")
     public ResponseEntity<?> deleteImage(@PathVariable("img_id") Long imgId, @RequestHeader("Authorization") String jwtToken) {
 //        Long memberId = jwtUtil.extractMemberId(jwtToken);
