@@ -44,7 +44,7 @@ public class SocialServiceImpl implements SocialService {
 
     @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
     private String redirectUri;
-
+gf
 //    private final MemberServiceImpl memberService;
     private final MemberRepository memberRepository;
     private JwtUtil jwtUtil;

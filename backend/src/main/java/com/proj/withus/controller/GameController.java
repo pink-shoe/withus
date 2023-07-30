@@ -3,6 +3,7 @@ package com.proj.withus.controller;
 import com.proj.withus.domain.Player;
 import com.proj.withus.domain.Room;
 import com.proj.withus.domain.dto.CaptureDto;
+import com.proj.withus.domain.dto.GameResultDto;
 import com.proj.withus.domain.dto.RoomPlayerDto;
 import com.proj.withus.service.GameService;
 import com.proj.withus.util.JwtUtil;
@@ -53,5 +54,14 @@ public class GameController {
             return new ResponseEntity<>("AI 서버로 요청이 전달되지 않음", HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(captureDto.getCurrentRound() + 1);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getGameResult() {
+        GameResultDto gameResult = gameService.getGameResult();
+        if (gameResult == null) {
+            return new ResponseEntity<>("AI 서버로부터 결과 전달 안됨", HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(gameResult);
     }
 }

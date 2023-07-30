@@ -3,6 +3,7 @@ package com.proj.withus.service;
 import com.proj.withus.domain.Player;
 import com.proj.withus.domain.Room;
 import com.proj.withus.domain.dto.CaptureDto;
+import com.proj.withus.domain.dto.GameResultDto;
 import com.proj.withus.repository.PlayerRepository;
 import com.proj.withus.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
@@ -58,5 +59,10 @@ public class GameServiceImpl implements GameService {
         );
 
         return responseEntity.getStatusCode().is2xxSuccessful();
+    }
+
+    @Override
+    public GameResultDto getGameResult() {
+        return null;
     }
 }
