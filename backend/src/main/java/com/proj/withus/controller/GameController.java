@@ -2,6 +2,7 @@ package com.proj.withus.controller;
 
 import com.proj.withus.domain.Player;
 import com.proj.withus.domain.Room;
+import com.proj.withus.domain.dto.CaptureDto;
 import com.proj.withus.domain.dto.RoomPlayerDto;
 import com.proj.withus.service.GameService;
 import com.proj.withus.util.JwtUtil;
@@ -46,5 +47,11 @@ public class GameController {
         return ResponseEntity.ok(gameInfo);
     }
 
-
+    @PostMapping("/image")
+    public ResponseEntity<?> getCaptureImage(@RequestHeader("Authorization") String jwtToken, @RequestBody CaptureDto captureDto) {
+        if (!gameService.sendCaptureInfo(captureDto)) {
+            return new ResponseEntity<>("AI 서버로 요청이 전달되지 않음", HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(captureDto.getCurrentRound() + 1);
+    }
 }
