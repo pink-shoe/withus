@@ -1,5 +1,6 @@
 package com.proj.withus.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,7 @@ public class Room {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @JsonIgnore
     private Member member;
 
     private int type;
@@ -32,13 +34,16 @@ public class Room {
     private int time;
 
     @OneToMany(mappedBy = "room")
+    @JsonIgnore
     private List<GameResult> gameResults = new ArrayList<>();
 
     @OneToMany(mappedBy = "room")
+    @JsonIgnore
     private List<Player> players = new ArrayList<>();
 
     @OneToOne(mappedBy = "room", fetch = FetchType.LAZY)
     @JoinColumn(name = "gamelog_id")
+    @JsonIgnore
     private GameLog gameLog;
 
 }
