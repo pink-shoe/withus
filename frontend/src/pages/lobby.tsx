@@ -51,7 +51,7 @@ export default function Lobby() {
         <div className='flex flex-auto justify-center content-center'>
           <Fragment>
             <button onClick={openMakeModal} className='bg-red-600 hover:bg-red-800 me-5 aspect-square h-96 rounded-xl font-semibold text-2xl text-white'>방 만들기</button>
-            <SettingModal isInviteAreaOpen={false} openModal={makeRoomModal} closeModal={closeMakeModal}></SettingModal>
+            <SettingModal isUpdateModal={false} openModal={makeRoomModal} closeModal={closeMakeModal}></SettingModal>
           </Fragment>
           <Fragment>
             <button onClick={openEnterModal} className='bg-green-600 hover:bg-green-700 ms-5 aspect-square h-96 rounded-xl font-semibold text-2xl text-white'>참여하기</button>

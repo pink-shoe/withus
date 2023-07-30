@@ -9,14 +9,14 @@ import GameStartButton from './GameStartButton';
 import TextCopy from './TextCopy';
 
 interface ISettingModalProps {
-  isInviteAreaOpen: boolean;
+  isUpdateModal: boolean;
   openModal: boolean;
   closeModal: React.MouseEventHandler<SVGSVGElement>;
   children?: React.ReactNode;
 };
 
 export default function SettingModal({
-  isInviteAreaOpen,
+  isUpdateModal,
   openModal,
   closeModal,
   children,
@@ -28,10 +28,10 @@ export default function SettingModal({
   const [url, setUrl] = useState('');
 
   // 옵션 창을 누르면 선택한 옵션이 mode와 round에 각각 넣어짐
-  const chooseMode = (mode: string) => {
+  const selectMode = (mode: string) => {
     setMode(mode);
   };
-  const chooseRound = (round: number) => {
+  const selectRound = (round: number) => {
     setRound(round);
   };
 
@@ -72,18 +72,18 @@ export default function SettingModal({
           <p className='text-indigo-900 font-bold text-3xl mb-10 text-center'>방 설정</p>
           <div className='flex my-7'>
             <span className='me-5 font-semibold text-xl flex items-center'>게임모드</span>
-            <SelectBox chooseSetting={chooseMode} options={MOPTIONS}></SelectBox>
+            <SelectBox selectSetting={selectMode} options={MOPTIONS}></SelectBox>
           </div>
           <div className='flex mb-7'>
             <span className='me-5 font-semibold text-xl flex items-center'>게임진행</span>
-            <SelectBox chooseSetting={chooseRound} options={ROPTIONS}></SelectBox>
+            <SelectBox selectSetting={selectRound} options={ROPTIONS}></SelectBox>
             <span className='me-5 font-semibold text-xl flex items-center ms-2'>판</span>
           </div>
           <div>{children}</div>
 
           {/* true일 때는 초대하기 부분이 나타나고 */}
           {/* false일 때는 초대하기 부분이 나타나지 않음 */}
-          {isInviteAreaOpen ? (
+          {isUpdateModal ? (
             <div className='flex mb-8'>
               <span className='me-5 font-semibold text-xl flex items-center'>초대하기</span>
               <div className='w-[19.5rem]'>
@@ -110,7 +110,7 @@ export default function SettingModal({
               </div>
             </div>
           ) : null}
-          <GameStartButton clickResult={handleSaveSetting} />
+          <GameStartButton onClickStartBtn={handleSaveSetting} />
         </Modal>
       </Fragment>
     </Fragment>
