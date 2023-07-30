@@ -58,10 +58,9 @@ public class GameController {
 
     @GetMapping
     public ResponseEntity<?> getGameResult() {
-        GameResultDto gameResult = gameService.getGameResult();
-        if (gameResult == null) {
+        if (!gameService.getGameResult()) {
             return new ResponseEntity<>("AI 서버로부터 결과 전달 안됨", HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(gameResult);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

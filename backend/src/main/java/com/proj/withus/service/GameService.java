@@ -13,5 +13,5 @@ public interface GameService {
     public List<Player> getPlayersInfo(Long roomId);
 
     public boolean sendCaptureInfo(CaptureDto captureDto);
-    public GameResultDto getGameResult();
+    public boolean getGameResult();
 }
