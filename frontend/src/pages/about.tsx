@@ -10,7 +10,7 @@ export default function About() {
   // 참여하기 버튼을 누르면 참여 코드를 입력할 수 있는 모달창이 뜸
   const openUpdateModal = () => {
     setUpdateModalStatus(true);
-  };
+  };s
   const closeUpdateModal = () => {
     setUpdateModalStatus(false);
   };

@@ -1,7 +1,6 @@
 // 방 설정과 초대하기를 포함한 모달창
 // true일 때는 초대하기가 나타나고
 // false일 때는 초대하기가 제외된 방 설정만 나타남
-// 기본은
 import React, { Fragment, useState } from 'react';
 import Modal from './Modal';
 import SelectBox from './SelectBox';
