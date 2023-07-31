@@ -4,7 +4,6 @@ import com.proj.withus.domain.Player;
 import com.proj.withus.domain.Room;
 import com.proj.withus.domain.Shape;
 import com.proj.withus.domain.dto.CaptureDto;
-import com.proj.withus.domain.dto.GameResultDto;
 import com.proj.withus.domain.dto.RoomPlayerDto;
 import com.proj.withus.domain.dto.TotalGameResultDto;
 import com.proj.withus.service.GameService;
@@ -71,7 +70,12 @@ public class GameController {
     }
 
     @GetMapping("/result/{room_id}")
-    public ResponseEntity<?> getGameTotalResult(@PathVariable("room_id") Long roomId) {
+    public ResponseEntity<?> getGameTotalResult(@PathVariable("room_id") Long roomId, @RequestHeader("Authorization") String jwtToken) {
+        Long memberId = jwtUtil.extractMemberId(jwtToken);
+        if (memberId == null) {
+            return new ResponseEntity<>("인증되지 않은 사용자", HttpStatus.BAD_REQUEST);
+        }
+
         List<TotalGameResultDto> totalGameResultDto = gameService.getTotalGameResult(roomId);
         if (totalGameResultDto == null) {
             return new ResponseEntity<>("전체 게임 결과를 가져오지 못함", HttpStatus.BAD_REQUEST);

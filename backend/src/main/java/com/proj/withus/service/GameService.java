@@ -1,11 +1,9 @@
 package com.proj.withus.service;
 
-import com.proj.withus.domain.GameResult;
 import com.proj.withus.domain.Player;
 import com.proj.withus.domain.Room;
 import com.proj.withus.domain.Shape;
 import com.proj.withus.domain.dto.CaptureDto;
-import com.proj.withus.domain.dto.GameResultDto;
 import com.proj.withus.domain.dto.TotalGameResultDto;
 
 import java.util.List;

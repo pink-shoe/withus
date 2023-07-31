@@ -5,7 +5,6 @@ import com.proj.withus.domain.Player;
 import com.proj.withus.domain.Room;
 import com.proj.withus.domain.Shape;
 import com.proj.withus.domain.dto.CaptureDto;
-import com.proj.withus.domain.dto.GameResultDto;
 import com.proj.withus.domain.dto.TotalGameResultDto;
 import com.proj.withus.repository.GameResultRepository;
 import com.proj.withus.repository.PlayerRepository;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 
@@ -101,12 +99,13 @@ public class GameServiceImpl implements GameService {
         gameResult.setCaptureUrl(response.getBody().get("captureUrl").toString());
         gameResult.setCorrect((Boolean) response.getBody().get("isCorrect"));
         gameResult.setCorrectRate((int) response.getBody().get("correctRate"));
-
+        gameResult.setShape(shapeRepository.findShapeById((Long) response.getBody().get("shapeId")));
         Long gameResultId = gameResultRepository.save(gameResult).getId();
 
         if (gameResultId == null) {
             return false;
         }
+
         return true;
     }
 
@@ -121,8 +120,10 @@ public class GameServiceImpl implements GameService {
         }
 
         for (GameResult result : gameResult) {
-            TotalGameResultDto totalGameResultDto = new TotalGameResultDto();
-            totalGameResultDto.setGameResult(result);
+            TotalGameResultDto totalGameResultDto = TotalGameResultDto.builder()
+                    .gameResult(result)
+                    .shape(shapeRepository.findShapeById(result.getShape().getId()))
+                    .build();
             totalGameResult.add(totalGameResultDto);
         }
 

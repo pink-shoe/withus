@@ -1,21 +1,17 @@
 package com.proj.withus.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Getter @Setter
 public class GameResult {
 
     @Id @GeneratedValue
-    @Column(name = "gameresult_id")
+    @Column(name = "gameResult_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -31,7 +27,7 @@ public class GameResult {
 
     private int correctRate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "shape_id")
     @JsonIgnore
     private Shape shape;

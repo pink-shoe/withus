@@ -1,7 +1,7 @@
 package com.proj.withus.domain.dto;
 
 import com.proj.withus.domain.GameResult;
-
+import com.proj.withus.domain.Shape;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 public class TotalGameResultDto {
 
 	private GameResult gameResult;
-	// shape
+	private Shape shape;
 
 }

@@ -12,4 +12,6 @@ public interface ShapeRepository extends JpaRepository<Shape, Long> {
 
 	@Query(value = "select * from shape order by rand() limit :round", nativeQuery = true)
 	List<Shape> findRandomShapes(@Param("round") int round);
+
+	Shape findShapeById(Long id);
 }
