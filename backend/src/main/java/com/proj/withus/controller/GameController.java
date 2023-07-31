@@ -5,6 +5,7 @@ import com.proj.withus.domain.Room;
 import com.proj.withus.domain.dto.CaptureDto;
 import com.proj.withus.domain.dto.GameResultDto;
 import com.proj.withus.domain.dto.RoomPlayerDto;
+import com.proj.withus.domain.dto.TotalGameResultDto;
 import com.proj.withus.service.GameService;
 import com.proj.withus.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -62,5 +63,14 @@ public class GameController {
             return new ResponseEntity<>("AI 서버로부터 결과 전달 안됨", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/result/{room_id}")
+    public ResponseEntity<?> getGameTotalResult(@PathVariable("room_id") Long roomId) {
+        List<TotalGameResultDto> totalGameResultDto = gameService.getTotalGameResult(roomId);
+        if (totalGameResultDto == null) {
+            return new ResponseEntity<>("전체 게임 결과를 가져오지 못함", HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(totalGameResultDto);
     }
 }

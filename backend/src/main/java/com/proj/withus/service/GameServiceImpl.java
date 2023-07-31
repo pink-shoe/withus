@@ -5,6 +5,7 @@ import com.proj.withus.domain.Player;
 import com.proj.withus.domain.Room;
 import com.proj.withus.domain.dto.CaptureDto;
 import com.proj.withus.domain.dto.GameResultDto;
+import com.proj.withus.domain.dto.TotalGameResultDto;
 import com.proj.withus.repository.GameResultRepository;
 import com.proj.withus.repository.PlayerRepository;
 import com.proj.withus.repository.RoomRepository;
@@ -21,6 +22,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -84,7 +87,7 @@ public class GameServiceImpl implements GameService {
 
         GameResult gameResult = new GameResult();
 
-        gameResult.setRoom(roomRepository.findByRoomId((Long) response.getBody().get("roomId")));
+        // gameResult.setRoom(roomRepository.findByRoomId((Long) response.getBody().get("roomId")));
         gameResult.setRound((int) response.getBody().get("currentRound"));
         gameResult.setCaptureUrl(response.getBody().get("captureUrl").toString());
         gameResult.setCorrect((Boolean) response.getBody().get("isCorrect"));
@@ -96,5 +99,24 @@ public class GameServiceImpl implements GameService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public List<TotalGameResultDto> getTotalGameResult(Long roomId) {
+        List<TotalGameResultDto> totalGameResult = new ArrayList<>();
+        List<GameResult> gameResult = gameResultRepository.findGameResultsByRoomId(roomId);
+
+        Room room = roomRepository.findRoomById(roomId);
+        if (gameResult.size() != room.getRound()) {
+            return null;
+        }
+
+        for (GameResult result : gameResult) {
+            TotalGameResultDto totalGameResultDto = new TotalGameResultDto();
+            totalGameResultDto.setGameResult(result);
+            totalGameResult.add(totalGameResultDto);
+        }
+
+        return totalGameResult;
     }
 }
