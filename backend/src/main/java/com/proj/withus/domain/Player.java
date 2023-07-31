@@ -28,5 +28,5 @@ public class Player {
 	@JoinColumn(name = "room_id")
 	private Room room;
 
-	private int teamType;
+//	private int teamType;
 }
