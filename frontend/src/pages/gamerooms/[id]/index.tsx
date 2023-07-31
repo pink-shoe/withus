@@ -21,7 +21,7 @@ export default function GameRoom() {
   const [userName, setUserName] = useState('name' + userId);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
   const [readyStatus, setReadyStatus] = useState<boolean>(false);
-  const [isEditUserName, setIsEditUserName] = useState<boolean>(false);
+  const [isUpdateUserName, setIsUpdateUserName] = useState<boolean>(false);
 
   const { session, publisher, streamList, onChangeCameraStatus, onChangeMicStatus, sendMessage } =
     useOpenvidu(userId!, roomId);
@@ -38,8 +38,8 @@ export default function GameRoom() {
     setUserName(userName);
   };
 
-  const onChangeIsEditUserName = (isEditUserName: boolean) => {
-    setIsEditUserName(!isEditUserName);
+  const onChangeIsUpdateUserName = (isUpdateUserName: boolean) => {
+    setIsUpdateUserName(!isUpdateUserName);
   };
   const divRef = useRef<HTMLDivElement>(null);
 
@@ -68,7 +68,7 @@ export default function GameRoom() {
         publisher={publisher}
         streamList={streamList}
         readyStatus={readyStatus}
-        onChangeIsEditUserName={onChangeIsEditUserName}
+        onChangeIsUpdateUserName={onChangeIsUpdateUserName}
         type={'GAME'}
       />
       {/* openvidu 화면 */}
@@ -86,7 +86,7 @@ export default function GameRoom() {
                     <VideoStream
                       streamManager={stream.streamManager}
                       name={stream.userName}
-                      me={stream.userId === userId}
+                      isMe={stream.userId === userId}
                     />
                   </div>
                 );
@@ -103,7 +103,7 @@ export default function GameRoom() {
             onChangeReadyStatus={onChangeReadyStatus}
           />
         </div>
-        <button onClick={handleDownload}>다운로드</button>
+        {/* <button onClick={handleDownload}>다운로드</button> */}
       </div>
       <ChatContainer
         chatStatus={chatStatus}

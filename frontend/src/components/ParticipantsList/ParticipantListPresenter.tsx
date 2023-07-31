@@ -11,8 +11,8 @@ interface IParticiPantsPresenterProps {
   userName: string;
   readyStatus: boolean;
   onChangeUserName: any;
-  isEditUserName: boolean;
-  editUserName: () => void;
+  isUpdateUserName: boolean;
+  updateUserName: () => void;
   saveUserName: () => void;
 }
 interface IStreamList {
@@ -27,8 +27,8 @@ export const ParticipantsPresenter: FC<IParticiPantsPresenterProps> = ({
   userName,
   readyStatus,
   onChangeUserName,
-  isEditUserName,
-  editUserName,
+  isUpdateUserName,
+  updateUserName,
   saveUserName,
 }) => {
   return (
@@ -44,7 +44,7 @@ export const ParticipantsPresenter: FC<IParticiPantsPresenterProps> = ({
               className='flex justify-between items-center w-full text-justify border-bottom border-b-2 p-3'
             >
               {userId === stream.userId ? (
-                isEditUserName ? (
+                isUpdateUserName ? (
                   <>
                     <input
                       className='w-full'
@@ -70,7 +70,7 @@ export const ParticipantsPresenter: FC<IParticiPantsPresenterProps> = ({
                       disabled
                     />
                     {type === 'WAIT' ? (
-                      <button onClick={editUserName}>
+                      <button onClick={updateUserName}>
                         <FontAwesomeIcon icon={faPenToSquare} />
                       </button>
                     ) : (

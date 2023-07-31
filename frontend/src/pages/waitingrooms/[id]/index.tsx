@@ -19,7 +19,7 @@ export default function WaitingRoom() {
   const [userName, setUserName] = useState('name' + userId);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
   const [readyStatus, setReadyStatus] = useState<boolean>(false);
-  const [isEditUserName, setIsEditUserName] = useState<boolean>(false);
+  const [isUpdateUserName, setIsUpdateUserName] = useState<boolean>(false);
 
   const { session, publisher, streamList, onChangeCameraStatus, onChangeMicStatus, sendMessage } =
     useOpenvidu(userId!, roomId);
@@ -36,8 +36,8 @@ export default function WaitingRoom() {
     setUserName(userName);
   };
 
-  const onChangeIsEditUserName = (isEditUserName: boolean) => {
-    setIsEditUserName(!isEditUserName);
+  const onChangeIsUpdateUserName = (isUpdateteteUserName: boolean) => {
+    setIsUpdateUserName(!isUpdateUserName);
   };
 
   return (
@@ -50,7 +50,7 @@ export default function WaitingRoom() {
         publisher={publisher}
         streamList={streamList}
         readyStatus={readyStatus}
-        onChangeIsEditUserName={onChangeIsEditUserName}
+        onChangeIsUpdateUserName={onChangeIsUpdateUserName}
         type={'WAIT'}
       />
       {/* openvidu 화면 */}

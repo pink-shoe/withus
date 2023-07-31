@@ -10,7 +10,7 @@ interface IParticipantsContainerProps {
   publisher: any;
   streamList: any;
   readyStatus: boolean;
-  onChangeIsEditUserName: (status: boolean) => void;
+  onChangeIsUpdateUserName: (status: boolean) => void;
 }
 export default function ParticipantsContainer({
   type,
@@ -22,17 +22,17 @@ export default function ParticipantsContainer({
   ...callback
 }: IParticipantsContainerProps) {
   const [userName, setUserName] = useState(uname);
-  const [isEditUserName, setIsEditUserName] = useState(false);
+  const [isUpdateUserName, setIsUpdateUserName] = useState(false);
   const onChangeUserName = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
     console.log(e.target.value);
   };
 
-  const editUserName = () => {
-    setIsEditUserName(true);
+  const updateUserName = () => {
+    setIsUpdateUserName(true);
   };
   const saveUserName = () => {
-    setIsEditUserName(false);
+    setIsUpdateUserName(false);
     console.log(userName);
     // stream에 userName update 처리 필요
   };
@@ -41,8 +41,8 @@ export default function ParticipantsContainer({
   }, [userName, callback]);
 
   useEffect(() => {
-    callback.onChangeIsEditUserName(isEditUserName);
-  }, [isEditUserName, callback]);
+    callback.onChangeIsUpdateUserName(isUpdateUserName);
+  }, [isUpdateUserName, callback]);
 
   return (
     <ParticipantsPresenter
@@ -52,8 +52,8 @@ export default function ParticipantsContainer({
       userId={userId}
       userName={userName}
       onChangeUserName={onChangeUserName}
-      isEditUserName={isEditUserName}
-      editUserName={editUserName}
+      isUpdateUserName={isUpdateUserName}
+      updateUserName={updateUserName}
       saveUserName={saveUserName}
     />
   );
