@@ -9,6 +9,7 @@ export default function GoogleSocialLogin() {
       console.log(code);
       axios.post(import.meta.env.VITE_KakaobackURL, { code }).then(({ data }) => {
         console.log(data);
+        // data받아서 어디에 저장해둘까 흠.... 월요일에 물어보자
       });
     },
     onError: (errorResponse) => {

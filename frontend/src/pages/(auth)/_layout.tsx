@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
+import { useAtom } from 'jotai';
 import MyCarousel from '@components/login/MyCarousel';
 import Logo from '@components/common/Logo';
 import GuestLogin from '@components/login/GuestLogin';
 import SocialLogin from '@components/login/SocialLogin';
+import { nicknameAtom } from '../../stores/index';
 
 export default function Layout() {
-  const [nickname, setNickname] = useState('');
+  // Atom 값과 상태 업데이트 함수 가져오기
+  const [nickname, setNickname] = useAtom(nicknameAtom);
   const [enterCode, setEnterCode] = useState('');
   const [email, setEmail] = useState('');
   const [emailPassword, setEmailPassword] = useState('');
   const [showLoginForm, setShowLoginForm] = useState(false);
-
-  function handleNicknameChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setNickname(event.target.value);
-  }
 
   function handleEnterCodeChange(event: React.ChangeEvent<HTMLInputElement>) {
     setEnterCode(event.target.value);
@@ -30,6 +29,7 @@ export default function Layout() {
   function handleGuestLoginClick() {
     console.log('Nickname:', nickname);
     console.log('Enter Code:', enterCode);
+    //로그인 되도록 짜야함
   }
 
   function handleSocialLoginClick() {
@@ -60,9 +60,7 @@ export default function Layout() {
             />
           ) : (
             <GuestLogin
-              nickname={nickname}
               enterCode={enterCode}
-              onNicknameChange={handleNicknameChange}
               onEnterCodeChange={handleEnterCodeChange}
               onGuestLoginClick={handleGuestLoginClick}
             />

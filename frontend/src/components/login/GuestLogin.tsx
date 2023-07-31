@@ -2,22 +2,22 @@ import React from 'react';
 import Input from '../common/Input';
 import Button from '../common/Button';
 import SmallContainer from '@components/common/SmallContainer';
+import { useAtom } from 'jotai';
+import { nicknameAtom } from 'stores/index';
 
 interface GuestLoginProps {
-  nickname: string;
   enterCode: string;
-  onNicknameChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onEnterCodeChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onGuestLoginClick: () => void;
 }
 
 const GuestLogin: React.FC<GuestLoginProps> = ({
-  nickname,
   enterCode,
-  onNicknameChange,
   onEnterCodeChange,
   onGuestLoginClick,
 }) => {
+  const [nickname, setNickname] = useAtom(nicknameAtom);
+
   return (
     <SmallContainer>
       <Input
@@ -25,7 +25,7 @@ const GuestLogin: React.FC<GuestLoginProps> = ({
         type='text'
         value={nickname}
         placeholder='닉네임'
-        onChange={onNicknameChange}
+        onChange={(event) => setNickname(event.target.value)}
       />
       <Input
         label='입장 코드'
