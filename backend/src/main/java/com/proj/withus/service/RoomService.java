@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -45,30 +47,52 @@ public class RoomService {
         return roomRepository.findById(roomId);
     }
 
+    /*
+    [player 삭제하기]
+    delete from player
+    where room_id = roomId
+    => 근데 이건 맞아도, player를 삽입할 때 member의 정보를 끌고 와야겠네
+     */
     public boolean leaveRoom(Long roomId, Long memberId) {
+        playerRepopsitory.deleteByRoomId(roomId);
+
+        /*
+        [방장일 경우 방 삭제하는 로직]
+         Room을 검색해서, memberId에 해당하는 Room이 있으면 삭제
+
+         */
+
 
         return true;
     }
 
 
-    // 어떻게 하는거임?
+    /*
+    select member_id
+    from room
+    where room_id = roomId
+    */
     public Long getHostId(Long roomId) {
-        roomRepository.findHostIdByRoomId(roomId);
+        Long hostId = roomRepository.findHostIdByRoomId(roomId);
+        return hostId;
+    }
 
-        /*
-        select member_id
-        from room
-        where room_id = roomId
-         */
+    /*
+    select *
+    from player
+    where room_id = roomId
+     */
+    public List<Player> getPlayerList(Long roomId) {
+        return playerRepopsitory.findAllByRoomId(roomId);
     }
 
     private int createCode() {
-        int randomCode = ThreadLocalRandom.current().nextInt(100000, 1000000); // 일단 십진수로 처리 (추후에 16진수로 변경 예정)
-
+        int randomCode = ThreadLocalRandom.current().nextInt(100000, 1000000); // 일단 십진수로 처리 (추후에 16진수로 변경할 듯)
         /*
          code 중복 검사 필요
          */
-
         return randomCode;
     }
+
+
 }

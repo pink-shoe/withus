@@ -47,7 +47,7 @@ public class RoomController {
         }
 
         Optional<Room> room = roomService.enterRoom(roomId, memberId);
-
+        // Optional<>은 isPresent()로 확인!
         if (!room.isPresent()) {
             return new ResponseEntity<String>("존재하지 않는 방입니다.", HttpStatus.BAD_REQUEST);
         } else {
@@ -56,6 +56,8 @@ public class RoomController {
             enterRoomRes.setRoomType(room.get().getType());
             enterRoomRes.setCode(String.valueOf(room.get().getCode()));
             enterRoomRes.setHostId(roomService.getHostId(roomId));
+            enterRoomRes.setPlayers(roomService.getPlayerList(roomId)); // List<>를 이렇게 set하는게 맞나..
+            return new ResponseEntity<EnterRoomRes>(enterRoomRes, HttpStatus.OK);
         }
 
     }
@@ -64,17 +66,18 @@ public class RoomController {
     public ResponseEntity<?> leaveRoom(
             @RequestHeader("Authorization") String token,
             @PathVariable("room_id") Long roomId,
-            @PathVariable("member_id") Long memberId) {
-        try {
-            Long id = jwtUtil.extractMemberId(token);
-        } catch (Exception e) {
-            return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
-        }
+            @PathVariable("member_id") Long pathMemberId) {
 
+        Long memberId = jwtUtil.extractMemberId(token); // try-catch 뺌
         boolean isInRoom = roomService.leaveRoom(roomId, memberId);
 
+        return new ResponseEntity<>();
     }
 
+    /*
+    방장인거 확인하고, 방장 맞으면 처리.
+
+     */
     @PutMapping("/{room_id}")
     public ResponseEntity<?> modifyRoom(
             @RequestHeader("Authorization") String token,
@@ -85,6 +88,8 @@ public class RoomController {
         } catch (Exception e) {
             return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
         }
+
+
 
 
 
