@@ -1,5 +1,8 @@
 package com.proj.withus.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,4 +30,10 @@ public class GameResult {
     private boolean isCorrect;
 
     private int correctRate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shape_id")
+    @JsonIgnore
+    private Shape shape;
+
 }

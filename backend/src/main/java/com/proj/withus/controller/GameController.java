@@ -2,6 +2,7 @@ package com.proj.withus.controller;
 
 import com.proj.withus.domain.Player;
 import com.proj.withus.domain.Room;
+import com.proj.withus.domain.Shape;
 import com.proj.withus.domain.dto.CaptureDto;
 import com.proj.withus.domain.dto.GameResultDto;
 import com.proj.withus.domain.dto.RoomPlayerDto;
@@ -39,12 +40,16 @@ public class GameController {
             return new ResponseEntity<>("플레이어 정보가 없음", HttpStatus.BAD_REQUEST);
         }
 
+        List<Shape> shapes = gameService.getShapeInfo(room.getRound());
+        if (shapes == null) {
+            return new ResponseEntity<>("모양 데이터셋이 부족함", HttpStatus.BAD_REQUEST);
+        }
+
         RoomPlayerDto gameInfo = RoomPlayerDto.builder()
                 .room(room)
                 .players(players)
+                .shapes(shapes)
                 .build();
-        // shape 정보
-
 
         return ResponseEntity.ok(gameInfo);
     }

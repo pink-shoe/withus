@@ -3,12 +3,15 @@ package com.proj.withus.service;
 import com.proj.withus.domain.GameResult;
 import com.proj.withus.domain.Player;
 import com.proj.withus.domain.Room;
+import com.proj.withus.domain.Shape;
 import com.proj.withus.domain.dto.CaptureDto;
 import com.proj.withus.domain.dto.GameResultDto;
 import com.proj.withus.domain.dto.TotalGameResultDto;
 import com.proj.withus.repository.GameResultRepository;
 import com.proj.withus.repository.PlayerRepository;
 import com.proj.withus.repository.RoomRepository;
+import com.proj.withus.repository.ShapeRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -36,6 +39,7 @@ public class GameServiceImpl implements GameService {
     private final RoomRepository roomRepository;
     private final PlayerRepository playerRepository;
     private final GameResultRepository gameResultRepository;
+    private final ShapeRepository shapeRepository;
 
     @Override
     public Room getRoomInfo(Long hostId) {
@@ -45,6 +49,11 @@ public class GameServiceImpl implements GameService {
     @Override
     public List<Player> getPlayersInfo(Long roomId) {
         return playerRepository.findPlayersByRoomId(roomId);
+    }
+
+    @Override
+    public List<Shape> getShapeInfo(int round) {
+        return shapeRepository.findRandomShapes(round);
     }
 
     @Override
