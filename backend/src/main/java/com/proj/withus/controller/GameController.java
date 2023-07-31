@@ -5,6 +5,7 @@ import com.proj.withus.domain.Room;
 import com.proj.withus.domain.Shape;
 import com.proj.withus.domain.dto.CaptureDto;
 import com.proj.withus.domain.dto.RoomPlayerDto;
+import com.proj.withus.domain.dto.SelectedDto;
 import com.proj.withus.domain.dto.TotalGameResultDto;
 import com.proj.withus.service.GameService;
 import com.proj.withus.util.JwtUtil;
@@ -81,5 +82,12 @@ public class GameController {
             return new ResponseEntity<>("전체 게임 결과를 가져오지 못함", HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(totalGameResultDto);
+    }
+
+    @PostMapping("/image/upload")
+    public ResponseEntity<?> getSelectedImages(@RequestHeader("Authorization") String jwtToken, @RequestBody SelectedDto selectedDto) {
+
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
