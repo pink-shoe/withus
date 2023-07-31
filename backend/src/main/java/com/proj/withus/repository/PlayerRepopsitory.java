@@ -15,7 +15,7 @@ public interface PlayerRepopsitory extends JpaRepository<Player, Long> {
     List<Player> findAllByRoomId(@Param("roomId") Long roomId);
 
     @Query("delete from Player p where p.room.id = :roomId")
-    void deleteByRoomId(@Param("roomId") Long roomId); // 명명 규칙 있나? deletePlayersByRoomId()을 추천 받음.
+    int deleteByRoomId(@Param("roomId") Long roomId); // 명명 규칙 있나? deletePlayersByRoomId()을 추천 받음.
 
     // @param 변수 이름 같으면 왠지 생략 가능할 듯 ?
 }

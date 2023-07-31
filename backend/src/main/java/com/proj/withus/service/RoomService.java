@@ -4,6 +4,8 @@ import com.proj.withus.domain.Member;
 import com.proj.withus.domain.Player;
 import com.proj.withus.domain.Room;
 import com.proj.withus.domain.dto.CreateRoomReq;
+import com.proj.withus.domain.dto.ModifyNicknameReq;
+import com.proj.withus.domain.dto.ModifyRoomReq;
 import com.proj.withus.repository.MemberRepository;
 import com.proj.withus.repository.PlayerRepopsitory;
 import com.proj.withus.repository.RoomRepository;
@@ -53,6 +55,15 @@ public class RoomService {
     where room_id = roomId
     => 근데 이건 맞아도, player를 삽입할 때 member의 정보를 끌고 와야겠네
      */
+
+    /*
+   "member: {
+    memberId: Long
+    nickname: String
+    hostId: Long
+    }[]: Object[]"
+    해당 방에 대한 정보?
+     */
     public boolean leaveRoom(Long roomId, Long memberId) {
         playerRepopsitory.deleteByRoomId(roomId);
 
@@ -61,11 +72,22 @@ public class RoomService {
          Room을 검색해서, memberId에 해당하는 Room이 있으면 삭제
 
          */
-
-
         return true;
     }
 
+    /*
+    update room
+    set type = roomType, code = roomCode, round = roomRound // roomCode는 없음
+    where room_id = roomId
+     */
+    public int modifyRoom(ModifyRoomReq req) {
+        int resultVal = roomRepository.updateRoom(req);
+        return resultVal;
+    }
+
+    public int modifyNickname(Long id, String nickname) {
+        return memberRepository.updateNickname(id, nickname);
+    }
 
     /*
     select member_id
