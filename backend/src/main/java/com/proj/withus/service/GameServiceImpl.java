@@ -87,7 +87,7 @@ public class GameServiceImpl implements GameService {
 
         GameResult gameResult = new GameResult();
 
-        // gameResult.setRoom(roomRepository.findByRoomId((Long) response.getBody().get("roomId")));
+        gameResult.setRoom(roomRepository.findRoomById((Long) response.getBody().get("roomId")));
         gameResult.setRound((int) response.getBody().get("currentRound"));
         gameResult.setCaptureUrl(response.getBody().get("captureUrl").toString());
         gameResult.setCorrect((Boolean) response.getBody().get("isCorrect"));
