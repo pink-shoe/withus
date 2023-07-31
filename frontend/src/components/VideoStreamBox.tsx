@@ -1,21 +1,21 @@
 import React, { FC } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrophoneSlash, faVideoSlash } from '@fortawesome/free-solid-svg-icons';
-interface IProps {
+interface IVideoStreamBoxProps {
   name: string;
   speaking: boolean;
   micStatus: boolean;
   videoStatus: boolean;
-  me: boolean;
+  isMe: boolean;
   children: React.ReactNode;
 }
 
-export const VideoStreamBox: FC<IProps> = ({
+export const VideoStreamBox: FC<IVideoStreamBoxProps> = ({
   name,
   speaking,
   micStatus,
   videoStatus,
-  me,
+  isMe,
   children,
 }) => {
   return (
@@ -24,7 +24,7 @@ export const VideoStreamBox: FC<IProps> = ({
       <div className='px-3 relative bottom-7 h-7 text-white flex justify-between bg-blue-700 bg-opacity-50'>
         <div className='h-7 leading-7'>
           {name}
-          {me && ' (나)'}
+          {isMe && ' (나)'}
         </div>
         <div>
           {!micStatus ? (

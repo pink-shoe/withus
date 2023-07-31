@@ -4,13 +4,13 @@ import { useStream } from '../hooks/useStream';
 import { VideoStreamBox } from './VideoStreamBox';
 // import { useSelector } from 'react-redux';
 
-interface IProps {
+interface IVideoStreamProps {
   streamManager: StreamManager;
   name: string;
-  me: boolean;
+  isMe: boolean;
 }
 
-export const VideoStream: FC<IProps> = ({ streamManager, name, me }) => {
+export const VideoStream: FC<IVideoStreamProps> = ({ streamManager, name, isMe }) => {
   const { videoRef, speaking, micStatus, videoStatus } = useStream(streamManager);
 
   return (
@@ -19,7 +19,7 @@ export const VideoStream: FC<IProps> = ({ streamManager, name, me }) => {
       speaking={speaking}
       micStatus={micStatus}
       videoStatus={videoStatus}
-      me={me}
+      isMe={isMe}
     >
       <video
         autoPlay={true}
