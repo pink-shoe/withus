@@ -2,8 +2,8 @@ import axios from 'axios';
 import { OPENVIDU_SERVER_SECRET, OPENVIDU_SERVER_URL } from './url';
 
 export async function getToken(roomId: string) {
-  const sessoinId = await createSession(roomId);
-  return await createToken(sessoinId);
+  const sessionId = await createSession(roomId);
+  return await createToken(sessionId);
 }
 
 function createSession(roomId: string): Promise<any> {
