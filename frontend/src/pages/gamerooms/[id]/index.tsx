@@ -17,7 +17,7 @@ export default function GameRoom() {
 
   const [roomId, setRoomId] = useState<string>(currentPath);
   const [userId, setUserId] = useState<number>(Math.floor(Math.random() * 100));
-  const [isHost, setIsHost] = useState<boolean>(false);
+  const [isHost, setIsHost] = useState<boolean>(true);
   const [userName, setUserName] = useState('name' + userId);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
   const [readyStatus, setReadyStatus] = useState<boolean>(false);
