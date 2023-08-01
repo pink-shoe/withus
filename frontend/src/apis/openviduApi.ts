@@ -1,23 +1,25 @@
 import axios from 'axios';
 import { OPENVIDU_SERVER_SECRET, OPENVIDU_SERVER_URL } from './url';
 
-export function getToken(roomId: string): Promise<any> {
-  return createSession(roomId).then((roomId) => createToken(roomId));
+export async function getToken(roomId: string) {
+  const sessionId = await createSession(roomId);
+  return await createToken(sessionId);
 }
 
 function createSession(roomId: string): Promise<any> {
   return new Promise((resolve, reject) => {
     var data = JSON.stringify({ customSessionId: roomId });
+
     axios
-      .post(OPENVIDU_SERVER_URL + '/openvidu/api/sessions', data, {
+      .post(OPENVIDU_SERVER_URL + 'api/sessions', data, {
         headers: {
           Authorization: 'Basic ' + btoa('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
           'Content-Type': 'application/json',
         },
       })
       .then((response) => {
-        console.log('CREATE SESION', response);
-        resolve(response.data.id);
+        console.log('CREATE SESSION', response);
+        resolve(response.data);
       })
       .catch((response) => {
         var error = Object.assign({}, response);
@@ -39,7 +41,7 @@ function createToken(roomId: string): Promise<any> {
   return new Promise((resolve, reject) => {
     var data = {};
     axios
-      .post(OPENVIDU_SERVER_URL + '/openvidu/api/sessions/' + roomId + '/connection', data, {
+      .post(OPENVIDU_SERVER_URL + 'api/sessions/' + roomId + '/connections', data, {
         headers: {
           Authorization: 'Basic ' + btoa('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
           'Content-Type': 'application/json',
@@ -47,7 +49,9 @@ function createToken(roomId: string): Promise<any> {
       })
       .then((response) => {
         console.log('TOKEN', response);
-        resolve(response.data.token);
+        // const token = new URLSearchParams(response.data);
+        // console.log(token.get('token'));
+        resolve(response.data);
       })
       .catch((error) => reject(error));
   });

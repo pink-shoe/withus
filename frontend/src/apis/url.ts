@@ -15,6 +15,6 @@ export const WS_BASE_URL =
   (DEV ? `ws://localhost${PORT_SERVER}` : 'wss://i7a309.p.ssafy.io') + '/ws/ava';
 export const API_BASE_URL = (DEV ? `${URL_LOCAL}${PORT_SERVER}` : URL_RELEASE) + '/api/v1';
 
-export const OPENVIDU_SERVER_URL =
-  (DEV ? 'https://localhost' : 'https://i7a309.p.ssafy.io') + PORT_OPENVIDU;
+export const OPENVIDU_SERVER_URL = 'http://localhost:5000/';
+// (DEV ? 'https://localhost' : 'https://demos.openvidu.io') + PORT_OPENVIDU;
 export const OPENVIDU_SERVER_SECRET = DEV ? 'MY_SECRET' : 'avatime';
