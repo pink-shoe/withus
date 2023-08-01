@@ -21,6 +21,7 @@ public class Player {
 	@Column(name = "player_id")
 	private Long id;
 
+	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
 	@JsonIgnore
@@ -31,5 +32,5 @@ public class Player {
 	@JsonIgnore
 	private Room room;
 
-	private int teamType;
+//	private int teamType;
 }

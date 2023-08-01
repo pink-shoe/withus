@@ -77,6 +77,7 @@ public class SocialController {
         member.setNickname(socialMemberInfo.getNickname());
         member.setEmail(socialMemberInfo.getEmail());
         memberRepository.save(member);
+
         return ResponseEntity.ok("Success");
     }
 

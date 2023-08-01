@@ -1,7 +1,6 @@
 package com.proj.withus.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -18,6 +17,7 @@ public class Room {
     @Column(name = "room_id")
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     @JsonIgnore
@@ -37,6 +37,7 @@ public class Room {
     @JsonIgnore
     private List<GameResult> gameResults = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "room")
     @JsonIgnore
     private List<Player> players = new ArrayList<>();

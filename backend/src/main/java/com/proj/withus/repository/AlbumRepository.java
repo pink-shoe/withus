@@ -11,4 +11,6 @@ public interface AlbumRepository extends JpaRepository<Album, Long> {
 
     @Query("select a from Album a join fetch a.member m where m.id = :memberId")
     Album findAlbumByMemberId(@Param("memberId") Long memberId);
+
+    void deleteByMemberId(Long memberId);
 }

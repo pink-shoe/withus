@@ -2,6 +2,7 @@ package com.proj.withus.controller;
 
 import com.proj.withus.domain.Image;
 import com.proj.withus.service.AlbumService;
+import com.proj.withus.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,11 @@ public class AlbumController {
     @Autowired
     private AlbumService albumService;
 
+    private final JwtUtil jwtUtil = new JwtUtil();
+
     @GetMapping
-    public ResponseEntity<?> showAlbums(@RequestHeader("Authorization") String token) {
-        // token 변환
-        Long memberId = 1L;
+    public ResponseEntity<?> showAlbums(@RequestHeader("Authorization") String jwtToken) {
+        Long memberId = jwtUtil.extractMemberId(jwtToken);
 
         Long albumId = albumService.getAlbum(memberId);
         if (albumId != null) {
@@ -33,9 +35,28 @@ public class AlbumController {
         return new ResponseEntity<>("앨범이 존재하지 않음", HttpStatus.BAD_REQUEST);
     }
 
+    @PostMapping("/image/save")
+    public ResponseEntity<?> saveImages(@RequestHeader("Authorization") String jwtToken, @RequestBody() List<String> imageUrls) {
+        Long memberId = jwtUtil.extractMemberId(jwtToken);
+
+//        Long albumId = albumService.getAlbum(memberId);
+//        if (albumId == null) {
+//            return new ResponseEntity<>("앨범이 존재하지 않음", HttpStatus.BAD_REQUEST);
+//        }
+
+        for (String imgUrl : imageUrls) {
+            Image saved = albumService.saveImage(memberId, imgUrl);
+            if (saved == null) {
+                return new ResponseEntity<>("사진이 정상적으로 저장되지 않음", HttpStatus.BAD_REQUEST);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @DeleteMapping("/{img_id}")
-    public ResponseEntity<?> deleteImage(@PathVariable("img_id") Long imgId, @RequestHeader("Authorization") String token) {
-        // token
+    public ResponseEntity<?> deleteImage(@PathVariable("img_id") Long imgId, @RequestHeader("Authorization") String jwtToken) {
+//        Long memberId = jwtUtil.extractMemberId(jwtToken);
+
         Image deleted = albumService.deleteImage((Long) imgId);
 
         if (deleted == null) {
