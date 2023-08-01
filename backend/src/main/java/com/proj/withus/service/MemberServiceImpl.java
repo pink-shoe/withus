@@ -1,33 +1,38 @@
-//package com.proj.withus.service;
-//
-//import com.proj.withus.domain.Member;
-//import com.proj.withus.domain.dto.GoogleUserInfo;
-//import com.proj.withus.repository.MemberRepository;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Service;
-//
-//import java.time.LocalDateTime;
-//
-//@Service
-//public class MemberServiceImpl implements MemberService {
-//
-//    @Autowired
-//    private MemberRepository memberRepository;
-//
-//    public void saveGoogle(GoogleUserInfo userInfo, String accessToken) {
-//        Member exist = memberRepository.findByEmail(userInfo.getEmail());
-//
-//        if (exist == null) {
-//            Member member = new Member();
-//            member.setId(1L);
-//            member.setEmail(userInfo.getEmail());
-//            member.setNickname(userInfo.getNickname());
-//            member.setPassword(null);
-//            member.setLoginType("google");
-//            member.setCreatedAt(LocalDateTime.now().toString());
-//            member.setDeletedAt(null);
-//            memberRepository.save(member);
-//        }
-//
-//    }
-//}
+package com.proj.withus.service;
+
+import com.proj.withus.domain.Member;
+import com.proj.withus.repository.MemberRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class MemberServiceImpl implements MemberService {
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    public Member getMemberInfo(Long id) {
+        return memberRepository.findById(id).orElse(null);
+    }
+
+    public Member updateMember(Long id, String nickname) {
+        // nickname 유효성 검사
+
+        Member find = getMemberInfo(id);
+
+        if (find == null) {
+            return null;
+        }
+
+        find.setNickname(nickname);
+
+        memberRepository.save(find);
+
+        return find;
+    }
+
+    public Member deleteMember(Long id) {
+        memberRepository.deleteById(id);
+        return memberRepository.findById(id).orElse(null);
+    }
+}

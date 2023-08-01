@@ -9,7 +9,6 @@ import com.proj.withus.repository.MemberRepository;
 import com.proj.withus.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -46,7 +45,7 @@ public class SocialServiceImpl implements SocialService {
     private String redirectUri;
 
 //    private final MemberServiceImpl memberService;
-    private final AlbumService albumService;
+    private final AlbumServiceImpl albumServiceImpl;
     private final MemberRepository memberRepository;
     private JwtUtil jwtUtil;
 
@@ -148,7 +147,7 @@ public class SocialServiceImpl implements SocialService {
 
             memberRepository.save(kakaoMember);
             memberId = memberRepository.findByEmail(kakaoMember.getEmail()).getId();
-            albumService.createAlbum(kakaoMember);
+            albumServiceImpl.createAlbum(kakaoMember);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -214,7 +213,7 @@ public class SocialServiceImpl implements SocialService {
 
 //        memberService.saveGoogle(userInfo, token);
         memberRepository.save(googleMember);
-        albumService.createAlbum(googleMember);
+        albumServiceImpl.createAlbum(googleMember);
         return response.getBody().toString(); // kakao return값과 다르긴 한데, 이 return값을 사용하진 않을 것 같음
     }
 

@@ -1,7 +1,7 @@
 package com.proj.withus.controller;
 
 import com.proj.withus.domain.Image;
-import com.proj.withus.service.AlbumService;
+import com.proj.withus.service.AlbumServiceImpl;
 import com.proj.withus.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.util.List;
 public class AlbumController {
 
     @Autowired
-    private AlbumService albumService;
+    private AlbumServiceImpl albumServiceImpl;
 
     private final JwtUtil jwtUtil = new JwtUtil();
 
@@ -27,9 +27,9 @@ public class AlbumController {
     public ResponseEntity<?> showAlbums(@RequestHeader("Authorization") String jwtToken) {
         Long memberId = jwtUtil.extractMemberId(jwtToken);
 
-        Long albumId = albumService.getAlbum(memberId);
+        Long albumId = albumServiceImpl.getAlbum(memberId);
         if (albumId != null) {
-            List<Image> albums = albumService.getImages(albumId);
+            List<Image> albums = albumServiceImpl.getImages(albumId);
             return ResponseEntity.ok(albums);
         }
         return new ResponseEntity<>("앨범이 존재하지 않음", HttpStatus.BAD_REQUEST);
@@ -45,7 +45,7 @@ public class AlbumController {
 //        }
 
         for (String imgUrl : imageUrls) {
-            Image saved = albumService.saveImage(memberId, imgUrl);
+            Image saved = albumServiceImpl.saveImage(memberId, imgUrl);
             if (saved == null) {
                 return new ResponseEntity<>("사진이 정상적으로 저장되지 않음", HttpStatus.BAD_REQUEST);
             }
@@ -57,7 +57,7 @@ public class AlbumController {
     public ResponseEntity<?> deleteImage(@PathVariable("img_id") Long imgId, @RequestHeader("Authorization") String jwtToken) {
 //        Long memberId = jwtUtil.extractMemberId(jwtToken);
 
-        Image deleted = albumService.deleteImage((Long) imgId);
+        Image deleted = albumServiceImpl.deleteImage((Long) imgId);
 
         if (deleted == null) {
             return new ResponseEntity(HttpStatus.OK);

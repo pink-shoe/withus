@@ -21,7 +21,7 @@ import com.proj.withus.domain.dto.CaptureDto;
 import com.proj.withus.domain.dto.RoomPlayerDto;
 import com.proj.withus.domain.dto.SelectedDto;
 import com.proj.withus.domain.dto.TotalGameResultDto;
-import com.proj.withus.service.AlbumService;
+import com.proj.withus.service.AlbumServiceImpl;
 import com.proj.withus.service.GameService;
 import com.proj.withus.util.JwtUtil;
 
@@ -36,7 +36,7 @@ public class GameController {
 
 
     private final GameService gameService;
-    private final AlbumService albumService;
+    private final AlbumServiceImpl albumServiceImpl;
     private final JwtUtil jwtUtil = new JwtUtil();
 
     @GetMapping("/{room_id}")
@@ -107,7 +107,7 @@ public class GameController {
             if (captureUrl == null) {
                 return new ResponseEntity<>("이미지를 가져오지 못함", HttpStatus.BAD_REQUEST);
             }
-            Image saved = albumService.saveImage(memberId, captureUrl);
+            Image saved = albumServiceImpl.saveImage(memberId, captureUrl);
             if (saved == null) {
                 return new ResponseEntity<>("이미지가 저장되지 않음", HttpStatus.BAD_REQUEST);
             }
