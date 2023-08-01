@@ -18,7 +18,6 @@ public class ValidTokenInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object Handler) throws Exception {
-
 //        // Jwt 인증 확인
 //        JwtUtil jwtUtil = new JwtUtil();
 //        String jwt = jwtUtil.generateJwtToken(12345678L);
@@ -28,7 +27,14 @@ public class ValidTokenInterceptor implements HandlerInterceptor {
 //        String id = jwtUtil.extractMemberId(jwt);
 //        System.out.println("member id: " + id);
 
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        log.info("interceptor가 불렸는지 확인~~~~~~~~~~~~~~~~~~~~~ ");
+
+        String jwtToken = "";
+        try {
+            jwtToken = request.getHeader("Authorization").substring(7);
+        } catch (Exception e) {
+            return false;
+        }
         boolean isValid = jwtUtil.validateJwtToken(jwtToken);
         if (!isValid) {
             return false;

@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +21,7 @@ public class Player {
 	@Column(name = "player_id")
 	private Long id;
 
+	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
 	private Member member;
@@ -28,5 +30,5 @@ public class Player {
 	@JoinColumn(name = "room_id")
 	private Room room;
 
-	private int teamType;
+//	private int teamType;
 }
