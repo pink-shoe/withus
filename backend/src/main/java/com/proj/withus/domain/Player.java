@@ -21,7 +21,6 @@ public class Player {
 	@Column(name = "player_id")
 	private Long id;
 
-	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
 	@JsonIgnore
