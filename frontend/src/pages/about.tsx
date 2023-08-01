@@ -2,7 +2,7 @@
 // 게임 결과는 현재 진행 중
 import React, { Fragment, useState } from 'react';
 import ResultModal from '../components/common/ResultModal';
-import SettingModal from '../components/common/SettingModal';
+import SettingModalContainer from '../components/common/SettingModal/SettingModalContainer';
 
 export default function About() {
   const [updateModalStatus, setUpdateModalStatus] = useState(false);
@@ -10,7 +10,7 @@ export default function About() {
   // 참여하기 버튼을 누르면 참여 코드를 입력할 수 있는 모달창이 뜸
   const openUpdateModal = () => {
     setUpdateModalStatus(true);
-  };s
+  };
   const closeUpdateModal = () => {
     setUpdateModalStatus(false);
   };
@@ -23,11 +23,11 @@ export default function About() {
       >
         대기실 방 설정
       </button>
-      <SettingModal
+      <SettingModalContainer
         isUpdateModal={true}
         openModal={updateModalStatus}
         closeModal={closeUpdateModal}
-      ></SettingModal>
+      ></SettingModalContainer>
       <div>하하하</div>
       <ResultModal></ResultModal>
     </Fragment>

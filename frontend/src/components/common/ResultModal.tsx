@@ -17,8 +17,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faX } from '@fortawesome/free-solid-svg-icons';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 export default function ResultModal() {
-  let pictures = [picture1, picture2, picture3, picture4, picture5];
-  let answers = [answer1, answer2, answer3, answer4, answer5];
+  let pictures = [picture1, picture2, picture3, picture4, picture5]
+  let answers = [answer1, answer2, answer3, answer4, answer5]
   let results = [100, 0, 100, 0, 100]
 
   const [modalStatus, setModalStatus] = useState(false);
@@ -39,24 +39,24 @@ export default function ResultModal() {
       // 유사도가 50% 이상이면 O 표시
       if (results[i] >= 50) {
         arr.push(
-          <div className='flex justify-center mb-5'>
+          <div className='flex justify-center mb-5' key={i}>
             <span className='me-5'>
               <span className='font-semibold text-xl'>ROUND {i + 1}</span>
               <div className='text-center text-indigo-900 text-2xl mt-2'><FontAwesomeIcon icon={faCircle} size="2xl" /></div>
             </span>
-            <img key={i + 5} className='w-36 h-28 rounded-lg display: inline me-2 border-solid border-4 border-indigo-900' src={pictures[i]} />
-            <img key={i + 10} className='w-36 h-28 rounded-lg display: inline border-solid border-4 border-indigo-900' src={answers[i]} />
+            <img className='w-36 h-28 rounded-lg display: inline me-2 border-solid border-4 border-indigo-900' src={pictures[i]} />
+            <img className='w-36 h-28 rounded-lg display: inline border-solid border-4 border-indigo-900' src={answers[i]} />
           </div>
         )
       } else {
         arr.push(
-          <div className='flex justify-center mb-5'>
+          <div className='flex justify-center mb-5' key={i}>
             <span className='me-5'>
               <span className='font-semibold text-xl'>ROUND {i + 1}</span>
               <div className='text-center text-red-600 text-2xl mt-2'><FontAwesomeIcon icon={faX} size="2xl" /></div>
             </span>
-            <img key={i + 5} className='w-36 h-28 rounded-lg display: inline me-3 border-solid border-4 border-red-600' src={pictures[i]} />
-            <img key={i + 10} className='w-36 h-28 rounded-lg display: inline border-solid border-4 border-red-600' src={answers[i]} />
+            <img className='w-36 h-28 rounded-lg display: inline me-3 border-solid border-4 border-red-600' src={pictures[i]} />
+            <img className='w-36 h-28 rounded-lg display: inline border-solid border-4 border-red-600' src={answers[i]} />
           </div>
         )
       }

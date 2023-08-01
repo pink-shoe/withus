@@ -1,68 +1,50 @@
-// 방 설정과 초대하기를 포함한 모달창
-// true일 때는 초대하기가 나타나고
-// false일 때는 초대하기가 제외된 방 설정만 나타남
-import React, { Fragment, useState } from 'react';
-import Modal from './Modal';
-import SelectBox from './SelectBox';
-import GameStartButton from './GameStartButton';
-import TextCopy from './TextCopy';
+import { Fragment } from 'react';
+import Modal from '../Modal';
+import SelectBox from '../SelectBox';
+import TextCopy from '../TextCopy';
+import GameStartButton from '../GameStartButton';
 
-interface ISettingModalProps {
-  isUpdateModal: boolean;
+interface ISettingModalPresenterProps {
+  mode: string;
+  round: number;
   openModal: boolean;
   closeModal: React.MouseEventHandler<SVGSVGElement>;
-  children?: React.ReactNode;
-};
+  selectMode: any;
+  MOPTIONS: {
+    value: string | number;
+    name: string;
+  }[];
+  selectRound: any;
+  ROPTIONS: {
+    value: string | number;
+    name: string;
+  }[];
+  children: React.ReactNode;
+  isUpdateModal: boolean;
+  code: string;
+  codeEnter: any;
+  url: string;
+  urlEnter: any;
+  handleSaveSetting: any;
+}
 
-export default function SettingModal({
-  isUpdateModal,
+export default function SettingModalPresenter({
+  mode,
+  round,
   openModal,
   closeModal,
+  selectMode,
+  MOPTIONS,
+  selectRound,
+  ROPTIONS,
   children,
-}: ISettingModalProps) {
-  const [mode, setMode] = useState('');
-  const [round, setRound] = useState(0);
-
-  const [code, setCode] = useState('');
-  const [url, setUrl] = useState('');
-
-  // 옵션 창을 누르면 선택한 옵션이 mode와 round에 각각 넣어짐
-  const selectMode = (mode: string) => {
-    setMode(mode);
-  };
-  const selectRound = (round: number) => {
-    setRound(round);
-  };
-
-  // 나중에 삭제하겠지만 현재는 코드와 url을 작성하면 저장되는 기능
-  const codeWriting = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCode((event.target as HTMLInputElement).value);
-    console.log(code);
-  };
-  const urlWriting = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUrl(event.target.value);
-    console.log(url);
-  };
-
-  // 시작 버튼을 누르면 모드와 라운드가 저장됨
-  // 하지만 현재는 콘솔창에 모드와 라운드가 나타나도록 했음
-  const handleSaveSetting = () => {
-    console.log(mode, round);
-  };
-
-  // 모드의 옵션들
-  const MOPTIONS = [
-    { value: 'mode_choice', name: '모드 선택' },
-    { value: 'coop', name: '협동전' },
-    // { value: 'team', name: '팀전' },
-  ];
-  // 라운드의 옵션들
-  const ROPTIONS = [
-    { value: 'round_choice', name: '라운드 선택' },
-    // { value: 3, name: '3' },
-    { value: 5, name: '5' },
-  ];
-
+  isUpdateModal,
+  code,
+  codeEnter,
+  url,
+  urlEnter,
+  handleSaveSetting,
+}: ISettingModalPresenterProps) {
   return (
     <Fragment>
       <Fragment>
@@ -89,7 +71,7 @@ export default function SettingModal({
                 <div>
                   <input
                     value={code}
-                    onChange={codeWriting}
+                    onChange={codeEnter}
                     className='p-2 border-2 w-[17.5rem] border-blue-800 rounded-md text-center focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 placeholder:text-slate-400'
                     placeholder='코드 입력'
                     type='text'
@@ -99,7 +81,7 @@ export default function SettingModal({
                 <div className='my-1'>
                   <input
                     value={url}
-                    onChange={urlWriting}
+                    onChange={urlEnter}
                     className='p-2 border-2 w-[17.5rem] border-blue-800 rounded-md text-center focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 placeholder:text-slate-400'
                     placeholder='URL 입력'
                     type='text'

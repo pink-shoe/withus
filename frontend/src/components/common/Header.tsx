@@ -12,13 +12,13 @@ export default function Header() {
           icon={faDoorOpen}
           size='2xl'
           style={{ color: '#fcfcfc' }}
-          className='me-1.5'
+          className='me-1.5 cursor-pointer'
         />
         <FontAwesomeIcon
           icon={faCircleUser}
           size='2xl'
           style={{ color: '#fcfcfc' }}
-          className='ms-1.5'
+          className='ms-1.5 cursor-pointer'
         />
       </span>
     </div>

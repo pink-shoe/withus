@@ -1,11 +1,12 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import Header from '../components/common/Header';
 import Modal from '../components/common/Modal';
-import SettingModal from '../components/common/SettingModal';
+import SettingModalContainer from '../components/common/SettingModal/SettingModalContainer';
 
 export default function Lobby() {
   const [makeRoomModal, setMakeRoomModal] = useState(false);
   const [enterRoomModal, setEnterRoomModal] = useState(false);
+  // inviteCode는 초대 코드를 의미함
   const [inviteCode, setInviteCode] = useState('');
 
   const openMakeModal = () => {
@@ -32,7 +33,8 @@ export default function Lobby() {
   // 현재는 콘솔창에 코드가 출력되도록 함
   const enterCode = () => {
     // 예시 코드
-    if(inviteCode === 'ddddd') {
+    // 존재하지 않는 코드를 입력하면 방이 존재하지 않는다고 뜸
+    if(inviteCode !== 'ddddd') {
       console.log('잘못된 코드 입력')
       alert('방이 존재하지 않습니다😥')
       setInviteCode('')
@@ -51,7 +53,7 @@ export default function Lobby() {
         <div className='flex flex-auto justify-center content-center'>
           <Fragment>
             <button onClick={openMakeModal} className='bg-red-600 hover:bg-red-800 me-5 aspect-square h-96 rounded-xl font-semibold text-2xl text-white'>방 만들기</button>
-            <SettingModal isUpdateModal={false} openModal={makeRoomModal} closeModal={closeMakeModal}></SettingModal>
+            <SettingModalContainer isUpdateModal={false} openModal={makeRoomModal} closeModal={closeMakeModal}></SettingModalContainer>
           </Fragment>
           <Fragment>
             <button onClick={openEnterModal} className='bg-green-600 hover:bg-green-700 ms-5 aspect-square h-96 rounded-xl font-semibold text-2xl text-white'>참여하기</button>
