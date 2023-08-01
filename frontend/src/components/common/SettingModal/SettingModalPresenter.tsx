@@ -48,7 +48,6 @@ export default function SettingModalPresenter({
   return (
     <Fragment>
       <Fragment>
-        {/* node 버전으로 인해 발생하는 에러(mode의 붉은 줄) */}
         <Modal mode={mode} round={round} openModal={openModal} closeModal={closeModal}>
           <p className='text-indigo-900 font-bold text-3xl mb-10 text-center'>방 설정</p>
           <div className='flex my-7'>

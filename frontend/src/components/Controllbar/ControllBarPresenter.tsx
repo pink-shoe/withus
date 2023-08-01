@@ -10,6 +10,7 @@ import {
   faComment,
   faCommentSlash,
 } from '@fortawesome/free-solid-svg-icons';
+import SettingModalContainer from '@components/common/SettingModal/SettingModalContainer';
 
 interface IControllBarPresenterProps {
   isHost: boolean;
@@ -76,29 +77,36 @@ export const ControllBarPresenter: FC<IControllBarPresenterProps> = ({
           )}
         </button>
         {isHost && (
-          <button
-            className={` w-16 h-16 rounded-full p-3 ${
-              gameSettingModal ? ' bg-[#D3D3D3]' : 'bg-[#FF7B7B]'
-            }`}
-            onClick={onChangeGameSettingModal}
-          >
-            {gameSettingModal ? (
-              <FontAwesomeIcon
-                icon={faGear}
-                color={'black'}
-                fontSize={`2rem`}
-                className=' transition-transform'
-              />
-            ) : (
-              <FontAwesomeIcon
-                icon={faGear}
-                color={'white'}
-                fontSize={`2rem`}
-                rotation={90}
-                className=' transition-transform'
-              />
-            )}
-          </button>
+          <>
+            <button
+              className={` w-16 h-16 rounded-full p-3 ${
+                gameSettingModal ? ' bg-[#FF7B7B]' : 'bg-[#D3D3D3]'
+              }`}
+              onClick={onChangeGameSettingModal}
+            >
+              {gameSettingModal ? (
+                <FontAwesomeIcon
+                  icon={faGear}
+                  color={'white'}
+                  fontSize={`2rem`}
+                  rotation={90}
+                  className=' transition-transform'
+                />
+              ) : (
+                <FontAwesomeIcon
+                  icon={faGear}
+                  color={'black'}
+                  fontSize={`2rem`}
+                  className=' transition-transform'
+                />
+              )}
+            </button>
+            <SettingModalContainer
+              isUpdateModal={true}
+              openModal={gameSettingModal}
+              closeModal={onChangeGameSettingModal}
+            />
+          </>
         )}
 
         <button className={` w-16 h-16 rounded-full p-3 bg-red-500`} onClick={onClickExit}>

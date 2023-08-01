@@ -8,7 +8,7 @@ interface ISelectBoxProps {
     value: string | number;
     name: string;
   }[];
-};
+}
 
 export default function SelectBox({ selectSetting, options }: ISelectBoxProps) {
   const [setting, setSetting] = useState('');

@@ -7,8 +7,10 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 interface IModalProps {
   openModal: boolean;
   closeModal: React.MouseEventHandler<SVGSVGElement>;
+  mode?: string;
+  round?: number;
   children: React.ReactNode;
-};
+}
 
 export default function Modal({ openModal, closeModal, children }: IModalProps) {
   return (

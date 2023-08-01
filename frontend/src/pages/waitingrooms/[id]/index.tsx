@@ -15,7 +15,7 @@ export default function WaitingRoom() {
 
   const [roomId, setRoomId] = useState<string>(currentPath);
   const [userId, setUserId] = useState<number>(Math.floor(Math.random() * 100));
-  const [isHost, setIsHost] = useState<boolean>(false);
+  const [isHost, setIsHost] = useState<boolean>(true);
   const [userName, setUserName] = useState('name' + userId);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
   const [readyStatus, setReadyStatus] = useState<boolean>(false);
@@ -61,7 +61,7 @@ export default function WaitingRoom() {
         <div className='aspect-[4/3]'>
           {publisher && (
             <div className='w-full'>
-              <VideoStream streamManager={publisher} name={userName} me={true} />
+              <VideoStream streamManager={publisher} name={userName} isMe={true} />
             </div>
           )}
         </div>
