@@ -19,7 +19,7 @@ const GuestLogin: React.FC<IGuestLoginProps> = ({
   const [{ nickname }, setNickname] = useAtom(userAtom); // useAtom에서 setNickname도 가져옴
 
   // nickname 변경 함수
-  const handleNicknameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeNickname = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNickname((prev) => ({ ...prev, nickname: event.target.value }));
   };
   return (
@@ -29,7 +29,7 @@ const GuestLogin: React.FC<IGuestLoginProps> = ({
         type='text'
         value={nickname}
         placeholder='닉네임'
-        onChange={handleNicknameChange}
+        onChange={onChangeNickname}
       />
       <InputComponent
         label='입장 코드'

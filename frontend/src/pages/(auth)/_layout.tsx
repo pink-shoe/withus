@@ -30,7 +30,7 @@ export default function Layout() {
     setUser((prev) => ({ ...prev, nickname: nickname }));
     console.log('Nickname:', nickname);
     console.log('Enter Code:', enterCode);
-    //로그인 되도록 짜야함
+    //로그인 되도록 짜야하고, 입장코드가 잘못된 경우에 입장할 수 없도록 코드 짜야함.
   }
 
   function onClickSocialLogin() {

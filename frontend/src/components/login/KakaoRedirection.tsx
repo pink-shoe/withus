@@ -27,6 +27,7 @@ export default function KakaoRedirection() {
         (r) => {
           console.log(r.data); // 받아온 데이터 확인
           // 받아온 데이터 처리 코드 작성
+          localStorage.setItem('token', r.data);
 
           navigate('/lobby'); // login이 성공했다면 해당 페이지로 이동
         },
