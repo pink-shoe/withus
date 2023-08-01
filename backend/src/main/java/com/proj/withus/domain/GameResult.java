@@ -1,5 +1,6 @@
 package com.proj.withus.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,11 +11,12 @@ import javax.persistence.*;
 public class GameResult {
 
     @Id @GeneratedValue
-    @Column(name = "gameresult_id")
+    @Column(name = "gameResult_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
+    @JsonIgnore
     private Room room;
 
     private int round;
@@ -24,4 +26,10 @@ public class GameResult {
     private boolean isCorrect;
 
     private int correctRate;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "shape_id")
+    @JsonIgnore
+    private Shape shape;
+
 }

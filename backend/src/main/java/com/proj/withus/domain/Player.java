@@ -24,10 +24,12 @@ public class Player {
 	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
+	@JsonIgnore
 	private Member member;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "room_id")
+	@JsonIgnore
 	private Room room;
 
 //	private int teamType;

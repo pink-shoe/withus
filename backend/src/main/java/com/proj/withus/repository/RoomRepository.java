@@ -13,7 +13,10 @@ import java.util.List;
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {
+    Room findByMemberId(Long memberId);
 
+    Room findRoomById(Long roomId);
+  
     @Query("select r.member.id from Room r where r.id = :roomId")
     Long findHostIdByRoomId(@Param("roomId") Long roomId);
 

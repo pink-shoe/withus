@@ -1,5 +1,8 @@
 package com.proj.withus.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import com.proj.withus.domain.Album;
 import com.proj.withus.domain.Image;
 import com.proj.withus.domain.Member;
@@ -8,9 +11,6 @@ import com.proj.withus.repository.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class AlbumService {
@@ -67,5 +67,14 @@ public class AlbumService {
         imageRepository.deleteImageById(imgId);
 
         return imageRepository.findImageById(imgId);
+    }
+
+    public Image saveImage(Long memberId, String captureUrl) {
+        Album album = albumRepository.findAlbumByMemberId(memberId);
+        Image image = new Image();
+        image.setImgUrl(captureUrl);
+        image.setAlbum(album);
+        image.setSavedAt(LocalDateTime.now().toString());
+        return imageRepository.save(image);
     }
 }
