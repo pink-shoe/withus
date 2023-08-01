@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faFloppyDisk } from '@fortawesome/free-regular-svg-icons';
 export let localUser: IUser;
 
-interface IParticiPantsPresenterProps {
+interface IParticipantsPresenterProps {
   type: 'WAIT' | 'GAME';
   streamList: IStreamList[];
   userId: number;
@@ -20,7 +20,7 @@ interface IStreamList {
   userId: number;
   userName: string;
 }
-export const ParticipantsPresenter: FC<IParticiPantsPresenterProps> = ({
+export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
   type,
   streamList,
   userId,
