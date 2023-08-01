@@ -21,7 +21,7 @@ export default function App() {
   // const e = () => navigate('/posts/:id/deep', { params: { id: 'e' } });
 
   return (
-    <section className='w-full h-full bg-gradient-to-b from-slate-800 via-indigo-500 to-purple-300'>
+    <section>
       <main>
         <Outlet />
       </main>

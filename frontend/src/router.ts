@@ -16,6 +16,7 @@ export type Path =
   | `/posts/:id/deep`
   | `/register`
   | `/splat/${string}`
+  | `/test`
   | `/waitingrooms`
   | `/waitingrooms/:id`
 
