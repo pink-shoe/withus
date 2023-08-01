@@ -68,13 +68,4 @@ public class AlbumService {
 
         return imageRepository.findImageById(imgId);
     }
-
-    public Image saveImage(Long memberId, String captureUrl) {
-        Album album = albumRepository.findAlbumByMemberId(memberId);
-        Image image = new Image();
-        image.setImgUrl(captureUrl);
-        image.setAlbum(album);
-        image.setSavedAt(LocalDateTime.now().toString());
-        return imageRepository.save(image);
-    }
 }
