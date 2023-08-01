@@ -1,0 +1,116 @@
+import { useRef, useState } from 'react';
+import html2canvas from 'html2canvas';
+import saveAs from 'file-saver';
+import { VideoStream } from '@components/VideoStream';
+import { useLocation } from 'react-router-dom';
+import { useOpenvidu } from 'hooks/useOpenvidu';
+import { ControllBarContainer } from '@components/Controllbar/ControllBarContainer';
+import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
+import ChatContainer from '@components/Chat/ChatContainer';
+export default function GameRoom() {
+  const location = useLocation();
+
+  const currentPath = location.pathname.slice(
+    location.pathname.lastIndexOf('/') + 1,
+    location.pathname.length
+  );
+
+  const [roomId, setRoomId] = useState<string>(currentPath);
+  const [userId, setUserId] = useState<number>(Math.floor(Math.random() * 100));
+  const [isHost, setIsHost] = useState<boolean>(true);
+  const [userName, setUserName] = useState('name' + userId);
+  const [chatStatus, setChatStatus] = useState<boolean>(true);
+  const [readyStatus, setReadyStatus] = useState<boolean>(false);
+  const [isUpdateUserName, setIsUpdateUserName] = useState<boolean>(false);
+
+  const { session, publisher, streamList, onChangeCameraStatus, onChangeMicStatus, sendMessage } =
+    useOpenvidu(userId!, roomId);
+
+  const onChangeChatStatus = (chatStatus: boolean) => {
+    setChatStatus(!chatStatus);
+  };
+
+  const onChangeReadyStatus = (readyStatus: boolean) => {
+    setReadyStatus(!readyStatus);
+  };
+
+  const onChangeUserName = (userName: string) => {
+    setUserName(userName);
+  };
+
+  const onChangeIsUpdateUserName = (isUpdateUserName: boolean) => {
+    setIsUpdateUserName(!isUpdateUserName);
+  };
+  const divRef = useRef<HTMLDivElement>(null);
+
+  const handleDownload = async () => {
+    if (!divRef.current) return;
+
+    try {
+      const div = divRef.current;
+      const canvas = await html2canvas(div, { scale: 1 });
+      canvas.toBlob((blob) => {
+        if (blob !== null) {
+          saveAs(blob, 'result.png');
+        }
+      });
+    } catch (error) {
+      console.error('Error converting div to image:', error);
+    }
+  };
+  return (
+    <section className={`w-full flex justify-between  h-screen`}>
+      {/* 참가자 목록 */}
+      <ParticipantsContainer
+        userId={userId}
+        userName={userName}
+        onChangeUserName={onChangeUserName}
+        publisher={publisher}
+        streamList={streamList}
+        readyStatus={readyStatus}
+        onChangeIsUpdateUserName={onChangeIsUpdateUserName}
+        type={'GAME'}
+      />
+      {/* openvidu 화면 */}
+      <div className=' w-1/2 h-full flex flex-col justify-between items-center'>
+        <header className=''>
+          <div className=' text-white font-extrabold text-6xl text-center py-3'>[] with us</div>
+        </header>
+        <div className='aspect-[4/3]'>
+          {publisher && (
+            <div ref={divRef} className='aspect-[4/3] grid grid-flow-dense grid-rows-2 grid-cols-2'>
+              {streamList?.map((stream: any, idx: number) => {
+                // const userInfo = streamList.find((it: any) => it.userId === stream.userId);
+                return (
+                  <div className='w-full h-full' key={idx}>
+                    <VideoStream
+                      streamManager={stream.streamManager}
+                      name={stream.userName}
+                      isMe={stream.userId === userId}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+        <div className=' p-3'>
+          <ControllBarContainer
+            isHost={isHost}
+            onChangeMicStatus={onChangeMicStatus}
+            onChangeCameraStatus={onChangeCameraStatus}
+            onChangeChatStatus={onChangeChatStatus}
+            onChangeReadyStatus={onChangeReadyStatus}
+          />
+        </div>
+        {/* <button onClick={handleDownload}>다운로드</button> */}
+      </div>
+      <ChatContainer
+        chatStatus={chatStatus}
+        session={session}
+        publisher={publisher}
+        sendMessage={sendMessage}
+      />
+    </section>
+  );
+}
