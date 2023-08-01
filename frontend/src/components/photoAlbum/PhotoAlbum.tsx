@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import ButtonComponent from '@components/common/ButtonComponent';
 import AlbumFrame from './AlbumFrame';
-import { albumImageSaveApi } from '../../apis/albumImageSaveApi';
+import { album } from '../../apis/album';
 import PaginationContainer from '@components/Pagination/PaginationContainer';
 
 export default function PhotoAlbum() {
@@ -21,7 +21,7 @@ export default function PhotoAlbum() {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const response = await albumImageSaveApi();
+        const response = await album();
         setImages(response); // 가져온 이미지 객체(아이디, 주소, 저장날짜)를 images 배열에 저장
       } catch (error) {
         console.error('이미지 저장 실패');

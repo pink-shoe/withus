@@ -1,4 +1,4 @@
-import axios, { AxiosResponse, AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useAtom } from 'jotai';
 import { userAtom } from '../stores/index';
 

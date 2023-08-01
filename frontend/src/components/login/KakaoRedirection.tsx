@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Spinner from '@components/common/Spinner';
-import Modal from '@components/common/Modal';
 
 export default function KakaoRedirection() {
   const code = new URL(document.location.toString()).searchParams.get('code');
@@ -12,7 +11,6 @@ export default function KakaoRedirection() {
   console.log(`카카오 리다이렉션 확인 카카오 URL: ${kakaobackURL}`);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
 
   function handleKakaoLogin() {
     console.log(`handleKakaologin 함수 스타트! 카카오 ${code}`);
