@@ -71,15 +71,15 @@ public class SocialController {
     }
 
     // 프론트가 가진 정보로 withus DB에 회원 등록
-    @PostMapping("/auth/googlemember")
-    public ResponseEntity<String> saveGoogleMember(@RequestBody SocialMemberInfo socialMemberInfo) {
-        Member member = new Member();
-        member.setNickname(socialMemberInfo.getNickname());
-        member.setEmail(socialMemberInfo.getEmail());
-        memberRepository.save(member);
-
-        return ResponseEntity.ok("Success");
-    }
+//    @PostMapping("/auth/googlemember")
+//    public ResponseEntity<String> saveGoogleMember(@RequestBody SocialMemberInfo socialMemberInfo) {
+//        Member member = new Member();
+//        member.setNickname(socialMemberInfo.getNickname());
+//        member.setEmail(socialMemberInfo.getEmail());
+//        memberRepository.save(member);
+//
+//        return ResponseEntity.ok("Success");
+//    }
 
 //    // google api에서 받은 google 계정 전용 고유 id를 withus DB의 id로 변환
 //    @GetMapping("/auth/googlememberid")

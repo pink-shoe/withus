@@ -16,7 +16,7 @@ public class JwtUtil {
     private final String SECRET_KEY = "withussecretkeywithussecretkeywithussecretkeywithussecretkey";
     private final long EXPIRATION_TIME = 9000000; // 9,000,000ms == 150분
 
-    public String generateJwtToken(Long memberId) { // String으로 변환해서 받아야하는지 확인 필요
+    public String generateJwtToken(Long memberId, String loginType) { // String으로 변환해서 받아야하는지 확인 필요
 
         // 현재 시간 기준으로 토큰 만료 시간 설정
         Date expirationDate = new Date(System.currentTimeMillis() + EXPIRATION_TIME);
@@ -25,6 +25,7 @@ public class JwtUtil {
         // payload에 저장할 정보 설정
         Map<String, Object> claims = new HashMap<>();
         claims.put("memberId", memberId.toString());
+        claims.put("loginType", loginType);
 
         String tempJwtToken = Jwts.builder()
                 .setClaims(claims)
