@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react';
 
-interface PhotoBackProps {
+interface IAlbumBackGroundProps {
   children: ReactNode;
 }
 
-export default function PhotoBack({ children }: PhotoBackProps) {
+export default function AlbumBackGround({ children }: IAlbumBackGroundProps) {
   return <div className=''>{children}</div>;
 }

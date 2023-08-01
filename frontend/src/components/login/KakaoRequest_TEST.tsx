@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Spinner from '@components/common/Spinner';
 
-//인증이 필요한 요청이 있을때 사용하는 코드
+//TEST용 코드 걍 무시
 
 function KakaoRequest() {
   const [data, setData] = useState(null);

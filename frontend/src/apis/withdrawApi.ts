@@ -5,7 +5,7 @@ const apiUrl = `${import.meta.env.VITE_API}/api/members`; // 변동될 수 있�
 const token = localStorage.getItem('token'); // 토큰 일단 로컬 스토리지
 
 // Axios 요청 함수 정의
-export async function myPageApi() {
+export async function withdrawApi() {
   try {
     // 헤더에 토큰과 nickname을 포함하여 요청 보내기
     const response = await axios.delete(apiUrl, {
@@ -18,6 +18,6 @@ export async function myPageApi() {
     // 삭제완료!
   } catch (error) {
     // 요청이 실패하면 에러를 출력합니다.
-    console.log('실패:', (error as AxiosError).message);
+    console.error('실패:', (error as AxiosError).message);
   }
 }

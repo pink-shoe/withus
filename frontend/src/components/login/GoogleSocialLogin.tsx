@@ -1,5 +1,5 @@
 import { useGoogleLogin } from '@react-oauth/google';
-import Button from '@components/common/Button';
+import ButtonComponent from '@components/common/ButtonComponent';
 import axios from 'axios';
 
 export default function GoogleSocialLogin() {
@@ -7,9 +7,9 @@ export default function GoogleSocialLogin() {
     scope: 'email profile',
     onSuccess: async ({ code }) => {
       console.log(code);
-      axios.post(import.meta.env.VITE_KakaobackURL, { code }).then(({ data }) => {
-        console.log(data);
-        // data받아서 어디에 저장해둘까 흠.... 월요일에 물어보자
+      axios.post(`${import.meta.env.VITE_API}/api/oauth/google`, { code }).then(({ data }) => {
+        console.log(`구글 로그인 토큰 받기 성공 ${data}`);
+        localStorage.setItem('token', data);
       });
     },
     onError: (errorResponse) => {
@@ -18,5 +18,5 @@ export default function GoogleSocialLogin() {
     flow: 'auth-code',
   });
 
-  return <Button onClick={googleSocialLogin}>Google Button</Button>;
+  return <ButtonComponent onClick={googleSocialLogin}>Google ButtonComponent</ButtonComponent>;
 }
