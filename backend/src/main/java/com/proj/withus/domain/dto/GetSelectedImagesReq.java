@@ -5,14 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CaptureDto {
+public class GetSelectedImagesReq {
 
     private Long roomId;
-    private String captureUrl;
-    private int currentRound;
-    private Long shapeId;
+    private List<Long> results;
 }

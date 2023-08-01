@@ -19,8 +19,8 @@ import com.proj.withus.domain.GameResult;
 import com.proj.withus.domain.Player;
 import com.proj.withus.domain.Room;
 import com.proj.withus.domain.Shape;
-import com.proj.withus.domain.dto.CaptureDto;
-import com.proj.withus.domain.dto.TotalGameResultDto;
+import com.proj.withus.domain.dto.GetCaptureImageReq;
+import com.proj.withus.domain.dto.GetTotalGameResultRes;
 import com.proj.withus.repository.GameResultRepository;
 import com.proj.withus.repository.PlayerRepository;
 import com.proj.withus.repository.RoomRepository;
@@ -42,7 +42,7 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Room getRoomInfo(Long hostId) {
-        return roomRepository.findByMemberId(hostId);
+        return roomRepository.findByMemberId(hostId).orElse(null);
     }
 
     @Override
@@ -56,15 +56,15 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public boolean sendCaptureInfo(CaptureDto captureDto) {
+    public boolean sendCaptureInfo(GetCaptureImageReq getCaptureImageReq) {
         String url = ""; // flask 서버
         RestTemplate restTemplate = new RestTemplate();
 
         MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
-        requestBody.add("roomId", captureDto.getRoomId());
-        requestBody.add("captureUrl", captureDto.getCaptureUrl());
-        requestBody.add("currentRound", captureDto.getCurrentRound());
-        requestBody.add("shapeId", captureDto.getShapeId());
+        requestBody.add("roomId", getCaptureImageReq.getRoomId());
+        requestBody.add("captureUrl", getCaptureImageReq.getCaptureUrl());
+        requestBody.add("currentRound", getCaptureImageReq.getCurrentRound());
+        requestBody.add("shapeId", getCaptureImageReq.getShapeId());
 
         HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(requestBody);
 
@@ -95,12 +95,12 @@ public class GameServiceImpl implements GameService {
 
         GameResult gameResult = new GameResult();
 
-        gameResult.setRoom(roomRepository.findRoomById((Long) response.getBody().get("roomId")));
+        gameResult.setRoom(roomRepository.findRoomById((Long) response.getBody().get("roomId")).orElse(null));
         gameResult.setRound((int) response.getBody().get("currentRound"));
         gameResult.setCaptureUrl(response.getBody().get("captureUrl").toString());
         gameResult.setCorrect((Boolean) response.getBody().get("isCorrect"));
         gameResult.setCorrectRate((int) response.getBody().get("correctRate"));
-        gameResult.setShape(shapeRepository.findShapeById((Long) response.getBody().get("shapeId")));
+        gameResult.setShape(shapeRepository.findShapeById((Long) response.getBody().get("shapeId")).orElse(null));
         Long gameResultId = gameResultRepository.save(gameResult).getId();
 
         if (gameResultId == null) {
@@ -116,21 +116,22 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public List<TotalGameResultDto> getTotalGameResult(Long roomId) {
-        List<TotalGameResultDto> totalGameResult = new ArrayList<>();
+    public List<GetTotalGameResultRes> getTotalGameResult(Long roomId) {
+        List<GetTotalGameResultRes> totalGameResult = new ArrayList<>();
         List<GameResult> gameResult = gameResultRepository.findGameResultsByRoomId(roomId);
 
-        Room room = roomRepository.findRoomById(roomId);
+        Room room = roomRepository.findRoomById(roomId).orElse(null);
         if (gameResult.size() != room.getRound()) {
             return null;
         }
 
         for (GameResult result : gameResult) {
-            TotalGameResultDto totalGameResultDto = TotalGameResultDto.builder()
-                    .gameResult(result)
-                    .shape(shapeRepository.findShapeById(result.getShape().getId()))
-                    .build();
-            totalGameResult.add(totalGameResultDto);
+            totalGameResult.add(
+                    GetTotalGameResultRes.builder()
+                            .gameResult(result)
+                            .shape(shapeRepository.findShapeById(result.getShape().getId()).orElse(null))
+                            .build()
+            );
         }
 
         return totalGameResult;
