@@ -15,6 +15,7 @@ public interface GameService {
     public List<Shape> getShapeInfo(int round);
     public boolean sendCaptureInfo(CaptureDto captureDto);
     public boolean getGameResult();
+    public String getCaptureUrl(Long resultId);
 
     public List<TotalGameResultDto> getTotalGameResult(Long roomId);
 }

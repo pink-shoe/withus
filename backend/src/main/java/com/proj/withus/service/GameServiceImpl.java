@@ -1,5 +1,20 @@
 package com.proj.withus.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.transaction.Transactional;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+
 import com.proj.withus.domain.GameResult;
 import com.proj.withus.domain.Player;
 import com.proj.withus.domain.Room;
@@ -13,20 +28,6 @@ import com.proj.withus.repository.ShapeRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-
-import javax.transaction.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -107,6 +108,11 @@ public class GameServiceImpl implements GameService {
         }
 
         return true;
+    }
+
+    @Override
+    public String getCaptureUrl(Long id) {
+        return gameResultRepository.findById(id).get().getCaptureUrl();
     }
 
     @Override
