@@ -61,14 +61,14 @@ public class SocialController {
     }
 
     // 프론트가 구현 성공하면 다시 살릴 것
-//    @ResponseBody
-//    @GetMapping("/auth/google/callback")
-//    public ResponseEntity<?> googleLogin(@RequestParam(name = "code") String code) {
-//        String accessToken = socialService.getGoogleAccessToken(code);
-//        String userInfo = socialService.getGoogleMemberInfo(accessToken);
-//
-//        return ResponseEntity.ok(userInfo);
-//    }
+    @ResponseBody
+    @GetMapping("/auth/google/callback")
+    public ResponseEntity<?> googleLogin(@RequestParam(name = "code") String code) {
+        String accessToken = socialService.getGoogleAccessToken(code);
+        String userInfo = socialService.getGoogleMemberInfo(accessToken);
+
+        return ResponseEntity.ok(userInfo);
+    }
 
     // 프론트가 가진 정보로 withus DB에 회원 등록
     @PostMapping("/auth/googlemember")
