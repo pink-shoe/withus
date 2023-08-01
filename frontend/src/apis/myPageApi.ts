@@ -5,9 +5,6 @@ import { useAtom } from 'jotai';
 
 // 특정 주소와 토큰을 변수로 설정합니다.
 const apiUrl = `${import.meta.env.VITE_API}/api/members`; // 변동될 수 있음
-const token = localStorage.getItem('token'); // 토큰 일단 로컬 스토리지
-
-// axios.defaults.headers.common['Authorization'] = token;
 
 // Axios 요청 함수 정의
 export async function myPageApi() {
@@ -15,11 +12,7 @@ export async function myPageApi() {
     const [user, setUser] = useAtom(userAtom);
 
     // 헤더에 토큰을 포함하여 요청을 보냅니다.
-    const response = await axios.get(apiUrl, {
-      headers: {
-        Authorization: token,
-      },
-    });
+    const response = await axios.get(apiUrl);
 
     console.log('성공:', response.data);
 

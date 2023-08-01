@@ -74,7 +74,7 @@ export default function PhotoAlbum() {
         BackgroundURL={BackGroundURL}
         contentNumber={contentNumber}
       />
-      <PaginationContainer currentPage={currentPage} onPageClick={onClickPage} />
+      <PaginationContainer currentPage={currentPage} onClickPage={onClickPage} />
     </div>
   );
 }

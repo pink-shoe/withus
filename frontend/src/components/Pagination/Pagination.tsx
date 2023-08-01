@@ -1,32 +1,10 @@
-import PaginationPresenter from './PaginationPresenter';
-import { useState, useEffect } from 'react';
-import { album } from 'apis/album';
-
-interface IPaginationContainerProps {
+interface PaginationProps {
   currentPage: number;
-  onClickPage: (page: number) => void;
+  totalPages: number;
+  setCurrentPage: (page: number) => void;
 }
 
-export default function PaginationContainer({
-  currentPage,
-  onClickPage,
-}: IPaginationContainerProps) {
-  const [images, setImages] = useState<{ imgId: number; imgUrl: string; savedAt: string }[]>([]);
-  const imagesPerPage = 4; // 한 페이지에 보여줄 이미지 개수
-  const totalPages = Math.ceil(images.length / imagesPerPage);
-
-  useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const response = await album();
-        setImages(response); // 가져온 이미지 객체(아이디, 주소, 저장날짜)를 images 배열에 저장
-      } catch (error) {
-        console.error('이미지 저장 실패');
-      }
-    };
-    fetchImages();
-  }, []);
-
+export default function Pagination({ currentPage, totalPages, setCurrentPage }: PaginationProps) {
   const generatePageNumbers = () => {
     const pageNumbers = [];
     if (totalPages <= 5) {
@@ -64,16 +42,44 @@ export default function PaginationContainer({
     return pageNumbers;
   };
 
+  const handlePageClick = (page: number) => {
+    setCurrentPage(page);
+  };
+
   const pageNumbers = generatePageNumbers();
 
   return (
-    <div>
-      <PaginationPresenter
-        currentPage={currentPage}
-        pageNumbers={pageNumbers}
-        totalPages={totalPages}
-        onClickPage={onClickPage}
-      />
+    <div className='flex justify-center mt-8 py-4'>
+      {/* Pagination */}
+      <button
+        className='px-4 py-2 m-2 border rounded bg-white hover:bg-blue-500'
+        onClick={() => handlePageClick(currentPage - 1)}
+        disabled={currentPage === 1}
+      >
+        이전
+      </button>
+      {pageNumbers.map((pageNum, index) =>
+        typeof pageNum === 'number' ? (
+          <button
+            key={index}
+            className={`px-4 py-2 m-1 border rounded ${
+              pageNum === currentPage ? 'bg-blue-500' : 'bg-white'
+            }`}
+            onClick={() => handlePageClick(pageNum)}
+          >
+            {pageNum}
+          </button>
+        ) : (
+          <span key={index}>{pageNum}</span>
+        )
+      )}
+      <button
+        className='px-4 py-2 m-2 border rounded bg-white hover:bg-blue-500'
+        onClick={() => handlePageClick(currentPage + 1)}
+        disabled={currentPage === totalPages}
+      >
+        다음
+      </button>
     </div>
   );
 }
