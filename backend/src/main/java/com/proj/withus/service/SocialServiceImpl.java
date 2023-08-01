@@ -32,8 +32,17 @@ import java.util.Map;
 @Transactional
 public class SocialServiceImpl implements SocialService {
 
+    private final String KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
+
+    private final String KAKAO_USERINFO_URL = "https://kapi.kakao.com/v2/user/me" ;
     private final String GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
     private final String GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo";
+
+    @Value("${kakao.rest-api-key}")
+    private String kakaoApiKey;
+
+    @Value("${kakao.redirect-uri}")
+    private String kakaoRedirectUri;
 
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String clientId;
@@ -51,7 +60,7 @@ public class SocialServiceImpl implements SocialService {
 
     @Override
     public String getKakaoAccessToken(String code) {
-        String accessToken = "";
+        String accessToken = KAKAO_TOKEN_URL;
         String reqURL = "https://kauth.kakao.com/oauth/token";
 
         try {
@@ -66,8 +75,8 @@ public class SocialServiceImpl implements SocialService {
             BufferedWriter bw = new BufferedWriter((new OutputStreamWriter(conn.getOutputStream())));
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
-            sb.append("&client_id=7ea82d8a610fe51bcf3eca267069b264");
-            sb.append("&redirect_uri=http://localhost:8080/kakao/login");
+            sb.append("&client_id=" + kakaoApiKey);
+            sb.append("&redirect_uri=" + kakaoRedirectUri);
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
@@ -99,7 +108,7 @@ public class SocialServiceImpl implements SocialService {
 
     @Override
     public Long getKakaoMemberInfo(String token) {
-        String reqURL = "https://kapi.kakao.com/v2/user/me";
+        String reqURL = KAKAO_USERINFO_URL;
         SocialMemberInfo kakaoMemberInfo = new SocialMemberInfo();
         Long memberId = -1L;
 

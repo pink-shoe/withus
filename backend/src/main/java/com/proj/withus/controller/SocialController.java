@@ -38,7 +38,7 @@ public class SocialController {
 
     @ResponseBody
     @GetMapping("/kakao/login") // url 수정 필요함
-    public ResponseEntity<String> kakaoCallback(@RequestParam String code) {
+    public ResponseEntity<?> kakaoCallback(@RequestParam String code) {
         log.info("code: ", code);
         String accessToken = socialService.getKakaoAccessToken(code);
         System.out.println("access token: " + accessToken);

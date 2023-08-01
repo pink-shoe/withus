@@ -33,6 +33,10 @@ spring:
             user-name-attribute: email
             jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
 
+kakao:
+  rest-api-key: 7ea82d8a610fe51bcf3eca267069b264
+  redirect-uri: http://localhost:8080/kakao/login
+
 logging:
   level:
     org.hibernate.SQL: debug
