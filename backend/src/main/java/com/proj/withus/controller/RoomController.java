@@ -28,11 +28,15 @@ public class RoomController {
     public ResponseEntity<?> createRoom(
             @RequestHeader("Authorization") String token,
             @RequestBody CreateRoomReq createRoomReq) { // dto 새로 만들어야 함
-        try {
-            Long id = jwtUtil.extractMemberId(token);
-        } catch (Exception e) {
-            return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
-        }
+
+        System.out.println("createRoomReq.getId()" + createRoomReq.getId());
+        System.out.println("createRoomReq.getRoomType()" + createRoomReq.getRoomType());
+
+//        try {
+//            Long id = jwtUtil.extractMemberId(token);
+//        } catch (Exception e) {
+//            return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
+//        }
         Room newRoom = roomService.createRoom(createRoomReq);
         return new ResponseEntity<Room>(newRoom, HttpStatus.OK);
     }
@@ -64,18 +68,20 @@ public class RoomController {
 
     }
 
-//    @DeleteMapping("/{room_id}/{member_id}")
-//    public ResponseEntity<?> leaveRoom(
-//            @RequestHeader("Authorization") String token,
-//            @PathVariable("room_id") Long roomId,
-//            @PathVariable("member_id") Long pathMemberId) {
-//
-//        Long memberId = jwtUtil.extractMemberId(token); // try-catch 뺌
-//        boolean isInRoom = roomService.leaveRoom(roomId, memberId);
-//
-//        return new ResponseEntity<>();
-//    }
-    // 방 나갈 때 response가 왜 필요한가
+    @DeleteMapping("/{room_id}/{member_id}")
+    public ResponseEntity<?> leaveRoom(
+            @RequestHeader("Authorization") String token,
+            @PathVariable("room_id") Long roomId,
+            @PathVariable("member_id") Long pathMemberId) {
+
+        Long memberId = jwtUtil.extractMemberId(token); // try-catch 뺌
+        try {
+            roomService.leaveRoom(roomId, memberId);
+        } catch (Exception e) {
+            return new ResponseEntity<String>("오류가 발생했습니다.", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<String>("방 나가기 성공", HttpStatus.OK); // 웹소켓에서 처리 가능한지에 따라 변경할 예정 (일단 String으로 성공 결과만 처리)
+    }
 
     /*
     방장인거 확인하고, 방장 맞으면 처리.
@@ -100,23 +106,29 @@ public class RoomController {
         if (!isValid) {
             return new ResponseEntity<String>("토큰이 만료되었습니다.", HttpStatus.UNAUTHORIZED);
         }
-        roomService.modifyRoom(modifyRoomReq); // 반환 받아도 됨
+        roomService.modifyRoom(modifyRoomReq, roomId); // 반환 받아도 됨
         return new ResponseEntity<String>("성공", HttpStatus.OK);
     }
 
     @PutMapping("/members/social")
     public ResponseEntity<?> modifyNickname(
             @RequestHeader("Authorization") String token,
-            @RequestBody ModifyNicknameReq modifyNicknameReq) {
+            @RequestBody() String nickname) {
+        System.out.println(nickname);
+
         Long id = -1L;
         try {
             id = jwtUtil.extractMemberId(token);
+            System.out.println("ididididi: " + id); //
         } catch (Exception e) {
             return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
         }
+        System.out.println("ididididi: " + id); //
+
         try {
-            int isSuccess = roomService.modifyNickname(id, modifyNicknameReq.getNickname());
+            int isSuccess = roomService.modifyNickname(id, nickname);
             if (isSuccess != 1) {
+                System.out.println("ididididi: " + id); //
                 return new ResponseEntity<String>("권한이 없습니다.", HttpStatus.UNAUTHORIZED);
             }
             return new ResponseEntity<String>("닉네임이 수정되었습니다.", HttpStatus.OK);

@@ -17,6 +17,6 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     @Query("select r.member.id from Room r where r.id = :roomId")
     Long findHostIdByRoomId(@Param("roomId") Long roomId);
 
-    @Query("update Room r set r.type = :#{#req.roomType}, r.round = :#{#req.roomRound} WHERE r.id = :#{#req.roomId}")
-    int updateRoom(@Param("req") ModifyRoomReq req);
+    @Query("update Room r set r.type = :#{#req.roomType}, r.round = :#{#req.roomRound} WHERE r.id = :roomId")
+    int updateRoom(@Param("req") ModifyRoomReq req, @Param("roomId") Long roomId);
 }

@@ -8,7 +8,7 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class CreateRoomReq {
 
-    private final Long id;
+    private final Long id; // memberId
     private final int roomType;
     private final int roomRound = 5; // room round 5로 고정?
 

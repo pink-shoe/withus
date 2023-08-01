@@ -28,6 +28,8 @@ public class RoomService {
     private final PlayerRepopsitory playerRepopsitory;
 
     public Room createRoom(CreateRoomReq createRoomReq) {
+        System.out.println(createRoomReq.getId());
+
         Member member = memberRepository.findById(createRoomReq.getId())
                         .orElseThrow(() -> new IllegalArgumentException("invalid" + createRoomReq.getId()));
 
@@ -64,15 +66,16 @@ public class RoomService {
     }[]: Object[]"
     해당 방에 대한 정보?
      */
-    public boolean leaveRoom(Long roomId, Long memberId) {
+    public void leaveRoom(Long roomId, Long memberId) {
         playerRepopsitory.deleteByRoomId(roomId);
 
         /*
         [방장일 경우 방 삭제하는 로직]
-         Room을 검색해서, memberId에 해당하는 Room이 있으면 삭제
-
+         Room을 검색해서, memberId(방장)에 해당하는 Room이 있으면 삭제
+        delete from room
+        where id = memberId
          */
-        return true;
+        roomRepository.deleteById(memberId);
     }
 
     /*
@@ -80,8 +83,8 @@ public class RoomService {
     set type = roomType, code = roomCode, round = roomRound // roomCode는 없음
     where room_id = roomId
      */
-    public int modifyRoom(ModifyRoomReq req) {
-        int resultVal = roomRepository.updateRoom(req);
+    public int modifyRoom(ModifyRoomReq req, Long roomId) {
+        int resultVal = roomRepository.updateRoom(req, roomId);
         return resultVal;
     }
 
