@@ -12,14 +12,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@RequiredArgsConstructor
+@Slf4j
+@Transactional
 public class AlbumServiceImpl implements  AlbumService {
 
-    @Autowired
-    private AlbumRepository albumRepository;
-
-    @Autowired
-    private ImageRepository imageRepository;
+    private final AlbumRepository albumRepository;
+    private final ImageRepository imageRepository;
 
     public void createAlbum(Member member) {
         if (albumRepository.findAlbumByMemberId(member.getId()) == null) {
@@ -27,22 +30,19 @@ public class AlbumServiceImpl implements  AlbumService {
             album.setMember(member);
             albumRepository.save(album);
         }
-//        return albumRepository.save(album).getId();
     }
 
     public Long getAlbum(Long memberId) {
-        Album find = albumRepository.findAlbumByMemberId(memberId);
-        if (find != null) {
-            return find.getId();
-        }
-        return null;
+        return albumRepository.findAlbumByMemberId(memberId)
+            .map(Album::getId)
+            .orElse(null);
     }
 
     @Transactional
     public Album deleteAlbum(Long memberId) {
         albumRepository.deleteByMemberId(memberId);
 
-        return albumRepository.findAlbumByMemberId(memberId);
+        return albumRepository.findAlbumByMemberId(memberId).orElse(null);
     }
 
     public List<Image> getImages(Long albumId) {
@@ -56,7 +56,7 @@ public class AlbumServiceImpl implements  AlbumService {
         }
         Image image = new Image();
         image.setImgUrl(imgUrl);
-        image.setAlbum(albumRepository.findAlbumByMemberId(memberId));
+        image.setAlbum(albumRepository.findAlbumByMemberId(memberId).orElse(null));
         image.setSavedAt(LocalDateTime.now().toString());
         Long imgId = imageRepository.save(image).getId();
         return imageRepository.findImageById(imgId);
