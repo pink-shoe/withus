@@ -1,14 +1,16 @@
 package com.proj.withus.service;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Map;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.proj.withus.domain.Member;
-import com.proj.withus.domain.dto.SocialMemberInfo;
-import com.proj.withus.repository.MemberRepository;
-import com.proj.withus.util.JwtUtil;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,11 +22,15 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.transaction.Transactional;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Map;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.proj.withus.domain.Member;
+import com.proj.withus.domain.dto.SocialMemberInfo;
+import com.proj.withus.repository.MemberRepository;
+import com.proj.withus.util.JwtUtil;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +60,7 @@ public class SocialServiceImpl implements SocialService {
     private String redirectUri;
 
 //    private final MemberServiceImpl memberService;
-    private final AlbumServiceImpl albumServiceImpl;
+    private final AlbumService albumService;
     private final MemberRepository memberRepository;
     private JwtUtil jwtUtil;
 
@@ -156,7 +162,7 @@ public class SocialServiceImpl implements SocialService {
 
             memberRepository.save(kakaoMember);
             memberId = memberRepository.findByEmail(kakaoMember.getEmail()).getId();
-            albumServiceImpl.createAlbum(kakaoMember);
+            albumService.createAlbum(kakaoMember);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -222,7 +228,7 @@ public class SocialServiceImpl implements SocialService {
 
 //        memberService.saveGoogle(userInfo, token);
         memberRepository.save(googleMember);
-        albumServiceImpl.createAlbum(googleMember);
+        albumService.createAlbum(googleMember);
 
         Long memberId = memberRepository.findByEmail(googleUserInfo.getEmail()).getId();
 

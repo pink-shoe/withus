@@ -25,7 +25,7 @@ public class AlbumServiceImpl implements  AlbumService {
     private final ImageRepository imageRepository;
 
     public void createAlbum(Member member) {
-        if (albumRepository.findAlbumByMemberId(member.getId()) == null) {
+        if (!albumRepository.findAlbumByMemberId(member.getId()).isPresent()) {
             Album album = new Album();
             album.setMember(member);
             albumRepository.save(album);
