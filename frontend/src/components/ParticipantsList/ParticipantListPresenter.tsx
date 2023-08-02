@@ -32,8 +32,8 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
   saveUserName,
 }) => {
   return (
-    <div id='participantsList' className=' w-52 bg-white'>
-      <div className='bg-[#C4C6EC] p-3 text-white whitespace-nowrap font-bold text-xl'>
+    <div id='participantsList' className=' w-52 bg-white '>
+      <div className='bg-[#C4C6EC] p-3 text-white whitespace-nowrap font-bold text-xl '>
         협동전 &nbsp; 1/5(판)
       </div>
       <div className='bg-[#FF8DA3] p-3 text-white whitespace-nowrap font-bold text-xl'>
@@ -45,10 +45,8 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
             <div
               key={idx}
               className={
-                'flex justify-between items-center w-full text-justify border-bottom border-b-2 p-3 ' +
-                readyStatus
-                  ? 'bg-[#FFF5C0]'
-                  : 'bg-white'
+                'flex justify-between items-center w-full text-justify border-bottom border-b-2 p-3 text-[#514148]' +
+                ` ${readyStatus ? 'bg-[#FFF5C0]' : 'bg-white'} `
               }
             >
               {userId === stream.userId ? (

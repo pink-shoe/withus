@@ -68,8 +68,8 @@ export default function GameRoom() {
         publisher={publisher}
         streamList={streamList}
         readyStatus={readyStatus}
-        updateUsernameStatus={isUpdateUserName}
-        onChangeUpdateUsernameStatus={onChangeIsUpdateUserName}
+        updateUserNameStatus={isUpdateUserName}
+        onChangeUpdateUserNameStatus={onChangeIsUpdateUserName}
         type={'GAME'}
       />
       {/* openvidu 화면 */}

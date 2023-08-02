@@ -50,8 +50,8 @@ export default function WaitingRoom() {
         publisher={publisher}
         streamList={streamList}
         readyStatus={readyStatus}
-        updateUsernameStatus={updateUserNameStatus}
-        onChangeUpdateUsernameStatus={onChangeUpdateUserNameStatus}
+        updateUserNameStatus={updateUserNameStatus}
+        onChangeUpdateUserNameStatus={onChangeUpdateUserNameStatus}
         type={'WAIT'}
       />
       {/* openvidu 화면 */}

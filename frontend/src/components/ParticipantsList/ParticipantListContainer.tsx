@@ -10,8 +10,8 @@ interface IParticipantsContainerProps {
   publisher: any;
   streamList: any;
   readyStatus: boolean;
-  updateUsernameStatus: boolean;
-  onChangeUpdateUsernameStatus: (status: boolean) => void;
+  updateUserNameStatus: boolean;
+  onChangeUpdateUserNameStatus: (status: boolean) => void;
 }
 export default function ParticipantsContainer({
   type,
@@ -20,7 +20,7 @@ export default function ParticipantsContainer({
   publisher,
   streamList,
   readyStatus,
-  updateUsernameStatus: updateUnameStatus,
+  updateUserNameStatus: updateUnameStatus,
   ...callback
 }: IParticipantsContainerProps) {
   const [userName, setUserName] = useState(uname);
@@ -43,7 +43,7 @@ export default function ParticipantsContainer({
   }, [userName, callback]);
 
   useEffect(() => {
-    callback.onChangeUpdateUsernameStatus(updateUserNameStatus);
+    callback.onChangeUpdateUserNameStatus(updateUserNameStatus);
   }, [updateUserNameStatus, callback]);
 
   return (
