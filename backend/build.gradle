@@ -32,6 +32,8 @@ dependencies {
 //	implementation 'io.jsonwebtoken:jjwt-api:0.11.2' // 최신 버전으로 업데이트하세요
 //	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2' // 최신 버전으로 업데이트하세요
 //	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2' // 최신 버전으로 업데이트하세요
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 	implementation 'com.google.code.gson:gson:2.8.7'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'

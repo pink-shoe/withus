@@ -32,6 +32,9 @@ spring:
             user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
             user-name-attribute: email
             jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 kakao:
   rest-api-key: 7ea82d8a610fe51bcf3eca267069b264
