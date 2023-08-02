@@ -4,6 +4,7 @@ import { ControlBarPresenter } from './ControlBarPresenter';
 import { useNavigate } from 'react-router-dom';
 
 interface IControlBarProps {
+  type: 'WAIT' | 'GAME';
   isHost: boolean;
   readyStatus: boolean;
   onChangeMicStatus: (status: boolean) => void;
@@ -13,6 +14,7 @@ interface IControlBarProps {
 }
 
 export const ControlBarContainer: FC<IControlBarProps> = ({
+  type,
   isHost,
   readyStatus: isReady,
   ...callback
@@ -64,6 +66,7 @@ export const ControlBarContainer: FC<IControlBarProps> = ({
   }, [readyStatus, callback]);
   return (
     <ControlBarPresenter
+      type={type}
       isHost={isHost}
       micStatus={micStatus}
       onChangeMicStatus={onChangeMicStatus}

@@ -7,6 +7,7 @@ import { useOpenvidu } from 'hooks/useOpenvidu';
 import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer';
 import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
 import ChatContainer from '@components/Chat/ChatContainer';
+import { CountdownCircleTimer, useCountdown } from 'react-countdown-circle-timer';
 export default function GameRoom() {
   const location = useLocation();
 
@@ -58,6 +59,18 @@ export default function GameRoom() {
       console.error('Error converting div to image:', error);
     }
   };
+  // const {
+  //   path,
+  //   pathLength,
+  //   stroke,
+  //   strokeDashoffset,
+  //   remainingTime,
+  //   elapsedTime,
+  //   size,
+  //   strokeWidth,
+  // } = useCountdown({ isPlaying: true, duration: 5, colors: '#abc' });
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [count, setCount] = useState(5);
   return (
     <section className={`w-full flex justify-between  h-screen`}>
       {/* 참가자 목록 */}
@@ -75,8 +88,30 @@ export default function GameRoom() {
       />
       {/* openvidu 화면 */}
       <div className=' w-1/2 h-full flex flex-col justify-between items-center'>
-        <header className=''>
+        <header className=' flex items-center gap-2 '>
           <div className=' text-white font-extrabold text-6xl text-center py-3'>[] with us</div>
+          <CountdownCircleTimer
+            size={128}
+            isPlaying={isPlaying}
+            duration={count}
+            initialRemainingTime={6}
+            isSmoothColorTransition={true}
+            // updateInterval={1}
+            // colors='#aabbcc'
+            // colors="url(#test-it)"
+            colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+            colorsTime={[4, 2.66, 1.33, 0]}
+            onUpdate={(remainingTime) => {
+              console.log('Counter is ', count);
+              console.log('Remaining time is ', remainingTime);
+            }}
+            onComplete={() => ({ shouldRepeat: true })}
+            strokeWidth={30}
+          >
+            {({ remainingTime }) => (
+              <div className=' text-white text-3xl font-bold'>{remainingTime}</div>
+            )}
+          </CountdownCircleTimer>
         </header>
         <div className='aspect-[4/3]'>
           {publisher && (
@@ -98,6 +133,7 @@ export default function GameRoom() {
         </div>
         <div className=' p-3'>
           <ControlBarContainer
+            type={'GAME'}
             isHost={isHost}
             readyStatus={readyStatus}
             onChangeMicStatus={onChangeMicStatus}

@@ -71,6 +71,7 @@ export default function WaitingRoom() {
         </div>
         <div className=' p-3'>
           <ControlBarContainer
+            type={'WAIT'}
             isHost={isHost}
             readyStatus={readyStatus}
             onChangeMicStatus={onChangeMicStatus}

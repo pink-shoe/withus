@@ -13,6 +13,7 @@ import {
 import SettingModalContainer from '@components/common/SettingModal/SettingModalContainer';
 
 interface IControlBarPresenterProps {
+  type: 'WAIT' | 'GAME';
   isHost: boolean;
   micStatus: boolean;
   onChangeMicStatus: () => void;
@@ -28,6 +29,7 @@ interface IControlBarPresenterProps {
 }
 
 export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
+  type,
   isHost,
   micStatus,
   onChangeMicStatus,
@@ -57,18 +59,20 @@ export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
             <FontAwesomeIcon icon={faMicrophoneSlash} color={'white'} fontSize={`2rem`} />
           )}
         </button>
-        <button
-          className={` w-16 h-16 rounded-full p-3 ${
-            cameraStatus ? ' bg-[#D3D3D3]' : 'bg-[#FF7B7B]'
-          }`}
-          onClick={onChangeCameraStatus}
-        >
-          {cameraStatus ? (
-            <FontAwesomeIcon icon={faVideo} color={'black'} fontSize={`2rem`} />
-          ) : (
-            <FontAwesomeIcon icon={faVideoSlash} color={'white'} fontSize={`2rem`} />
-          )}
-        </button>
+        {type === 'WAIT' && (
+          <button
+            className={` w-16 h-16 rounded-full p-3 ${
+              cameraStatus ? ' bg-[#D3D3D3]' : 'bg-[#FF7B7B]'
+            }`}
+            onClick={onChangeCameraStatus}
+          >
+            {cameraStatus ? (
+              <FontAwesomeIcon icon={faVideo} color={'black'} fontSize={`2rem`} />
+            ) : (
+              <FontAwesomeIcon icon={faVideoSlash} color={'white'} fontSize={`2rem`} />
+            )}
+          </button>
+        )}
         <button
           className={` w-16 h-16 rounded-full p-3 ${chatStatus ? ' bg-[#FF7B7B]' : 'bg-[#D3D3D3]'}`}
           onClick={onChangeChatStatus}
