@@ -2,9 +2,7 @@ package com.proj.withus.controller;
 
 import com.proj.withus.domain.Album;
 import com.proj.withus.domain.dto.SocialMemberInfo;
-import com.proj.withus.service.AlbumServiceImpl;
 import com.proj.withus.util.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.proj.withus.domain.Member;
-import com.proj.withus.service.MemberServiceImpl;
-
+import com.proj.withus.service.AlbumService;
+import com.proj.withus.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,17 +25,12 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/members")
 public class MemberController {
 
-    @Autowired
-    private MemberServiceImpl memberServiceImpl;
-
-    @Autowired
-    private AlbumServiceImpl albumServiceImpl;
-
-    private JwtUtil jwtUtil = new JwtUtil();
+    private final MemberService memberService;
+    private final AlbumService albumService;
+    private final JwtUtil jwtUtil;
 
     @GetMapping
     private ResponseEntity<?> getMemberInfo(@RequestHeader("Authorization") String jwtToken) {
-
         SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
         Long memberId = socialMemberInfo.getId();
         Member memberInfo = memberServiceImpl.getMemberInfo(memberId);
@@ -49,13 +42,19 @@ public class MemberController {
     }
 
     @PatchMapping
-    private ResponseEntity<?> updateMemberInfo(@RequestHeader("Authorization") String jwtToken, @RequestBody String nickname) {
+    private ResponseEntity<?> updateMemberInfo(
+            @RequestHeader("Authorization") String jwtToken,
+            @RequestBody String nickname) {
+
         SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
         Long memberId = socialMemberInfo.getId();
         Member updatedInfo = memberServiceImpl.updateMember(memberId, nickname);
 
         if (updatedInfo == null) {
             return new ResponseEntity<>("유저 정보 찾을 수 없음", HttpStatus.BAD_REQUEST);
+        }
+        if (!updatedInfo.getNickname().equals(nickname)) {
+            return new ResponseEntity<>("닉네임을 수정하지 못함", HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok().body(updatedInfo);
     }
@@ -65,12 +64,12 @@ public class MemberController {
         SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
         Long memberId = socialMemberInfo.getId();
 
-        Album deletedAlbum = albumServiceImpl.deleteAlbum(memberId);
+        Album deletedAlbum = albumService.deleteAlbum(memberId);
         if (deletedAlbum != null) {
             return new ResponseEntity("앨범 삭제 안됨", HttpStatus.BAD_REQUEST);
         }
 
-        Member deleted = memberServiceImpl.deleteMember(memberId);
+        Member deleted = memberService.deleteMember(memberId);
         if (deleted != null) {
             return new ResponseEntity<>("유저 탈퇴 안됨", HttpStatus.BAD_REQUEST);
         }
