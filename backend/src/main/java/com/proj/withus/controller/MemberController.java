@@ -33,7 +33,7 @@ public class MemberController {
     private ResponseEntity<?> getMemberInfo(@RequestHeader("Authorization") String jwtToken) {
         SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
         Long memberId = socialMemberInfo.getId();
-        Member memberInfo = memberServiceImpl.getMemberInfo(memberId);
+        Member memberInfo = memberService.getMemberInfo(memberId);
 
         if (memberInfo == null) {
             return new ResponseEntity<>("유저 정보 찾지 못함", HttpStatus.BAD_REQUEST);
@@ -48,7 +48,7 @@ public class MemberController {
 
         SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
         Long memberId = socialMemberInfo.getId();
-        Member updatedInfo = memberServiceImpl.updateMember(memberId, nickname);
+        Member updatedInfo = memberService.updateMember(memberId, nickname);
 
         if (updatedInfo == null) {
             return new ResponseEntity<>("유저 정보 찾을 수 없음", HttpStatus.BAD_REQUEST);

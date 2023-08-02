@@ -3,6 +3,7 @@ package com.proj.withus.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.proj.withus.domain.dto.SocialMemberInfo;
 import com.proj.withus.service.AlbumService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
