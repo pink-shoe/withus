@@ -1,5 +1,10 @@
 # GIT COMMIT 컨벤션
 
+## 0. 기본 파일 구조
+
+component만 파스칼
+나머지는 카멜 케이스
+
 ### 1. Commit 메시지 구조
 
 ---
@@ -41,10 +46,10 @@ footer
 - 제목은 최대 50글자가 넘지 않도록 하고 마침표 및 특수기호는 사용하지 않는다.
 - 한글로 표기하되, 동사형으로 끝내지 않는다.
 - 제목은 **개조식 구문**으로 작성한다.
-    - 완전한 서술형 문장이 아니라, 간결하고 요점적인 서술을 의미.
+  - 완전한 서술형 문장이 아니라, 간결하고 요점적인 서술을 의미.
 
 ```
-ex. 
+ex.
 
 [BE] style: 들여쓰기 통일
 ```
@@ -69,22 +74,20 @@ ex.
 - 꼬리말은 `"유형: #이슈 번호"` 형식으로 사용한다.
 - 여러 개의 이슈 번호를 적을 때는 `쉼표(,)`로 구분한다.
 - 이슈 트래커 유형은 다음 중 하나를 사용한다.`Fixes`
-    - 이슈 수정 중 (아직 해결되지 않은 경우)`Resolves`
-    - 이슈를 해결했을 때 사용`Ref`
-    - 참고할 이슈가 있을 때 사용`Related to`
-    - 해당 커밋에 관련된 이슈번호 (아직 해결되지 않은 경우)
-        
-        ```jsx
-        ex)
-        
-        type: ~~~
-        
-        ...
-        
-        Fixes: #45
-        Related to: #48, #45
-        ```
-        
+  - 이슈 수정 중 (아직 해결되지 않은 경우)`Resolves`
+  - 이슈를 해결했을 때 사용`Ref`
+  - 참고할 이슈가 있을 때 사용`Related to`
+  - 해당 커밋에 관련된 이슈번호 (아직 해결되지 않은 경우)
+    ```jsx
+    ex)
+
+    type: ~~~
+
+    ...
+
+    Fixes: #45
+    Related to: #48, #45
+    ```
 
 ### 6. Commit 예시
 
@@ -99,7 +102,6 @@ Resolves: #123
 Ref: #456
 Related to: #48, #45
 ```
-
 
 # GIT FLOW (깃 전략)
 
@@ -125,7 +127,7 @@ ex) feature/jini11/google-social-login
 
 ---
 
-![출처 : [https://techblog.woowahan.com/2553/](https://techblog.woowahan.com/2553/)](GIT%20FLOW%20(%E1%84%80%E1%85%B5%E1%86%BA%20%E1%84%8C%E1%85%A5%E1%86%AB%E1%84%85%E1%85%A3%E1%86%A8)%20c2f701bfb3ed4285b564fcf25b901244/Untitled.png)
+![출처 : [https://techblog.woowahan.com/2553/](https://techblog.woowahan.com/2553/)](<GIT%20FLOW%20(%E1%84%80%E1%85%B5%E1%86%BA%20%E1%84%8C%E1%85%A5%E1%86%AB%E1%84%85%E1%85%A3%E1%86%A8)%20c2f701bfb3ed4285b564fcf25b901244/Untitled.png>)
 
 출처 : [https://techblog.woowahan.com/2553/](https://techblog.woowahan.com/2553/)
 
@@ -134,20 +136,18 @@ ex) feature/jini11/google-social-login
 ---
 
 - Pull Request 진행 방식
-    - Pull Request 방식을 채택한 이유
-        - 개발 후 merge 전 `코드 리뷰`
+  - Pull Request 방식을 채택한 이유
+    - 개발 후 merge 전 `코드 리뷰`
 - `feature/#1` → `develop` branch Pull Request 예시.
-    
-    ```bash
-    git add .
-    git status
-    git commit -m "커밋 컨벤션 메세지"
-    git push origin 브랜치이름
-    ```
-    
+  ```bash
+  git add .
+  git status
+  git commit -m "커밋 컨벤션 메세지"
+  git push origin 브랜치이름
+  ```
 - Reviewers와 Assignees 는 각 Pull Request마다 반드시 한 명 이상 참여한다
-    - Reviewer : 현재 Pull Request(PR)을 리뷰를 해 줄 팀원.
-    - Assignee : 현재 PR 작업의 담당자
+  - Reviewer : 현재 Pull Request(PR)을 리뷰를 해 줄 팀원.
+  - Assignee : 현재 PR 작업의 담당자
 - Reviewer는 구체적이고 명확하게 comment를 적는다.
 
 ### 깃 머지 전략
@@ -155,14 +155,14 @@ ex) feature/jini11/google-social-login
 ---
 
 - `develop` ↔ `feature`
-    - `squash & merge` 를 사용한다.
-        - 이유
-            - feature의 복잡한 커밋 히스토리를 새로운 커밋으로 develop branch에 추가해, develop branch에서 독자적으로 관리할 수 있다.
+  - `squash & merge` 를 사용한다.
+    - 이유
+      - feature의 복잡한 커밋 히스토리를 새로운 커밋으로 develop branch에 추가해, develop branch에서 독자적으로 관리할 수 있다.
 - `master` ↔ `develop`
-    - `rebase & merge` 를 사용한다.
-        - 이유
-            - develop의 내용을 master에 추가할 때에는 별도의 새로운 커밋을 생성할 이유가 없다.
+  - `rebase & merge` 를 사용한다.
+    - 이유
+      - develop의 내용을 master에 추가할 때에는 별도의 새로운 커밋을 생성할 이유가 없다.
 - `hotfix` ↔ `develop` , `hotfix` ↔ `master`
-    - `squash & merge` 또는 `merge` 를 사용한다.
-        - 이유
-            - hotfix branch 작업의 각 커밋 히스토리가 모두 남아야 하는 경우 merge, 필요 없는 경우 squash and merge를 사용한다.
+  - `squash & merge` 또는 `merge` 를 사용한다.
+    - 이유
+      - hotfix branch 작업의 각 커밋 히스토리가 모두 남아야 하는 경우 merge, 필요 없는 경우 squash and merge를 사용한다.
