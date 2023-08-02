@@ -1,38 +1,39 @@
 import React, { useState } from 'react';
-import MyCarousel from '@components/login/MyCarousel';
+import { useAtom } from 'jotai';
+import Tutorial from '@components/login/Tutorial';
 import Logo from '@components/common/Logo';
 import GuestLogin from '@components/login/GuestLogin';
-import SocialLogin from '@components/login/SocialLogin';
+import Login from '@components/login/Login';
+import { userAtom } from '../../stores/index';
 
 export default function Layout() {
-  const [nickname, setNickname] = useState('');
+  // Atom 값과 상태 업데이트 함수 가져오기
+  const [{ email, nickname }, setUser] = useAtom(userAtom);
   const [enterCode, setEnterCode] = useState('');
-  const [email, setEmail] = useState('');
   const [emailPassword, setEmailPassword] = useState('');
   const [showLoginForm, setShowLoginForm] = useState(false);
 
-  function handleNicknameChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setNickname(event.target.value);
-  }
-
-  function handleEnterCodeChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function onChangeEnterCode(event: React.ChangeEvent<HTMLInputElement>) {
     setEnterCode(event.target.value);
   }
 
-  function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setEmail(event.target.value);
+  function onChangeEmail(event: React.ChangeEvent<HTMLInputElement>) {
+    setUser((prev) => ({ ...prev, email: event.target.value }));
+    console.log(`이메일 확인: ${email}`);
   }
 
-  function handleEmailPasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function onChangeEmailPassword(event: React.ChangeEvent<HTMLInputElement>) {
     setEmailPassword(event.target.value);
   }
 
-  function handleGuestLoginClick() {
+  function onClickGuestLogin() {
+    setUser((prev) => ({ ...prev, nickname: nickname }));
     console.log('Nickname:', nickname);
     console.log('Enter Code:', enterCode);
+    //로그인 되도록 짜야하고, 입장코드가 잘못된 경우에 입장할 수 없도록 코드 짜야함.
   }
 
-  function handleSocialLoginClick() {
+  function onClickSocialLogin() {
     console.log('Email: ', email);
     console.log('Email Password:', emailPassword);
   }
@@ -54,24 +55,22 @@ export default function Layout() {
       <div className='flex justify-center'>
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-12 items-center'>
           {showLoginForm ? (
-            <SocialLogin
+            <Login
               email={email}
               emailPassword={emailPassword}
-              onEmailChange={handleEmailChange}
-              onEmailPasswordChange={handleEmailPasswordChange}
-              onSocialLoginClick={handleSocialLoginClick}
+              onChangeEmail={onChangeEmail}
+              onChangeEmailPassword={onChangeEmailPassword}
+              onClickSocialLogin={onClickSocialLogin}
             />
           ) : (
             <GuestLogin
-              nickname={nickname}
               enterCode={enterCode}
-              onNicknameChange={handleNicknameChange}
-              onEnterCodeChange={handleEnterCodeChange}
-              onGuestLoginClick={handleGuestLoginClick}
+              onChangeEnterCode={onChangeEnterCode}
+              onClickGuestLogin={onClickGuestLogin}
             />
           )}
 
-          <MyCarousel />
+          <Tutorial />
         </div>
       </div>
     </div>

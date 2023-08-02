@@ -1,44 +1,48 @@
 import React from 'react';
-import Input from '../common/Input';
-import Button from '../common/Button';
-import SmallContainer from '@components/common/SmallContainer';
+import ButtonComponent from '../common/ButtonComponent';
+import Container from '@components/common/Container';
+import { useAtom } from 'jotai';
+import { userAtom } from 'stores/index';
+import InputComponent from '../common/InputComponent';
 
-interface GuestLoginProps {
-  nickname: string;
+interface IGuestLoginProps {
   enterCode: string;
-  onNicknameChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onEnterCodeChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onGuestLoginClick: () => void;
+  onChangeEnterCode: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onClickGuestLogin: () => void;
 }
 
-const GuestLogin: React.FC<GuestLoginProps> = ({
-  nickname,
+const GuestLogin: React.FC<IGuestLoginProps> = ({
   enterCode,
-  onNicknameChange,
-  onEnterCodeChange,
-  onGuestLoginClick,
+  onChangeEnterCode,
+  onClickGuestLogin,
 }) => {
+  const [{ nickname }, setNickname] = useAtom(userAtom); // useAtom에서 setNickname도 가져옴
+
+  // nickname 변경 함수
+  const onChangeNickname = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNickname((prev) => ({ ...prev, nickname: event.target.value }));
+  };
   return (
-    <SmallContainer>
-      <Input
+    <Container>
+      <InputComponent
         label='닉네임 설정'
         type='text'
         value={nickname}
         placeholder='닉네임'
-        onChange={onNicknameChange}
+        onChange={onChangeNickname}
       />
-      <Input
+      <InputComponent
         label='입장 코드'
         type='text'
         value={enterCode}
         placeholder='입장 코드'
-        onChange={onEnterCodeChange}
+        onChange={onChangeEnterCode}
       />
       <div className='flex justify-center'>
         <p className='text-black hover:text-purple-600'>로그인한 유저만 방을 생성할 수 있습니다.</p>
       </div>
-      <Button onClick={onGuestLoginClick}>로그인</Button>
-    </SmallContainer>
+      <ButtonComponent onClick={onClickGuestLogin}>로그인</ButtonComponent>
+    </Container>
   );
 };
 

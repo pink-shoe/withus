@@ -1,24 +1,22 @@
-import { GoogleLogin } from '@react-oauth/google';
-import { useNavigate } from 'react-router-dom';
-import jwtDecode from 'jwt-decode';
+import { useGoogleLogin } from '@react-oauth/google';
+import ButtonComponent from '@components/common/ButtonComponent';
+import axios from 'axios';
 
 export default function GoogleSocialLogin() {
-  const navigate = useNavigate();
+  const googleSocialLogin = useGoogleLogin({
+    scope: 'email profile',
+    onSuccess: async ({ code }) => {
+      console.log(code);
+      axios.post(`${import.meta.env.VITE_API}/api/oauth/google`, { code }).then(({ data }) => {
+        console.log(`구글 로그인 토큰 받기 성공 ${data}`);
+        localStorage.setItem('token', data);
+      });
+    },
+    onError: (errorResponse) => {
+      console.error(errorResponse);
+    },
+    flow: 'auth-code',
+  });
 
-  return (
-    <GoogleLogin
-      onSuccess={(credentialResponse) => {
-        const credential: string = credentialResponse.credential!;
-        console.log(jwtDecode(credential));
-
-        // credentail에서 받은 데이터 서버로 넘겨서 로그인 확인 하고
-        //
-
-        navigate('/');
-      }}
-      onError={() => {
-        console.log('Login Failed');
-      }}
-    />
-  );
+  return <ButtonComponent onClick={googleSocialLogin}>Google ButtonComponent</ButtonComponent>;
 }

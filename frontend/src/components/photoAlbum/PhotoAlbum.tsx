@@ -1,107 +1,80 @@
-import { useState } from 'react';
-import img1 from '../../assets/background1.jpg';
-import img2 from '../../assets/background2.jpg';
-import img3 from '../../assets/background3.jpg';
-import img4 from '../../assets/1.gif';
-import img5 from '../../assets/2.gif';
-import img6 from '../../assets/3.gif';
-import img7 from '../../assets/4.gif';
-import img8 from '../../assets/5.gif';
-import img9 from '../../assets/6.gif';
-import img10 from '../../assets/7.gif';
-import img11 from '../../assets/8.gif';
-import img12 from '../../assets/9.gif';
-import Content1 from './Content1';
+import { useState, useEffect } from 'react';
+import ButtonComponent from '@components/common/ButtonComponent';
+import AlbumFrame from './AlbumFrame';
+import { album } from '../../apis/album';
+import PaginationContainer from '@components/Pagination/PaginationContainer';
 
 export default function PhotoAlbum() {
-  const images = [img1, img2, img3, img4, img5, img6, img7, img8, img9, img10, img11, img12];
-
+  const [images, setImages] = useState<{ imgId: number; imgUrl: string; savedAt: string }[]>([]);
+  const [contentNumber, setContentNumber] = useState(1);
+  const BackGroundURLs = [
+    '/src/assets/albumbackground1.jpg',
+    '/src/assets/albumbackground2.jpg',
+    '/src/assets/albumbackground3.jpg',
+    '/src/assets/albumbackground4.jpg',
+    '/src/assets/albumbackground5.jpg',
+  ];
+  const [BackGroundURL, setBackGroundURL] = useState(BackGroundURLs[0]);
   const imagesPerPage = 4; // 한 페이지에 보여줄 이미지 개수
-  const totalPages = Math.ceil(images.length / imagesPerPage); // 전체 페이지 수
   const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await album();
+        setImages(response); // 가져온 이미지 객체(아이디, 주소, 저장날짜)를 images 배열에 저장
+      } catch (error) {
+        console.error('이미지 저장 실패');
+      }
+    };
+    fetchImages();
+  }, []);
 
   // 현재 페이지에 보여줄 이미지들을 계산하는 함수
   const getDisplayedImages = () => {
     const startIndex = (currentPage - 1) * imagesPerPage;
     const endIndex = startIndex + imagesPerPage;
-    return images.slice(startIndex, endIndex);
+    const displayedImages = images.slice(startIndex, endIndex).map((image) => image.imgUrl);
+    return displayedImages;
   };
 
-  // 페이지 숫자를 생성하는 함수
-  const generatePageNumbers = () => {
-    const pageNumbers = [];
-    if (totalPages <= 5) {
-      // 전체 페이지가 5개 이하일 경우 모든 페이지 숫자 추가
-      for (let i = 1; i <= totalPages; i++) {
-        pageNumbers.push(i);
-      }
-    } else {
-      // 전체 페이지가 5개를 넘을 경우 1, ... 중앙, ..., 마지막 페이지 숫자 추가
-      pageNumbers.push(1);
-      if (currentPage <= 3) {
-        // 현재 페이지가 3 이하일 경우 첫 번째 그룹에 속하는 페이지 추가
-        for (let i = 2; i <= 4; i++) {
-          pageNumbers.push(i);
-        }
-        pageNumbers.push('...');
-        pageNumbers.push(totalPages);
-      } else if (currentPage >= totalPages - 2) {
-        // 현재 페이지가 뒤에서 3개 이하일 경우 마지막 그룹에 속하는 페이지 추가
-        pageNumbers.push('...');
-        for (let i = totalPages - 3; i <= totalPages - 1; i++) {
-          pageNumbers.push(i);
-        }
-        pageNumbers.push(totalPages);
-      } else {
-        // 그 외의 경우 중앙 그룹에 속하는 페이지 추가
-        pageNumbers.push('...');
-        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
-          pageNumbers.push(i);
-        }
-        pageNumbers.push('...');
-        pageNumbers.push(totalPages);
-      }
-    }
-    return pageNumbers;
+  const onClickPage = (page: number) => {
+    setCurrentPage(page);
   };
 
   // 한 줄에 4개씩 이미지 배치하기 위해 grid 레이아웃 사용
   return (
     <div>
-      {/* <div className='grid grid-rows-2 grid-cols-2 lg:grid-rows-4 lg:grid-cols-1 gap-4'></div> */}
-      <Content1 DisplayedImages={getDisplayedImages()} />
-      <div className='flex justify-center mt-4'>
-        {/* Pagination */}
-        <button
-          className='px-4 py-2 mr-2 border rounded bg-white hover:bg-blue-500'
-          onClick={() => setCurrentPage((prevPage) => prevPage - 1)}
-          disabled={currentPage === 1}
-        >
-          이전
-        </button>
-        {generatePageNumbers().map((pageNum, index) =>
-          typeof pageNum === 'number' ? (
-            <button
-              key={index}
-              className={`px-4 py-2 border rounded ${
-                pageNum === currentPage ? 'bg-blue-500' : 'bg-white'
-              }`}
-              onClick={() => setCurrentPage(pageNum)}
-            >
-              {pageNum}
-            </button>
-          ) : (
-            <span key={index}>{pageNum}</span>
-          )
-        )}
-        <button
-          className='px-4 py-2 border rounded bg-white hover:bg-blue-500'
-          onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          다음
-        </button>
+      <div className='grid grid-cols-5 gap-1'>
+        <ButtonComponent onClick={() => setContentNumber(1)}>사진첩양식 1</ButtonComponent>
+        <ButtonComponent onClick={() => setContentNumber(2)}>사진첩양식 2</ButtonComponent>
+        <ButtonComponent onClick={() => setContentNumber(3)}>사진첩양식 3</ButtonComponent>
+        <ButtonComponent onClick={() => setContentNumber(4)}>사진첩양식 4</ButtonComponent>
+        <ButtonComponent onClick={() => setContentNumber(5)}>사진첩양식 5</ButtonComponent>
       </div>
+      <div className='grid grid-cols-5 gap-1'>
+        <ButtonComponent onClick={() => setBackGroundURL(BackGroundURLs[0])}>
+          배경 1
+        </ButtonComponent>
+        <ButtonComponent onClick={() => setBackGroundURL(BackGroundURLs[1])}>
+          배경 2
+        </ButtonComponent>
+        <ButtonComponent onClick={() => setBackGroundURL(BackGroundURLs[2])}>
+          배경 3
+        </ButtonComponent>
+        <ButtonComponent onClick={() => setBackGroundURL(BackGroundURLs[3])}>
+          배경 4
+        </ButtonComponent>
+        <ButtonComponent onClick={() => setBackGroundURL(BackGroundURLs[4])}>
+          배경 5
+        </ButtonComponent>
+      </div>
+      <AlbumFrame
+        DisplayedImages={getDisplayedImages()}
+        BackgroundURL={BackGroundURL}
+        contentNumber={contentNumber}
+      />
+      <PaginationContainer currentPage={currentPage} onClickPage={onClickPage} />
     </div>
   );
 }
