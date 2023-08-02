@@ -1,12 +1,13 @@
 package com.proj.withus.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.proj.withus.repository.MemberRepository;
 import com.proj.withus.service.SocialService;
@@ -15,9 +16,16 @@ import com.proj.withus.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Api(tags = "소셜 api")
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+@ApiResponses({
+        @ApiResponse(code = 200, message = "로그인 성공"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 401, message = "토큰 만료"),
+})
 public class SocialController {
 
     private final SocialService socialService;
@@ -25,14 +33,17 @@ public class SocialController {
 
     private final JwtUtil jwtUtil;
 
-    @GetMapping("/")
-    public String index() {
-        return "<h1>index page</h1>";
-    }
+//    @GetMapping("/")
+//    public String index() {
+//        return "<h1>index page</h1>";
+//    }
 
+    @ApiOperation(value = "소셜 로그인", notes = "인가 코드, 로그인 타입으로 소셜 로그인을 진행한다.")
     @ResponseBody
     @GetMapping("/api/oauth/{login-type}") // pathvariable로 애초에 loginType 받고, 이걸로 jwt 만들기
-    public ResponseEntity<?> callback(@RequestParam String code, @PathVariable("login-type") String loginType) {
+    public ResponseEntity<?> callback(
+            @RequestParam String code,
+            @PathVariable(value = "login-type", required = true) String loginType) {
 
         String accessToken = "";
         Long memberId = -1L;
