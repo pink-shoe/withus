@@ -34,7 +34,7 @@ export default function Carousel({
           <img key={index} src={img} alt='' />
         ))}
       </div>
-      <div className='absolute inset-0 flex items-center justify-between p-4'>
+      <div className='absolute inset-0 flex items-center justify-between p-2'>
         <button
           onClick={goToPrevSlide}
           className='p-1 rounded-full shadow bg-white/80 text-gray-800 hover:bg-white'
@@ -57,14 +57,15 @@ export default function Carousel({
               className={`transition-all w-3 h-3 rounded-full ${
                 curr === i ? 'p-2' : 'bg-opacity-50'
               }`}
-              style={{ backgroundColor: curr === i ? 'black' : 'white' }} // 현재 이미지의 번호에만 색상 적용
+              style={{ backgroundColor: curr === i ? 'navy' : 'purple' }} // 현재 이미지의 번호에만 색상 적용
             />
           ))}
         </div>
       </div>
-      <div className='bg-neutral-800 text-neutral-50 dark:bg-transparent absolute bottom-12 left-0 right-0 text-center'>
+      {/* <div className='bg-neutral-800 text-neutral-50 dark:bg-transparent absolute bottom-12 left-0 right-0 text-center'>
+        몇 번째 화면인지 설명이 적혀있던 공간
         <p>{guidelines[curr]}</p>
-      </div>
+      </div> */}
     </div>
   );
 }
