@@ -27,8 +27,8 @@ public class SwaggerConfig {
 
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder()
-			.title("Example API Documentation")
-			.description("API documentation for Example App")
+			.title("WithUs API")
+			.description("토큰 입력 시 Bearer 추가하기")
 			.version("1.0")
 			.build();
 	}
