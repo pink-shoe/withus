@@ -1,5 +1,6 @@
 package com.proj.withus.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,17 +26,18 @@ public class Member {
 
     private String loginType;
 
-    private String token;
-
-    private String accessToken;
-
     private String createdAt;
 
     private String deletedAt;
 
-    @OneToMany(mappedBy = "member")
-    private List<Album> albums = new ArrayList<>();
+    @OneToOne(mappedBy = "member")
+    private Album album;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<Room> rooms = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "member")
+    private Player player;
 }
