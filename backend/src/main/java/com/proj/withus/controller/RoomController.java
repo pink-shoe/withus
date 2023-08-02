@@ -4,6 +4,7 @@ import com.proj.withus.domain.Room;
 import com.proj.withus.domain.dto.CreateRoomReq;
 import com.proj.withus.domain.dto.EnterRoomRes;
 import com.proj.withus.domain.dto.ModifyRoomReq;
+import com.proj.withus.domain.dto.SocialMemberInfo;
 import com.proj.withus.service.RoomServiceImpl;
 import com.proj.withus.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -45,8 +46,12 @@ public class RoomController {
             @RequestHeader("Authorization") String token,
             @PathVariable("room_id") Long roomId,
             @PathVariable("member_id") Long memberId) {
+        Long id = -1L;
+        String loginType = "";
         try {
-            Long id = jwtUtil.extractMemberId(token);
+            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
+            id = socialMemberInfo.getId();
+            loginType = socialMemberInfo.getLoginType();
         } catch (Exception e) {
             return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
         }
@@ -73,7 +78,8 @@ public class RoomController {
             @PathVariable("room_id") Long roomId,
             @PathVariable("member_id") Long pathMemberId) {
 
-        Long memberId = jwtUtil.extractMemberId(token); // try-catch 뺌
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);// try-catch 뺌
+        Long memberId = socialMemberInfo.getId();
         try {
             roomServiceImpl.leaveRoom(roomId, memberId);
         } catch (Exception e) {
@@ -90,8 +96,10 @@ public class RoomController {
             @RequestHeader("Authorization") String token,
             @PathVariable("room_id") Long roomId,
             @RequestBody ModifyRoomReq modifyRoomReq) {
+
         try {
-            Long id = jwtUtil.extractMemberId(token);
+            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
+            Long id = socialMemberInfo.getId();
             // 방장 체크 // 이렇게 깊은건 어떻게 처리하는게 깔끔한지 알아보기 (depth 3 이상)
             Long hostId = roomServiceImpl.getHostId(roomId);
             if (hostId != id) {
@@ -117,7 +125,8 @@ public class RoomController {
 
         Long id = -1L;
         try {
-            id = jwtUtil.extractMemberId(token);
+            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
+            id = socialMemberInfo.getId();
             System.out.println("ididididi: " + id); //
         } catch (Exception e) {
             return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);

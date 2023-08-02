@@ -6,7 +6,7 @@ import com.proj.withus.domain.Room;
 import com.proj.withus.domain.dto.CreateRoomReq;
 import com.proj.withus.domain.dto.ModifyRoomReq;
 import com.proj.withus.repository.MemberRepository;
-import com.proj.withus.repository.PlayerRepopsitory;
+import com.proj.withus.repository.PlayerRepository;
 import com.proj.withus.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
     private final MemberRepository memberRepository;
-    private final PlayerRepopsitory playerRepopsitory;
+    private final PlayerRepository playerRepository;
 
     public Room createRoom(CreateRoomReq createRoomReq) {
         System.out.println(createRoomReq.getId());
@@ -44,7 +44,7 @@ public class RoomServiceImpl implements RoomService {
         Player player = new Player();
         player.setRoom(roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("Room not found")));
         player.setMember(memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Member not found")));
-        Player savedPlayer = playerRepopsitory.save(player); // 반환을 지정해줘도, 주지 않아도 됨 // 예외 처리를 위해서는 받는게 좋지 않을까
+        Player savedPlayer = playerRepository.save(player); // 반환을 지정해줘도, 주지 않아도 됨 // 예외 처리를 위해서는 받는게 좋지 않을까
 
         return roomRepository.findById(roomId);
     }
@@ -65,7 +65,7 @@ public class RoomServiceImpl implements RoomService {
     해당 방에 대한 정보?
      */
     public void leaveRoom(Long roomId, Long memberId) {
-        playerRepopsitory.deleteByRoomId(roomId);
+        playerRepository.deleteByRoomId(roomId);
 
         /*
         [방장일 경우 방 삭제하는 로직]
@@ -106,7 +106,7 @@ public class RoomServiceImpl implements RoomService {
     where room_id = roomId
      */
     public List<Player> getPlayerList(Long roomId) {
-        return playerRepopsitory.findAllByRoomId(roomId);
+        return playerRepository.findAllByRoomId(roomId);
     }
 
     public int createCode() {

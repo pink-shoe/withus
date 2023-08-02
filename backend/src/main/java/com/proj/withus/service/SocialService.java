@@ -11,7 +11,7 @@ public interface SocialService {
 
     // google
     public String getGoogleAccessToken(String code);
-    public String getGoogleMemberInfo(String token);
+    public Long getGoogleMemberInfo(String token);
 
     // 공통
     public void joinMember(Member member);

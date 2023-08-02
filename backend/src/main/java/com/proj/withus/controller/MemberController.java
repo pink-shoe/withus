@@ -1,15 +1,23 @@
 package com.proj.withus.controller;
 
 import com.proj.withus.domain.Album;
+import com.proj.withus.domain.dto.SocialMemberInfo;
+import com.proj.withus.util.JwtUtil;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.proj.withus.domain.Member;
 import com.proj.withus.service.AlbumService;
 import com.proj.withus.service.MemberService;
-import com.proj.withus.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
@@ -23,8 +31,9 @@ public class MemberController {
 
     @GetMapping
     private ResponseEntity<?> getMemberInfo(@RequestHeader("Authorization") String jwtToken) {
-        Long memberId = jwtUtil.extractMemberId(jwtToken);
-        Member memberInfo = memberService.getMemberInfo(memberId);
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
+        Long memberId = socialMemberInfo.getId();
+        Member memberInfo = memberServiceImpl.getMemberInfo(memberId);
 
         if (memberInfo == null) {
             return new ResponseEntity<>("유저 정보 찾지 못함", HttpStatus.BAD_REQUEST);
@@ -37,8 +46,9 @@ public class MemberController {
             @RequestHeader("Authorization") String jwtToken,
             @RequestBody String nickname) {
 
-        Long memberId = jwtUtil.extractMemberId(jwtToken);
-        Member updatedInfo = memberService.updateMember(memberId, nickname);
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
+        Long memberId = socialMemberInfo.getId();
+        Member updatedInfo = memberServiceImpl.updateMember(memberId, nickname);
 
         if (updatedInfo == null) {
             return new ResponseEntity<>("유저 정보 찾을 수 없음", HttpStatus.BAD_REQUEST);
@@ -51,7 +61,8 @@ public class MemberController {
 
     @DeleteMapping
     private ResponseEntity deleteMemberInfo(@RequestHeader("Authorization") String jwtToken) {
-        Long memberId = jwtUtil.extractMemberId(jwtToken);
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
+        Long memberId = socialMemberInfo.getId();
 
         Album deletedAlbum = albumService.deleteAlbum(memberId);
         if (deletedAlbum != null) {

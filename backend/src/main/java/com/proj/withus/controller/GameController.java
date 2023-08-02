@@ -43,7 +43,8 @@ public class GameController {
             @PathVariable("room_id") Long roomId,
             @RequestHeader("Authorization") String jwtToken) {
 
-        Long hostId = jwtUtil.extractMemberId(jwtToken);
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
+        Long hostId = socialMemberInfo.getId();
 
         Room room = gameService.getRoomInfo(hostId);
         if (room == null) {
@@ -89,7 +90,8 @@ public class GameController {
             @PathVariable("room_id") Long roomId,
             @RequestHeader("Authorization") String jwtToken) {
 
-        Long memberId = jwtUtil.extractMemberId(jwtToken);
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
+        Long memberId = socialMemberInfo.getId();
         if (memberId == null) {
             return new ResponseEntity<>("인증되지 않은 사용자", HttpStatus.BAD_REQUEST);
         }
@@ -106,7 +108,8 @@ public class GameController {
             @RequestHeader("Authorization") String jwtToken,
             @RequestBody GetSelectedImagesReq getSelectedImagesReq) {
 
-        Long memberId = jwtUtil.extractMemberId(jwtToken);
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
+        Long memberId = socialMemberInfo.getId();
 
         List<Long> resultsId = getSelectedImagesReq.getResults();
         List<String> captureUrls = new ArrayList<>();

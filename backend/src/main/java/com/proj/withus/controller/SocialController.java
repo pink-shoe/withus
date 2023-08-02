@@ -29,57 +29,65 @@ public class SocialController {
         return "<h1>index page</h1>";
     }
 
-    // test
-    @GetMapping("/temp/member")
-    public ResponseEntity<Long> getMemberInfo(@RequestHeader("Authorization") String jwtToken) {
-        Long testId = jwtUtil.extractMemberId(jwtToken);
-        return new ResponseEntity<>(testId, HttpStatus.OK);
-    }
-
     @ResponseBody
-    @GetMapping("/kakao/login") // url 수정 필요함
-    public ResponseEntity<String> kakaoCallback(@RequestParam String code) {
-        log.info("code: ", code);
-        String accessToken = socialService.getKakaoAccessToken(code);
-        System.out.println("access token: " + accessToken);
-        Long kakaoMemberInfo = socialService.getKakaoMemberInfo(accessToken);
-        System.out.println("kakaoMemberInfo: " + kakaoMemberInfo);
+    @GetMapping("/api/oauth/{login-type}") // pathvariable로 애초에 loginType 받고, 이걸로 jwt 만들기
+    public ResponseEntity<?> callback(@RequestParam String code, @PathVariable("login-type") String loginType) {
 
-//        String jwtToken = jwtUtil.generateJwtToken(12345678L);
-//        JwtUtil jwtUtil = new JwtUtil();
-        String jwtToken = jwtUtil.generateJwtToken((Long) kakaoMemberInfo);
-        System.out.println("jwtToken: " + jwtToken);
+        String accessToken = "";
+        Long memberId = -1L;
+        String jwtToken = "";
+
+        if (loginType.equals("kakao")) {
+            log.info("code: ", code);
+            // 코드 to 액세스 토큰
+            accessToken = socialService.getKakaoAccessToken(code);
+            System.out.println("access token: " + accessToken);
+
+            // 액세스 토큰 to 회원 정보
+            memberId = socialService.getKakaoMemberInfo(accessToken);
+            System.out.println("kakaoMemberInfo: " + memberId);
+
+            // 회원 정보 to JWT
+            jwtToken = jwtUtil.generateJwtToken(memberId, loginType);
+            System.out.println("jwtToken: " + jwtToken);
+
+        } else if (loginType.equals("google")) {
+            accessToken = socialService.getGoogleAccessToken(code);
+            memberId = socialService.getGoogleMemberInfo(accessToken);
+            jwtToken = jwtUtil.generateJwtToken(memberId, loginType);
+        }
+        System.out.println("memberId:" + memberId);
         return new ResponseEntity<>(jwtToken, HttpStatus.OK);
     }
 
-    // authorization code 확인용
-    @ResponseBody
-    @GetMapping("/kakao/code")
-    public ResponseEntity<String> kakaoCode(@RequestParam String code) {
-        System.out.println("code: " + code);
-        return new ResponseEntity<>(code, HttpStatus.OK);
-    }
+//    // authorization code 확인용
+//    @ResponseBody
+//    @GetMapping("/kakao/code")
+//    public ResponseEntity<String> kakaoCode(@RequestParam String code) {
+//        System.out.println("code: " + code);
+//        return new ResponseEntity<>(code, HttpStatus.OK);
+//    }
 
-    // 프론트가 구현 성공하면 다시 살릴 것
-    @ResponseBody
-    @GetMapping("/auth/google/callback")
-    public ResponseEntity<?> googleLogin(@RequestParam(name = "code") String code) {
-        String accessToken = socialService.getGoogleAccessToken(code);
-        String userInfo = socialService.getGoogleMemberInfo(accessToken);
-
-        return ResponseEntity.ok(userInfo);
-    }
+//    // 프론트가 구현 성공하면 다시 살릴 것 -> pathvariable로 통합
+//    @ResponseBody
+//    @GetMapping("/auth/google/callback")
+//    public ResponseEntity<?> googleLogin(@RequestParam(name = "code") String code) {
+//        String accessToken = socialService.getGoogleAccessToken(code);
+//        Long memberId = socialService.getGoogleMemberInfo(accessToken);
+//
+//        return ResponseEntity.ok(memberId);
+//    }
 
     // 프론트가 가진 정보로 withus DB에 회원 등록
-    @PostMapping("/auth/googlemember")
-    public ResponseEntity<String> saveGoogleMember(@RequestBody SocialMemberInfo socialMemberInfo) {
-        Member member = new Member();
-        member.setNickname(socialMemberInfo.getNickname());
-        member.setEmail(socialMemberInfo.getEmail());
-        memberRepository.save(member);
-
-        return ResponseEntity.ok("Success");
-    }
+//    @PostMapping("/auth/googlemember")
+//    public ResponseEntity<String> saveGoogleMember(@RequestBody SocialMemberInfo socialMemberInfo) {
+//        Member member = new Member();
+//        member.setNickname(socialMemberInfo.getNickname());
+//        member.setEmail(socialMemberInfo.getEmail());
+//        memberRepository.save(member);
+//
+//        return ResponseEntity.ok("Success");
+//    }
 
 //    // google api에서 받은 google 계정 전용 고유 id를 withus DB의 id로 변환
 //    @GetMapping("/auth/googlememberid")
