@@ -112,6 +112,11 @@ public class GameController {
         SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
         Long memberId = socialMemberInfo.getId();
 
+        Long albumId = albumService.getAlbum(memberId);
+        if (albumId == null) {
+            return new ResponseEntity<>("앨범이 존재하지 않음", HttpStatus.BAD_REQUEST);
+        }
+
         List<Long> resultsId = getSelectedImagesReq.getResults();
         List<String> captureUrls = new ArrayList<>();
         for (Long resultId : resultsId) {
