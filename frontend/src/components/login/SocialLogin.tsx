@@ -16,11 +16,11 @@ interface GuestLoginProps {
 }
 
 function SocialLogin({
-  email,
-  emailPassword,
-  onEmailChange,
-  onEmailPasswordChange,
-  onSocialLoginClick,
+  // email,
+  // emailPassword,
+  // onEmailChange,
+  // onEmailPasswordChange,
+  // onSocialLoginClick,
 }: GuestLoginProps) {
   const GOOGLE_REST_API_KEY = import.meta.env.VITE_GoogleClient_ID;
 
