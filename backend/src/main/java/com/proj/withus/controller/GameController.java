@@ -3,6 +3,7 @@ package com.proj.withus.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.proj.withus.domain.dto.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +18,6 @@ import com.proj.withus.domain.Image;
 import com.proj.withus.domain.Player;
 import com.proj.withus.domain.Room;
 import com.proj.withus.domain.Shape;
-import com.proj.withus.domain.dto.CaptureDto;
-import com.proj.withus.domain.dto.RoomPlayerDto;
-import com.proj.withus.domain.dto.SelectedDto;
-import com.proj.withus.domain.dto.TotalGameResultDto;
 import com.proj.withus.service.AlbumServiceImpl;
 import com.proj.withus.service.GameService;
 import com.proj.withus.util.JwtUtil;
@@ -41,7 +38,8 @@ public class GameController {
 
     @GetMapping("/{room_id}")
     public ResponseEntity<?> getGameInfo(@PathVariable("room_id") Long roomId, @RequestHeader("Authorization") String jwtToken) {
-        Long hostId = jwtUtil.extractMemberId(jwtToken);
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
+        Long hostId = socialMemberInfo.getId();
 
         Room room = gameService.getRoomInfo(hostId);
         if (room == null) {
@@ -84,7 +82,8 @@ public class GameController {
 
     @GetMapping("/result/{room_id}")
     public ResponseEntity<?> getGameTotalResult(@PathVariable("room_id") Long roomId, @RequestHeader("Authorization") String jwtToken) {
-        Long memberId = jwtUtil.extractMemberId(jwtToken);
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
+        Long memberId = socialMemberInfo.getId();
         if (memberId == null) {
             return new ResponseEntity<>("인증되지 않은 사용자", HttpStatus.BAD_REQUEST);
         }
@@ -98,7 +97,8 @@ public class GameController {
 
     @PostMapping("/image/upload")
     public ResponseEntity<?> getSelectedImages(@RequestHeader("Authorization") String jwtToken, @RequestBody SelectedDto selectedDto) {
-        Long memberId = jwtUtil.extractMemberId(jwtToken);
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
+        Long memberId = socialMemberInfo.getId();
 
         List<Long> resultsId = selectedDto.getResults();
         List<String> captureUrls = new ArrayList<>();

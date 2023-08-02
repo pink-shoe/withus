@@ -191,7 +191,7 @@ public class SocialServiceImpl implements SocialService {
     }
 
     @Override
-    public String getGoogleMemberInfo(String token) {
+    public Long getGoogleMemberInfo(String token) {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -223,7 +223,10 @@ public class SocialServiceImpl implements SocialService {
 //        memberService.saveGoogle(userInfo, token);
         memberRepository.save(googleMember);
         albumServiceImpl.createAlbum(googleMember);
-        return response.getBody().toString(); // kakao return값과 다르긴 한데, 이 return값을 사용하진 않을 것 같음
+
+        Long memberId = memberRepository.findByEmail(googleUserInfo.getEmail()).getId();
+
+        return memberId;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.proj.withus.util;
 
+import com.proj.withus.domain.dto.SocialMemberInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -61,7 +62,7 @@ public class JwtUtil {
         }
     }
 
-    public Long extractMemberId(String jwtToken) {
+    public SocialMemberInfo extractMemberId(String jwtToken) {
         System.out.println("jwtToken: " + jwtToken); //
         jwtToken = jwtToken.substring(7);
         System.out.println("jwtToken: " + jwtToken); //
@@ -70,6 +71,10 @@ public class JwtUtil {
                 .parseClaimsJws(jwtToken)
                 .getBody();
 
-        return Long.parseLong(claims.get("memberId", String.class));
+        SocialMemberInfo memberInfoByJwt = new SocialMemberInfo();
+        memberInfoByJwt.setId(Long.parseLong(claims.get("memberId", String.class)));
+        memberInfoByJwt.setLoginType(claims.get("loginType", String.class));
+
+        return memberInfoByJwt;
     }
 }

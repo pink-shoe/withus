@@ -1,6 +1,7 @@
 package com.proj.withus.controller;
 
 import com.proj.withus.domain.Album;
+import com.proj.withus.domain.dto.SocialMemberInfo;
 import com.proj.withus.service.AlbumServiceImpl;
 import com.proj.withus.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,9 @@ public class MemberController {
 
     @GetMapping
     private ResponseEntity<?> getMemberInfo(@RequestHeader("Authorization") String jwtToken) {
-        Long memberId = jwtUtil.extractMemberId(jwtToken);
+
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
+        Long memberId = socialMemberInfo.getId();
         Member memberInfo = memberServiceImpl.getMemberInfo(memberId);
 
         if (memberInfo == null) {
@@ -47,7 +50,8 @@ public class MemberController {
 
     @PatchMapping
     private ResponseEntity<?> updateMemberInfo(@RequestHeader("Authorization") String jwtToken, @RequestBody String nickname) {
-        Long memberId = jwtUtil.extractMemberId(jwtToken);
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
+        Long memberId = socialMemberInfo.getId();
         Member updatedInfo = memberServiceImpl.updateMember(memberId, nickname);
 
         if (updatedInfo == null) {
@@ -58,7 +62,8 @@ public class MemberController {
 
     @DeleteMapping
     private ResponseEntity deleteMemberInfo(@RequestHeader("Authorization") String jwtToken) {
-        Long memberId = jwtUtil.extractMemberId(jwtToken);
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
+        Long memberId = socialMemberInfo.getId();
 
         Album deletedAlbum = albumServiceImpl.deleteAlbum(memberId);
         if (deletedAlbum != null) {

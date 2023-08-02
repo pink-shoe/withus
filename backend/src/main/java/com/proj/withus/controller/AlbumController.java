@@ -1,6 +1,7 @@
 package com.proj.withus.controller;
 
 import com.proj.withus.domain.Image;
+import com.proj.withus.domain.dto.SocialMemberInfo;
 import com.proj.withus.service.AlbumServiceImpl;
 import com.proj.withus.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,8 @@ public class AlbumController {
 
     @GetMapping
     public ResponseEntity<?> showAlbums(@RequestHeader("Authorization") String jwtToken) {
-        Long memberId = jwtUtil.extractMemberId(jwtToken);
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
+        Long memberId = socialMemberInfo.getId();
 
         Long albumId = albumServiceImpl.getAlbum(memberId);
         if (albumId != null) {
@@ -37,7 +39,8 @@ public class AlbumController {
 
     @PostMapping("/image/save")
     public ResponseEntity<?> saveImages(@RequestHeader("Authorization") String jwtToken, @RequestBody() List<String> imageUrls) {
-        Long memberId = jwtUtil.extractMemberId(jwtToken);
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
+        Long memberId = socialMemberInfo.getId();
 
 //        Long albumId = albumService.getAlbum(memberId);
 //        if (albumId == null) {
