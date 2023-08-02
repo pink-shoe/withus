@@ -6,7 +6,8 @@ export default {
   ],
   theme: {
     fontFamily: {
-      display: ['Jua', 'sans-serif']
+      kdisplay: ['Jua', 'sans-serif'],
+      edisplay: ['Baloo Thambi', 'sans-serif'],
     },
     extend: {},
   },

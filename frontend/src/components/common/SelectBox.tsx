@@ -28,10 +28,10 @@ export default function SelectBox({ selectSetting, options }: ISelectBoxProps) {
   return (
     <select
       onChange={onChangeSetting}
-      className='p-2 border-2 w-[17.5rem] border-blue-800 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 rounded-md font-semibold text-lg text-center'
+      className='p-2 border-2 w-[19rem] border-[#FF8DA3] focus:outline-none focus:border-[#fa6d6d] focus:ring-1 focus:ring-[#fa6d6d] rounded-md font-medium text-2xl text-center text-[#514148] font-kdisplay'
     >
       {options.map((option: any) => (
-        <option className='font-semibold text-lg' key={option.value}>
+        <option className='font-medium text-xl' key={option.value}>
           {option.name}
         </option>
       ))}

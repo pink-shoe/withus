@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import Header from '../components/common/Header';
 import Modal from '../components/common/Modal';
 import SettingModalContainer from '../components/common/SettingModal/SettingModalContainer';
 import { useNavigate } from 'react-router-dom';
+import Background from '@components/common/Background';
 
 export default function Lobby() {
   const navigate = useNavigate();
@@ -35,11 +35,15 @@ export default function Lobby() {
   // 현재는 콘솔창에 코드가 출력되도록 함
   const onClickParticipantBtn = () => {
     // 예시 코드
-    // 존재하지 않는 코드를 입력하면 방이 존재하지 않는다고 뜸
     if (enterCode !== 'ddddd') {
-      console.log('잘못된 코드 입력');
-      alert('방이 존재하지 않습니다😥');
-      setEnterCode('');
+      if (enterCode === '') {
+        // 공백이면 참여코드를 입력해달라는 창이 뜸
+        alert('참여코드를 입력해주세요😳');
+      } else {
+        // 존재하지 않는 코드를 입력하면 방이 존재하지 않는다고 뜸
+        console.log('잘못된 코드 입력');
+        alert('방이 존재하지 않습니다😥');
+        setEnterCode('');}
     } else {
       console.log(enterCode);
       navigate(`/waitingrooms/${enterCode}`);
@@ -48,18 +52,12 @@ export default function Lobby() {
 
   return (
     <Fragment>
-      <header>
-        <Header />
-      </header>
-      <div className='h-screen bg-gradient-to-b from-sky-900 to-pink-800'>
-        <div className=' w-full h-[220px] text-5xl text-center items-center flex justify-center font-bold text-white'>
-          [] with us
-        </div>
-        <div className='flex flex-auto justify-center content-center'>
+      <Background>
+      <div className='flex flex-auto justify-center content-center'>
           <Fragment>
             <button
               onClick={openMakeModal}
-              className='bg-red-600 hover:bg-red-800 me-5 aspect-square h-96 rounded-xl font-semibold text-2xl text-white'
+              className='bg-[#FF8D8D] hover:bg-red-500 me-10 aspect-square h-96 rounded-xl font-medium font-kdisplay text-4xl text-white'
             >
               방 만들기
             </button>
@@ -72,16 +70,16 @@ export default function Lobby() {
           <Fragment>
             <button
               onClick={openEnterModal}
-              className='bg-green-600 hover:bg-green-700 ms-5 aspect-square h-96 rounded-xl font-semibold text-2xl text-white'
+              className='bg-[#8D98FF] hover:bg-violet-700 ms-10 aspect-square h-96 rounded-xl font-medium font-kdisplay text-4xl text-white'
             >
-              참여하기
+              방 참여하기
             </button>
             <Modal openModal={enterRoomModal} closeModal={closeEnterModal}>
-              <p className='text-indigo-900 font-bold text-3xl mb-10 text-center'>참여 코드</p>
+              <p className='text-[#514148] font-kdisplay font-medium text-4xl mb-10 text-center'>참여 코드</p>
               <div className='flex mb-7'>
-                <span className='me-5 font-semibold text-xl flex items-center'>참여코드</span>
+                <span className='me-5 font-kdisplay font-medium text-2xl flex items-center'>참여코드</span>
                 <input
-                  className='p-2 border-2 w-[17.5rem] border-blue-800 rounded-md text-center focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 placeholder:text-slate-400'
+                  className='p-2 border-2 w-[19rem] border-[#8D98FF] focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 rounded-md font-medium text-2xl text-center text-[#514148] font-kdisplay'
                   placeholder='참여코드 입력'
                   type='text'
                   value={enterCode}
@@ -91,7 +89,7 @@ export default function Lobby() {
               <div className='flex justify-center'>
                 <button
                   onClick={onClickParticipantBtn}
-                  className='bg-violet-800 hover:bg-indigo-950 w-72 h-12 rounded-md font-semibold text-lg text-white'
+                  className='bg-[#8D98FF] hover:bg-violet-700 w-72 h-12 rounded-md font-medium font-kdisplay text-2xl text-white'
                 >
                   참여
                 </button>
@@ -99,7 +97,7 @@ export default function Lobby() {
             </Modal>
           </Fragment>
         </div>
-      </div>
+      </Background>
     </Fragment>
   );
 }

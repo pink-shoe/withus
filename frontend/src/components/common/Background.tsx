@@ -1,27 +1,20 @@
 import { Fragment } from 'react';
-import Logo from './Logo/Logo';
-import Header from './Header';
+import UserHeader from './UserHeader';
+import Board from './Board';
 
-export default function Background() {
+interface IBackgroundProps {
+  children: React.ReactNode;
+}
+
+export default function Background({children}: IBackgroundProps) {
   return (
     <Fragment>
-      <Header />
-      <div className='flex justify-center place-items-center h-screen bg-red-200'>
-        <div className='h-[38rem] w-[75rem]'>
-          <div className='static'>
-            <div className='flex justify-center place-items-center drop-shadow-xl rounded-md bg-yellow-100 h-[2.5rem]'></div>
-            <div className='w-full felx justify-center'>
-              <Logo />
-            </div>
-          </div>
-            <div className='flex justify-center place-items-center h-[35rem] w-[70rem] ms-[2.5rem] bg-white'>
-              dddddddd
-            </div>
-          <div className='flex justify-center place-items-center drop-shadow-lg rounded-md bg-yellow-100 h-[2.5rem]'></div>
-
-        </div>
+      <UserHeader />
+      <div className='flex justify-center place-items-center h-screen bg-[#F9C7C8]'>
+        <Board isGameBoard={false}>
+          {children}
+        </Board>
       </div>
-
     </Fragment>
   )
 }

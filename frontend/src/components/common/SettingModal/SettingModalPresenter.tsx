@@ -47,17 +47,17 @@ export default function SettingModalPresenter({
 }: ISettingModalPresenterProps) {
   return (
     <Fragment>
-      <Fragment>
+      <div className='font-kdisplay'>
         <Modal mode={mode} round={round} openModal={openModal} closeModal={closeModal}>
-          <p className='text-indigo-900 font-bold text-3xl mb-10 text-center'>방 설정</p>
+          <p className='text-[#514148] font-medium text-4xl mb-10 text-center'>방 설정</p>
           <div className='flex my-7'>
-            <span className='me-5 font-semibold text-xl flex items-center'>게임모드</span>
+            <span className='me-5 font-medium text-2xl flex items-center'>게임모드</span>
             <SelectBox selectSetting={selectMode} options={MOPTIONS}></SelectBox>
           </div>
           <div className='flex mb-7'>
-            <span className='me-5 font-semibold text-xl flex items-center'>게임진행</span>
+            <span className='me-5 font-medium text-2xl flex items-center'>게임진행</span>
             <SelectBox selectSetting={selectRound} options={ROPTIONS}></SelectBox>
-            <span className='me-5 font-semibold text-xl flex items-center ms-2'>판</span>
+            <span className='me-5 font-medium text-2xl flex items-center ms-2'>판</span>
           </div>
           <div>{children}</div>
 
@@ -71,7 +71,7 @@ export default function SettingModalPresenter({
                   <input
                     value={code}
                     onChange={codeEnter}
-                    className='p-2 border-2 w-[17.5rem] border-blue-800 rounded-md text-center focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 placeholder:text-slate-400'
+                    className='p-2 border-2 w-[19rem] border-[#FF8DA3] focus:outline-none focus:border-[#fa6d6d] focus:ring-1 focus:ring-[#fa6d6d] rounded-md font-medium text-2xl text-center text-[#514148] font-kdisplay'
                     placeholder='코드 입력'
                     type='text'
                   />
@@ -81,7 +81,7 @@ export default function SettingModalPresenter({
                   <input
                     value={url}
                     onChange={urlEnter}
-                    className='p-2 border-2 w-[17.5rem] border-blue-800 rounded-md text-center focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 placeholder:text-slate-400'
+                    className='p-2 border-2 w-[19rem] border-[#FF8DA3] focus:outline-none focus:border-[#fa6d6d] focus:ring-1 focus:ring-[#fa6d6d] rounded-md font-medium text-2xl text-center text-[#514148] font-kdisplay'
                     placeholder='URL 입력'
                     type='text'
                   />
@@ -92,7 +92,7 @@ export default function SettingModalPresenter({
           ) : null}
           <GameStartButton onClickStartBtn={handleSaveSetting} />
         </Modal>
-      </Fragment>
+      </div>
     </Fragment>
   );
 }

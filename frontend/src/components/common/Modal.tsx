@@ -16,7 +16,7 @@ export default function Modal({ openModal, closeModal, children }: IModalProps) 
       {openModal ? (
         <Fragment>
           {/* 모달창 띄우면 뒷배경 불투명해지는 효과 */}
-          <div className='h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-70'>
+          <div className='h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-70 z-50'>
             {/* 모달창 */}
             <div className='bg-slate-50 w-[32rem] rounded-lg px-5 py-3'>
               {/* 닫기 버튼 */}
