@@ -10,7 +10,7 @@ export default function Background() {
         <div className='h-[38rem] w-[75rem]'>
           <div className='static'>
             <div className='flex justify-center place-items-center drop-shadow-xl rounded-md bg-yellow-100 h-[2.5rem]'></div>
-            <div>
+            <div className='w-full felx justify-center'>
               <Logo />
             </div>
           </div>
