@@ -10,7 +10,8 @@ interface IParticipantsContainerProps {
   publisher: any;
   streamList: any;
   readyStatus: boolean;
-  onChangeIsUpdateUserName: (status: boolean) => void;
+  updateUsernameStatus: boolean;
+  onChangeUpdateUsernameStatus: (status: boolean) => void;
 }
 export default function ParticipantsContainer({
   type,
@@ -19,20 +20,21 @@ export default function ParticipantsContainer({
   publisher,
   streamList,
   readyStatus,
+  updateUsernameStatus: updateUnameStatus,
   ...callback
 }: IParticipantsContainerProps) {
   const [userName, setUserName] = useState(uname);
-  const [isUpdateUserName, setIsUpdateUserName] = useState(false);
+  const [updateUserNameStatus, setUpdateUsernameStatus] = useState(updateUnameStatus);
   const onChangeUserName = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
     console.log(e.target.value);
   };
 
-  const updateUserName = () => {
-    setIsUpdateUserName(true);
+  const onChangeUpdateUserNameStatus = () => {
+    setUpdateUsernameStatus((prev) => !prev);
   };
   const saveUserName = () => {
-    setIsUpdateUserName(false);
+    setUpdateUsernameStatus((prev) => !prev);
     console.log(userName);
     // stream에 userName update 처리 필요
   };
@@ -41,8 +43,8 @@ export default function ParticipantsContainer({
   }, [userName, callback]);
 
   useEffect(() => {
-    callback.onChangeIsUpdateUserName(isUpdateUserName);
-  }, [isUpdateUserName, callback]);
+    callback.onChangeUpdateUsernameStatus(updateUserNameStatus);
+  }, [updateUserNameStatus, callback]);
 
   return (
     <ParticipantsPresenter
@@ -50,10 +52,10 @@ export default function ParticipantsContainer({
       readyStatus={readyStatus}
       streamList={streamList}
       userId={userId}
-      userName={userName}
+      userName={uname}
       onChangeUserName={onChangeUserName}
-      isUpdateUserName={isUpdateUserName}
-      updateUserName={updateUserName}
+      isUpdateUserName={updateUserNameStatus}
+      onChangeUpdateUserNameStatus={onChangeUpdateUserNameStatus}
       saveUserName={saveUserName}
     />
   );

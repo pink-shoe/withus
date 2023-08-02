@@ -12,7 +12,7 @@ interface IParticipantsPresenterProps {
   readyStatus: boolean;
   onChangeUserName: any;
   isUpdateUserName: boolean;
-  updateUserName: () => void;
+  onChangeUpdateUserNameStatus: () => void;
   saveUserName: () => void;
 }
 interface IStreamList {
@@ -28,12 +28,15 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
   readyStatus,
   onChangeUserName,
   isUpdateUserName,
-  updateUserName,
+  onChangeUpdateUserNameStatus,
   saveUserName,
 }) => {
   return (
     <div id='participantsList' className=' w-52 bg-white'>
-      <div className='bg-[#112364] p-3 text-white whitespace-nowrap font-bold text-xl'>
+      <div className='bg-[#C4C6EC] p-3 text-white whitespace-nowrap font-bold text-xl'>
+        협동전 &nbsp; 1/5(판)
+      </div>
+      <div className='bg-[#FF8DA3] p-3 text-white whitespace-nowrap font-bold text-xl'>
         현재 플레이어({streamList.length})
       </div>
       <div className='bg-white w-full text-justify'>
@@ -41,7 +44,12 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
           return (
             <div
               key={idx}
-              className='flex justify-between items-center w-full text-justify border-bottom border-b-2 p-3'
+              className={
+                'flex justify-between items-center w-full text-justify border-bottom border-b-2 p-3 ' +
+                readyStatus
+                  ? 'bg-[#FFF5C0]'
+                  : 'bg-white'
+              }
             >
               {userId === stream.userId ? (
                 isUpdateUserName ? (
@@ -70,7 +78,7 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
                       disabled
                     />
                     {type === 'WAIT' ? (
-                      <button onClick={updateUserName}>
+                      <button onClick={onChangeUpdateUserNameStatus}>
                         <FontAwesomeIcon icon={faPenToSquare} />
                       </button>
                     ) : (

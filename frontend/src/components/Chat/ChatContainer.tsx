@@ -41,9 +41,9 @@ export default function ChatContainer({
     session && publisher && receiveMessage();
   }, [session, publisher]);
 
-  useEffect(() => {
-    console.log(messageList);
-  }, [receiveMessage]);
+  // useEffect(() => {
+  //   console.log(messageList);
+  // }, [receiveMessage]);
 
   return (
     <ChatPresenter
