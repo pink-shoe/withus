@@ -1,22 +1,27 @@
 import { FC, useEffect, useState } from 'react';
 
-import { ControllBarPresenter } from './ControllBarPresenter';
+import { ControlBarPresenter } from './ControlBarPresenter';
 import { useNavigate } from 'react-router-dom';
 
-interface IProps {
+interface IControlBarProps {
   isHost: boolean;
+  readyStatus: boolean;
   onChangeMicStatus: (status: boolean) => void;
   onChangeCameraStatus: (status: boolean) => void;
   onChangeChatStatus: (status: boolean) => void;
   onChangeReadyStatus: (status: boolean) => void;
 }
 
-export const ControllBarContainer: FC<IProps> = ({ isHost, ...callback }) => {
+export const ControlBarContainer: FC<IControlBarProps> = ({
+  isHost,
+  readyStatus: isReady,
+  ...callback
+}) => {
   const [micStatus, setMicStatus] = useState(true);
   const [cameraStatus, setCameraStatus] = useState(true);
   const [chatStatus, setChatStatus] = useState(true);
   const [gameSettingModal, setGameSettingModal] = useState(false);
-  const [readyStatus, setReadyStatus] = useState(false);
+  const [readyStatus, setReadyStatus] = useState(isReady);
   const navigate = useNavigate();
   const onChangeMicStatus = () => {
     setMicStatus((prev) => !prev);
@@ -55,9 +60,10 @@ export const ControllBarContainer: FC<IProps> = ({ isHost, ...callback }) => {
 
   useEffect(() => {
     callback.onChangeReadyStatus(readyStatus);
+    console.log('ControlBar' + readyStatus);
   }, [readyStatus, callback]);
   return (
-    <ControllBarPresenter
+    <ControlBarPresenter
       isHost={isHost}
       micStatus={micStatus}
       onChangeMicStatus={onChangeMicStatus}

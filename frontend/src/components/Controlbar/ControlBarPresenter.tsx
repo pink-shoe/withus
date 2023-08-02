@@ -12,7 +12,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import SettingModalContainer from '@components/common/SettingModal/SettingModalContainer';
 
-interface IControllBarPresenterProps {
+interface IControlBarPresenterProps {
   isHost: boolean;
   micStatus: boolean;
   onChangeMicStatus: () => void;
@@ -27,7 +27,7 @@ interface IControllBarPresenterProps {
   onClickExit: () => void;
 }
 
-export const ControllBarPresenter: FC<IControllBarPresenterProps> = ({
+export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
   isHost,
   micStatus,
   onChangeMicStatus,

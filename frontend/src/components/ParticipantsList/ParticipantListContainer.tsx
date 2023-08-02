@@ -46,6 +46,9 @@ export default function ParticipantsContainer({
     callback.onChangeUpdateUserNameStatus(updateUserNameStatus);
   }, [updateUserNameStatus, callback]);
 
+  useEffect(() => {
+    console.log(readyStatus);
+  }, [readyStatus]);
   return (
     <ParticipantsPresenter
       type={type}

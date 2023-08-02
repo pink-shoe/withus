@@ -4,7 +4,7 @@ import saveAs from 'file-saver';
 import { VideoStream } from '@components/VideoStream';
 import { useLocation } from 'react-router-dom';
 import { useOpenvidu } from 'hooks/useOpenvidu';
-import { ControllBarContainer } from '@components/Controllbar/ControllBarContainer';
+import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer';
 import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
 import ChatContainer from '@components/Chat/ChatContainer';
 export default function GameRoom() {
@@ -96,8 +96,9 @@ export default function GameRoom() {
           )}
         </div>
         <div className=' p-3'>
-          <ControllBarContainer
+          <ControlBarContainer
             isHost={isHost}
+            readyStatus={readyStatus}
             onChangeMicStatus={onChangeMicStatus}
             onChangeCameraStatus={onChangeCameraStatus}
             onChangeChatStatus={onChangeChatStatus}
