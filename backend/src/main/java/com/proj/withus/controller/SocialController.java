@@ -38,7 +38,6 @@ public class SocialController {
         String jwtToken = "";
 
         if (loginType.equals("kakao")) {
-            System.out.println("들어갔냐??????????????????????????///");
             log.info("code: ", code);
             // 코드 to 액세스 토큰
             accessToken = socialService.getKakaoAccessToken(code);
