@@ -37,7 +37,8 @@ public class SocialController {
         Long memberId = -1L;
         String jwtToken = "";
 
-        if (loginType == "kakao") {
+        if (loginType.equals("kakao")) {
+            System.out.println("들어갔냐??????????????????????????///");
             log.info("code: ", code);
             // 코드 to 액세스 토큰
             accessToken = socialService.getKakaoAccessToken(code);
@@ -51,22 +52,22 @@ public class SocialController {
             jwtToken = jwtUtil.generateJwtToken(memberId, loginType);
             System.out.println("jwtToken: " + jwtToken);
 
-        } else if (loginType == "google") {
+        } else if (loginType.equals("google")) {
             accessToken = socialService.getGoogleAccessToken(code);
             memberId = socialService.getGoogleMemberInfo(accessToken);
             jwtToken = jwtUtil.generateJwtToken(memberId, loginType);
         }
-
+        System.out.println("memberId:" + memberId);
         return new ResponseEntity<>(jwtToken, HttpStatus.OK);
     }
 
-    // authorization code 확인용
-    @ResponseBody
-    @GetMapping("/kakao/code")
-    public ResponseEntity<String> kakaoCode(@RequestParam String code) {
-        System.out.println("code: " + code);
-        return new ResponseEntity<>(code, HttpStatus.OK);
-    }
+//    // authorization code 확인용
+//    @ResponseBody
+//    @GetMapping("/kakao/code")
+//    public ResponseEntity<String> kakaoCode(@RequestParam String code) {
+//        System.out.println("code: " + code);
+//        return new ResponseEntity<>(code, HttpStatus.OK);
+//    }
 
 //    // 프론트가 구현 성공하면 다시 살릴 것 -> pathvariable로 통합
 //    @ResponseBody

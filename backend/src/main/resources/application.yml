@@ -20,7 +20,7 @@ spring:
           google:
             client-id: 160086760593-ocfit5qtj8vainl0afo329ikgq5n1j2f.apps.googleusercontent.com
             client-secret: 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
-            redirect-uri: http://localhost:8080/auth/google/callback
+            redirect-uri: http://localhost:8080/api/oauth/google
             scope:
               - email
               - profile
@@ -35,7 +35,7 @@ spring:
 
 kakao:
   rest-api-key: 7ea82d8a610fe51bcf3eca267069b264
-  redirect-uri: http://localhost:8080/kakao/login
+  redirect-uri: http://localhost:8080/api/oauth/kakao
 
 logging:
   level:
