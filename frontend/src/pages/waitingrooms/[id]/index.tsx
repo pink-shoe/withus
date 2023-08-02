@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { VideoStream } from '@components/VideoStream';
 import { useLocation } from 'react-router-dom';
 import { useOpenvidu } from 'hooks/useOpenvidu';
@@ -39,7 +39,9 @@ export default function WaitingRoom() {
   const onChangeUpdateUserNameStatus = (updateUserNameStatus: boolean) => {
     setUpdateUserNameStatus(!updateUserNameStatus);
   };
-
+  useEffect(() => {
+    console.log('wait ', readyStatus);
+  }, [readyStatus]);
   return (
     <section className={`w-full flex  justify-between h-screen`}>
       {/* 참가자 목록 */}
@@ -52,6 +54,7 @@ export default function WaitingRoom() {
         readyStatus={readyStatus}
         updateUserNameStatus={updateUserNameStatus}
         onChangeUpdateUserNameStatus={onChangeUpdateUserNameStatus}
+        onChangeReadyStatus={onChangeReadyStatus}
         type={'WAIT'}
       />
       {/* openvidu 화면 */}

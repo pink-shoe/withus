@@ -70,6 +70,7 @@ export default function GameRoom() {
         readyStatus={readyStatus}
         updateUserNameStatus={isUpdateUserName}
         onChangeUpdateUserNameStatus={onChangeIsUpdateUserName}
+        onChangeReadyStatus={onChangeReadyStatus}
         type={'GAME'}
       />
       {/* openvidu 화면 */}

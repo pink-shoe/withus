@@ -1,16 +1,16 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import { ParticipantsPresenter } from './ParticipantListPresenter';
 
-// export let localUser: IUser;
 interface IParticipantsContainerProps {
   type: 'WAIT' | 'GAME';
   userId: number;
   userName: string;
-  onChangeUserName: (username: string) => void;
   publisher: any;
   streamList: any;
   readyStatus: boolean;
   updateUserNameStatus: boolean;
+  onChangeUserName: (username: string) => void;
+  onChangeReadyStatus: (status: boolean) => void;
   onChangeUpdateUserNameStatus: (status: boolean) => void;
 }
 export default function ParticipantsContainer({
@@ -19,12 +19,16 @@ export default function ParticipantsContainer({
   userName: uname,
   publisher,
   streamList,
-  readyStatus,
+  readyStatus: isReady,
   updateUserNameStatus: updateUnameStatus,
   ...callback
 }: IParticipantsContainerProps) {
+  const [readyStatus, setReadyStatus] = useState(isReady);
   const [userName, setUserName] = useState(uname);
   const [updateUserNameStatus, setUpdateUsernameStatus] = useState(updateUnameStatus);
+  const onChangeReadyStatus = () => {
+    setReadyStatus((prev) => !prev);
+  };
   const onChangeUserName = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
     console.log(e.target.value);
@@ -33,6 +37,7 @@ export default function ParticipantsContainer({
   const onChangeUpdateUserNameStatus = () => {
     setUpdateUsernameStatus((prev) => !prev);
   };
+
   const saveUserName = () => {
     setUpdateUsernameStatus((prev) => !prev);
     console.log(userName);
@@ -47,8 +52,8 @@ export default function ParticipantsContainer({
   }, [updateUserNameStatus, callback]);
 
   useEffect(() => {
-    console.log(readyStatus);
-  }, [readyStatus]);
+    onChangeReadyStatus();
+  }, [isReady]);
   return (
     <ParticipantsPresenter
       type={type}

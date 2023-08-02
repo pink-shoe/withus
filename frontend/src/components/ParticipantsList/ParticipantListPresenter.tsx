@@ -9,10 +9,10 @@ interface IParticipantsPresenterProps {
   streamList: IStreamList[];
   userId: number;
   userName: string;
-  readyStatus: boolean;
   onChangeUserName: any;
   isUpdateUserName: boolean;
   onChangeUpdateUserNameStatus: () => void;
+  readyStatus: boolean;
   saveUserName: () => void;
 }
 interface IStreamList {
@@ -25,10 +25,10 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
   streamList,
   userId,
   userName,
-  readyStatus,
   onChangeUserName,
   isUpdateUserName,
   onChangeUpdateUserNameStatus,
+  readyStatus,
   saveUserName,
 }) => {
   return (
