@@ -15,13 +15,12 @@ interface IEmailLoginProps {
   onClickSocialLogin: () => void;
 }
 
-export default function Login({
-  // email,
-  // emailPassword,
-  // onChangeEmail,
-  // onChangeEmailPassword,
-  // onClickSocialLogin,
-}: IEmailLoginProps) {
+export default function Login({}: // email,
+// emailPassword,
+// onChangeEmail,
+// onChangeEmailPassword,
+// onClickSocialLogin,
+IEmailLoginProps) {
   const GOOGLE_REST_API_KEY = import.meta.env.VITE_GOOGLECLIENT_ID;
 
   return (
@@ -42,12 +41,17 @@ export default function Login({
       />
       <ButtonComponent onClick={onClickSocialLogin}>로그인</ButtonComponent> */}
       <div className='flex mb-3'>
-      <span className='flex items-center h-10 px-20 bg-violet-800 text-white hover:bg-slate-800 hover:text-white rounded-lg m-2'>Social Login</span>
-      <span className='flex items-center h-10 px-20 hover:bg-slate-800 hover:text-white rounded-lg m-2'>Guest Login</span>
-
+        <span className='flex items-center h-10 px-20 bg-violet-800 text-white hover:bg-slate-800 hover:text-white rounded-lg m-2'>
+          Social Login
+        </span>
+        <span className='flex items-center h-10 px-20 hover:bg-slate-800 hover:text-white rounded-lg m-2'>
+          Guest Login
+        </span>
       </div>
       <div className='flex justify-center'>
-        <span className='flex items-center h-40 text-xl'>로그인하고 나만의 사진을 저장해보세요😊</span>
+        <span className='flex items-center h-40 text-xl'>
+          로그인하고 나만의 사진을 저장해보세요😊
+        </span>
       </div>
       <span className='flex m-2'>
         <KakaoLogin />
