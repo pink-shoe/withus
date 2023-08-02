@@ -5,11 +5,16 @@ import { components, hooks, utils } from '@generouted/react-router/client'
 
 export type Path =
   | `/`
+  | `/Page404`
   | `/about`
   | `/gamerooms`
   | `/gamerooms/:id`
+  | `/google`
+  | `/kakao`
   | `/lobby`
   | `/login`
+  | `/mypage`
+  | `/mypage/photoalbum`
   | `/posts`
   | `/posts/:id`
   | `/posts/:id/:pid?`

@@ -1,5 +1,3 @@
-// 모든 모달의 토대
-// 닫기 버튼을 포함하고 있음
 import React, { Fragment } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';

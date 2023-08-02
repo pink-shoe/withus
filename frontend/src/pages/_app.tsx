@@ -10,16 +10,6 @@ export const Catch = () => {
 export const Pending = () => <div>Loading from _app...</div>;
 
 export default function App() {
-  // const navigate = useNavigate();
-  // const modals = useModals();
-  //   const { id, pid } = useParams('/posts/:id/:pid?' as never);
-
-  // const a = () => navigate('/posts/:id', { params: { id: 'a' } });
-  // const b = () => navigate('/posts/:id', { params: { id: '' } });
-  // const c = () => navigate(-1);
-  // const d = () => navigate('/posts/:id/deep', { params: { id: 'd' } });
-  // const e = () => navigate('/posts/:id/deep', { params: { id: 'e' } });
-
   return (
     <section>
       <main>
