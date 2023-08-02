@@ -39,38 +39,38 @@ export default function ResultModal() {
       // 유사도가 50% 이상이면 O 표시
       if (results[i] >= 50) {
         arr.push(
-          <div className='flex justify-center mb-5' key={i}>
+          <div className='flex justify-center mb-8' key={i}>
             <span className='me-5'>
-              <span className='font-semibold text-xl'>ROUND {i + 1}</span>
-              <div className='text-center text-indigo-900 text-2xl mt-2'>
+              <span className='font-medium font-kdisplay text-2xl'>ROUND {i + 1}</span>
+              <div className='text-center text-blue-800 text-3xl mt-2'>
                 <FontAwesomeIcon icon={faCircle} size='2xl' />
               </div>
             </span>
             <img
-              className='w-36 h-28 rounded-lg display: inline me-2 border-solid border-4 border-indigo-900'
+              className='w-36 h-28 rounded-lg display: inline me-2'
               src={pictures[i]}
             />
             <img
-              className='w-36 h-28 rounded-lg display: inline border-solid border-4 border-indigo-900'
+              className='w-36 h-28 rounded-lg display: inline'
               src={answers[i]}
             />
           </div>
         );
       } else {
         arr.push(
-          <div className='flex justify-center mb-5' key={i}>
+          <div className='flex justify-center mb-8' key={i}>
             <span className='me-5'>
-              <span className='font-semibold text-xl'>ROUND {i + 1}</span>
+              <span className='font-medium font-kdisplay text-2xl'>ROUND {i + 1}</span>
               <div className='text-center text-red-600 text-2xl mt-2'>
                 <FontAwesomeIcon icon={faX} size='2xl' />
               </div>
             </span>
             <img
-              className='w-36 h-28 rounded-lg display: inline me-3 border-solid border-4 border-red-600'
+              className='w-36 h-28 rounded-lg display: inline me-3'
               src={pictures[i]}
             />
             <img
-              className='w-36 h-28 rounded-lg display: inline border-solid border-4 border-red-600'
+              className='w-36 h-28 rounded-lg display: inline'
               src={answers[i]}
             />
           </div>
@@ -89,14 +89,14 @@ export default function ResultModal() {
         게임 결과
       </button>
       <Modal openModal={modalStatus} closeModal={closeModal}>
-        <div className='text-center text-indigo-900 font-bold text-3xl mb-10'>🏆게임결과🏆</div>
+        <div className='text-center text-[#514148] font-medium font-kdisplay text-4xl mb-10'>🏆게임결과🏆</div>
         <div className='overflow-y-auto h-96'>{repeatResult(pictures, answers, results)}</div>
-        <div className='flex justify-center mt-5'>
-          <button className='bg-green-600 hover:bg-green-700 rounded-lg w-1/4 me-2 p-1 font-semibold text-lg text-white'>
+        <div className='flex justify-center mt-8'>
+          <button className='bg-[#8D98FF] hover:bg-violet-700 rounded-lg w-1/3 h-11 me-2 p-1 font-kdisplay text-2xl text-white'>
             대기실 이동
           </button>
           {/* 로비로 이동 */}
-          <button className='bg-red-600 hover:bg-red-800 rounded-lg w-1/5 ms-2 p-1 font-semibold text-lg text-white'>
+          <button className='bg-[#FF8D8D] hover:bg-red-500 rounded-lg w-1/4 h-11 ms-2 p-1 font-kdisplay text-2xl text-white'>
             <Link to='/lobby'>종료</Link>
           </button>
         </div>

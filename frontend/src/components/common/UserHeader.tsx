@@ -18,7 +18,7 @@ export default function UserHeader() {
           icon={faCircleUser}
           size='2xl'
           style={{ color: '#fcfcfc' }}
-          className='me-3 text-4xl hover:text-[#FF8DA3]'
+          className='me-3 text-4xl'
         />
       </span>
     </div>

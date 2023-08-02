@@ -11,7 +11,7 @@ export default function Background({children}: IBackgroundProps) {
     <Fragment>
       <UserHeader />
       <div className='flex justify-center place-items-center h-screen bg-[#F9C7C8]'>
-        <Board isGameBoard={false}>
+        <Board isBoard='lobby'>
           {children}
         </Board>
       </div>
