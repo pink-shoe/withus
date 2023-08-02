@@ -45,7 +45,7 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
             <div
               key={idx}
               className={
-                'flex justify-between items-center w-full text-justify border-bottom border-b-2 p-3 text-[#514148]' +
+                'flex relative justify-between items-center w-full text-justify border-bottom border-b-2 p-3 text-[#514148]' +
                 ` ${readyStatus ? 'bg-[#FFF5C0]' : 'bg-white'} `
               }
             >
@@ -53,12 +53,12 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
                 isUpdateUserName ? (
                   <>
                     <input
-                      className='w-full'
+                      className='w-full bg-transparent'
                       type='text'
                       value={userName}
                       onChange={onChangeUserName}
                     />
-                    {type === 'WAIT' ? (
+                    {type === 'WAIT' && !readyStatus ? (
                       <button onClick={saveUserName}>
                         <FontAwesomeIcon icon={faFloppyDisk} />
                       </button>
@@ -69,13 +69,13 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
                 ) : (
                   <>
                     <input
-                      className='w-full truncate'
+                      className='w-full truncate bg-transparent'
                       type='text'
                       value={stream.userName + ' (나)'}
                       onChange={onChangeUserName}
                       disabled
                     />
-                    {type === 'WAIT' ? (
+                    {type === 'WAIT' && !readyStatus ? (
                       <button onClick={onChangeUpdateUserNameStatus}>
                         <FontAwesomeIcon icon={faPenToSquare} />
                       </button>
@@ -86,12 +86,17 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
                 )
               ) : (
                 <input
-                  className='w-full'
+                  className='w-full bg-transparent'
                   type='text'
                   value={stream.userName}
                   onChange={onChangeUserName}
                   disabled
                 />
+              )}
+              {readyStatus && (
+                <div className=' text-[#FF8DA3] whitespace-nowrap absolute right-2 top-2'>
+                  준비완료
+                </div>
               )}
             </div>
           );

@@ -44,6 +44,9 @@ export const ControllBarPresenter: FC<IControllBarPresenterProps> = ({
   return (
     <div className='w-full flex justify-center'>
       <div className='bottom-3 flex flex-wrap gap-3 justify-center items-center'>
+        <button className={` w-16 h-16 rounded-full p-3 bg-red-500`} onClick={onClickExit}>
+          <FontAwesomeIcon icon={faDoorOpen} color={'white'} fontSize={`2rem`} />
+        </button>
         <button
           className={` w-16 h-16 rounded-full p-3 ${micStatus ? ' bg-[#D3D3D3]' : 'bg-[#FF7B7B]'}`}
           onClick={onChangeMicStatus}
@@ -109,26 +112,23 @@ export const ControllBarPresenter: FC<IControllBarPresenterProps> = ({
           </>
         )}
 
-        <button className={` w-16 h-16 rounded-full p-3 bg-red-500`} onClick={onClickExit}>
-          <FontAwesomeIcon icon={faDoorOpen} color={'white'} fontSize={`2rem`} />
-        </button>
         {isHost ? (
           <button
-            className={` whitespace-nowrap w-fit h-16 rounded p-3 bg-[#112364] text-white font-bold text-lg`}
+            className={` whitespace-nowrap w-fit h-16 rounded-lg p-3 bg-[#FF8DA3] text-white font-bold text-lg`}
             onClick={() => {}}
           >
             시작하기
           </button>
         ) : readyStatus ? (
           <button
-            className={` whitespace-nowrap w-fit h-16 rounded p-3 bg-slate-700 text-white font-bold text-lg`}
+            className={` whitespace-nowrap w-fit h-16 rounded-lg p-3 bg-[#8E8E8E] text-white font-bold text-lg`}
             onClick={onChangeReadyStatus}
           >
-            준비해제
+            준비취소
           </button>
         ) : (
           <button
-            className={` whitespace-nowrap w-fit h-16 rounded p-3 bg-[#112364] text-white font-bold text-lg`}
+            className={` whitespace-nowrap w-fit h-16 rounded-lg p-3 bg-[#FF8DA3] text-white font-bold text-lg`}
             onClick={onChangeReadyStatus}
           >
             준비하기
