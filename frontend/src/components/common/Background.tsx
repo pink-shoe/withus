@@ -8,10 +8,12 @@ export default function Background() {
       <Header />
       <div className='flex justify-center place-items-center h-screen bg-red-200'>
         <div className='h-[38rem] w-[75rem]'>
-          <div>
+          <div className='static'>
             <div className='flex justify-center place-items-center drop-shadow-xl rounded-md bg-yellow-100 h-[2.5rem]'></div>
+            <div>
+              <Logo />
+            </div>
           </div>
-          <Logo />
             <div className='flex justify-center place-items-center h-[35rem] w-[70rem] ms-[2.5rem] bg-white'>
               dddddddd
             </div>
