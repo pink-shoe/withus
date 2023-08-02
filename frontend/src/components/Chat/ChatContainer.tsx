@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ChatPresenter from './ChatPresenter';
 
 interface IChatContainerProps {
@@ -15,7 +15,7 @@ export default function ChatContainer({
 }: IChatContainerProps) {
   const [message, setMessage] = useState('');
   const [messageList, setMessageList] = useState<any[]>([]);
-
+  const messageRef = useRef<HTMLDivElement>(null);
   const onChangeMessage = (e: any) => {
     setMessage(e.target.value);
     console.log(e.target.value);
@@ -41,9 +41,12 @@ export default function ChatContainer({
     session && publisher && receiveMessage();
   }, [session, publisher]);
 
-  // useEffect(() => {
-  //   console.log(messageList);
-  // }, [receiveMessage]);
+  const scrollToBottom = () => {
+    messageRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+  useEffect(() => {
+    scrollToBottom();
+  }, [messageList]);
 
   return (
     <ChatPresenter
@@ -53,6 +56,7 @@ export default function ChatContainer({
       message={message}
       onChangeMessage={onChangeMessage}
       onClickSendMsg={onClickSendMsg}
+      messageRef={messageRef}
     />
   );
 }

@@ -1,10 +1,12 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-regular-svg-icons';
+import { RefObject } from 'react';
 interface IChatPresenterProps {
   chatStatus: boolean;
   messageList: any[];
   publisher: any;
   message: string;
+  messageRef: RefObject<HTMLDivElement>;
   onChangeMessage: (e: any) => void;
   onClickSendMsg: () => void;
 }
@@ -13,6 +15,7 @@ export default function ChatPresenter({
   messageList,
   publisher,
   message,
+  messageRef,
   onChangeMessage,
   onClickSendMsg,
 }: IChatPresenterProps) {
@@ -55,6 +58,7 @@ export default function ChatPresenter({
                 </div>
               </div>
             ))}
+            <div ref={messageRef} />
           </div>
           <div className='flex w-full gap-2 p-2 justify-center items-center'>
             <textarea
