@@ -3,6 +3,8 @@ package com.proj.withus.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.proj.withus.domain.dto.SocialMemberInfo;
+import com.proj.withus.service.AlbumService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +19,10 @@ import com.proj.withus.domain.Image;
 import com.proj.withus.domain.Player;
 import com.proj.withus.domain.Room;
 import com.proj.withus.domain.Shape;
-import com.proj.withus.domain.dto.CaptureDto;
-import com.proj.withus.domain.dto.RoomPlayerDto;
-import com.proj.withus.domain.dto.SelectedDto;
-import com.proj.withus.domain.dto.TotalGameResultDto;
-import com.proj.withus.service.AlbumServiceImpl;
+import com.proj.withus.domain.dto.GetCaptureImageReq;
+import com.proj.withus.domain.dto.GetGameInfoRes;
+import com.proj.withus.domain.dto.GetSelectedImagesReq;
+import com.proj.withus.domain.dto.GetTotalGameResultRes;
 import com.proj.withus.service.GameService;
 import com.proj.withus.util.JwtUtil;
 
@@ -34,14 +35,17 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/games")
 public class GameController {
 
-
     private final GameService gameService;
-    private final AlbumServiceImpl albumServiceImpl;
-    private final JwtUtil jwtUtil = new JwtUtil();
+    private final AlbumService albumService;
+    private final JwtUtil jwtUtil;
 
     @GetMapping("/{room_id}")
-    public ResponseEntity<?> getGameInfo(@PathVariable("room_id") Long roomId, @RequestHeader("Authorization") String jwtToken) {
-        Long hostId = jwtUtil.extractMemberId(jwtToken);
+    public ResponseEntity<?> getGameInfo(
+            @PathVariable("room_id") Long roomId,
+            @RequestHeader("Authorization") String jwtToken) {
+
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
+        Long hostId = socialMemberInfo.getId();
 
         Room room = gameService.getRoomInfo(hostId);
         if (room == null) {
@@ -51,27 +55,27 @@ public class GameController {
         if (players == null) {
             return new ResponseEntity<>("플레이어 정보가 없음", HttpStatus.BAD_REQUEST);
         }
-
         List<Shape> shapes = gameService.getShapeInfo(room.getRound());
         if (shapes == null) {
             return new ResponseEntity<>("모양 데이터셋이 부족함", HttpStatus.BAD_REQUEST);
         }
 
-        RoomPlayerDto gameInfo = RoomPlayerDto.builder()
+        return ResponseEntity.ok(GetGameInfoRes.builder()
                 .room(room)
                 .players(players)
                 .shapes(shapes)
-                .build();
-
-        return ResponseEntity.ok(gameInfo);
+                .build());
     }
 
     @PostMapping("/image")
-    public ResponseEntity<?> getCaptureImage(@RequestHeader("Authorization") String jwtToken, @RequestBody CaptureDto captureDto) {
-        if (!gameService.sendCaptureInfo(captureDto)) {
+    public ResponseEntity<?> getCaptureImage(
+            @RequestHeader("Authorization") String jwtToken,
+            @RequestBody GetCaptureImageReq getCaptureImageReq) {
+
+        if (!gameService.sendCaptureInfo(getCaptureImageReq)) {
             return new ResponseEntity<>("AI 서버로 요청이 전달되지 않음", HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(captureDto.getCurrentRound() + 1);
+        return ResponseEntity.ok(getCaptureImageReq.getCurrentRound() + 1);
     }
 
     @GetMapping
@@ -83,31 +87,39 @@ public class GameController {
     }
 
     @GetMapping("/result/{room_id}")
-    public ResponseEntity<?> getGameTotalResult(@PathVariable("room_id") Long roomId, @RequestHeader("Authorization") String jwtToken) {
-        Long memberId = jwtUtil.extractMemberId(jwtToken);
+    public ResponseEntity<?> getGameTotalResult(
+            @PathVariable("room_id") Long roomId,
+            @RequestHeader("Authorization") String jwtToken) {
+
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
+        Long memberId = socialMemberInfo.getId();
         if (memberId == null) {
             return new ResponseEntity<>("인증되지 않은 사용자", HttpStatus.BAD_REQUEST);
         }
 
-        List<TotalGameResultDto> totalGameResultDto = gameService.getTotalGameResult(roomId);
-        if (totalGameResultDto == null) {
+        List<GetTotalGameResultRes> getTotalGameResultRes = gameService.getTotalGameResult(roomId);
+        if (getTotalGameResultRes == null) {
             return new ResponseEntity<>("전체 게임 결과를 가져오지 못함", HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(totalGameResultDto);
+        return ResponseEntity.ok(getTotalGameResultRes);
     }
 
     @PostMapping("/image/upload")
-    public ResponseEntity<?> getSelectedImages(@RequestHeader("Authorization") String jwtToken, @RequestBody SelectedDto selectedDto) {
-        Long memberId = jwtUtil.extractMemberId(jwtToken);
+    public ResponseEntity<?> getSelectedImages(
+            @RequestHeader("Authorization") String jwtToken,
+            @RequestBody GetSelectedImagesReq getSelectedImagesReq) {
 
-        List<Long> resultsId = selectedDto.getResults();
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
+        Long memberId = socialMemberInfo.getId();
+
+        List<Long> resultsId = getSelectedImagesReq.getResults();
         List<String> captureUrls = new ArrayList<>();
         for (Long resultId : resultsId) {
             String captureUrl = gameService.getCaptureUrl(resultId);
             if (captureUrl == null) {
                 return new ResponseEntity<>("이미지를 가져오지 못함", HttpStatus.BAD_REQUEST);
             }
-            Image saved = albumServiceImpl.saveImage(memberId, captureUrl);
+            Image saved = albumService.saveImage(memberId, captureUrl);
             if (saved == null) {
                 return new ResponseEntity<>("이미지가 저장되지 않음", HttpStatus.BAD_REQUEST);
             }

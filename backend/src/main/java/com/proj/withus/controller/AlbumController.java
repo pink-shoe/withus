@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.proj.withus.domain.Image;
+import com.proj.withus.domain.dto.SocialMemberInfo;
 import com.proj.withus.service.AlbumServiceImpl;
 import com.proj.withus.util.JwtUtil;
 
@@ -31,7 +32,8 @@ public class AlbumController {
 
     @GetMapping
     public ResponseEntity<?> showAlbums(@RequestHeader("Authorization") String jwtToken) {
-        Long memberId = jwtUtil.extractMemberId(jwtToken);
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
+        Long memberId = socialMemberInfo.getId();
 
         Long albumId = albumServiceImpl.getAlbum(memberId);
         if (albumId != null) {
@@ -43,7 +45,8 @@ public class AlbumController {
 
     @PostMapping("/image/save")
     public ResponseEntity<?> saveImages(@RequestHeader("Authorization") String jwtToken, @RequestBody() List<String> imageUrls) {
-        Long memberId = jwtUtil.extractMemberId(jwtToken);
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
+        Long memberId = socialMemberInfo.getId();
 
        Long albumId = albumServiceImpl.getAlbum(memberId);
        if (albumId == null) {

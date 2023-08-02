@@ -2,14 +2,20 @@ package com.proj.withus.service;
 
 import com.proj.withus.domain.Member;
 import com.proj.withus.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
+@RequiredArgsConstructor
+@Slf4j
+@Transactional
 public class MemberServiceImpl implements MemberService {
 
-    @Autowired
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     public Member getMemberInfo(Long id) {
         return memberRepository.findById(id).orElse(null);
@@ -19,16 +25,12 @@ public class MemberServiceImpl implements MemberService {
         // nickname 유효성 검사
 
         Member find = getMemberInfo(id);
-
         if (find == null) {
             return null;
         }
 
         find.setNickname(nickname);
-
-        memberRepository.save(find);
-
-        return find;
+        return memberRepository.save(find);
     }
 
     public Member deleteMember(Long id) {
