@@ -1,9 +1,9 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
 import saveAs from 'file-saver';
 import { VideoStream } from '@components/VideoStream';
 import { useLocation } from 'react-router-dom';
-import { useOpenvidu } from 'hooks/useOpenvidu';
+import { signalType, useOpenvidu } from 'hooks/useOpenvidu';
 import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer';
 import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
 import ChatContainer from '@components/Chat/ChatContainer';
@@ -24,8 +24,15 @@ export default function GameRoom() {
   const [readyStatus, setReadyStatus] = useState<boolean>(false);
   const [isUpdateUserName, setIsUpdateUserName] = useState<boolean>(false);
 
-  const { session, publisher, streamList, onChangeCameraStatus, onChangeMicStatus, sendMessage } =
-    useOpenvidu(userId!, roomId);
+  const {
+    session,
+    publisher,
+    streamList,
+    onChangeCameraStatus,
+    onChangeMicStatus,
+    sendSignal,
+    // receiveSignal,
+  } = useOpenvidu(userId!, roomId, readyStatus);
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
@@ -59,18 +66,22 @@ export default function GameRoom() {
       console.error('Error converting div to image:', error);
     }
   };
-  // const {
-  //   path,
-  //   pathLength,
-  //   stroke,
-  //   strokeDashoffset,
-  //   remainingTime,
-  //   elapsedTime,
-  //   size,
-  //   strokeWidth,
-  // } = useCountdown({ isPlaying: true, duration: 5, colors: '#abc' });
   const [isPlaying, setIsPlaying] = useState(true);
   const [count, setCount] = useState(5);
+
+  const receiveSignal = (type: signalType) => {
+    if (session && publisher) {
+      publisher.stream.session.on('signal:' + type, (e: any) => {
+        const data = JSON.parse(e.data);
+        console.log(data);
+      });
+    }
+  };
+  useEffect(() => {
+    session && publisher && receiveSignal('READY');
+    session && publisher && receiveSignal('CANCEL_READY');
+  }, [session, publisher]);
+
   return (
     <section className={`w-full flex justify-between  h-screen`}>
       {/* 참가자 목록 */}
@@ -140,6 +151,7 @@ export default function GameRoom() {
             onChangeCameraStatus={onChangeCameraStatus}
             onChangeChatStatus={onChangeChatStatus}
             onChangeReadyStatus={onChangeReadyStatus}
+            sendSignal={sendSignal}
           />
         </div>
         {/* <button onClick={handleDownload}>다운로드</button> */}
@@ -148,7 +160,8 @@ export default function GameRoom() {
         chatStatus={chatStatus}
         session={session}
         publisher={publisher}
-        sendMessage={sendMessage}
+        sendSignal={sendSignal}
+        // receiveSignal={receiveSignal}
       />
     </section>
   );

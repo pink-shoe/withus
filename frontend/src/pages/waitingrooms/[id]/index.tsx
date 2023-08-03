@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { VideoStream } from '@components/VideoStream';
 import { useLocation } from 'react-router-dom';
-import { useOpenvidu } from 'hooks/useOpenvidu';
+import { signalType, useOpenvidu } from 'hooks/useOpenvidu';
 import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer';
 import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
 import ChatContainer from '@components/Chat/ChatContainer';
@@ -21,8 +21,8 @@ export default function WaitingRoom() {
   const [readyStatus, setReadyStatus] = useState<boolean>(false);
   const [updateUserNameStatus, setUpdateUserNameStatus] = useState<boolean>(false);
 
-  const { session, publisher, streamList, onChangeCameraStatus, onChangeMicStatus, sendMessage } =
-    useOpenvidu(userId!, roomId);
+  const { session, publisher, streamList, onChangeCameraStatus, onChangeMicStatus, sendSignal } =
+    useOpenvidu(userId!, roomId, readyStatus);
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
@@ -39,9 +39,31 @@ export default function WaitingRoom() {
   const onChangeUpdateUserNameStatus = (updateUserNameStatus: boolean) => {
     setUpdateUserNameStatus(!updateUserNameStatus);
   };
+
+  const receiveSignal = (type: signalType) => {
+    if (session && publisher) {
+      publisher.stream.session.on('signal:' + type, (e: any) => {
+        // type === 'READY' ?
+
+        // : type === 'CANCEL_READY' ? :
+        const data = JSON.parse(e.data);
+        console.log(data);
+      });
+    }
+  };
+
   useEffect(() => {
     console.log('wait ', readyStatus);
   }, [readyStatus]);
+
+  useEffect(() => {
+    session && publisher && receiveSignal('READY');
+    session && publisher && receiveSignal('CANCEL_READY');
+  }, [session, publisher]);
+
+  useEffect(() => {
+    console.log(streamList);
+  }, [streamList]);
   return (
     <section className={`w-full flex  justify-between h-screen`}>
       {/* 참가자 목록 */}
@@ -78,6 +100,7 @@ export default function WaitingRoom() {
             onChangeCameraStatus={onChangeCameraStatus}
             onChangeChatStatus={onChangeChatStatus}
             onChangeReadyStatus={onChangeReadyStatus}
+            sendSignal={sendSignal}
           />
         </div>
       </div>
@@ -85,7 +108,7 @@ export default function WaitingRoom() {
         chatStatus={chatStatus}
         session={session}
         publisher={publisher}
-        sendMessage={sendMessage}
+        sendSignal={sendSignal}
       />
     </section>
   );

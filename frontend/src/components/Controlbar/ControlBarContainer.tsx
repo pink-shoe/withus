@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from 'react';
 
 import { ControlBarPresenter } from './ControlBarPresenter';
 import { useNavigate } from 'react-router-dom';
+import { signalType } from 'hooks/useOpenvidu';
 
 interface IControlBarProps {
   type: 'WAIT' | 'GAME';
@@ -11,12 +12,14 @@ interface IControlBarProps {
   onChangeCameraStatus: (status: boolean) => void;
   onChangeChatStatus: (status: boolean) => void;
   onChangeReadyStatus: (status: boolean) => void;
+  sendSignal: (message: string, type: signalType) => void;
 }
 
 export const ControlBarContainer: FC<IControlBarProps> = ({
   type,
   isHost,
   readyStatus: isReady,
+  sendSignal,
   ...callback
 }) => {
   const [micStatus, setMicStatus] = useState(true);
@@ -35,6 +38,8 @@ export const ControlBarContainer: FC<IControlBarProps> = ({
 
   const onChangeChatStatus = () => {
     setChatStatus((prev) => !prev);
+    if (chatStatus) {
+    }
   };
   const onChangeGameSettingModal = () => {
     setGameSettingModal((prev) => !prev);
@@ -62,7 +67,7 @@ export const ControlBarContainer: FC<IControlBarProps> = ({
 
   useEffect(() => {
     callback.onChangeReadyStatus(readyStatus);
-    console.log('ControlBar' + readyStatus);
+    readyStatus ? sendSignal('준비완료', 'READY') : sendSignal('준비해제', 'CANCEL_READY');
   }, [readyStatus, callback]);
   return (
     <ControlBarPresenter

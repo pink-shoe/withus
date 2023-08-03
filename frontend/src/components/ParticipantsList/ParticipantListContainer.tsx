@@ -57,7 +57,6 @@ export default function ParticipantsContainer({
   return (
     <ParticipantsPresenter
       type={type}
-      readyStatus={readyStatus}
       streamList={streamList}
       userId={userId}
       userName={uname}
