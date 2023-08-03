@@ -17,11 +17,12 @@ export default function Layout() {
 
   React.useEffect(() => {
     const token = localStorage.getItem('token');
+    console.log(`토큰 있음: ${token}`);
     if (token) {
       // 토큰이 있으면, "/lobby" 페이지로 이동
       navigate('/lobby');
     }
-  }, [navigate]);
+  }, []);
 
   function onChangeEnterCode(event: React.ChangeEvent<HTMLInputElement>) {
     setEnterCode(event.target.value);
@@ -40,7 +41,7 @@ export default function Layout() {
     setUser((prev) => ({ ...prev, nickname: nickname }));
     console.log('Nickname:', nickname);
     console.log('Enter Code:', enterCode);
-    //로그인 되도록 짜야하고, 입장코드가 잘못된 경우에 입장할 수 없도록 코드 짜야함.
+    // 게스트는 로비로 보내지 않고 바로 방으로 갈 수 있도록 변경할거임. --------- 게스트 로그인 api 로 가서 서버로 부터 받아오고 정리 아직 미정 --------
   }
 
   function onClickSocialLogin() {
