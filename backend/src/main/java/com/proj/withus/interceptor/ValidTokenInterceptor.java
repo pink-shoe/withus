@@ -29,15 +29,26 @@ public class ValidTokenInterceptor implements HandlerInterceptor {
 
         log.info("interceptor가 불렸는지 확인~~~~~~~~~~~~~~~~~~~~~ ");
 
-        String jwtToken = "";
-        try {
-            jwtToken = request.getHeader("Authorization").substring(7);
-        } catch (Exception e) {
-            return false;
-        }
-        boolean isValid = jwtUtil.validateJwtToken(jwtToken);
-        if (!isValid) {
-            return false;
+//        String jwtToken = "";
+//        try {
+//            jwtToken = request.getHeader("Authorization").substring(7);
+//        } catch (Exception e) {
+//            return false;
+//        }
+//        boolean isValid = jwtUtil.validateJwtToken(jwtToken);
+//        if (!isValid) {
+//            return false;
+//        }
+//        return true;
+
+        String token = request.getHeader("Authorization");
+
+        if (token != null && token.startsWith("Bearer ")) {
+            String jwt = token.substring(7);
+            if (!jwtUtil.validateJwtToken(jwt)) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
+                return false;
+            }
         }
         return true;
     }
