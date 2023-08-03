@@ -4,15 +4,15 @@ import Board from './Board';
 
 interface IBackgroundProps {
   children: React.ReactNode;
-  BoardType: any;
+  boardType: any;
 }
 
-export default function Background({children, BoardType}: IBackgroundProps) {
+export default function Background({children, boardType}: IBackgroundProps) {
   return (
     <Fragment>
       <UserHeader />
       <div className='flex justify-center place-items-center h-screen bg-[#F9C7C8]'>
-        <Board boardType={BoardType}>
+        <Board boardType={boardType}>
           {children}
         </Board>
       </div>
