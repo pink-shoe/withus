@@ -50,48 +50,51 @@ export default function SettingModalPresenter({
       <div className='font-kdisplay'>
         <Modal mode={mode} round={round} openModal={openModal} closeModal={closeModal}>
           <p className='text-[#514148] font-medium text-4xl mb-10 text-center'>방 설정</p>
-          <div className='flex my-7'>
-            <span className='ms-2 me-5 font-medium text-2xl flex items-center'>게임모드</span>
-            <SelectBox selectSetting={selectMode} options={MOPTIONS}></SelectBox>
-          </div>
-          <div className='flex mb-7'>
-            <span className='ms-2 me-5 font-medium text-2xl flex items-center'>게임진행</span>
-            <SelectBox selectSetting={selectRound} options={ROPTIONS}></SelectBox>
-            <span className='me-5 font-medium text-2xl flex items-center ms-2'>판</span>
-          </div>
-          <div>{children}</div>
+          <div className='ms-2'>
+            <div className='flex my-7'>
+              <span className='ms-2 me-5 font-medium text-2xl flex items-center'>게임모드</span>
+              <SelectBox selectSetting={selectMode} options={MOPTIONS}></SelectBox>
+            </div>
+            <div className='flex mb-7'>
+              <span className='ms-2 me-5 font-medium text-2xl flex items-center'>게임진행</span>
+              <SelectBox selectSetting={selectRound} options={ROPTIONS}></SelectBox>
+              <span className='me-5 font-medium text-2xl flex items-center ms-2'>판</span>
+            </div>
+            <div>{children}</div>
 
-          {/* true일 때는 초대하기 부분이 나타나고 */}
-          {/* false일 때는 초대하기 부분이 나타나지 않음 */}
-          {isUpdateModal ? (
-            <Fragment>
-              <div className='mb-8'>
-                <span className='ms-2 me-5 font-medium text-2xl flex items-center'>초대하기</span>
-                <div className='w-[19.5rem] inline-block'>
-                  <div>
-                    <input
-                      value={code}
-                      onChange={codeEnter}
-                      className='p-1 border-2 w-[17rem] border-[#FF8DA3] focus:outline-none focus:border-[#fa6d6d] focus:ring-1 focus:ring-[#fa6d6d] rounded-md font-medium text-2xl text-center text-[#514148] font-kdisplay'
-                      placeholder='코드 입력'
-                      type='text'
-                    />
-                    <TextCopy text={code} />
+            {/* true일 때는 초대하기 부분이 나타나고 */}
+            {/* false일 때는 초대하기 부분이 나타나지 않음 */}
+            {isUpdateModal ? (
+              <Fragment>
+                <div className='flex mb-1'>
+                  <span className='ms-2 me-5 font-medium text-2xl flex items-center'>초대하기</span>
+                  <div className='w-[19.5rem] inline-block'>
+                    <div>
+                      <div className='inline-block p-1 border-2 border-[#FF8DA3] font-medium text-2xl text-center text-[#514148] font-kdisplay rounded-l-lg'>Code</div>
+                      <input
+                        value={code}
+                        onChange={codeEnter}
+                        className='p-1 w-[10.5rem] border-y-2 border-[#FF8DA3] rounded-r-lg font-medium text-2xl text-center text-[#514148] font-kdisplay'
+                        placeholder='코드 입력'
+                        type='text'
+'>
+                        <TextCopy text={code} />
+                    </div>
                   </div>
                 </div>
-                <div className='mt-2'>
-                    <input
-                      value={url}
-                      onChange={urlEnter}
-                      className='p-1 border-2 w-[17rem] border-[#FF8DA3] focus:outline-none focus:border-[#fa6d6d] focus:ring-1 focus:ring-[#fa6d6d] rounded-md font-medium text-2xl text-center text-[#514148] font-kdisplay'
-                      placeholder='URL 입력'
-                      type='text'
-                    />
-                    <TextCopy text={url} />
-                  </div>
-              </div>
-            </Fragment>
-          ) : null}
+                <div className='mb-10'>
+                  <input
+                    value={url}
+                    onChange={urlEnter}
+                    className='p-1 border-2 w-[24.1rem] border-[#FF8DA3] focus:outline-none focus:border-[#fa6d6d] focus:ring-1 focus:ring-[#fa6d6d] rounded-md font-medium text-2xl text-center text-[#514148] font-kdisplay'
+                    placeholder='URL 입력'
+                    type='text'
+                  />
+                  <TextCopy text={url} />
+                </div>
+              </Fragment>
+            ) : null}
+          </div>
           <GameStartButton onClickStartBtn={handleSaveSetting} />
         </Modal>
       </div>

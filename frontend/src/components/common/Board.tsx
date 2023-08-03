@@ -1,13 +1,12 @@
 import { Fragment } from 'react';
 import Logo from './Logo/Logo'
 
-export type BoardType = 'GAME' | 'WAIT' | 'LOBBY';
+export type boardType = 'GAME' | 'WAIT' | 'LOBBY';
 
 interface IBoardProps {
-  boardType: BoardType;
+  boardType: boardType;
   children: React.ReactNode;
 }
-
 
 export default function Board({ boardType, children }: IBoardProps) {
   return (
