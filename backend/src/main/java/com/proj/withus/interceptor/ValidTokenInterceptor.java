@@ -1,5 +1,6 @@
 package com.proj.withus.interceptor;
 
+import com.proj.withus.domain.dto.SocialMemberInfo;
 import com.proj.withus.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,14 +43,23 @@ public class ValidTokenInterceptor implements HandlerInterceptor {
 //        return true;
 
         String token = request.getHeader("Authorization");
+        Long memberId = -1234L;
 
         if (token != null && token.startsWith("Bearer ")) {
-            String jwt = token.substring(7);
+            String jwt = token.substring(7); // 두 번 처리하는 듯
+//            String jwt = token;
+
             if (!jwtUtil.validateJwtToken(jwt)) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token"); // 401
                 return false;
+            } else {
+                SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
+                memberId = socialMemberInfo.getId();
+                request.setAttribute("memberId", memberId);
+                request.setAttribute("token", token);
             }
         }
+        System.out.println("Valid check ~ id: " + memberId);
         return true;
     }
 }
