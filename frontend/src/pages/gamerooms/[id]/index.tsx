@@ -87,14 +87,14 @@ export default function GameRoom() {
         type={'GAME'}
       />
       {/* openvidu 화면 */}
-      <div className=' w-1/2 h-full flex flex-col justify-between items-center'>
-        <header className=' flex items-center gap-2 '>
+      <div className=' w-1/2 h-screen flex flex-col justify-between items-center'>
+        <header className=' h-fit flex items-center gap-2 '>
           <div className=' text-white font-extrabold text-6xl text-center py-3'>[] with us</div>
           <CountdownCircleTimer
-            size={128}
+            size={80}
             isPlaying={isPlaying}
             duration={count}
-            initialRemainingTime={6}
+            initialRemainingTime={30}
             isSmoothColorTransition={true}
             // updateInterval={1}
             // colors='#aabbcc'
@@ -106,14 +106,14 @@ export default function GameRoom() {
               console.log('Remaining time is ', remainingTime);
             }}
             onComplete={() => ({ shouldRepeat: true })}
-            strokeWidth={30}
+            strokeWidth={20}
           >
             {({ remainingTime }) => (
               <div className=' text-white text-3xl font-bold'>{remainingTime}</div>
             )}
           </CountdownCircleTimer>
         </header>
-        <div className='aspect-[4/3]'>
+        <div className='aspect-[4/3] h-auto max-w-full'>
           {publisher && (
             <div ref={divRef} className='aspect-[4/3] grid grid-flow-dense grid-rows-2 grid-cols-2'>
               {streamList?.map((stream: any, idx: number) => {
@@ -131,7 +131,7 @@ export default function GameRoom() {
             </div>
           )}
         </div>
-        <div className=' p-3'>
+        <div className=' h-fit p-3'>
           <ControlBarContainer
             type={'GAME'}
             isHost={isHost}

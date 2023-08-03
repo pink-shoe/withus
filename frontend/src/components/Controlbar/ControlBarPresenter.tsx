@@ -116,28 +116,29 @@ export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
           </>
         )}
 
-        {isHost ? (
-          <button
-            className={` whitespace-nowrap w-fit h-16 rounded-lg p-3 bg-[#FF8DA3] text-white font-bold text-lg`}
-            onClick={() => {}}
-          >
-            시작하기
-          </button>
-        ) : readyStatus ? (
-          <button
-            className={` whitespace-nowrap w-fit h-16 rounded-lg p-3 bg-[#8E8E8E] text-white font-bold text-lg`}
-            onClick={onChangeReadyStatus}
-          >
-            준비취소
-          </button>
-        ) : (
-          <button
-            className={` whitespace-nowrap w-fit h-16 rounded-lg p-3 bg-[#FF8DA3] text-white font-bold text-lg`}
-            onClick={onChangeReadyStatus}
-          >
-            준비하기
-          </button>
-        )}
+        {type === 'WAIT' &&
+          (isHost ? (
+            <button
+              className={` whitespace-nowrap w-fit h-16 rounded-lg p-3 bg-[#FF8DA3] text-white font-bold text-lg`}
+              onClick={() => {}}
+            >
+              시작하기
+            </button>
+          ) : readyStatus ? (
+            <button
+              className={` whitespace-nowrap w-fit h-16 rounded-lg p-3 bg-[#8E8E8E] text-white font-bold text-lg`}
+              onClick={onChangeReadyStatus}
+            >
+              준비취소
+            </button>
+          ) : (
+            <button
+              className={` whitespace-nowrap w-fit h-16 rounded-lg p-3 bg-[#FF8DA3] text-white font-bold text-lg`}
+              onClick={onChangeReadyStatus}
+            >
+              준비하기
+            </button>
+          ))}
       </div>
     </div>
   );
