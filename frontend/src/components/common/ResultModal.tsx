@@ -46,14 +46,8 @@ export default function ResultModal() {
                 <FontAwesomeIcon icon={faCircle} size='2xl' />
               </div>
             </span>
-            <img
-              className='w-36 h-28 rounded-lg display: inline me-2'
-              src={pictures[i]}
-            />
-            <img
-              className='w-36 h-28 rounded-lg display: inline'
-              src={answers[i]}
-            />
+            <img className='w-36 h-28 rounded-lg display: inline me-2' src={pictures[i]} />
+            <img className='w-36 h-28 rounded-lg display: inline' src={answers[i]} />
           </div>
         );
       } else {
@@ -65,14 +59,8 @@ export default function ResultModal() {
                 <FontAwesomeIcon icon={faX} size='2xl' />
               </div>
             </span>
-            <img
-              className='w-36 h-28 rounded-lg display: inline me-3'
-              src={pictures[i]}
-            />
-            <img
-              className='w-36 h-28 rounded-lg display: inline'
-              src={answers[i]}
-            />
+            <img className='w-36 h-28 rounded-lg display: inline me-3' src={pictures[i]} />
+            <img className='w-36 h-28 rounded-lg display: inline' src={answers[i]} />
           </div>
         );
       }
@@ -89,7 +77,9 @@ export default function ResultModal() {
         게임 결과 확인
       </button>
       <Modal openModal={modalStatus} closeModal={closeModal}>
-        <div className='text-center text-[#514148] font-medium font-kdisplay text-4xl mb-10'>🏆게임결과🏆</div>
+        <div className='text-center text-[#514148] font-medium font-kdisplay text-4xl mb-10'>
+          🏆게임결과🏆
+        </div>
         <div className='overflow-y-auto h-96'>{repeatResult(pictures, answers, results)}</div>
         <div className='flex justify-center mt-8'>
           <button className='bg-[#8D98FF] hover:bg-violet-700 rounded-lg w-1/3 h-11 me-2 p-1 font-kdisplay text-2xl text-white'>

@@ -13,6 +13,7 @@ export default function Lobby() {
   const navigate = useNavigate();
   const [makeRoomModal, setMakeRoomModal] = useState(false);
   const [enterRoomModal, setEnterRoomModal] = useState(false);
+  // inviteCode는 초대 코드를 의미함
   const [enterCode, setEnterCode] = useState('');
 
   useEffect(() => {
