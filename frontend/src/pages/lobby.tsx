@@ -1,14 +1,12 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
+import UserHeader from '../components/common/UserHeader';
 import Modal from '../components/common/Modal';
 import SettingModalContainer from '../components/common/SettingModal/SettingModalContainer';
 import { useNavigate } from 'react-router-dom';
-import Background from '@components/common/Background';
-
 export default function Lobby() {
   const navigate = useNavigate();
   const [makeRoomModal, setMakeRoomModal] = useState(false);
   const [enterRoomModal, setEnterRoomModal] = useState(false);
-  // inviteCode는 초대 코드를 의미함
   const [enterCode, setEnterCode] = useState('');
 
   const openMakeModal = () => {
@@ -44,6 +42,14 @@ export default function Lobby() {
         console.log('잘못된 코드 입력');
         alert('방이 존재하지 않습니다😥');
         setEnterCode('');}
+      if (enterCode === '') {
+        // 공백이면 참여코드를 입력해달라는 창이 뜸
+        alert('참여코드를 입력해주세요😳');
+      } else {
+        // 존재하지 않는 코드를 입력하면 방이 존재하지 않는다고 뜸
+        console.log('잘못된 코드 입력');
+        alert('방이 존재하지 않습니다😥');
+        setEnterCode('');}
     } else {
       console.log(enterCode);
       navigate(`/waitingrooms/${enterCode}`);
@@ -52,11 +58,12 @@ export default function Lobby() {
 
   return (
     <Fragment>
-      <Background isBoard='lobby'>
+      <Background BoardType={'LOBBY'} >
       <div className='flex flex-auto justify-center content-center'>
           <Fragment>
             <button
               onClick={openMakeModal}
+              className='bg-[#FF8D8D] hover:bg-red-500 me-10 aspect-square h-96 rounded-xl font-medium font-kdisplay text-4xl text-white'
               className='bg-[#FF8D8D] hover:bg-red-500 me-10 aspect-square h-96 rounded-xl font-medium font-kdisplay text-4xl text-white'
             >
               방 만들기
@@ -90,6 +97,7 @@ export default function Lobby() {
                 <button
                   onClick={onClickParticipantBtn}
                   className='bg-[#8D98FF] hover:bg-violet-700 w-72 h-12 rounded-md font-medium font-kdisplay text-2xl text-white'
+                  className='bg-[#8D98FF] hover:bg-violet-700 w-72 h-12 rounded-md font-medium font-kdisplay text-2xl text-white'
                 >
                   참여
                 </button>
@@ -97,6 +105,7 @@ export default function Lobby() {
             </Modal>
           </Fragment>
         </div>
+      </Background>
       </Background>
     </Fragment>
   );
