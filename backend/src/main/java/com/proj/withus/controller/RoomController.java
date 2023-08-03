@@ -198,6 +198,12 @@ public class RoomController {
         }
     }
 
+    @ApiOperation(value = "게임 준비 및 취소", notes = "사용자는 게임 준비 및 취소를 할 수 있다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "준비 상태 갱신 성공"),
+            @ApiResponse(code = 400, message = "준비 상태 갱신 실패"),
+            @ApiResponse(code = 403, message = "권한 부족")
+    })
     @GetMapping("/ready/{is_ready}/{room_id}")
     public ResponseEntity<?> setReady(
             HttpServletRequest request,
