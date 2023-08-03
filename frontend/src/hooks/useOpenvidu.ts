@@ -17,11 +17,25 @@ const setConnectionId = (user: IUser, conecctionId: string) => {
   return user;
 };
 
-export const useOpenvidu = (userId: number, gameRoomId: string, readyStatus: boolean) => {
+export const useOpenvidu = (
+  userId: number,
+  gameRoomId: string,
+  isReady: boolean
+  // ...callback: any
+) => {
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [publisher, setPublisher] = useState<any>();
   const [session, setSession] = useState<any>();
   const [userName, setUserName] = useState<string>('name' + userId);
+  const [readyStatus, setReadyStatus] = useState(isReady);
+  const onChangeReadyStatus = () => {
+    setReadyStatus((prev) => !prev);
+  };
+  useEffect(() => {
+    console.log(readyStatus);
+    onChangeReadyStatus();
+  }, [isReady]);
+
   const leaveSession = useCallback(() => {
     if (session) {
       session.disconnect();
@@ -45,7 +59,7 @@ export const useOpenvidu = (userId: number, gameRoomId: string, readyStatus: boo
             streamManager: subscriber,
             userId: +data.userId,
             userName: 'name' + data.userId,
-            isReady: readyStatus,
+            isReady: false,
           },
         ];
       });
@@ -142,6 +156,7 @@ export const useOpenvidu = (userId: number, gameRoomId: string, readyStatus: boo
               data: JSON.stringify({
                 message: message,
                 nickname: userName,
+                userId,
                 streamId: publisher.stream.streamId,
               }),
               type,
@@ -183,18 +198,51 @@ export const useOpenvidu = (userId: number, gameRoomId: string, readyStatus: boo
   //   // return messageList;
   // };
 
+  const updateUserStatus = (uId: number, isReady?: boolean, uname?: string) => {
+    console.log('update', uId);
+    console.log(streamList, uId);
+    const subscriber = streamList.find((stream) => {
+      return stream.userId === uId;
+    });
+    const filteredSubscriberList = streamList.filter((stream) => {
+      return stream.userId !== uId;
+    });
+    console.log('tttt', subscriber);
+    const newSubscriber = { ...subscriber, uname, isReady };
+    // setSubscribers(filteredSubscriberList);
+    // setSubscribers((prev) => {
+    //   return [...prev.filter((it) => it.userId !== uId), { newSubscriber }];
+    // });
+    // setSubscribers((prev) => {
+    //   return [...prev, { ...subscriber, isReady, uname }];
+    // });
+    // setSubscribers((prev) => {
+    //   return [
+    //     ...prev.filter((it) => it.userId !== +uId),
+    //     {
+    //       ...subscriber,
+    //       uname,
+    //       isReady,
+    //     },
+    //   ];
+    // });
+  };
+
   const streamList = useMemo(
     () => [{ streamManager: publisher, userId, userName, isReady: readyStatus }, ...subscribers],
     [publisher, subscribers, userId, userName, readyStatus]
   );
 
   return {
+    // subscribers,
+    // setSubscribers,
     session,
     publisher,
     streamList,
     onChangeCameraStatus,
     onChangeMicStatus,
     onChangeUserName,
+    updateUserStatus,
     // receiveSignal,
     sendSignal,
   };
