@@ -1,0 +1,20 @@
+/* CSS는 소문자 & '-' 사용 */
+
+.logo {
+  border: 0px none;
+  -webkit-text-stroke: 5px #51414b;
+  border-color: var(--collection-1-primary-font);
+  color: #ffffff;
+  font-family: 'Baloo Thambi', sans-serif;
+  font-size: 120px;
+  font-weight: 200;
+  left: 0;
+  letter-spacing: -0.77px;
+  position: absolute;
+  text-shadow: 10px 6px 1px rgba(0,0,0,0.75);
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  top: 0;
+  white-space: nowrap;
+}

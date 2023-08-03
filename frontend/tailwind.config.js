@@ -5,6 +5,10 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    fontFamily: {
+      kdisplay: ['Jua', 'sans-serif'],
+      edisplay: ['Baloo Thambi', 'sans-serif'],
+    },
     extend: {},
   },
   plugins: [],

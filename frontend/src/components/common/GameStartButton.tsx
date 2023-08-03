@@ -4,7 +4,7 @@ export default function GameStartButton({ onClickStartBtn }: any) {
     <div className='flex justify-center'>
       <button
         onClick={onClickStartBtn}
-        className='bg-violet-800 hover:bg-indigo-950 w-72 h-12 rounded-md font-semibold text-lg text-white'
+        className='bg-[#FF8DA3] hover:bg-red-500 w-72 h-12 rounded-md font-medium text-2xl text-white'
       >
         시작
       </button>
