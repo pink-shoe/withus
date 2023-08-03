@@ -4,16 +4,15 @@ import Board from './Board';
 
 interface IBackgroundProps {
   children: React.ReactNode;
-  isBoard: string;
+  boardType: any;
 }
 
-export default function Background({children, isBoard}: IBackgroundProps) {
+export default function Background({children, boardType}: IBackgroundProps) {
   return (
     <Fragment>
       <UserHeader />
       <div className='flex justify-center place-items-center h-screen bg-[#F9C7C8]'>
-        {/* Background를 사용할 페이지에서 isBoard를 game, wait, lobby 중 하나로 지정해서 사용 */}
-        <Board isBoard={isBoard}>
+        <Board boardType={boardType}>
           {children}
         </Board>
       </div>

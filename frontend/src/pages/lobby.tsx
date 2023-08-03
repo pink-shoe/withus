@@ -12,7 +12,6 @@ export default function Lobby() {
   const navigate = useNavigate();
   const [makeRoomModal, setMakeRoomModal] = useState(false);
   const [enterRoomModal, setEnterRoomModal] = useState(false);
-  // inviteCode는 초대 코드를 의미함
   const [enterCode, setEnterCode] = useState('');
 
   useEffect(() => {
@@ -65,7 +64,7 @@ export default function Lobby() {
 
   return (
     <Fragment>
-      <Background isBoard='lobby'>
+      <Background boardType={'LOBBY'}>
         <div className='flex flex-auto justify-center content-center'>
           <Fragment>
             <button
