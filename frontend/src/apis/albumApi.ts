@@ -1,14 +1,14 @@
 import { AxiosResponse, AxiosError } from 'axios';
 import axios from './axiosConfig';
 
-// 특정 주소와 토큰을 변수로 설정합니다.
-const apiUrl = `${import.meta.env.VITE_API}/albums`; // 변동될 수 있음
+// 사진 조회
+const apiUrl = `${import.meta.env.VITE_API}/api/albums`; // 변동될 수 있음
 
-// Axios 요청 함수 정의
+// 토큰 주면 images[] 배열 줄거임.
 export async function album(): Promise<{ imgId: number; imgUrl: string; savedAt: string }[]> {
   try {
     // Request body에 전달할 데이터는 없고 header는 자동
-    const response = await axios.post(apiUrl, {});
+    const response = await axios.post(apiUrl);
 
     // 요청이 성공하면 데이터를 출력합니다.
     console.log('성공:', response.data);

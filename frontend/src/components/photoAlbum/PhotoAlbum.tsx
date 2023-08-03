@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import ButtonComponent from '@components/common/ButtonComponent';
 import AlbumFrame from './AlbumFrame';
-import { album } from '../../apis/album';
+import { album } from '../../apis/albumApi';
 import PaginationContainer from '@components/Pagination/PaginationContainer';
 
 export default function PhotoAlbum() {

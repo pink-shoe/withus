@@ -5,6 +5,7 @@ import Logo from '@components/common/Logo';
 import GuestLogin from '@components/login/GuestLogin';
 import Login from '@components/login/Login';
 import { userAtom } from '../../stores/index';
+import { useNavigate } from 'react-router-dom';
 
 export default function Layout() {
   // Atom 값과 상태 업데이트 함수 가져오기
@@ -12,6 +13,15 @@ export default function Layout() {
   const [enterCode, setEnterCode] = useState('');
   const [emailPassword, setEmailPassword] = useState('');
   const [showLoginForm, setShowLoginForm] = useState(false);
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      // 토큰이 있으면, "/lobby" 페이지로 이동
+      navigate('/lobby');
+    }
+  }, [navigate]);
 
   function onChangeEnterCode(event: React.ChangeEvent<HTMLInputElement>) {
     setEnterCode(event.target.value);
@@ -40,9 +50,11 @@ export default function Layout() {
 
   return (
     // <div className="bg-[url('/src/assets/background2.jpg')] bg-cover">
-    <div className="h-screen bg-gradient-to-b from-sky-900 to-pink-800">
+    <div className='h-screen bg-gradient-to-b from-sky-900 to-pink-800'>
       {/* <Logo /> */}
-      <div className=' w-full h-[150px] text-5xl text-center items-center flex justify-center font-bold text-white'>[] with us</div>
+      <div className=' w-full h-[150px] text-5xl text-center items-center flex justify-center font-bold text-white'>
+        [] with us
+      </div>
       {/* <div className='flex justify-center space-x-4 m-4'> */}
       <div className='flex justify-center space-x-4'>
         <button className='bg-white' onClick={() => setShowLoginForm(false)}>

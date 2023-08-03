@@ -1,16 +1,18 @@
 import { Fragment } from 'react';
 import Logo from './Logo/Logo'
-import { faL } from '@fortawesome/free-solid-svg-icons';
+
+export type BoardType = 'GAME' | 'WAIT' | 'LOBBY';
 
 interface IBoardProps {
+  boardType: BoardType;
   children: React.ReactNode;
-  isBoard: any;
 }
 
-export default function Board({children, isBoard}: IBoardProps) {
+
+export default function Board({ boardType, children }: IBoardProps) {
   return (
     <Fragment>
-      {isBoard === 'game' ? (
+      {boardType === 'GAME' ? (
         // 게임 화면
         <div className='h-[38rem] w-[60rem]'>
           <div className='static'>
@@ -24,7 +26,7 @@ export default function Board({children, isBoard}: IBoardProps) {
           </div>
           <div className='flex justify-center place-items-center drop-shadow-lg rounded-md bg-yellow-100 h-[2.5rem]'></div>
         </div>
-      ) : isBoard === 'wait' ? (
+      ) : boardType === 'WAIT' ? (
         // 대기실 화면
         <div className='h-[38rem] w-[60rem]'>
           <div className='static'>
