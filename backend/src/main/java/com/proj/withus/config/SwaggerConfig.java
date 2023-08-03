@@ -20,19 +20,18 @@ import java.util.Collections;
 import java.util.List;
 
 @Configuration
-@EnableSwagger2
 public class SwaggerConfig {
 
 	@Bean
 	public Docket api() {
-		return new Docket(DocumentationType.SWAGGER_2)
-				.select()
-				.apis(RequestHandlerSelectors.basePackage("com.proj.withus.controller"))
-				.paths(PathSelectors.any())
-				.build()
-				.apiInfo(apiInfo())
-				.securityContexts(Arrays.asList(securityContext()))
-				.securitySchemes(Arrays.asList(apiKey()));
+		return new Docket(DocumentationType.OAS_30)
+			.select()
+			.apis(RequestHandlerSelectors.basePackage("com.proj.withus.controller"))
+			.paths(PathSelectors.any())
+			.build()
+			.apiInfo(apiInfo())
+      .securityContexts(Arrays.asList(securityContext()))
+			.securitySchemes(Arrays.asList(apiKey()));
 	}
 
 	private ApiInfo apiInfo() {

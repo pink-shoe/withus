@@ -19,7 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/api/oauth/**") // real pattern
 //                .excludePathPatterns("/kakao/login") // practice pattern
 //                .excludePathPatterns("/auth/google/callback")
-                .excludePathPatterns("/swagger-resources/**", "/swagger-ui/**", "/v2/api-docs");
+                .excludePathPatterns("/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs", "/swagger-ui/index.html");
     }
 
     @Override
