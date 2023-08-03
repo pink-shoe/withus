@@ -11,6 +11,8 @@ import InputComponent from '@components/common/InputComponent';
 export default function Mypage() {
   const [user, setUser] = useAtom(userAtom); // Access userAtom using useAtom
 
+  console.log(`닉네임 확인: ${user.nickname}`);
+
   const onChangeNickname = (data: any) => {
     setUser((prevUser) => ({
       ...prevUser,
@@ -18,7 +20,7 @@ export default function Mypage() {
     }));
   };
 
-  const handleSubmit = () => {
+  const onChangeNickName = () => {
     myPageUpdateApi()
       .then(() => {
         console.log('myPageUpdateApi 성공!');
@@ -41,7 +43,7 @@ export default function Mypage() {
           placeholder={user.nickname} // Access the nickname from the userAtom
           onChange={onChangeNickname}
         />
-        <ButtonComponent onClick={handleSubmit}>변경하기</ButtonComponent>
+        <ButtonComponent onClick={onChangeNickName}> 닉네임 변경하기</ButtonComponent>
         <Link to='/mypage/photoalbum'> 사진첩으로 이동 </Link>
       </Container>
     </div>
