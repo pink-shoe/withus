@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,6 +29,8 @@ import com.proj.withus.util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Api(tags = "게임 진행 api")
 @RestController
@@ -50,14 +51,12 @@ public class GameController {
             @ApiResponse(code = 200, message = "조회 성공"),
             @ApiResponse(code = 400, message = "게임 정보가 존재하지 않음")
     })
-    @ApiImplicitParam(name = "Authorization", value = "JWT token", required = true, dataType = "string", paramType = "header")
     @GetMapping("/{room_id}")
     public ResponseEntity<?> getGameInfo(
             @PathVariable(value = "room_id", required = true) Long roomId,
-            @RequestHeader("Authorization") String jwtToken) {
+            HttpServletRequest request) {
 
-        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
-        Long hostId = socialMemberInfo.getId();
+        Long hostId = (Long) request.getAttribute("memberId");
 
         Room room = gameService.getRoomInfo(hostId);
         if (room == null) {
@@ -84,13 +83,11 @@ public class GameController {
             @ApiResponse(code = 200, message = "AI 서버에 사진 전송 성공"),
             @ApiResponse(code = 400, message = "AI 서버에 사진 전송 실패")
     })
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "JWT token", required = true, dataType = "string", paramType = "header"),
-            @ApiImplicitParam(name = "getCaptureImageReq", value = "GetCaptureImageReq object", dataTypeClass = GetCaptureImageReq.class, paramType = "body")
-    })
+
+    @ApiImplicitParam(name = "getCaptureImageReq", value = "GetCaptureImageReq object", dataTypeClass = GetCaptureImageReq.class, paramType = "body")
     @PostMapping("/image")
     public ResponseEntity<?> getCaptureImage(
-            @RequestHeader("Authorization") String jwtToken,
+            HttpServletRequest request,
             @RequestBody GetCaptureImageReq getCaptureImageReq) {
 
         if (!gameService.sendCaptureInfo(getCaptureImageReq)) {
@@ -118,14 +115,12 @@ public class GameController {
             @ApiResponse(code = 400, message = "모든 게임 결과 전송 실패"),
             @ApiResponse(code = 403, message = "권한 없음")
     })
-    @ApiImplicitParam(name = "Authorization", value = "JWT token", required = true, dataType = "string", paramType = "header")
     @GetMapping("/result/{room_id}")
     public ResponseEntity<?> getGameTotalResult(
             @PathVariable(value = "room_id", required = true) Long roomId,
-            @RequestHeader("Authorization") String jwtToken) {
+            HttpServletRequest request) {
 
-        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
-        Long memberId = socialMemberInfo.getId();
+        Long memberId = (Long) request.getAttribute("memberId");
         if (memberId == null) {
             return new ResponseEntity<>("인증되지 않은 사용자", HttpStatus.FORBIDDEN);
         }
@@ -142,17 +137,14 @@ public class GameController {
             @ApiResponse(code = 200, message = "선택한 사진 저장 성공"),
             @ApiResponse(code = 400, message = "선택한 사진 저장 실패")
     })
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "JWT token", required = true, dataType = "string", paramType = "header"),
-            @ApiImplicitParam(name = "getSelectedImagesReq", value = "GetSelectedImages object", dataTypeClass = GetSelectedImagesReq.class, paramType = "body")
-    })
+
+    @ApiImplicitParam(name = "getSelectedImagesReq", value = "GetSelectedImages object", dataTypeClass = GetSelectedImagesReq.class, paramType = "body")
     @PostMapping("/image/upload")
     public ResponseEntity<?> getSelectedImages(
-            @RequestHeader("Authorization") String jwtToken,
+            HttpServletRequest request,
             @RequestBody GetSelectedImagesReq getSelectedImagesReq) {
 
-        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
-        Long memberId = socialMemberInfo.getId();
+        Long memberId = (Long) request.getAttribute("memberId");
 
         Long albumId = albumService.getAlbum(memberId);
         if (albumId == null) {

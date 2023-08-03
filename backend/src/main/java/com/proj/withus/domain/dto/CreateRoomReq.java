@@ -15,9 +15,9 @@ public class CreateRoomReq {
     private final Long id; // memberId
 
     @ApiModelProperty(value = "방 타입(팀전, 협동전)", required = true, example = "coop")
-    private final int roomType;
+    private final String roomType;
 
     @ApiModelProperty(value = "게임 총 라운드", required = true, example = "5")
-    private final int roomRound = 5; // room round 5로 고정?
+    private final int roomRound; // room round 5로 고정?
 
 }

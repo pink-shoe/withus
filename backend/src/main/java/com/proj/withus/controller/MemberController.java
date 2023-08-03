@@ -22,6 +22,8 @@ import com.proj.withus.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Api(tags = "마이페이지 api")
 @RestController
 @Slf4j
@@ -30,9 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 @ApiResponses({
         @ApiResponse(code = 401, message = "토큰 만료"),
         @ApiResponse(code = 403, message = "권한 부족")
-})
-@ApiImplicitParams({
-        @ApiImplicitParam(name = "Authorization", value = "JWT token", required = true, dataType = "string", paramType = "header")
 })
 public class MemberController {
 
@@ -47,9 +46,8 @@ public class MemberController {
             @ApiResponse(code = 400, message = "유저가 존재하지 않음")
     })
     @GetMapping
-    private ResponseEntity<?> getMemberInfo(@RequestHeader("Authorization") String jwtToken) {
-        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
-        Long memberId = socialMemberInfo.getId();
+    private ResponseEntity<?> getMemberInfo(HttpServletRequest request) {
+        Long memberId = (Long) request.getAttribute("memberId");
         Member memberInfo = memberService.getMemberInfo(memberId);
 
         if (memberInfo == null) {
@@ -65,11 +63,10 @@ public class MemberController {
     })
     @PatchMapping
     private ResponseEntity<?> updateMemberInfo(
-            @RequestHeader("Authorization") String jwtToken,
+            HttpServletRequest request,
             @RequestBody String nickname) {
 
-        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
-        Long memberId = socialMemberInfo.getId();
+        Long memberId = (Long) request.getAttribute("memberId");
         Member updatedInfo = memberService.updateMember(memberId, nickname);
 
         if (updatedInfo == null) {
@@ -87,9 +84,8 @@ public class MemberController {
             @ApiResponse(code = 400, message = "탈퇴 실패")
     })
     @DeleteMapping
-    private ResponseEntity deleteMemberInfo(@RequestHeader("Authorization") String jwtToken) {
-        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
-        Long memberId = socialMemberInfo.getId();
+    private ResponseEntity deleteMemberInfo(HttpServletRequest request) {
+        Long memberId = (Long) request.getAttribute("memberId");
 
         Album deletedAlbum = albumService.deleteAlbum(memberId);
         if (deletedAlbum != null) {

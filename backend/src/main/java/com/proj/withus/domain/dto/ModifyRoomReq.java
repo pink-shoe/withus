@@ -13,7 +13,7 @@ import lombok.Setter;
 public class ModifyRoomReq {
 
     @ApiModelProperty(value = "방 타입(팀전, 협동전)", required = true, example = "coop")
-    private final int roomType;
+    private final String roomType;
 
     @ApiModelProperty(value = "방 입장 코드", required = true)
     private final String roomCode;

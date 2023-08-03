@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +19,8 @@ import com.proj.withus.util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Api(tags = "사진첩 api")
 @RestController
@@ -45,10 +46,9 @@ public class AlbumController {
     })
     @GetMapping
     public ResponseEntity<?> showAlbums(
-            @RequestHeader("Authorization") String jwtToken) {
-        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
-        Long memberId = socialMemberInfo.getId();
+            HttpServletRequest request) {
 
+        Long memberId = (Long) request.getAttribute("memberId");
         Long albumId = albumService.getAlbum(memberId);
         if (albumId != null) {
             List<Image> albums = albumService.getImages(albumId);
@@ -83,7 +83,7 @@ public class AlbumController {
     })
 //    @ApiImplicitParam(name = "imgId", value = "이미지 id", required = true, dataType = "Long", paramType = "path")
     @DeleteMapping("/{img_id}")
-    public ResponseEntity<?> deleteImage(@PathVariable("img_id") Long imgId, @RequestHeader("Authorization") String jwtToken) {
+    public ResponseEntity<?> deleteImage(@PathVariable("img_id") Long imgId, HttpServletRequest request) {
 //        Long memberId = jwtUtil.extractMemberId(jwtToken);
 
         Image deleted = albumService.deleteImage((Long) imgId);
