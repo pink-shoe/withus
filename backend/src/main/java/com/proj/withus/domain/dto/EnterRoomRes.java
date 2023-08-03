@@ -31,7 +31,7 @@ public class EnterRoomRes {
     private Long roomId;
 
     @ApiModelProperty(value = "방 타입(팀전, 협동전)", required = true, example = "coop")
-    private int roomType;
+    private String roomType;
 
     @ApiModelProperty(value = "방장 id", required = true, example = "1")
     private Long hostId;
