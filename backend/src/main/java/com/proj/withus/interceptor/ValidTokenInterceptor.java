@@ -44,6 +44,7 @@ public class ValidTokenInterceptor implements HandlerInterceptor {
 
         String token = request.getHeader("Authorization");
         Long memberId = -1234L;
+        System.out.println("tokennnnnnnnnnnnnnnn:" + token);
 
         if (token != null && token.startsWith("Bearer ")) {
             String jwt = token.substring(7); // 두 번 처리하는 듯
