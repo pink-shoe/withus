@@ -50,7 +50,7 @@ export default function SettingModalPresenter({
       <div className='font-kdisplay'>
         <Modal mode={mode} round={round} openModal={openModal} closeModal={closeModal}>
           <p className='text-[#514148] font-medium text-4xl mb-10 text-center'>방 설정</p>
-          <div className='ms-2'>
+          <div className='ms-2.5'>
             <div className='flex my-7'>
               <span className='ms-2 me-5 font-medium text-2xl flex items-center'>게임모드</span>
               <SelectBox selectSetting={selectMode} options={MOPTIONS}></SelectBox>
@@ -76,22 +76,28 @@ export default function SettingModalPresenter({
                       <input
                         value={code}
                         onChange={codeEnter}
-                        className='p-1 w-[10.5rem] border-y-2 border-[#FF8DA3] rounded-r-lg font-medium text-2xl text-center text-[#514148] font-kdisplay'
+                        className='p-1 w-[13.4rem] border-y-2 border-e-2 border-[#FF8DA3] rounded-r-lg font-medium text-2xl text-center text-[#514148] font-kdisplay'
                         placeholder='코드 입력'
-                        type='text'/>
-                        <TextCopy text={code} />
+                        type='text'
+                      />
+                      <TextCopy text={code} />
                     </div>
                   </div>
                 </div>
                 <div className='mb-10'>
-                  <input
-                    value={url}
-                    onChange={urlEnter}
-                    className='p-1 border-2 w-[24.1rem] border-[#FF8DA3] focus:outline-none focus:border-[#fa6d6d] focus:ring-1 focus:ring-[#fa6d6d] rounded-md font-medium text-2xl text-center text-[#514148] font-kdisplay'
-                    placeholder='URL 입력'
-                    type='text'
-                  />
-                  <TextCopy text={url} />
+                  <div>
+                    <div className='inline-block px-2 py-1 border-2 border-[#FF8DA3] font-medium text-2xl text-center text-[#514148] font-kdisplay rounded-l-lg'>
+                      URL
+                    </div>
+                    <input
+                      value={url}
+                      onChange={urlEnter}
+                      className='inline-block p-1 border-y-2 border-e-2 w-[20.1rem] border-[#FF8DA3] rounded-r-lg font-medium text-2xl text-center text-[#514148] font-kdisplay'
+                      placeholder='URL 입력'
+                      type='text'
+                    />
+                    <TextCopy text={url} />
+                  </div>
                 </div>
               </Fragment>
             ) : null}

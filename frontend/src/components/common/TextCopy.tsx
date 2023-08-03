@@ -19,7 +19,7 @@ export default function TextCopy({ text }: any) {
         icon={faClipboard}
         size='2xl'
         onClick={() => handleTextCopy(text)}
-        className='cursor-pointer hover:text-violet-700'
+        className='cursor-pointer hover:text-[#FF8DA3]'
       />
     </span>
   );

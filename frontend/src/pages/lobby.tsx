@@ -68,11 +68,11 @@ export default function Lobby() {
     <Fragment>
       <Background>
         <Board boardType={'LOBBY'}>
-          <div className='flex flex-auto justify-center content-center'>
-            <Fragment>
+          <div className='flex justify-center content-center'>
+            <div className='w-full'>
               <button
                 onClick={openMakeModal}
-                className='bg-[#FF8D8D] hover:bg-red-500 me-10 aspect-square h-96 rounded-xl font-medium font-kdisplay text-4xl text-white'
+                className='bg-[#FF8D8D] hover:bg-red-500 me-6 w-2/3 rounded-xl font-medium font-kdisplay text-4xl text-white'
               >
                 방 만들기
               </button>
@@ -81,11 +81,11 @@ export default function Lobby() {
                 openModal={makeRoomModal}
                 closeModal={closeMakeModal}
               ></SettingModalContainer>
-            </Fragment>
+            </div>
             <Fragment>
               <button
                 onClick={openEnterModal}
-                className='bg-[#8D98FF] hover:bg-violet-700 ms-10 aspect-square h-96 rounded-xl font-medium font-kdisplay text-4xl text-white'
+                className='bg-[#8D98FF] hover:bg-violet-700 ms-6 w-2/3 rounded-xl font-medium font-kdisplay text-4xl text-white'
               >
                 방 참여하기
               </button>

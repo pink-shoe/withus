@@ -4,7 +4,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 interface IModalProps {
   openModal: boolean;
-  closeModal: React.MouseEventHandler<SVGSVGElement>;
+  closeModal?: React.MouseEventHandler<SVGSVGElement>;
   mode?: string;
   round?: number;
   children: React.ReactNode;
@@ -20,14 +20,14 @@ export default function Modal({ openModal, closeModal, children }: IModalProps) 
             {/* 모달창 */}
             <div className='bg-slate-50 w-[32rem] rounded-lg px-5 py-3'>
               {/* 닫기 버튼 */}
-              <header className='flex justify-end'>
+              <div className='flex justify-end'>
                 <FontAwesomeIcon
                   icon={faXmark}
                   size='xl'
                   onClick={closeModal}
                   className='cursor-pointer hover:text-red-500'
                 />
-              </header>
+              </div>
               <div className='ms-5 my-3'>{children}</div>
               <div className='flex justify-center mt-10'></div>
             </div>
