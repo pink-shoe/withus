@@ -42,7 +42,7 @@ export default function ResultModal() {
           <div className='flex justify-center mb-8' key={i}>
             <span className='me-5'>
               <span className='font-medium font-kdisplay text-2xl'>ROUND {i + 1}</span>
-              <div className='text-center text-blue-800 text-3xl mt-2'>
+              <div className='text-center text-[#112364] text-3xl mt-2'>
                 <FontAwesomeIcon icon={faCircle} size='2xl' />
               </div>
             </span>
@@ -61,7 +61,7 @@ export default function ResultModal() {
           <div className='flex justify-center mb-8' key={i}>
             <span className='me-5'>
               <span className='font-medium font-kdisplay text-2xl'>ROUND {i + 1}</span>
-              <div className='text-center text-red-600 text-2xl mt-2'>
+              <div className='text-center text-[#F84C4C] text-3xl mt-2'>
                 <FontAwesomeIcon icon={faX} size='2xl' />
               </div>
             </span>
@@ -84,9 +84,9 @@ export default function ResultModal() {
     <Fragment>
       <button
         onClick={openModal}
-        className='bg-violet-800 hover:bg-indigo-950 w-60 h-10 rounded-md font-semibold text-lg text-white'
+        className='bg-[#FF8DA3] hover:bg-red-500 w-[22rem] h-24 rounded-lg border-4 border-white font-medium font-kdisplay text-3xl text-white'
       >
-        게임 결과
+        게임 결과 확인
       </button>
       <Modal openModal={modalStatus} closeModal={closeModal}>
         <div className='text-center text-[#514148] font-medium font-kdisplay text-4xl mb-10'>🏆게임결과🏆</div>

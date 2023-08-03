@@ -51,11 +51,11 @@ export default function SettingModalPresenter({
         <Modal mode={mode} round={round} openModal={openModal} closeModal={closeModal}>
           <p className='text-[#514148] font-medium text-4xl mb-10 text-center'>방 설정</p>
           <div className='flex my-7'>
-            <span className='me-5 font-medium text-2xl flex items-center'>게임모드</span>
+            <span className='ms-2 me-5 font-medium text-2xl flex items-center'>게임모드</span>
             <SelectBox selectSetting={selectMode} options={MOPTIONS}></SelectBox>
           </div>
           <div className='flex mb-7'>
-            <span className='me-5 font-medium text-2xl flex items-center'>게임진행</span>
+            <span className='ms-2 me-5 font-medium text-2xl flex items-center'>게임진행</span>
             <SelectBox selectSetting={selectRound} options={ROPTIONS}></SelectBox>
             <span className='me-5 font-medium text-2xl flex items-center ms-2'>판</span>
           </div>
@@ -64,31 +64,33 @@ export default function SettingModalPresenter({
           {/* true일 때는 초대하기 부분이 나타나고 */}
           {/* false일 때는 초대하기 부분이 나타나지 않음 */}
           {isUpdateModal ? (
-            <div className='flex mb-8'>
-              <span className='me-5 font-semibold text-xl flex items-center'>초대하기</span>
-              <div className='w-[19.5rem]'>
-                <div>
-                  <input
-                    value={code}
-                    onChange={codeEnter}
-                    className='p-2 border-2 w-[19rem] border-[#FF8DA3] focus:outline-none focus:border-[#fa6d6d] focus:ring-1 focus:ring-[#fa6d6d] rounded-md font-medium text-2xl text-center text-[#514148] font-kdisplay'
-                    placeholder='코드 입력'
-                    type='text'
-                  />
-                  <TextCopy text={code} />
+            <Fragment>
+              <div className='mb-8'>
+                <span className='ms-2 me-5 font-medium text-2xl flex items-center'>초대하기</span>
+                <div className='w-[19.5rem] inline-block'>
+                  <div>
+                    <input
+                      value={code}
+                      onChange={codeEnter}
+                      className='p-1 border-2 w-[17rem] border-[#FF8DA3] focus:outline-none focus:border-[#fa6d6d] focus:ring-1 focus:ring-[#fa6d6d] rounded-md font-medium text-2xl text-center text-[#514148] font-kdisplay'
+                      placeholder='코드 입력'
+                      type='text'
+                    />
+                    <TextCopy text={code} />
+                  </div>
                 </div>
-                <div className='my-1'>
-                  <input
-                    value={url}
-                    onChange={urlEnter}
-                    className='p-2 border-2 w-[19rem] border-[#FF8DA3] focus:outline-none focus:border-[#fa6d6d] focus:ring-1 focus:ring-[#fa6d6d] rounded-md font-medium text-2xl text-center text-[#514148] font-kdisplay'
-                    placeholder='URL 입력'
-                    type='text'
-                  />
-                  <TextCopy text={url} />
-                </div>
+                <div className='mt-2'>
+                    <input
+                      value={url}
+                      onChange={urlEnter}
+                      className='p-1 border-2 w-[17rem] border-[#FF8DA3] focus:outline-none focus:border-[#fa6d6d] focus:ring-1 focus:ring-[#fa6d6d] rounded-md font-medium text-2xl text-center text-[#514148] font-kdisplay'
+                      placeholder='URL 입력'
+                      type='text'
+                    />
+                    <TextCopy text={url} />
+                  </div>
               </div>
-            </div>
+            </Fragment>
           ) : null}
           <GameStartButton onClickStartBtn={handleSaveSetting} />
         </Modal>

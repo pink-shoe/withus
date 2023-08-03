@@ -28,7 +28,7 @@ export default function Modal({ openModal, closeModal, children }: IModalProps) 
                   className='cursor-pointer hover:text-red-500'
                 />
               </header>
-              <div className='ms-4 my-3'>{children}</div>
+              <div className='ms-5 my-3'>{children}</div>
               <div className='flex justify-center mt-10'></div>
             </div>
           </div>

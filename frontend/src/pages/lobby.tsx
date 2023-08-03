@@ -52,7 +52,7 @@ export default function Lobby() {
 
   return (
     <Fragment>
-      <Background>
+      <Background isBoard='lobby'>
       <div className='flex flex-auto justify-center content-center'>
           <Fragment>
             <button
