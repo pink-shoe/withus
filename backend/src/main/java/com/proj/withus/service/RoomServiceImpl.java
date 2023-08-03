@@ -117,5 +117,23 @@ public class RoomServiceImpl implements RoomService {
         return randomCode;
     }
 
+    /*
+    select *
+    from player
+    where room_id = roomId
+    and member_id = memberId
+     */
+    public Player getPlayerInRoom(Long memberId, Long roomId) {
+        return playerRepository.findPlayerByMemberIdAndRoomId(memberId, roomId);
+    }
 
+    /*
+    update room
+    set ready = ready + :readyCnt // roomCode는 없음
+    where room_id = roomId
+     */
+    public int modifyReady(Long roomId, int readyCnt) {
+        System.out.println("roomId:" + roomId + " readyCnt " + readyCnt);
+        return roomRepository.updateReady(roomId, readyCnt);
+    }
 }

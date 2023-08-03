@@ -2,6 +2,7 @@ package com.proj.withus.controller;
 
 import java.util.Optional;
 
+import com.proj.withus.domain.Player;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -197,5 +198,39 @@ public class RoomController {
         }
     }
 
+    @GetMapping("/ready/{is_ready}/{room_id}")
+    public ResponseEntity<?> setReady(
+            HttpServletRequest request,
+            @PathVariable("is_ready") String isReady,
+            @PathVariable("room_id") Long roomId) {
 
+        if (isReady.trim().equals("") || isReady.equals(":is_ready")) {
+            return new ResponseEntity<String>("준비 상태가 설정되지 않았습니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        Long id = -1L;
+        try {
+            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
+            id = socialMemberInfo.getId();
+        } catch (Exception e) {
+            return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
+        }
+
+        Player player = roomService.getPlayerInRoom(id, roomId);
+        if (player == null) {
+            return new ResponseEntity<String>("참가자가 아닙니다.", HttpStatus.UNAUTHORIZED);
+        }
+
+        try {
+            if (isReady.equals("ready")) {
+                roomService.modifyReady(roomId, 1);
+            } else if (isReady.equals("cancel")) {
+                roomService.modifyReady(roomId, -1);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<String>("게임 준비에 실패했습니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<String>("준비 상태 갱신에 성공했습니다.", HttpStatus.OK);
+    }
 }

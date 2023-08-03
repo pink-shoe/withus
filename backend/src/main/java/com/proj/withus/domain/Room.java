@@ -32,6 +32,9 @@ public class Room {
     @ColumnDefault("5")
     private int time;
 
+    @ColumnDefault("0")
+    private int ready;
+
     @OneToMany(mappedBy = "room")
     @JsonIgnore
     private List<GameResult> gameResults = new ArrayList<>();

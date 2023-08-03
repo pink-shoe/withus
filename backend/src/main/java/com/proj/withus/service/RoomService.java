@@ -18,4 +18,6 @@ public interface RoomService {
     public Long getHostId(Long roomId);
     public List<Player> getPlayerList(Long roomId);
     public int createCode(); // Impl에서만 따로 private으로 관리 고려해 볼 것
+    public Player getPlayerInRoom(Long memberId, Long roomId);
+    public int modifyReady(Long roomId, int readyCnt);
 }
