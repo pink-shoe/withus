@@ -1,6 +1,8 @@
 package com.proj.withus.controller;
 
+import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,28 +19,32 @@ import com.proj.withus.service.AlbumService;
 import com.proj.withus.service.MemberService;
 import com.proj.withus.util.JwtUtil;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Api(tags = "마이페이지 api")
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/members")
+@RequestMapping(value = "/api/members", produces = MediaType.APPLICATION_JSON_VALUE)
+@ApiResponses({
+        @ApiResponse(code = 401, message = "토큰 만료"),
+        @ApiResponse(code = 403, message = "권한 부족")
+})
+@ApiImplicitParams({
+        @ApiImplicitParam(name = "Authorization", value = "JWT token", required = true, dataType = "string", paramType = "header")
+})
 public class MemberController {
 
     private final MemberService memberService;
     private final AlbumService albumService;
     private final JwtUtil jwtUtil;
 
-    @Operation(summary = "test hello", description = "hello api example")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "OK !!"),
-        @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
-        @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
-        @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
+
+    @ApiOperation(value = "유저 정보 조회", notes = "마이페이지에서 유저 정보를 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "조회 성공"),
+            @ApiResponse(code = 400, message = "유저가 존재하지 않음")
     })
     @GetMapping
     private ResponseEntity<?> getMemberInfo(@RequestHeader("Authorization") String jwtToken) {
@@ -52,6 +58,11 @@ public class MemberController {
         return ResponseEntity.ok().body(memberInfo);
     }
 
+    @ApiOperation(value = "유저 정보 수정", notes = "유저의 닉네임을 수정한다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "수정 성공"),
+            @ApiResponse(code = 400, message = "유저가 존재하지 않음")
+    })
     @PatchMapping
     private ResponseEntity<?> updateMemberInfo(
             @RequestHeader("Authorization") String jwtToken,
@@ -70,6 +81,11 @@ public class MemberController {
         return ResponseEntity.ok().body(updatedInfo);
     }
 
+    @ApiOperation(value = "유저 탈퇴", notes = "유저 정보를 삭제한다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "탈퇴 성공"),
+            @ApiResponse(code = 400, message = "탈퇴 실패")
+    })
     @DeleteMapping
     private ResponseEntity deleteMemberInfo(@RequestHeader("Authorization") String jwtToken) {
         SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
