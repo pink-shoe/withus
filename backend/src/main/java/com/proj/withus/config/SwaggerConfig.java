@@ -12,12 +12,12 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
-@EnableSwagger2
+// @EnableSwagger2
 public class SwaggerConfig {
 
 	@Bean
 	public Docket api() {
-		return new Docket(DocumentationType.SWAGGER_2)
+		return new Docket(DocumentationType.OAS_30)
 			.select()
 			.apis(RequestHandlerSelectors.basePackage("com.proj.withus.controller"))
 			.paths(PathSelectors.any())
@@ -27,9 +27,11 @@ public class SwaggerConfig {
 
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder()
-			.title("WithUs API")
-			.description("토큰 입력 시 Bearer 추가하기")
-			.version("1.0")
+			.title("Your API Title")
+			.description("Your API Description")
+			.version("1.0.0")
+			.license("Apache 2.0")
+			.licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
 			.build();
 	}
 }
