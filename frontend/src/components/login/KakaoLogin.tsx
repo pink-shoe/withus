@@ -1,7 +1,7 @@
 import Kakaoimg from '../../assets/kakao_login_medium_narrow.png';
 
 export default function KakaoLogin(): any {
-  const REST_API_KEY = import.meta.env.VITE_REST_API_KEY;
+  const REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
   const REDIRECT_URI = import.meta.env.VITE_KAKAO_URL;
   const link = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
