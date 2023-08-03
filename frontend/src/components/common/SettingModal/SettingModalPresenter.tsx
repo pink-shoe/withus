@@ -70,14 +70,17 @@ export default function SettingModalPresenter({
                   <span className='ms-2 me-5 font-medium text-2xl flex items-center'>초대하기</span>
                   <div className='w-[19.5rem] inline-block'>
                     <div>
-                      <div className='inline-block p-1 border-2 border-[#FF8DA3] font-medium text-2xl text-center text-[#514148] font-kdisplay rounded-l-lg'>Code</div>
+                      <div className='inline-block p-1 border-2 border-[#FF8DA3] font-medium text-2xl text-center text-[#514148] font-kdisplay rounded-l-lg'>
+                        Code
+                      </div>
                       <input
                         value={code}
                         onChange={codeEnter}
                         className='p-1 w-[10.5rem] border-y-2 border-[#FF8DA3] rounded-r-lg font-medium text-2xl text-center text-[#514148] font-kdisplay'
                         placeholder='코드 입력'
-                        type='text'/>
-                        <TextCopy text={code} />
+                        type='text'
+                      />
+                      <TextCopy text={code} />
                     </div>
                   </div>
                 </div>
