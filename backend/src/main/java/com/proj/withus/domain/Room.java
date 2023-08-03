@@ -22,7 +22,7 @@ public class Room {
     @JsonIgnore
     private Member member;
 
-    private int type;
+    private String type;
 
     private int code;
 
