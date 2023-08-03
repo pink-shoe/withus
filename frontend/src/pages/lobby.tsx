@@ -3,13 +3,25 @@ import Header from '../components/common/Header';
 import Modal from '../components/common/Modal';
 import SettingModalContainer from '../components/common/SettingModal/SettingModalContainer';
 import { useNavigate } from 'react-router-dom';
+import { myPageApi } from 'apis/myPageApi';
+import { useAtom } from 'jotai';
+import { userAtom } from 'stores/index';
 
 export default function Lobby() {
+  const [user, setUser] = useAtom(userAtom);
   const navigate = useNavigate();
   const [makeRoomModal, setMakeRoomModal] = useState(false);
   const [enterRoomModal, setEnterRoomModal] = useState(false);
   // inviteCode는 초대 코드를 의미함
   const [enterCode, setEnterCode] = useState('');
+
+  useEffect(() => {
+    myPageApi(setUser).catch((error) => {
+      console.log('Error fetching data:', error);
+    });
+  }, []);
+
+  console.log(`user확인: ${user}`);
 
   const openMakeModal = () => {
     setMakeRoomModal(true);

@@ -4,19 +4,12 @@ import { userAtom } from '../../stores/index';
 import Logo from '@components/common/Logo';
 import Container from '@components/common/Container';
 import ButtonComponent from '@components/common/ButtonComponent';
-import { myPageApi } from 'apis/myPageApi';
 import { myPageUpdateApi } from 'apis/myPageUpdateApi';
 import { Link } from '../../router';
 import InputComponent from '@components/common/InputComponent';
 
 export default function Mypage() {
   const [user, setUser] = useAtom(userAtom); // Access userAtom using useAtom
-
-  useEffect(() => {
-    myPageApi().catch((error) => {
-      console.log('Error fetching data:', error);
-    });
-  }, []);
 
   const onChangeNickname = (data: any) => {
     setUser((prevUser) => ({

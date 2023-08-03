@@ -22,7 +22,7 @@ export default function Login({
   onChangeEmailPassword,
   onClickSocialLogin,
 }: IEmailLoginProps) {
-  const GOOGLE_REST_API_KEY = import.meta.env.VITE_GOOGLECLIENT_ID;
+  const GOOGLE_GOOGLECLIENT_ID = import.meta.env.VITE_GOOGLECLIENT_ID;
 
   return (
     <Container>
@@ -43,7 +43,7 @@ export default function Login({
       <ButtonComponent onClick={onClickSocialLogin}>로그인</ButtonComponent>
       <KakaoLogin />
       <Naverlogin />
-      <GoogleOAuthProvider clientId={`${GOOGLE_REST_API_KEY}`}>
+      <GoogleOAuthProvider clientId={`${GOOGLE_GOOGLECLIENT_ID}`}>
         <GoogleSocialLogin />
       </GoogleOAuthProvider>
       ;

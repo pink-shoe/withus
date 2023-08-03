@@ -4,7 +4,7 @@ import axios from './axiosConfig';
 // 사진 조회
 const apiUrl = `${import.meta.env.VITE_API}/api/albums`; // 변동될 수 있음
 
-// Axios 요청 함수 정의
+// 토큰 주면 images[] 배열 줄거임.
 export async function album(): Promise<{ imgId: number; imgUrl: string; savedAt: string }[]> {
   try {
     // Request body에 전달할 데이터는 없고 header는 자동
