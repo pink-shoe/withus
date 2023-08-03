@@ -7,7 +7,9 @@ export default function GoogleSocialLogin() {
     scope: 'email profile',
     onSuccess: async ({ code }) => {
       console.log(code);
-      axios.post(`${import.meta.env.VITE_API}/api/oauth/google`, { code }).then(({ data }) => {
+      const googlebackURL = `${import.meta.env.VITE_API}/api/oauth/google`;
+
+      axios.get(googlebackURL, { params: { code } }).then((data: any) => {
         console.log(`구글 로그인 토큰 받기 성공 ${data}`);
         localStorage.setItem('token', data);
       });

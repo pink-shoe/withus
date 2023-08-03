@@ -5,9 +5,8 @@ import Spinner from '@components/common/Spinner';
 
 export default function KakaoRedirection() {
   const code = new URL(document.location.toString()).searchParams.get('code');
-  console.log(`code: ${code}`);
   const navigate = useNavigate();
-  const kakaobackURL = `${import.meta.env.VITE_API}/kakao/login`;
+  const kakaobackURL = `${import.meta.env.VITE_API}/api/oauth/kakao`;
   console.log(`카카오 리다이렉션 확인 카카오 URL: ${kakaobackURL}`);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -22,10 +21,10 @@ export default function KakaoRedirection() {
         },
       })
       .then(
-        (r) => {
-          console.log(r.data); // 받아온 데이터 확인
+        (result) => {
+          console.log(result.data); // 받아온 데이터 확인
           // 받아온 데이터 처리 코드 작성
-          localStorage.setItem('token', r.data);
+          localStorage.setItem('token', result.data);
 
           navigate('/lobby'); // login이 성공했다면 해당 페이지로 이동
         },
@@ -40,4 +39,6 @@ export default function KakaoRedirection() {
   if (isLoading) {
     return <Spinner />;
   }
+
+  return null;
 }

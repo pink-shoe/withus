@@ -1,6 +1,6 @@
 import PaginationPresenter from './PaginationPresenter';
 import { useState, useEffect } from 'react';
-import { album } from 'apis/album';
+import { album } from 'apis/albumApi';
 
 interface IPaginationContainerProps {
   currentPage: number;
