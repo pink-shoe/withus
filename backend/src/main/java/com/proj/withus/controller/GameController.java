@@ -5,7 +5,9 @@ import java.util.List;
 
 import com.proj.withus.domain.dto.SocialMemberInfo;
 import com.proj.withus.service.AlbumService;
+import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,19 +31,29 @@ import com.proj.withus.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Api(tags = "게임 진행 api")
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/games")
+@RequestMapping(value = "/api/games", produces = MediaType.APPLICATION_JSON_VALUE)
+@ApiResponses({
+        @ApiResponse(code = 401, message = "토큰 만료")
+})
 public class GameController {
 
     private final GameService gameService;
     private final AlbumService albumService;
     private final JwtUtil jwtUtil;
 
+    @ApiOperation(value = "게임 정보 조회", notes = "게임 시작 후 게임 기본 정보를 불러온다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "조회 성공"),
+            @ApiResponse(code = 400, message = "게임 정보가 존재하지 않음")
+    })
+    @ApiImplicitParam(name = "Authorization", value = "JWT token", required = true, dataType = "string", paramType = "header")
     @GetMapping("/{room_id}")
     public ResponseEntity<?> getGameInfo(
-            @PathVariable("room_id") Long roomId,
+            @PathVariable(value = "room_id", required = true) Long roomId,
             @RequestHeader("Authorization") String jwtToken) {
 
         SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
@@ -67,6 +79,15 @@ public class GameController {
                 .build());
     }
 
+    @ApiOperation(value = "사진 캡처 요청", notes = "라운드 종료 후 캡처한 사진을 불러와 AI 서버에 전송한다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "AI 서버에 사진 전송 성공"),
+            @ApiResponse(code = 400, message = "AI 서버에 사진 전송 실패")
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "JWT token", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "getCaptureImageReq", value = "GetCaptureImageReq object", dataTypeClass = GetCaptureImageReq.class, paramType = "body")
+    })
     @PostMapping("/image")
     public ResponseEntity<?> getCaptureImage(
             @RequestHeader("Authorization") String jwtToken,
@@ -78,6 +99,11 @@ public class GameController {
         return ResponseEntity.ok(getCaptureImageReq.getCurrentRound() + 1);
     }
 
+    @ApiOperation(value = "게임 결과 요청", notes = "AI 서버에서 게임 결과를 전달받는다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "AI 서버로부터 결과 수신 성공"),
+            @ApiResponse(code = 400, message = "AI 서버로부터 결과 수신 실패")
+    })
     @GetMapping
     public ResponseEntity<?> getGameResult() {
         if (!gameService.getGameResult()) {
@@ -86,15 +112,22 @@ public class GameController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @ApiOperation(value = "총 게임 결과 요청", notes = "모든 라운드 종료 후 전체 게임 결과를 전달한다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "모든 게임 결과 전송 성공"),
+            @ApiResponse(code = 400, message = "모든 게임 결과 전송 실패"),
+            @ApiResponse(code = 403, message = "권한 없음")
+    })
+    @ApiImplicitParam(name = "Authorization", value = "JWT token", required = true, dataType = "string", paramType = "header")
     @GetMapping("/result/{room_id}")
     public ResponseEntity<?> getGameTotalResult(
-            @PathVariable("room_id") Long roomId,
+            @PathVariable(value = "room_id", required = true) Long roomId,
             @RequestHeader("Authorization") String jwtToken) {
 
         SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
         Long memberId = socialMemberInfo.getId();
         if (memberId == null) {
-            return new ResponseEntity<>("인증되지 않은 사용자", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("인증되지 않은 사용자", HttpStatus.FORBIDDEN);
         }
 
         List<GetTotalGameResultRes> getTotalGameResultRes = gameService.getTotalGameResult(roomId);
@@ -104,6 +137,15 @@ public class GameController {
         return ResponseEntity.ok(getTotalGameResultRes);
     }
 
+    @ApiOperation(value = "선택된 사진 저장", notes = "모든 라운드 종료 후 유저는 저장하고 싶은 사진을 선택해 저장한다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "선택한 사진 저장 성공"),
+            @ApiResponse(code = 400, message = "선택한 사진 저장 실패")
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "JWT token", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "getSelectedImagesReq", value = "GetSelectedImages object", dataTypeClass = GetSelectedImagesReq.class, paramType = "body")
+    })
     @PostMapping("/image/upload")
     public ResponseEntity<?> getSelectedImages(
             @RequestHeader("Authorization") String jwtToken,
