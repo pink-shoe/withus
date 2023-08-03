@@ -11,7 +11,7 @@ export const Pending = () => <div>Loading from _app...</div>;
 
 export default function App() {
   return (
-    <section className='w-full h-full bg-gradient-to-b from-slate-800 via-indigo-500 to-purple-300'>
+    <section>
       <main>
         <Outlet />
       </main>

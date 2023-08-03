@@ -39,4 +39,6 @@ export default function KakaoRedirection() {
   if (isLoading) {
     return <Spinner />;
   }
+
+  return null;
 }
