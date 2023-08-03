@@ -76,8 +76,7 @@ export default function SettingModalPresenter({
                         onChange={codeEnter}
                         className='p-1 w-[10.5rem] border-y-2 border-[#FF8DA3] rounded-r-lg font-medium text-2xl text-center text-[#514148] font-kdisplay'
                         placeholder='코드 입력'
-                        type='text'
-'>
+                        type='text'/>
                         <TextCopy text={code} />
                     </div>
                   </div>
