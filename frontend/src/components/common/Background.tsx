@@ -1,6 +1,5 @@
 import { Fragment } from 'react';
 import UserHeader from './UserHeader';
-import Board from './Board';
 
 interface IBackgroundProps {
   children: React.ReactNode;
