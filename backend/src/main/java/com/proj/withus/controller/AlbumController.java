@@ -31,9 +31,6 @@ import javax.servlet.http.HttpServletRequest;
         @ApiResponse(code = 403, message = "권한 부족"),
         @ApiResponse(code = 401, message = "토큰 만료"),
 })
-@ApiImplicitParams({
-        @ApiImplicitParam(name = "Authorization", value = "JWT token", required = true, dataType = "string", paramType = "header")
-})
 public class AlbumController {
 
     private final AlbumService albumService;
