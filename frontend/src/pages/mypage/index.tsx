@@ -21,7 +21,7 @@ export default function Mypage() {
   };
 
   const onChangeNickName = () => {
-    myPageUpdateApi()
+    myPageUpdateApi(user.nickname)
       .then(() => {
         console.log('myPageUpdateApi 성공!');
         // 닉네임 변경되었다는 모달 띄우기
