@@ -12,7 +12,7 @@ interface IChatPresenterProps {
   onChangeMessage: (e: any) => void;
   onClickSendMsg: () => void;
 }
-const faPaperLookup: IconLookup = { prefix: 'fas', iconName: 'paper-plane' };
+const faPaperLookup: IconLookup = { prefix: 'far', iconName: 'paper-plane' };
 const faPaperIconDefinition: IconDefinition = findIconDefinition(faPaperLookup);
 
 export default function ChatPresenter({
