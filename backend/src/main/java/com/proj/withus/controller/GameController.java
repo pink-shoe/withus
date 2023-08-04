@@ -3,9 +3,8 @@ package com.proj.withus.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.proj.withus.domain.dto.SocialMemberInfo;
-import com.proj.withus.service.AlbumService;
-import io.swagger.annotations.*;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,23 +13,28 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.proj.withus.domain.Image;
 import com.proj.withus.domain.Player;
 import com.proj.withus.domain.Room;
 import com.proj.withus.domain.Shape;
 import com.proj.withus.domain.dto.GetCaptureImageReq;
 import com.proj.withus.domain.dto.GetGameInfoRes;
-import com.proj.withus.domain.dto.GetSelectedImagesReq;
 import com.proj.withus.domain.dto.GetTotalGameResultRes;
+import com.proj.withus.service.AlbumService;
+import com.proj.withus.service.AwsS3Service;
 import com.proj.withus.service.GameService;
 import com.proj.withus.util.JwtUtil;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Api(tags = "게임 진행 api")
 @RestController
@@ -44,6 +48,7 @@ public class GameController {
 
     private final GameService gameService;
     private final AlbumService albumService;
+    private final AwsS3Service awsS3Service;
     private final JwtUtil jwtUtil;
 
     @ApiOperation(value = "게임 정보 조회", notes = "게임 시작 후 게임 기본 정보를 불러온다.")
@@ -132,18 +137,51 @@ public class GameController {
         return ResponseEntity.ok(getTotalGameResultRes);
     }
 
-    @ApiOperation(value = "선택된 사진 저장", notes = "모든 라운드 종료 후 유저는 저장하고 싶은 사진을 선택해 저장한다.")
+    // 프론트에서 어떤 정보 받아 사진 저장할 지 정해야 함
+    // @ApiOperation(value = "선택된 사진 저장", notes = "모든 라운드 종료 후 유저는 저장하고 싶은 사진을 선택해 저장한다.")
+    // @ApiResponses(value = {
+    //         @ApiResponse(code = 200, message = "선택한 사진 저장 성공"),
+    //         @ApiResponse(code = 400, message = "선택한 사진 저장 실패")
+    // })
+    //
+    // @ApiImplicitParam(name = "getSelectedImagesReq", value = "GetSelectedImages object", dataTypeClass = GetSelectedImagesReq.class, paramType = "body")
+    // @PostMapping("/image/upload")
+    // public ResponseEntity<?> getSelectedImages(
+    //         HttpServletRequest request,
+    //         @RequestBody GetSelectedImagesReq getSelectedImagesReq) {
+    //
+    //     Long memberId = (Long) request.getAttribute("memberId");
+    //
+    //     Long albumId = albumService.getAlbum(memberId);
+    //     if (albumId == null) {
+    //         return new ResponseEntity<>("앨범이 존재하지 않음", HttpStatus.BAD_REQUEST);
+    //     }
+    //
+    //     List<Long> resultsId = getSelectedImagesReq.getResults();
+    //     List<String> captureUrls = new ArrayList<>();
+    //     for (Long resultId : resultsId) {
+    //         String captureUrl = gameService.getCaptureUrl(resultId);
+    //         if (captureUrl == null) {
+    //             return new ResponseEntity<>("이미지를 가져오지 못함", HttpStatus.BAD_REQUEST);
+    //         }
+    //         Image saved = albumService.saveImage(memberId, captureUrl);
+    //         if (saved == null) {
+    //             return new ResponseEntity<>("이미지가 저장되지 않음", HttpStatus.BAD_REQUEST);
+    //         }
+    //     }
+    //
+    //     return new ResponseEntity<>(HttpStatus.OK);
+    // }
+
+    @ApiOperation(value = "선택된 사진 저장", notes = "모든 라운드 종료 후 유저는 저장하고 싶은 사진을 선택해 저장한다.(S3)")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "선택한 사진 저장 성공"),
             @ApiResponse(code = 400, message = "선택한 사진 저장 실패")
     })
-
-    @ApiImplicitParam(name = "getSelectedImagesReq", value = "GetSelectedImages object", dataTypeClass = GetSelectedImagesReq.class, paramType = "body")
     @PostMapping("/image/upload")
-    public ResponseEntity<?> getSelectedImages(
-            HttpServletRequest request,
-            @RequestBody GetSelectedImagesReq getSelectedImagesReq) {
-
+    public ResponseEntity<?> saveImageToS3(
+        HttpServletRequest request,
+        @RequestPart("multipartFile") List<MultipartFile> images) {
         Long memberId = (Long) request.getAttribute("memberId");
 
         Long albumId = albumService.getAlbum(memberId);
@@ -151,19 +189,22 @@ public class GameController {
             return new ResponseEntity<>("앨범이 존재하지 않음", HttpStatus.BAD_REQUEST);
         }
 
-        List<Long> resultsId = getSelectedImagesReq.getResults();
-        List<String> captureUrls = new ArrayList<>();
-        for (Long resultId : resultsId) {
-            String captureUrl = gameService.getCaptureUrl(resultId);
-            if (captureUrl == null) {
-                return new ResponseEntity<>("이미지를 가져오지 못함", HttpStatus.BAD_REQUEST);
-            }
-            Image saved = albumService.saveImage(memberId, captureUrl);
-            if (saved == null) {
-                return new ResponseEntity<>("이미지가 저장되지 않음", HttpStatus.BAD_REQUEST);
-            }
+        List<String> imgUrls = new ArrayList<>();
+        try {
+            imgUrls = awsS3Service.uploadFiles(images);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>("S3에 이미지 업로드 실패", HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            for (String imgUrl : imgUrls) {
+                albumService.saveImage(memberId, imgUrl);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<String>("DB에 이미지 저장 실패", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<String>("S3에 이미지 업로드 성공", HttpStatus.OK);
     }
 }
