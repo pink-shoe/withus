@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping(value = "/albums", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/albums", produces = MediaType.APPLICATION_JSON_VALUE)
 @ApiResponses({
         @ApiResponse(code = 403, message = "권한 부족"),
         @ApiResponse(code = 401, message = "토큰 만료"),
