@@ -203,8 +203,7 @@ public class RoomController {
     @ApiOperation(value = "게임 준비 및 취소", notes = "사용자는 게임 준비 및 취소를 할 수 있다.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "준비 상태 갱신 성공"),
-            @ApiResponse(code = 400, message = "준비 상태 갱신 실패"),
-            @ApiResponse(code = 403, message = "권한 부족")
+            @ApiResponse(code = 400, message = "준비 상태 갱신 실패")
     })
     @GetMapping("/ready/{is_ready}/{room_id}")
     public ResponseEntity<?> setReady(
@@ -216,15 +215,10 @@ public class RoomController {
             return new ResponseEntity<String>("준비 상태가 설정되지 않았습니다.", HttpStatus.BAD_REQUEST);
         }
 
-        Long id = -1L;
-        try {
-            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
-            id = socialMemberInfo.getId();
-        } catch (Exception e) {
-            return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
-        }
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
+        Long memberId = socialMemberInfo.getId();
 
-        Player player = roomService.getPlayerInRoom(id, roomId);
+        Player player = roomService.getPlayerInRoom(memberId, roomId);
         if (player == null) {
             return new ResponseEntity<String>("참가자가 아닙니다.", HttpStatus.UNAUTHORIZED);
         }
@@ -243,25 +237,24 @@ public class RoomController {
         return new ResponseEntity<List<Long>>(readyPlayer, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "게임 시작 여부", notes = "게임 시작 여부를 알려준다.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "게임 시작 성공"),
+        @ApiResponse(code = 400, message = "게임 시작 실패")
+    })
     @GetMapping("/start/{room_id}")
     public ResponseEntity<?> isStart(
         HttpServletRequest request,
         @PathVariable("room_id") Long roomId) {
 
-        Long id = -1L;
-        try {
-            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
-            id = socialMemberInfo.getId();
-        } catch (Exception e) {
-            return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
-        }
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
+        Long memberId = socialMemberInfo.getId();
 
         Long host = roomService.getHostId(roomId);
         if (host == null) {
             return new ResponseEntity<String>("방이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
 
-        // start 상태가 true 이면 ok, 아니면 bad request
         if (!roomService.getStartStatus(roomId)) {
             return new ResponseEntity<String>("준비되지 않은 플레이어가 있습니다.", HttpStatus.BAD_REQUEST);
         }
