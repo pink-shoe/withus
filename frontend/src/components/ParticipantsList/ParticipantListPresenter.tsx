@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faFloppyDisk } from '@fortawesome/free-regular-svg-icons';
 import { IUserAtom } from 'stores/user';
 export let localUser: IUser;
+import { IconLookup, IconDefinition, findIconDefinition } from '@fortawesome/fontawesome-svg-core';
 
 interface IParticipantsPresenterProps {
   type: 'WAIT' | 'GAME';
@@ -20,6 +21,11 @@ interface IStreamList {
   userName: string;
   isReady: boolean;
 }
+const faPenToSquareLookup: IconLookup = { prefix: 'far', iconName: 'pen-to-square' };
+const faPenToSquareIconDefinition: IconDefinition = findIconDefinition(faPenToSquareLookup);
+const faFloppyDiskLookup: IconLookup = { prefix: 'far', iconName: 'floppy-disk' };
+const faFloppyDiskIconDefinition: IconDefinition = findIconDefinition(faFloppyDiskLookup);
+
 export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
   type,
   streamList,
@@ -60,7 +66,7 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
                     />
                     {type === 'WAIT' && !stream.isReady ? (
                       <button onClick={saveUserName}>
-                        <FontAwesomeIcon icon={faFloppyDisk} />
+                        <FontAwesomeIcon icon={faFloppyDiskIconDefinition} />
                       </button>
                     ) : (
                       <div></div>
@@ -77,7 +83,7 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
                     />
                     {type === 'WAIT' && !stream.isReady ? (
                       <button onClick={onChangeUpdateUserNameStatus}>
-                        <FontAwesomeIcon icon={faPenToSquare} />
+                        <FontAwesomeIcon icon={faPenToSquareIconDefinition} />
                       </button>
                     ) : (
                       <div></div>
