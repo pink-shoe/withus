@@ -1,5 +1,6 @@
 package com.proj.withus.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,6 +14,7 @@ import lombok.Setter;
 @Schema(description = "방 생성 정보")
 public class CreateRoomReq {
 
+    @JsonProperty("memberId")
     @Schema(description = "유저 id", required = true, example = "1")
     private Long id; // memberId
 
