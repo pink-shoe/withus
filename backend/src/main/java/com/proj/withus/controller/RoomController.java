@@ -3,6 +3,7 @@ package com.proj.withus.controller;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,21 +22,39 @@ import com.proj.withus.domain.dto.SocialMemberInfo;
 import com.proj.withus.service.RoomService;
 import com.proj.withus.util.JwtUtil;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.servlet.http.HttpServletRequest;
+
+@Api(tags = "방 api")
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/rooms")
+@RequestMapping(value = "/api/rooms", produces = MediaType.APPLICATION_JSON_VALUE)
+@ApiResponses({
+    @ApiResponse(code = 401, message = "토큰 만료")
+})
 public class RoomController {
 
     private final RoomService roomService;
     private final JwtUtil jwtUtil;
 
+    @ApiOperation(value = "방 생성", notes = "방장은 방을 생성한다.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "방 만들기 성공"),
+        @ApiResponse(code = 400, message = "방 만들기 실패")
+    })
+    @ApiImplicitParam(name = "createRoomReq", value = "CreateRoomReq object", dataTypeClass = CreateRoomReq.class, paramType = "body")
     @PostMapping
     public ResponseEntity<?> createRoom(
-            @RequestHeader("Authorization") String token,
+            HttpServletRequest request,
             @RequestBody CreateRoomReq createRoomReq) { // dto 새로 만들어야 함
 
         System.out.println("createRoomReq.getId()" + createRoomReq.getId());
@@ -48,18 +66,24 @@ public class RoomController {
 //            return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
 //        }
         Room newRoom = roomService.createRoom(createRoomReq);
-        return new ResponseEntity<Room>(newRoom, HttpStatus.OK);
+        return new ResponseEntity<Room>(newRoom, HttpStatus.CREATED);
     }
 
+    @ApiOperation(value = "방 입장", notes = "참가자는 방에 참여한다.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "방 입장 성공"),
+        @ApiResponse(code = 400, message = "방 입장 실패"),
+        @ApiResponse(code = 403, message = "권한 부족")
+    })
     @GetMapping("/{room_id}/{member_id}")
     public ResponseEntity<?> enterRoom(
-            @RequestHeader("Authorization") String token,
+            HttpServletRequest request,
             @PathVariable("room_id") Long roomId,
             @PathVariable("member_id") Long memberId) {
         Long id = -1L;
         String loginType = "";
         try {
-            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
+            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
             id = socialMemberInfo.getId();
             loginType = socialMemberInfo.getLoginType();
         } catch (Exception e) {
@@ -82,13 +106,18 @@ public class RoomController {
 
     }
 
+    @ApiOperation(value = "방 나가기", notes = "참가자는 방에서 나간다.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "방 나가기 성공"),
+        @ApiResponse(code = 400, message = "방 나가기 실패")
+    })
     @DeleteMapping("/{room_id}/{member_id}")
     public ResponseEntity<?> leaveRoom(
-            @RequestHeader("Authorization") String token,
+            HttpServletRequest request,
             @PathVariable("room_id") Long roomId,
             @PathVariable("member_id") Long pathMemberId) {
 
-        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);// try-catch 뺌
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
         Long memberId = socialMemberInfo.getId();
         try {
             roomService.leaveRoom(roomId, memberId);
@@ -101,14 +130,21 @@ public class RoomController {
     /*
     방장인거 확인하고, 방장 맞으면 처리.
      */
+    @ApiOperation(value = "방 옵션 수정", notes = "방장은 방 옵션을 수정한다.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "방 나가기 성공"),
+        @ApiResponse(code = 400, message = "방 나가기 실패"),
+        @ApiResponse(code = 403, message = "권한 부족")
+    })
+    @ApiImplicitParam(name = "modifyRoomReq", value = "ModifyRoomReq object", dataTypeClass = ModifyRoomReq.class, paramType = "body")
     @PutMapping("/{room_id}")
     public ResponseEntity<?> modifyRoom(
-            @RequestHeader("Authorization") String token,
+            HttpServletRequest request,
             @PathVariable("room_id") Long roomId,
             @RequestBody ModifyRoomReq modifyRoomReq) {
 
         try {
-            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
+            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
             Long id = socialMemberInfo.getId();
             // 방장 체크 // 이렇게 깊은건 어떻게 처리하는게 깔끔한지 알아보기 (depth 3 이상)
             Long hostId = roomService.getHostId(roomId);
@@ -119,7 +155,7 @@ public class RoomController {
             return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.FORBIDDEN);
         }
 
-        boolean isValid = jwtUtil.validateJwtToken(token);
+        boolean isValid = jwtUtil.validateJwtToken((String) request.getAttribute("token"));
         if (!isValid) {
             return new ResponseEntity<String>("토큰이 만료되었습니다.", HttpStatus.UNAUTHORIZED);
         }
@@ -127,15 +163,21 @@ public class RoomController {
         return new ResponseEntity<String>("성공", HttpStatus.OK);
     }
 
+    @ApiOperation(value = "유저 닉네임 수정", notes = "방에서 유저는 닉네임을 변경한다.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "닉네임 수정 성공"),
+        @ApiResponse(code = 400, message = "닉네임 수정 실패"),
+        @ApiResponse(code = 403, message = "권한 부족")
+    })
     @PutMapping("/members/social")
     public ResponseEntity<?> modifyNickname(
-            @RequestHeader("Authorization") String token,
+            HttpServletRequest request,
             @RequestBody() String nickname) {
         System.out.println(nickname);
 
         Long id = -1L;
         try {
-            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
+            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
             id = socialMemberInfo.getId();
             System.out.println("ididididi: " + id); //
         } catch (Exception e) {

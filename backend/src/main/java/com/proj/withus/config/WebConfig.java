@@ -16,10 +16,10 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new ValidTokenInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/api/oauth/**") // real pattern
+                .excludePathPatterns("/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs", "/swagger-ui/index.html")
+                .excludePathPatterns("/api/oauth/**"); // real pattern
 //                .excludePathPatterns("/kakao/login") // practice pattern
 //                .excludePathPatterns("/auth/google/callback")
-                .excludePathPatterns("/swagger-resources/**", "/swagger-ui/**", "/v2/api-docs");
     }
 
     @Override
