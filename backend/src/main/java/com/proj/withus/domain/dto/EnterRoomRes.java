@@ -41,6 +41,9 @@ public class EnterRoomRes {
     @ApiModelProperty(value = "방 입장 코드", required = true)
     private String code; // 일단 10진수여도 String으로 하는걸로?
 
+    // @ApiModelProperty(value = "참가자 리스트", required = true)
+    // private List<Player> players = new ArrayList<>();
+
     @ApiModelProperty(value = "참가자 리스트", required = true)
-    private List<Player> players = new ArrayList<>();
+    private List<PlayerInfoDto> players = new ArrayList<>();
 }

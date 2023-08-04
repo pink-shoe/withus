@@ -1,10 +1,12 @@
 package com.proj.withus.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.proj.withus.domain.Member;
 import com.proj.withus.domain.Player;
+import com.proj.withus.domain.dto.PlayerInfoDto;
 import com.proj.withus.repository.RoomRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +25,7 @@ import com.proj.withus.domain.dto.CreateRoomReq;
 import com.proj.withus.domain.dto.EnterRoomRes;
 import com.proj.withus.domain.dto.ModifyRoomReq;
 import com.proj.withus.domain.dto.SocialMemberInfo;
+import com.proj.withus.service.MemberService;
 import com.proj.withus.service.RoomService;
 import com.proj.withus.util.JwtUtil;
 
@@ -51,6 +54,8 @@ public class RoomController {
     private final JwtUtil jwtUtil;
     private final RoomRepository roomRepository;
 
+    private final MemberService memberService;
+
     @ApiOperation(value = "방 생성", notes = "방장은 방을 생성한다.")
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "방 만들기 성공"),
@@ -59,17 +64,17 @@ public class RoomController {
     @ApiImplicitParam(name = "createRoomReq", value = "CreateRoomReq object", dataTypeClass = CreateRoomReq.class, paramType = "body")
     @PostMapping
     public ResponseEntity<?> createRoom(
-            HttpServletRequest request,
-            @RequestBody CreateRoomReq createRoomReq) { // dto 새로 만들어야 함
+        HttpServletRequest request,
+        @RequestBody CreateRoomReq createRoomReq) { // dto 새로 만들어야 함
 
         System.out.println("createRoomReq.getId()" + createRoomReq.getId());
         System.out.println("createRoomReq.getRoomType()" + createRoomReq.getRoomType());
 
-//        try {
-//            Long id = jwtUtil.extractMemberId(token);
-//        } catch (Exception e) {
-//            return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
-//        }
+        //        try {
+        //            Long id = jwtUtil.extractMemberId(token);
+        //        } catch (Exception e) {
+        //            return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
+        //        }
         Room newRoom = roomService.createRoom(createRoomReq);
         return new ResponseEntity<Room>(newRoom, HttpStatus.CREATED);
     }
@@ -82,9 +87,9 @@ public class RoomController {
     })
     @GetMapping("/{room_code}/{member_id}")
     public ResponseEntity<?> enterRoom(
-            HttpServletRequest request,
-            @PathVariable("room_code") int roomCode,
-            @PathVariable("member_id") Long memberId) {
+        HttpServletRequest request,
+        @PathVariable("room_code") int roomCode,
+        @PathVariable("member_id") Long memberId) {
         Long id = -1L;
         String loginType = "";
         String token = (String) request.getAttribute("token");
@@ -106,7 +111,25 @@ public class RoomController {
             enterRoomRes.setRoomType(room.get().getType());
             enterRoomRes.setCode(String.valueOf(room.get().getCode()));
             enterRoomRes.setHostId(getHostId(room.get().getId()));
-            enterRoomRes.setPlayers(roomService.getPlayerList(room.get().getId())); // List<>를 이렇게 set하는게 맞나..
+
+            List<Player> playerList = roomService.getPlayerList(room.get().getId());
+            List<PlayerInfoDto> playerInfos = new ArrayList<>();
+            for (Player player : playerList) {
+                PlayerInfoDto playerInfo = new PlayerInfoDto();
+                playerInfo.setMemberId(player.getId());
+                playerInfo.setNickname(memberService.getMemberInfo(player.getId()).getNickname());
+                playerInfo.setReady(roomService.getReadyStatus(player.getId()));
+                // PlayerInfoDto.builder()
+                // .memberId(player.getId())
+                // .nickname(memberService.getMemberInfo(player.getId()).getNickname())
+                // .ready(roomService.getReadyStatus(player.getId()))
+                // .build();
+
+                playerInfos.add(playerInfo);
+            }
+            // PlayerInfoDto playerInfo = PlayerInfoDto.builder()
+            //     .memberId().build();
+            enterRoomRes.setPlayers(playerInfos); // List<>를 이렇게 set하는게 맞나..
             return new ResponseEntity<EnterRoomRes>(enterRoomRes, HttpStatus.OK);
         }
 
@@ -119,9 +142,9 @@ public class RoomController {
     })
     @DeleteMapping("/{room_id}/{member_id}")
     public ResponseEntity<?> leaveRoom(
-            HttpServletRequest request,
-            @PathVariable("room_id") Long roomId,
-            @PathVariable("member_id") Long pathMemberId) {
+        HttpServletRequest request,
+        @PathVariable("room_id") Long roomId,
+        @PathVariable("member_id") Long pathMemberId) {
 
         String token = (String) request.getAttribute("token");
         SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
@@ -146,9 +169,9 @@ public class RoomController {
     @ApiImplicitParam(name = "modifyRoomReq", value = "ModifyRoomReq object", dataTypeClass = ModifyRoomReq.class, paramType = "body")
     @PutMapping("/{room_id}")
     public ResponseEntity<?> modifyRoom(
-            HttpServletRequest request,
-            @PathVariable("room_id") Long roomId,
-            @RequestBody ModifyRoomReq modifyRoomReq) {
+        HttpServletRequest request,
+        @PathVariable("room_id") Long roomId,
+        @RequestBody ModifyRoomReq modifyRoomReq) {
 
         String token = ((String) request.getAttribute("token"));
         System.out.println("token:~~~~" + token);
@@ -190,8 +213,8 @@ public class RoomController {
     })
     @PutMapping("/members/social")
     public ResponseEntity<?> modifyNickname(
-            HttpServletRequest request,
-            @RequestBody() String nickname) {
+        HttpServletRequest request,
+        @RequestBody() String nickname) {
         log.info("nickname", nickname);
         Long id = -1L;
         String token = (String) request.getAttribute("token");
@@ -218,14 +241,14 @@ public class RoomController {
 
     @ApiOperation(value = "게임 준비 및 취소", notes = "사용자는 게임 준비 및 취소를 할 수 있다.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "준비 상태 갱신 성공"),
-            @ApiResponse(code = 400, message = "준비 상태 갱신 실패")
+        @ApiResponse(code = 200, message = "준비 상태 갱신 성공"),
+        @ApiResponse(code = 400, message = "준비 상태 갱신 실패")
     })
     @GetMapping("/ready/{is_ready}/{room_id}")
     public ResponseEntity<?> setReady(
-            HttpServletRequest request,
-            @PathVariable("is_ready") String isReady,
-            @PathVariable("room_id") Long roomId) {
+        HttpServletRequest request,
+        @PathVariable("is_ready") String isReady,
+        @PathVariable("room_id") Long roomId) {
 
         if (isReady.trim().equals("")) {
             return new ResponseEntity<String>("준비 상태가 설정되지 않았습니다.", HttpStatus.BAD_REQUEST);
@@ -266,11 +289,12 @@ public class RoomController {
         SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
         Long memberId = socialMemberInfo.getId();
 
-        Long host = getHostId(roomId);
+        Long host = 1L;
+        // Long host = roomService.getHostId(roomId);
         if (host == null) {
             return new ResponseEntity<String>("방이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
-         if (!roomService.getStartStatus(roomId)) {
+        if (!roomService.getStartStatus(roomId)) {
             return new ResponseEntity<String>("준비되지 않은 플레이어가 있습니다.", HttpStatus.BAD_REQUEST);
         }
 
@@ -284,5 +308,5 @@ public class RoomController {
         System.out.println(hostId);
         return hostId;
     }
-     
+
 }
