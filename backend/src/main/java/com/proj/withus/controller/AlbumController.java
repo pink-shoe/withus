@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Api(tags = "사진첩 api")
+@Api(tags = "사진첩 API", description = "사진첩 관련 기능을 처리하는 API (AlbumController)")
 @RestController
 @Slf4j
 @RequiredArgsConstructor

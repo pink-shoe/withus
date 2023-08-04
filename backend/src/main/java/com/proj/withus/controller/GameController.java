@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Api(tags = "게임 진행 api")
+@Api(tags = "게임 진행 API", description = "게임 진행 관련 기능을 처리하는 API (GameController)")
 @RestController
 @Slf4j
 @RequiredArgsConstructor

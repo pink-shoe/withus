@@ -1,9 +1,6 @@
 package com.proj.withus.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +13,7 @@ import com.proj.withus.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Api(tags = "소셜 api")
+@Api(tags = "소셜 로그인 API", description = "소셜 로그인 기능을 처리하는 API (SocialController)")
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -42,9 +39,11 @@ public class SocialController {
     @ResponseBody
     @GetMapping("/api/oauth/{login-type}") // pathvariable로 애초에 loginType 받고, 이걸로 jwt 만들기
     public ResponseEntity<?> callback(
-            @RequestParam String code,
-            @PathVariable(value = "login-type", required = true) String loginType) {
+            @ApiParam(value = "소셜 서버에서 전달 받은 인가 코드 (Authorization code)", required = true) @RequestParam String code,
+            @ApiParam(value = "소셜 이름 (kakao 혹은 google)", required = true) @PathVariable(name = "login-type") String loginType) {
 
+        // 소셜 서버에서 전달 받은 인가 코드 (Authorization code)
+        // 소셜 이름 (kakao 혹은 google)
         String accessToken = "";
         Long memberId = -1L;
         String jwtToken = "";
