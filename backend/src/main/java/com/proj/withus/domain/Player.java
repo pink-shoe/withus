@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,5 +33,8 @@ public class Player {
 	@JsonIgnore
 	private Room room;
 
-//	private int teamType;
+	private int teamType;
+
+	@ColumnDefault("false")
+	private boolean ready;
 }

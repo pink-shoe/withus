@@ -128,12 +128,21 @@ public class RoomServiceImpl implements RoomService {
     }
 
     /*
-    update room
-    set ready = ready + :readyCnt // roomCode는 없음
-    where room_id = roomId
+    update player
+    set ready = readyStatus
+    where player_id = playerId
      */
-    public int modifyReady(Long roomId, int readyCnt) {
-        System.out.println("roomId:" + roomId + " readyCnt " + readyCnt);
-        return roomRepository.updateReady(roomId, readyCnt);
+    public int modifyReady(Long playerId, boolean readyStatus) {
+        return roomRepository.updateReady(playerId, readyStatus);
+    }
+
+    /*
+    select *
+    from player
+    where room_id = roomId
+    and ready = true
+     */
+    public List<Long> getReadyPlayers(Long roomId) {
+        return playerRepository.findReadyPlayersByRoomId(roomId);
     }
 }

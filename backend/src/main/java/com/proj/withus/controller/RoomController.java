@@ -1,7 +1,9 @@
 package com.proj.withus.controller;
 
+import java.util.List;
 import java.util.Optional;
 
+import com.proj.withus.domain.Member;
 import com.proj.withus.domain.Player;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -210,7 +212,7 @@ public class RoomController {
             @PathVariable("is_ready") String isReady,
             @PathVariable("room_id") Long roomId) {
 
-        if (isReady.trim().equals("") || isReady.equals(":is_ready")) {
+        if (isReady.trim().equals("")) {
             return new ResponseEntity<String>("준비 상태가 설정되지 않았습니다.", HttpStatus.BAD_REQUEST);
         }
 
@@ -229,14 +231,16 @@ public class RoomController {
 
         try {
             if (isReady.equals("ready")) {
-                roomService.modifyReady(roomId, 1);
+                roomService.modifyReady(player.getId(), true);
             } else if (isReady.equals("cancel")) {
-                roomService.modifyReady(roomId, -1);
+                roomService.modifyReady(player.getId(), false);
             }
         } catch (Exception e) {
             return new ResponseEntity<String>("게임 준비에 실패했습니다.", HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<String>("준비 상태 갱신에 성공했습니다.", HttpStatus.OK);
+        List<Long> readyPlayer = roomService.getReadyPlayers(roomId);
+
+        return new ResponseEntity<List<Long>>(readyPlayer, HttpStatus.OK);
     }
 }

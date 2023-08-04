@@ -32,8 +32,8 @@ public class Room {
     @ColumnDefault("5")
     private int time;
 
-    @ColumnDefault("0")
-    private int ready;
+    @ColumnDefault("false")
+    private int start;
 
     @OneToMany(mappedBy = "room")
     @JsonIgnore

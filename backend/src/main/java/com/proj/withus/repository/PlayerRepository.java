@@ -1,5 +1,6 @@
 package com.proj.withus.repository;
 
+import com.proj.withus.domain.Member;
 import com.proj.withus.domain.Player;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,4 +20,7 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
 
     @Query("delete from Player p where p.room.id = :roomId")
     int deleteByRoomId(@Param("roomId") Long roomId); // 명명 규칙 있나? deletePlayersByRoomId()을 추천 받음.
+
+    @Query("select p.member.id from Player p where p.room.id = :roomId and p.ready = true")
+    List<Long> findReadyPlayersByRoomId(@Param("roomId") Long roomId);
 }
