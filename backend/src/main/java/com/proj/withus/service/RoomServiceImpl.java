@@ -10,15 +10,16 @@ import com.proj.withus.repository.PlayerRepository;
 import com.proj.withus.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
+@Transactional
 public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
@@ -81,6 +82,7 @@ public class RoomServiceImpl implements RoomService {
     set type = roomType, code = roomCode, round = roomRound // roomCode는 없음
     where room_id = roomId
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     public int modifyRoom(ModifyRoomReq req, Long roomId) {
         int resultVal = roomRepository.updateRoom(req, roomId);
         return resultVal;
@@ -95,10 +97,12 @@ public class RoomServiceImpl implements RoomService {
     from room
     where room_id = roomId
     */
-    public Long getHostId(Long roomId) {
-        Long hostId = roomRepository.findHostIdByRoomId(roomId);
-        return hostId;
-    }
+//    public Long getHostId(Long roomId) {
+//        Long hostId = roomRepository.findHostIdByRoomId(roomId);
+//        System.out.println("hostId~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+//        System.out.println(hostId);
+//        return hostId;
+//    }
 
     /*
     select *

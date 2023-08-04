@@ -26,6 +26,8 @@ public class Room {
 
     private int code;
 
+    private String roomLink;
+
     @ColumnDefault("5")
     private int round;
 

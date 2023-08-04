@@ -2,6 +2,7 @@ package com.proj.withus.controller;
 
 import java.util.Optional;
 
+import com.proj.withus.repository.RoomRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Api(tags = "방 api")
+@Api(tags = "방 API", description = "게임 방 관련 기능을 처리하는 API (RoomController)")
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -45,6 +46,7 @@ public class RoomController {
 
     private final RoomService roomService;
     private final JwtUtil jwtUtil;
+    private final RoomRepository roomRepository;
 
     @ApiOperation(value = "방 생성", notes = "방장은 방을 생성한다.")
     @ApiResponses(value = {
@@ -82,8 +84,10 @@ public class RoomController {
             @PathVariable("member_id") Long memberId) {
         Long id = -1L;
         String loginType = "";
+        String token = (String) request.getAttribute("token");
+        token = token.substring(7);
         try {
-            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
+            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
             id = socialMemberInfo.getId();
             loginType = socialMemberInfo.getLoginType();
         } catch (Exception e) {
@@ -99,7 +103,7 @@ public class RoomController {
             enterRoomRes.setRoomId(room.get().getId());
             enterRoomRes.setRoomType(room.get().getType());
             enterRoomRes.setCode(String.valueOf(room.get().getCode()));
-            enterRoomRes.setHostId(roomService.getHostId(roomId));
+            enterRoomRes.setHostId(getHostId(roomId));
             enterRoomRes.setPlayers(roomService.getPlayerList(roomId)); // List<>를 이렇게 set하는게 맞나..
             return new ResponseEntity<EnterRoomRes>(enterRoomRes, HttpStatus.OK);
         }
@@ -117,7 +121,9 @@ public class RoomController {
             @PathVariable("room_id") Long roomId,
             @PathVariable("member_id") Long pathMemberId) {
 
-        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
+        String token = (String) request.getAttribute("token");
+        token = token.substring(7);
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
         Long memberId = socialMemberInfo.getId();
         try {
             roomService.leaveRoom(roomId, memberId);
@@ -143,11 +149,21 @@ public class RoomController {
             @PathVariable("room_id") Long roomId,
             @RequestBody ModifyRoomReq modifyRoomReq) {
 
+        String token = ((String) request.getAttribute("token"));
+        System.out.println("token:~~~~" + token);
         try {
-            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
+            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
+            System.out.println("-------------------------------");
             Long id = socialMemberInfo.getId();
+            System.out.println("memberId:~~ ");
+            System.out.println(id);
+            log.info("memberId:~~ ", id);
             // 방장 체크 // 이렇게 깊은건 어떻게 처리하는게 깔끔한지 알아보기 (depth 3 이상)
-            Long hostId = roomService.getHostId(roomId);
+            Long hostId = getHostId(roomId);
+            log.info("hostId:~~ ", hostId);
+            System.out.println(hostId);
+            System.out.println("hostId");
+
             if (hostId != id) {
                 return new ResponseEntity<String>("방장이 아닙니다.", HttpStatus.FORBIDDEN);
             }
@@ -155,7 +171,9 @@ public class RoomController {
             return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.FORBIDDEN);
         }
 
-        boolean isValid = jwtUtil.validateJwtToken((String) request.getAttribute("token"));
+        boolean isValid = jwtUtil.validateJwtToken(token);
+        System.out.println("request.getAttribute(\"token\") 찍어보기 " + token);
+        System.out.println("isValid 찍어보기 " + isValid);
         if (!isValid) {
             return new ResponseEntity<String>("토큰이 만료되었습니다.", HttpStatus.UNAUTHORIZED);
         }
@@ -174,10 +192,11 @@ public class RoomController {
             HttpServletRequest request,
             @RequestBody() String nickname) {
         System.out.println(nickname);
-
         Long id = -1L;
+        String token = (String) request.getAttribute("token");
+        token = token.substring(7);
         try {
-            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
+            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
             id = socialMemberInfo.getId();
             System.out.println("ididididi: " + id); //
         } catch (Exception e) {
@@ -196,6 +215,15 @@ public class RoomController {
             return new ResponseEntity<String>("닉네임 수정에 실패했습니다.", HttpStatus.FORBIDDEN);
         }
     }
+
+    // 트랜잭션 전파 문제 생겨서 일단 Service -> Controller에서 처리
+    private Long getHostId(Long roomId) {
+        Long hostId = roomRepository.findHostIdByRoomId(roomId);
+        System.out.println("hostId~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println(hostId);
+        return hostId;
+    }
+
 
 
 }

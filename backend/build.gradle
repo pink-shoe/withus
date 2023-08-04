@@ -36,7 +36,7 @@ dependencies {
 //	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 //	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.5.12'
 	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
-
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	implementation 'com.google.code.gson:gson:2.8.7'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
