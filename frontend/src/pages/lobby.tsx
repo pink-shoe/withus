@@ -1,12 +1,12 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import Modal from '../components/common/Modal';
 import SettingModalContainer from '../components/common/SettingModal/SettingModalContainer';
 import { useNavigate } from 'react-router-dom';
-import { myPageApi } from 'apis/myPageApi';
 import { useAtom } from 'jotai';
-import { userAtom } from 'stores/index';
+import { userAtom } from 'stores/user';
 import Background from '../components/common/Background';
 import Board from '../components/common/Board';
+import { getMemberApi } from 'apis/memberApi';
 
 export default function Lobby() {
   const [user, setUser] = useAtom(userAtom);
@@ -17,12 +17,12 @@ export default function Lobby() {
   const [enterCode, setEnterCode] = useState('');
 
   useEffect(() => {
-    myPageApi(setUser).catch((error) => {
+    getMemberApi(setUser).catch((error) => {
       console.log('Error fetching data:', error);
     });
   }, []);
 
-  console.log(`user확인: ${user}`);
+  console.log('user확인:', user);
 
   const openMakeModal = () => {
     setMakeRoomModal(true);

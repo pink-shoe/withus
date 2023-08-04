@@ -5,6 +5,8 @@ import { useOpenvidu } from 'hooks/useOpenvidu';
 import { ControllBarContainer } from '@components/Controllbar/ControllBarContainer';
 import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
 import ChatContainer from '@components/Chat/ChatContainer';
+import { useAtom } from 'jotai';
+import { userAtom } from 'stores/user';
 export default function WaitingRoom() {
   const location = useLocation();
 
@@ -12,7 +14,7 @@ export default function WaitingRoom() {
     location.pathname.lastIndexOf('/') + 1,
     location.pathname.length
   );
-
+  const [user, setUser] = useAtom(userAtom);
   const [roomId, setRoomId] = useState<string>(currentPath);
   const [userId, setUserId] = useState<number>(Math.floor(Math.random() * 100));
   const [isHost, setIsHost] = useState<boolean>(true);
