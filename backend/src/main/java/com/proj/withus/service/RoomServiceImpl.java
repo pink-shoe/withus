@@ -122,5 +122,47 @@ public class RoomServiceImpl implements RoomService {
         return randomCode;
     }
 
+    /*
+    select *
+    from player
+    where room_id = roomId
+    and member_id = memberId
+     */
+    public Player getPlayerInRoom(Long memberId, Long roomId) {
+        return playerRepository.findPlayerByMemberIdAndRoomId(memberId, roomId);
+    }
 
+    /*
+    update player
+    set ready = readyStatus
+    where player_id = playerId
+     */
+    public int modifyReady(Long playerId, boolean readyStatus) {
+        return playerRepository.updateReady(playerId, readyStatus);
+    }
+
+    /*
+    select *
+    from player
+    where room_id = roomId
+    and ready = true
+
+    update room
+    set start = startStatus
+    where room_id = roomId
+     */
+    public List<Long> getReadyPlayers(Long roomId) {
+        List<Long> readyMember = playerRepository.findReadyPlayersByRoomId(roomId);
+        List<Player> totalMember = playerRepository.findAllByRoomId(roomId);
+        if (readyMember.size() == totalMember.size()) {
+            roomRepository.updateStart(roomId, true);
+        } else {
+            roomRepository.updateStart(roomId, false);
+        }
+        return readyMember;
+    }
+
+    public boolean getStartStatus(Long roomId) {
+        return roomRepository.findStartStatusByRoomId(roomId);
+    }
 }

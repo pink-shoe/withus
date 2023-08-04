@@ -41,6 +41,9 @@ public class Room {
     @ColumnDefault("5")
     private int time;
 
+    @ColumnDefault("false")
+    private boolean start;
+
     @OneToMany(mappedBy = "room")
     @JsonIgnore
     private List<GameResult> gameResults = new ArrayList<>();

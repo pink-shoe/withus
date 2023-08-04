@@ -1,7 +1,10 @@
 package com.proj.withus.controller;
 
+import java.util.List;
 import java.util.Optional;
 
+import com.proj.withus.domain.Member;
+import com.proj.withus.domain.Player;
 import com.proj.withus.repository.RoomRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -213,6 +216,67 @@ public class RoomController {
         }
     }
 
+    @ApiOperation(value = "게임 준비 및 취소", notes = "사용자는 게임 준비 및 취소를 할 수 있다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "준비 상태 갱신 성공"),
+            @ApiResponse(code = 400, message = "준비 상태 갱신 실패")
+    })
+    @GetMapping("/ready/{is_ready}/{room_id}")
+    public ResponseEntity<?> setReady(
+            HttpServletRequest request,
+            @PathVariable("is_ready") String isReady,
+            @PathVariable("room_id") Long roomId) {
+
+        if (isReady.trim().equals("")) {
+            return new ResponseEntity<String>("준비 상태가 설정되지 않았습니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
+        Long memberId = socialMemberInfo.getId();
+
+        Player player = roomService.getPlayerInRoom(memberId, roomId);
+        if (player == null) {
+            return new ResponseEntity<String>("참가자가 아닙니다.", HttpStatus.UNAUTHORIZED);
+        }
+
+        try {
+            if (isReady.equals("ready")) {
+                roomService.modifyReady(player.getId(), true);
+            } else if (isReady.equals("cancel")) {
+                roomService.modifyReady(player.getId(), false);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<String>("게임 준비에 실패했습니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        List<Long> readyPlayer = roomService.getReadyPlayers(roomId);
+        return new ResponseEntity<List<Long>>(readyPlayer, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "게임 시작 여부", notes = "게임 시작 여부를 알려준다.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "게임 시작 성공"),
+        @ApiResponse(code = 400, message = "게임 시작 실패")
+    })
+    @GetMapping("/start/{room_id}")
+    public ResponseEntity<?> isStart(
+        HttpServletRequest request,
+        @PathVariable("room_id") Long roomId) {
+
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
+        Long memberId = socialMemberInfo.getId();
+
+        Long host = roomService.getHostId(roomId);
+        if (host == null) {
+            return new ResponseEntity<String>("방이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        }
+         if (!roomService.getStartStatus(roomId)) {
+            return new ResponseEntity<String>("준비되지 않은 플레이어가 있습니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<String>("게임을 시작할 수 있습니다.", HttpStatus.OK);
+    }
+
     // 트랜잭션 전파 문제 생겨서 일단 Service -> Controller에서 처리
     private Long getHostId(Long roomId) {
         Long hostId = roomRepository.findHostIdByRoomId(roomId);
@@ -220,7 +284,5 @@ public class RoomController {
         System.out.println(hostId);
         return hostId;
     }
-
-
-
+     
 }
