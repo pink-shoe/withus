@@ -56,6 +56,9 @@ public class SocialController {
 
             // 액세스 토큰 to 회원 정보
             memberId = socialService.getKakaoMemberInfo(accessToken);
+            if (memberId == -1L) {
+                return new ResponseEntity<String>("로그인에 실패했습니다.", HttpStatus.BAD_REQUEST);
+            }
             System.out.println("kakaoMemberInfo: " + memberId);
 
             // 회원 정보 to JWT
@@ -65,6 +68,9 @@ public class SocialController {
         } else if (loginType.equals("google")) {
             accessToken = socialService.getGoogleAccessToken(code);
             memberId = socialService.getGoogleMemberInfo(accessToken);
+            if (memberId == -1L) {
+                return new ResponseEntity<String>("로그인에 실패했습니다.", HttpStatus.BAD_REQUEST);
+            }
             jwtToken = jwtUtil.generateJwtToken(memberId, loginType);
         }
         System.out.println("memberId:" + memberId);
