@@ -69,10 +69,11 @@ export default function Lobby() {
       <Background>
         <Board boardType={'LOBBY'}>
           <div className='flex justify-center content-center'>
-            <div className='w-full'>
+            <div>
+            {/* <div className='grid grid-cols-1 md:grid-cols-2 gap-12 items-center'> */}
               <button
                 onClick={openMakeModal}
-                className='bg-[#FF8D8D] hover:bg-red-500 me-6 w-2/3 rounded-xl font-medium font-kdisplay text-4xl text-white'
+                className='bg-[#FF8D8D] hover:bg-red-500 me-2 xl:aspect-square xl:h-96 lg:aspect-square lg:h-80 md:aspect-[3/4] md:h-80 sm:aspect-[3/4] sm:h-60 md:m-8 sm:me-4 aspect-[3/5] h-60 rounded-xl font-medium font-kdisplay text-4xl text-white'
               >
                 방 만들기
               </button>
@@ -82,14 +83,14 @@ export default function Lobby() {
                 closeModal={closeMakeModal}
               ></SettingModalContainer>
             </div>
-            <Fragment>
+            <div>
               <button
                 onClick={openEnterModal}
-                className='bg-[#8D98FF] hover:bg-violet-700 ms-6 w-2/3 rounded-xl font-medium font-kdisplay text-4xl text-white'
+                className='bg-[#8D98FF] hover:bg-violet-700 ms-2 xl:aspect-square xl:h-96 lg:aspect-square lg:h-80 md:aspect-[3/4] md:h-80 md:m-8 sm:ms-4 sm:aspect-[3/4] sm:h-60 aspect-[3/4] h-60 rounded-xl font-medium font-kdisplay text-4xl text-white'
               >
                 방 참여하기
               </button>
-              <Modal openModal={enterRoomModal} closeModal={closeEnterModal}>
+              <Modal openModal={enterRoomModal} closeModal={closeEnterModal} isSettingModal={true}>
                 <p className='text-[#514148] font-kdisplay font-medium text-4xl mb-10 text-center'>
                   참여 코드
                 </p>
@@ -114,7 +115,7 @@ export default function Lobby() {
                   </button>
                 </div>
               </Modal>
-            </Fragment>
+            </div>
           </div>
         </Board>
       </Background>

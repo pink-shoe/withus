@@ -3,9 +3,12 @@
 import React, { Fragment, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
+import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import SettingModalContainer from '../components/common/SettingModal/SettingModalContainer';
 import ResultModal from '../components/common/ResultModal';
 import EndGameModal from '../components/common/EndGameModal';
+import Dropdown from '../components/common/Dropdown';
+
 
 export default function About() {
   const [updateModalStatus, setUpdateModalStatus] = useState(false);
@@ -19,7 +22,7 @@ export default function About() {
   };
 
   return (
-    <Fragment>
+    <div className='bg-red-300'>
       <FontAwesomeIcon onClick={openUpdateModal} icon={faGear} size="2xl" style={{color: "#000000",}} className='bg-[#D9D9D9] p-2 rounded-full hover:cursor-pointer hover:bg-[#FF8DA3] hover:rotate-12' />
       <SettingModalContainer
         isUpdateModal={true}
@@ -30,6 +33,10 @@ export default function About() {
       <ResultModal></ResultModal>
       <div>==============구분선=================</div>
       <EndGameModal></EndGameModal>
-    </Fragment>
+      <div>==============구분선=================</div>
+      <div>==============구분선=================</div>
+      <Dropdown></Dropdown>
+      <FontAwesomeIcon icon={faCircleUser} size="2xl" style={{color: "#ffffff"}} className='cursor-pointer me-1 text-[42px] z-50' />
+    </div>
   );
 }

@@ -1,6 +1,6 @@
 // 대기실 입장 전까지 Header
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDoorOpen, faCircleUser } from '@fortawesome/free-solid-svg-icons';
+import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 
 export default function UserHeader() {
   return (
@@ -14,12 +14,7 @@ export default function UserHeader() {
           style={{ color: '#fcfcfc' }}
           className='me-1.5 cursor-pointer'
         /> */}
-        <FontAwesomeIcon
-          icon={faCircleUser}
-          size='2xl'
-          style={{ color: '#fcfcfc' }}
-          className='me-3 text-4xl'
-        />
+        <FontAwesomeIcon icon={faCircleUser} size="2xl" style={{color: "#ffffff"}} className='cursor-pointer me-1 text-[42px] z-50' />
       </span>
     </div>
   );

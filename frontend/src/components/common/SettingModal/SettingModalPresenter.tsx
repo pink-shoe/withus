@@ -48,7 +48,7 @@ export default function SettingModalPresenter({
   return (
     <Fragment>
       <div className='font-kdisplay'>
-        <Modal mode={mode} round={round} openModal={openModal} closeModal={closeModal}>
+        <Modal mode={mode} round={round} openModal={openModal} closeModal={closeModal} isSettingModal={true}>
           <p className='text-[#514148] font-medium text-4xl mb-10 text-center'>방 설정</p>
           <div className='ms-2.5'>
             <div className='flex my-7'>

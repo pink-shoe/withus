@@ -76,7 +76,7 @@ export default function ResultModal() {
       >
         게임 결과 확인
       </button>
-      <Modal openModal={modalStatus} closeModal={closeModal}>
+      <Modal openModal={modalStatus} closeModal={closeModal} isSettingModal={false}>
         <div className='text-center text-[#514148] font-medium font-kdisplay text-4xl mb-10'>
           🏆게임결과🏆
         </div>

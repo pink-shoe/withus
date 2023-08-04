@@ -7,10 +7,11 @@ interface IModalProps {
   closeModal?: React.MouseEventHandler<SVGSVGElement>;
   mode?: string;
   round?: number;
+  isSettingModal: boolean;
   children: React.ReactNode;
 }
 
-export default function Modal({ openModal, closeModal, children }: IModalProps) {
+export default function Modal({ openModal, closeModal, isSettingModal, children }: IModalProps) {
   return (
     <div>
       {openModal ? (
@@ -20,7 +21,9 @@ export default function Modal({ openModal, closeModal, children }: IModalProps) 
             {/* 모달창 */}
             <div className='bg-slate-50 w-[32rem] rounded-lg px-5 py-3'>
               {/* 닫기 버튼 */}
-              <div className='flex justify-end'>
+              {/* 세팅 모달에서만 닫기 버튼 존재 */}
+              {isSettingModal ? (
+                <div className='flex justify-end'>
                 <FontAwesomeIcon
                   icon={faXmark}
                   size='xl'
@@ -28,6 +31,7 @@ export default function Modal({ openModal, closeModal, children }: IModalProps) 
                   className='cursor-pointer hover:text-red-500'
                 />
               </div>
+              ) : null}
               <div className='ms-5 my-3'>{children}</div>
               <div className='flex justify-center mt-10'></div>
             </div>
