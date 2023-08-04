@@ -19,7 +19,13 @@ export default function About() {
 
   return (
     <Fragment>
-      <FontAwesomeIcon onClick={openUpdateModal} icon={faGear} size="2xl" style={{color: "#000000",}} className='bg-[#D9D9D9] p-2 rounded-full hover:cursor-pointer hover:bg-[#FF8DA3] hover:rotate-12' />
+      <FontAwesomeIcon
+        onClick={openUpdateModal}
+        icon={faGear}
+        size='2xl'
+        style={{ color: '#000000' }}
+        className='bg-[#D9D9D9] p-2 rounded-full hover:cursor-pointer hover:bg-[#FF8DA3] hover:rotate-12'
+      />
       {/* <button
         onClick={openUpdateModal}
         className='bg-violet-800 hover:bg-indigo-950 w-60 h-10 rounded-md font-semibold text-lg text-white'

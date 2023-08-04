@@ -2,14 +2,13 @@ import { FC } from 'react';
 import { IUser } from 'hooks/useOpenvidu';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faFloppyDisk } from '@fortawesome/free-regular-svg-icons';
+import { IUserAtom } from 'stores/user';
 export let localUser: IUser;
 
 interface IParticipantsPresenterProps {
   type: 'WAIT' | 'GAME';
   streamList: IStreamList[];
-  userId: number;
-  userName: string;
-  readyStatus: boolean;
+  user: IUserAtom;
   onChangeUserName: any;
   isUpdateUserName: boolean;
   updateUserName: () => void;
@@ -23,9 +22,7 @@ interface IStreamList {
 export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
   type,
   streamList,
-  userId,
-  userName,
-  readyStatus,
+  user,
   onChangeUserName,
   isUpdateUserName,
   updateUserName,
@@ -43,13 +40,13 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
               key={idx}
               className='flex justify-between items-center w-full text-justify border-bottom border-b-2 p-3'
             >
-              {userId === stream.userId ? (
+              {user.memberId === stream.userId ? (
                 isUpdateUserName ? (
                   <>
                     <input
                       className='w-full'
                       type='text'
-                      value={userName}
+                      value={user.nickname}
                       onChange={onChangeUserName}
                     />
                     {type === 'WAIT' ? (

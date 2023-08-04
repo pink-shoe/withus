@@ -16,7 +16,7 @@ const setConnectionId = (user: IUser, conecctionId: string) => {
   return user;
 };
 
-export const useOpenvidu = (userId: number, gameRoomId: string) => {
+export const useOpenvidu = (userId: number, gameRoomId: number) => {
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [publisher, setPublisher] = useState<any>();
   const [session, setSession] = useState<any>();

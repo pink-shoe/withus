@@ -4,7 +4,7 @@ import Tutorial from '@components/login/Tutorial';
 import Logo from '@components/common/Logo';
 import GuestLogin from '@components/login/GuestLogin';
 import Login from '@components/login/Login';
-import { userAtom } from '../../stores/index';
+import { userAtom } from '../../stores/user';
 import { useNavigate } from 'react-router-dom';
 
 export default function Layout() {

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import ButtonComponent from '@components/common/ButtonComponent';
 import AlbumFrame from './AlbumFrame';
-import { album } from '../../apis/albumApi';
 import PaginationContainer from '@components/Pagination/PaginationContainer';
+import { getAlbumListApi } from 'apis/albumApi';
 
 export default function PhotoAlbum() {
   const [images, setImages] = useState<{ imgId: number; imgUrl: string; savedAt: string }[]>([]);
@@ -21,7 +21,7 @@ export default function PhotoAlbum() {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const response = await album();
+        const response = await getAlbumListApi();
         setImages(response); // 가져온 이미지 객체(아이디, 주소, 저장날짜)를 images 배열에 저장
       } catch (error) {
         console.error('이미지 저장 실패');

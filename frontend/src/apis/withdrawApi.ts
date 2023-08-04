@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import axios from './axiosConfig';
+import axios from '.';
 
 // 특정 주소와 토큰을 변수로 설정합니다.
 const apiUrl = `${import.meta.env.VITE_API}/api/members`; // 변동될 수 있음
