@@ -49,7 +49,7 @@ export default function ParticipantsContainer({
       user={user}
       onChangeUserName={onChangeUserName}
       isUpdateUserName={isUpdateUserName}
-      updateUserName={updateUserName}
+      onChangeUpdateUserNameStatus={updateUserName}
       saveUserName={saveUserName}
     />
   );

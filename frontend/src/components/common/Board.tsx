@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import Logo from './Logo/Logo'
+import Logo from './Logo/Logo';
 
 export type boardType = 'GAME' | 'WAIT' | 'LOBBY';
 
@@ -55,5 +55,5 @@ export default function Board({ boardType, children }: IBoardProps) {
         </div>
       )}
     </Fragment>
-  )
+  );
 }

@@ -1,34 +1,39 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ChatPresenter from './ChatPresenter';
+import { signalType } from 'hooks/useOpenvidu';
 
 interface IChatContainerProps {
   chatStatus: boolean;
   session: any;
   publisher: any;
-  sendMessage: (message: string) => void;
+  sendSignal: (message: string, type: signalType) => void;
+  // receiveSignal: (type: signalType) => void;
 }
 export default function ChatContainer({
   chatStatus,
   session,
   publisher,
-  sendMessage,
-}: IChatContainerProps) {
+  sendSignal,
+}: // receiveSignal,
+IChatContainerProps) {
   const [message, setMessage] = useState('');
   const [messageList, setMessageList] = useState<any[]>([]);
-
+  const messageRef = useRef<HTMLDivElement>(null);
   const onChangeMessage = (e: any) => {
     setMessage(e.target.value);
     console.log(e.target.value);
   };
 
   const onClickSendMsg = () => {
-    sendMessage(message);
+    sendSignal(message, 'CHAT');
     setMessage('');
   };
 
-  const receiveMessage = () => {
+  const receiveMessage = (type: signalType) => {
     if (session && publisher) {
-      publisher.stream.session.on('signal:chat', (e: any) => {
+      // const data = receiveSignal('CHAT');
+      // console.log('message', data);
+      publisher.stream.session.on('signal:' + type, (e: any) => {
         const data = JSON.parse(e.data);
         setMessageList((msgList) => [
           ...msgList,
@@ -38,8 +43,15 @@ export default function ChatContainer({
     }
   };
   useEffect(() => {
-    session && publisher && receiveMessage();
+    session && publisher && receiveMessage('CHAT');
   }, [session, publisher]);
+
+  const scrollToBottom = () => {
+    messageRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+  useEffect(() => {
+    scrollToBottom();
+  }, [messageList]);
 
   return (
     <ChatPresenter
@@ -49,6 +61,7 @@ export default function ChatContainer({
       message={message}
       onChangeMessage={onChangeMessage}
       onClickSendMsg={onClickSendMsg}
+      messageRef={messageRef}
     />
   );
 }

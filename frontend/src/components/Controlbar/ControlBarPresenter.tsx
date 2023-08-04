@@ -12,7 +12,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import SettingModalContainer from '@components/common/SettingModal/SettingModalContainer';
 
-interface IControllBarPresenterProps {
+interface IControlBarPresenterProps {
+  type: 'WAIT' | 'GAME';
   isHost: boolean;
   micStatus: boolean;
   onChangeMicStatus: () => void;
@@ -27,7 +28,8 @@ interface IControllBarPresenterProps {
   onClickExit: () => void;
 }
 
-export const ControllBarPresenter: FC<IControllBarPresenterProps> = ({
+export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
+  type,
   isHost,
   micStatus,
   onChangeMicStatus,
@@ -44,6 +46,9 @@ export const ControllBarPresenter: FC<IControllBarPresenterProps> = ({
   return (
     <div className='w-full flex justify-center'>
       <div className='bottom-3 flex flex-wrap gap-3 justify-center items-center'>
+        <button className={` w-16 h-16 rounded-full p-3 bg-red-500`} onClick={onClickExit}>
+          <FontAwesomeIcon icon={faDoorOpen} color={'white'} fontSize={`2rem`} />
+        </button>
         <button
           className={` w-16 h-16 rounded-full p-3 ${micStatus ? ' bg-[#D3D3D3]' : 'bg-[#FF7B7B]'}`}
           onClick={onChangeMicStatus}
@@ -54,18 +59,20 @@ export const ControllBarPresenter: FC<IControllBarPresenterProps> = ({
             <FontAwesomeIcon icon={faMicrophoneSlash} color={'white'} fontSize={`2rem`} />
           )}
         </button>
-        <button
-          className={` w-16 h-16 rounded-full p-3 ${
-            cameraStatus ? ' bg-[#D3D3D3]' : 'bg-[#FF7B7B]'
-          }`}
-          onClick={onChangeCameraStatus}
-        >
-          {cameraStatus ? (
-            <FontAwesomeIcon icon={faVideo} color={'black'} fontSize={`2rem`} />
-          ) : (
-            <FontAwesomeIcon icon={faVideoSlash} color={'white'} fontSize={`2rem`} />
-          )}
-        </button>
+        {type === 'WAIT' && (
+          <button
+            className={` w-16 h-16 rounded-full p-3 ${
+              cameraStatus ? ' bg-[#D3D3D3]' : 'bg-[#FF7B7B]'
+            }`}
+            onClick={onChangeCameraStatus}
+          >
+            {cameraStatus ? (
+              <FontAwesomeIcon icon={faVideo} color={'black'} fontSize={`2rem`} />
+            ) : (
+              <FontAwesomeIcon icon={faVideoSlash} color={'white'} fontSize={`2rem`} />
+            )}
+          </button>
+        )}
         <button
           className={` w-16 h-16 rounded-full p-3 ${chatStatus ? ' bg-[#FF7B7B]' : 'bg-[#D3D3D3]'}`}
           onClick={onChangeChatStatus}
@@ -109,31 +116,29 @@ export const ControllBarPresenter: FC<IControllBarPresenterProps> = ({
           </>
         )}
 
-        <button className={` w-16 h-16 rounded-full p-3 bg-red-500`} onClick={onClickExit}>
-          <FontAwesomeIcon icon={faDoorOpen} color={'white'} fontSize={`2rem`} />
-        </button>
-        {isHost ? (
-          <button
-            className={` whitespace-nowrap w-fit h-16 rounded p-3 bg-[#112364] text-white font-bold text-lg`}
-            onClick={() => {}}
-          >
-            시작하기
-          </button>
-        ) : readyStatus ? (
-          <button
-            className={` whitespace-nowrap w-fit h-16 rounded p-3 bg-slate-700 text-white font-bold text-lg`}
-            onClick={onChangeReadyStatus}
-          >
-            준비해제
-          </button>
-        ) : (
-          <button
-            className={` whitespace-nowrap w-fit h-16 rounded p-3 bg-[#112364] text-white font-bold text-lg`}
-            onClick={onChangeReadyStatus}
-          >
-            준비하기
-          </button>
-        )}
+        {type === 'WAIT' &&
+          (isHost ? (
+            <button
+              className={` whitespace-nowrap w-fit h-16 rounded-lg p-3 bg-[#FF8DA3] text-white font-bold text-lg`}
+              onClick={() => {}}
+            >
+              시작하기
+            </button>
+          ) : readyStatus ? (
+            <button
+              className={` whitespace-nowrap w-fit h-16 rounded-lg p-3 bg-[#8E8E8E] text-white font-bold text-lg`}
+              onClick={onChangeReadyStatus}
+            >
+              준비취소
+            </button>
+          ) : (
+            <button
+              className={` whitespace-nowrap w-fit h-16 rounded-lg p-3 bg-[#FF8DA3] text-white font-bold text-lg`}
+              onClick={onChangeReadyStatus}
+            >
+              준비하기
+            </button>
+          ))}
       </div>
     </div>
   );
