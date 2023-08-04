@@ -40,15 +40,15 @@ public class RoomServiceImpl implements RoomService {
         return roomRepository.save(room);
     }
 
-    public Optional<Room> enterRoom(Long roomId, Long memberId) {
+    public Optional<Room> enterRoom(int roomCode, Long memberId) {
         // 해당 방에 참가자 등록하기 (Player 테이블) // team type 일단 패스
         Player player = new Player();
         player.setId(memberId);
-        player.setRoom(roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("Room not found")));
+        player.setRoom(roomRepository.findRoomByCode(roomCode).orElseThrow(() -> new IllegalArgumentException("Room not found")));
         player.setMember(memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Member not found")));
         Player savedPlayer = playerRepository.save(player); // 반환을 지정해줘도, 주지 않아도 됨 // 예외 처리를 위해서는 받는게 좋지 않을까
 
-        return roomRepository.findById(roomId);
+        return roomRepository.findRoomByCode(roomCode);
     }
 
     /*

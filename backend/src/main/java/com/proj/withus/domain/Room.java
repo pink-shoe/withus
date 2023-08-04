@@ -24,15 +24,20 @@ public class Room {
     @JsonIgnore
     private Member member;
 
+    @JsonProperty("roomType")
     private String type;
 
+    @JsonProperty("roomCode")
     private int code;
 
-    private String roomLink;
+    @JsonProperty("roomLink")
+    private String link;
 
+    @JsonProperty("roomRound")
     @ColumnDefault("5")
     private int round;
 
+    @JsonProperty("roomTime")
     @ColumnDefault("5")
     private int time;
 

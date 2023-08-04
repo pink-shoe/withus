@@ -77,10 +77,10 @@ public class RoomController {
         @ApiResponse(code = 400, message = "방 입장 실패"),
         @ApiResponse(code = 403, message = "권한 부족")
     })
-    @GetMapping("/{room_id}/{member_id}")
+    @GetMapping("/{room_code}/{member_id}")
     public ResponseEntity<?> enterRoom(
             HttpServletRequest request,
-            @PathVariable("room_id") Long roomId,
+            @PathVariable("room_code") int roomCode,
             @PathVariable("member_id") Long memberId) {
         Long id = -1L;
         String loginType = "";
@@ -93,7 +93,7 @@ public class RoomController {
             return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
         }
 
-        Optional<Room> room = roomService.enterRoom(roomId, memberId);
+        Optional<Room> room = roomService.enterRoom(roomCode, memberId);
         // Optional<>은 isPresent()로 확인!
         if (!room.isPresent()) {
             return new ResponseEntity<String>("존재하지 않는 방입니다.", HttpStatus.BAD_REQUEST);
@@ -102,8 +102,8 @@ public class RoomController {
             enterRoomRes.setRoomId(room.get().getId());
             enterRoomRes.setRoomType(room.get().getType());
             enterRoomRes.setCode(String.valueOf(room.get().getCode()));
-            enterRoomRes.setHostId(getHostId(roomId));
-            enterRoomRes.setPlayers(roomService.getPlayerList(roomId)); // List<>를 이렇게 set하는게 맞나..
+            enterRoomRes.setHostId(getHostId(room.get().getId()));
+            enterRoomRes.setPlayers(roomService.getPlayerList(room.get().getId())); // List<>를 이렇게 set하는게 맞나..
             return new ResponseEntity<EnterRoomRes>(enterRoomRes, HttpStatus.OK);
         }
 
