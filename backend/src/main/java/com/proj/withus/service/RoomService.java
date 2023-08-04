@@ -16,11 +16,13 @@ public interface RoomService {
     public void leaveRoom(Long roomId, Long memberId);
     public int modifyRoom(ModifyRoomReq req, Long roomId);
     public int modifyNickname(Long id, String nickname);
-//    public Long getHostId(Long roomId);
+    //    public Long getHostId(Long roomId);
     public List<Player> getPlayerList(Long roomId);
     public int createCode(); // Impl에서만 따로 private으로 관리 고려해 볼 것
     public Player getPlayerInRoom(Long memberId, Long roomId);
     public int modifyReady(Long playerId, boolean readyStatus);
     public List<Long> getReadyPlayers(Long roomId);
+    public boolean getReadyStatus(Long playerId);
     public boolean getStartStatus(Long roomId);
+
 }

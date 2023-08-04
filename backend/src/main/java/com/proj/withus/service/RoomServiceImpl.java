@@ -30,7 +30,7 @@ public class RoomServiceImpl implements RoomService {
         System.out.println(createRoomReq.getId());
 
         Member member = memberRepository.findById(createRoomReq.getId())
-                        .orElseThrow(() -> new IllegalArgumentException("invalid" + createRoomReq.getId()));
+            .orElseThrow(() -> new IllegalArgumentException("invalid" + createRoomReq.getId()));
 
         Room room = new Room();
         room.setMember(member);
@@ -98,12 +98,12 @@ public class RoomServiceImpl implements RoomService {
     from room
     where room_id = roomId
     */
-//    public Long getHostId(Long roomId) {
-//        Long hostId = roomRepository.findHostIdByRoomId(roomId);
-//        System.out.println("hostId~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-//        System.out.println(hostId);
-//        return hostId;
-//    }
+    //    public Long getHostId(Long roomId) {
+    //        Long hostId = roomRepository.findHostIdByRoomId(roomId);
+    //        System.out.println("hostId~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    //        System.out.println(hostId);
+    //        return hostId;
+    //    }
 
     /*
     select *
@@ -160,6 +160,10 @@ public class RoomServiceImpl implements RoomService {
             roomRepository.updateStart(roomId, false);
         }
         return readyMember;
+    }
+
+    public boolean getReadyStatus(Long playerId) {
+        return playerRepository.findPlayerById(playerId);
     }
 
     public boolean getStartStatus(Long roomId) {

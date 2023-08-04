@@ -28,4 +28,7 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
     @Modifying
     @Query("update Player p set p.ready = :readyStatus where p.id = :playerId")
     int updateReady(@Param("playerId") Long playerId, @Param("readyStatus") boolean readyStatus);
+
+    @Query("select p.ready from Player p where p.id = :playerId")
+    boolean findPlayerById(@Param("playerId") Long playerId);
 }
