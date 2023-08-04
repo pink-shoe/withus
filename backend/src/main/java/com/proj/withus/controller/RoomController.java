@@ -85,7 +85,6 @@ public class RoomController {
         Long id = -1L;
         String loginType = "";
         String token = (String) request.getAttribute("token");
-        token = token.substring(7);
         try {
             SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
             id = socialMemberInfo.getId();
@@ -122,7 +121,6 @@ public class RoomController {
             @PathVariable("member_id") Long pathMemberId) {
 
         String token = (String) request.getAttribute("token");
-        token = token.substring(7);
         SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
         Long memberId = socialMemberInfo.getId();
         try {
