@@ -36,6 +36,12 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+  # Multipart 설정
+  servlet:
+    multipart:
+      max-file-size: 100MB # 요청한 파일 한 개의 크기
+      max-request-size: 100MB # 요청한 파일 전체의 크기
+
 kakao:
   rest-api-key: 7ea82d8a610fe51bcf3eca267069b264
   redirect-uri: http://localhost:8080/api/oauth/kakao
@@ -44,3 +50,15 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
+
+cloud:
+  aws:
+    s3:
+      bucket: withus.bucket
+    credentials:
+      access-key: AKIASQ5NU6QBBSXRE6WD
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
