@@ -8,18 +8,19 @@ import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer'
 import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
 import ChatContainer from '@components/Chat/ChatContainer';
 import { CountdownCircleTimer, useCountdown } from 'react-countdown-circle-timer';
+import { IUserAtom, userAtom } from 'stores/user';
+import { useAtom } from 'jotai';
+import { IRoomAtom, roomAtom } from 'stores/room';
+
 export default function GameRoom() {
   const location = useLocation();
 
-  const currentPath = location.pathname.slice(
-    location.pathname.lastIndexOf('/') + 1,
-    location.pathname.length
+  const currentPath = Number(
+    location.pathname.slice(location.pathname.lastIndexOf('/') + 1, location.pathname.length)
   );
-
-  const [roomId, setRoomId] = useState<string>(currentPath);
-  const [userId, setUserId] = useState<number>(Math.floor(Math.random() * 100));
+  const [user, setUser] = useAtom<IUserAtom>(userAtom);
+  const [roomInfo, setRoomInfo] = useAtom<IRoomAtom>(roomAtom);
   const [isHost, setIsHost] = useState<boolean>(true);
-  const [userName, setUserName] = useState('name' + userId);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
   const [readyStatus, setReadyStatus] = useState<boolean>(false);
   const [isUpdateUserName, setIsUpdateUserName] = useState<boolean>(false);
@@ -32,7 +33,7 @@ export default function GameRoom() {
     onChangeMicStatus,
     sendSignal,
     // receiveSignal,
-  } = useOpenvidu(userId!, roomId, readyStatus);
+  } = useOpenvidu(user.memberId!, roomInfo.roomId, readyStatus);
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
@@ -42,9 +43,12 @@ export default function GameRoom() {
     setReadyStatus(!readyStatus);
   };
 
-  const onChangeUserName = (userName: string) => {
-    setUserName(userName);
-  };
+  // const onChangeUserName = (userName: string) => {
+  //   setUser((prevUser: IUserAtom) => ({
+  //     ...prevUser,
+  //     nickname: userName,
+  //   }));
+  // };
 
   const onChangeIsUpdateUserName = (isUpdateUserName: boolean) => {
     setIsUpdateUserName(!isUpdateUserName);
@@ -86,16 +90,15 @@ export default function GameRoom() {
     <section className={`w-full flex justify-between  h-screen`}>
       {/* 참가자 목록 */}
       <ParticipantsContainer
-        userId={userId}
-        userName={userName}
-        onChangeUserName={onChangeUserName}
+        type={'GAME'}
+        user={user}
+        // onChangeUserName={onChangeUserName}
         publisher={publisher}
         streamList={streamList}
         readyStatus={readyStatus}
-        updateUserNameStatus={isUpdateUserName}
-        onChangeUpdateUserNameStatus={onChangeIsUpdateUserName}
-        onChangeReadyStatus={onChangeReadyStatus}
-        type={'GAME'}
+        // updateUserNameStatus={isUpdateUserName}
+        // onChangeUpdateUserNameStatus={onChangeIsUpdateUserName}
+        // onChangeReadyStatus={onChangeReadyStatus}
       />
       {/* openvidu 화면 */}
       <div className=' w-1/2 h-screen flex flex-col justify-between items-center'>
@@ -134,7 +137,7 @@ export default function GameRoom() {
                     <VideoStream
                       streamManager={stream.streamManager}
                       name={stream.userName}
-                      isMe={stream.userId === userId}
+                      isMe={stream.userId === user.memberId}
                     />
                   </div>
                 );
