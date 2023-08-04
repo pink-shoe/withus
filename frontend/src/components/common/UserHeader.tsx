@@ -14,12 +14,12 @@ export default function UserHeader() {
           style={{ color: '#fcfcfc' }}
           className='me-1.5 cursor-pointer'
         /> */}
-        <FontAwesomeIcon
+        {/* <FontAwesomeIcon
           icon={faCircleUser}
           size='2xl'
           style={{ color: '#fcfcfc' }}
           className='me-3 text-4xl'
-        />
+        /> */}
       </span>
     </div>
   );

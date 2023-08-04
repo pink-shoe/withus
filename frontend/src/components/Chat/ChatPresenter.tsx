@@ -77,7 +77,7 @@ export default function ChatPresenter({
               className='whitespace-nowrap bg- rounded-md bg-[#FEDCE3]  p-3'
               onClick={onClickSendMsg}
             >
-              <FontAwesomeIcon icon={faPaperIconDefinition} color={'#FF8DA3'} fontSize={'28px'} />
+              {/* <FontAwesomeIcon icon={faPaperIconDefinition} color={'#FF8DA3'} fontSize={'28px'} /> */}
             </button>
           </div>
         </div>

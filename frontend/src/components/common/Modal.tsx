@@ -21,12 +21,12 @@ export default function Modal({ openModal, closeModal, children }: IModalProps) 
             <div className='bg-slate-50 w-[32rem] rounded-lg px-5 py-3'>
               {/* 닫기 버튼 */}
               <header className='flex justify-end'>
-                <FontAwesomeIcon
+                {/* <FontAwesomeIcon
                   icon={faXmark}
                   size='xl'
                   onClick={closeModal}
                   className='cursor-pointer hover:text-red-500'
-                />
+                /> */}
               </header>
               <div className='ms-5 my-3'>{children}</div>
               <div className='flex justify-center mt-10'></div>

@@ -32,7 +32,7 @@ export const VideoStreamBox: FC<IVideoStreamBoxProps> = ({
           {isMe && ' (나)'}
         </div>
         <div>
-          {!micStatus ? (
+          {/* {!micStatus ? (
             <FontAwesomeIcon
               icon={faMicrophoneSlashIconDefinition}
               color={'red'}
@@ -45,7 +45,7 @@ export const VideoStreamBox: FC<IVideoStreamBoxProps> = ({
             <FontAwesomeIcon icon={faVideoSlashIconDefinition} color={'red'} fontSize={'16px'} />
           ) : (
             <></>
-          )}
+          )} */}
         </div>
       </div>
     </div>

@@ -66,7 +66,7 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
                     />
                     {type === 'WAIT' && !stream.isReady ? (
                       <button onClick={saveUserName}>
-                        <FontAwesomeIcon icon={faFloppyDiskIconDefinition} />
+                        {/* <FontAwesomeIcon icon={faFloppyDiskIconDefinition} /> */}
                       </button>
                     ) : (
                       <div></div>
@@ -83,7 +83,7 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
                     />
                     {type === 'WAIT' && !stream.isReady ? (
                       <button onClick={onChangeUpdateUserNameStatus}>
-                        <FontAwesomeIcon icon={faPenToSquareIconDefinition} />
+                        {/* <FontAwesomeIcon icon={faPenToSquareIconDefinition} /> */}
                       </button>
                     ) : (
                       <div></div>
