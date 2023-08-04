@@ -1,5 +1,6 @@
 package com.proj.withus.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.proj.withus.domain.Member;
 import com.proj.withus.domain.Player;
 
@@ -36,6 +37,7 @@ public class EnterRoomRes {
     @ApiModelProperty(value = "방장 id", required = true, example = "1")
     private Long hostId;
 
+    @JsonProperty("roomCode")
     @ApiModelProperty(value = "방 입장 코드", required = true)
     private String code; // 일단 10진수여도 String으로 하는걸로?
 

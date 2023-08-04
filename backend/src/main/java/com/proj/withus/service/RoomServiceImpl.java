@@ -10,15 +10,16 @@ import com.proj.withus.repository.PlayerRepository;
 import com.proj.withus.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
+@Transactional
 public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
@@ -39,14 +40,15 @@ public class RoomServiceImpl implements RoomService {
         return roomRepository.save(room);
     }
 
-    public Optional<Room> enterRoom(Long roomId, Long memberId) {
+    public Optional<Room> enterRoom(int roomCode, Long memberId) {
         // 해당 방에 참가자 등록하기 (Player 테이블) // team type 일단 패스
         Player player = new Player();
-        player.setRoom(roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("Room not found")));
+        player.setId(memberId);
+        player.setRoom(roomRepository.findRoomByCode(roomCode).orElseThrow(() -> new IllegalArgumentException("Room not found")));
         player.setMember(memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Member not found")));
         Player savedPlayer = playerRepository.save(player); // 반환을 지정해줘도, 주지 않아도 됨 // 예외 처리를 위해서는 받는게 좋지 않을까
 
-        return roomRepository.findById(roomId);
+        return roomRepository.findRoomByCode(roomCode);
     }
 
     /*
@@ -81,6 +83,7 @@ public class RoomServiceImpl implements RoomService {
     set type = roomType, code = roomCode, round = roomRound // roomCode는 없음
     where room_id = roomId
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     public int modifyRoom(ModifyRoomReq req, Long roomId) {
         int resultVal = roomRepository.updateRoom(req, roomId);
         return resultVal;
@@ -95,10 +98,12 @@ public class RoomServiceImpl implements RoomService {
     from room
     where room_id = roomId
     */
-    public Long getHostId(Long roomId) {
-        Long hostId = roomRepository.findHostIdByRoomId(roomId);
-        return hostId;
-    }
+//    public Long getHostId(Long roomId) {
+//        Long hostId = roomRepository.findHostIdByRoomId(roomId);
+//        System.out.println("hostId~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+//        System.out.println(hostId);
+//        return hostId;
+//    }
 
     /*
     select *
