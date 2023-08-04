@@ -37,7 +37,7 @@ public class SocialController {
 
     @ApiOperation(value = "소셜 로그인", notes = "인가 코드, 로그인 타입으로 소셜 로그인을 진행한다.")
     @ResponseBody
-    @GetMapping("/api/oauth/{login-type}") // pathvariable로 애초에 loginType 받고, 이걸로 jwt 만들기
+    @GetMapping("/api/oauth/{login_type}") // pathvariable로 애초에 loginType 받고, 이걸로 jwt 만들기
     public ResponseEntity<?> callback(
             @ApiParam(value = "소셜 서버에서 전달 받은 인가 코드 (Authorization code)", required = true) @RequestParam String code,
             @ApiParam(value = "소셜 이름 (kakao 혹은 google)", required = true) @PathVariable(name = "login-type") String loginType) {
