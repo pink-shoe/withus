@@ -8,7 +8,7 @@ export default function Login() {
 
   return (
     <div>
-      <p className='font-kdisplay text-3xl'> 나만의 방과 사진첩을 구경해보세요!! </p>
+      <p className='font-kdisplay text-4xl'> 나만의 방과 사진첩을 구경해보세요!! </p>
       <KakaoLogin />
       <Naverlogin />
       <GoogleOAuthProvider clientId={`${GOOGLE_GOOGLECLIENT_ID}`}>

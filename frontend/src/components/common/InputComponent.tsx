@@ -1,5 +1,5 @@
 interface IInputProps {
-  type: 'text' | 'password' | 'email';
+  type: 'text' | 'password' | 'email' | 'entercode';
   label?: string | undefined;
   placeholder?: string;
   value?: string;
@@ -7,22 +7,16 @@ interface IInputProps {
   version?: number;
 }
 
-export default function InputComponent({
-  type,
-  label,
-  placeholder,
-  value,
-  version,
-  onChange,
-}: IInputProps) {
+export default function InputComponent({ type, label, placeholder, value, onChange }: IInputProps) {
   let windcss: string;
   const inputId = label ? label : 'input';
   if (placeholder === undefined) placeholder = '입력해주세요';
-  if (version == 1) {
-    windcss = 'test중';
+  if (type === 'entercode') {
+    windcss =
+      'block w-80 h-8 mx-auto rounded-md px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-[#FF8D8D] placeholder:text-[#FF8D8D] focus:ring-1 focus:ring-inset focus:ring-[#FF8D8D] sm:text-sm sm:leading-6 font-edisplay';
   } else {
     windcss =
-      'block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6';
+      'block w-80 h-8 mx-auto rounded-md px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-[#FF8D8D] placeholder:text-[#FF8D8D] focus:ring-1 focus:ring-inset focus:ring-[#FF8D8D] sm:text-sm sm:leading-6 font-kdisplay';
   }
 
   return (

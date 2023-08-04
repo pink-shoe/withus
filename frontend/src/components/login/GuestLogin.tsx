@@ -33,7 +33,7 @@ const GuestLogin: React.FC<IGuestLoginProps> = ({
       />
       <InputComponent
         label='입장 코드'
-        type='text'
+        type='entercode'
         value={enterCode}
         placeholder='입장 코드'
         onChange={onChangeEnterCode}
