@@ -191,18 +191,17 @@ public class RoomController {
     public ResponseEntity<?> modifyNickname(
             HttpServletRequest request,
             @RequestBody() String nickname) {
-        System.out.println(nickname);
+        log.info("nickname", nickname);
         Long id = -1L;
         String token = (String) request.getAttribute("token");
-        token = token.substring(7);
+
         try {
             SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
             id = socialMemberInfo.getId();
-            System.out.println("ididididi: " + id); //
         } catch (Exception e) {
             return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
         }
-        System.out.println("ididididi: " + id); //
+        log.info("modify nickname - id: ", id);
 
         try {
             int isSuccess = roomService.modifyNickname(id, nickname);
