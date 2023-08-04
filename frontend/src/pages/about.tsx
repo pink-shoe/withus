@@ -7,7 +7,6 @@ import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import SettingModalContainer from '../components/common/SettingModal/SettingModalContainer';
 import ResultModal from '../components/common/ResultModal';
 import EndGameModal from '../components/common/EndGameModal';
-import Dropdown from '../components/common/Dropdown';
 
 
 export default function About() {
@@ -47,7 +46,6 @@ export default function About() {
       <EndGameModal></EndGameModal>
       <div>==============구분선=================</div>
       <div>==============구분선=================</div>
-      <Dropdown></Dropdown>
       <FontAwesomeIcon icon={faCircleUser} size="2xl" style={{color: "#ffffff"}} className='cursor-pointer me-1 text-[42px] z-50' />
     </div>
   );
