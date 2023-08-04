@@ -240,7 +240,32 @@ public class RoomController {
         }
 
         List<Long> readyPlayer = roomService.getReadyPlayers(roomId);
-
         return new ResponseEntity<List<Long>>(readyPlayer, HttpStatus.OK);
+    }
+
+    @GetMapping("/start/{room_id}")
+    public ResponseEntity<?> isStart(
+        HttpServletRequest request,
+        @PathVariable("room_id") Long roomId) {
+
+        Long id = -1L;
+        try {
+            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
+            id = socialMemberInfo.getId();
+        } catch (Exception e) {
+            return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
+        }
+
+        Long host = roomService.getHostId(roomId);
+        if (host == null) {
+            return new ResponseEntity<String>("방이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        // start 상태가 true 이면 ok, 아니면 bad request
+        if (!roomService.getStartStatus(roomId)) {
+            return new ResponseEntity<String>("준비되지 않은 플레이어가 있습니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<String>("게임을 시작할 수 있습니다.", HttpStatus.OK);
     }
 }

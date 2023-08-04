@@ -3,6 +3,7 @@ package com.proj.withus.repository;
 import com.proj.withus.domain.Member;
 import com.proj.withus.domain.Player;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -23,4 +24,8 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
 
     @Query("select p.member.id from Player p where p.room.id = :roomId and p.ready = true")
     List<Long> findReadyPlayersByRoomId(@Param("roomId") Long roomId);
+
+    @Modifying
+    @Query("update Player p set p.ready = :readyStatus where p.id = :playerId")
+    int updateReady(@Param("playerId") Long playerId, @Param("readyStatus") boolean readyStatus);
 }

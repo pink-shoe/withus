@@ -133,7 +133,7 @@ public class RoomServiceImpl implements RoomService {
     where player_id = playerId
      */
     public int modifyReady(Long playerId, boolean readyStatus) {
-        return roomRepository.updateReady(playerId, readyStatus);
+        return playerRepository.updateReady(playerId, readyStatus);
     }
 
     /*
@@ -141,8 +141,23 @@ public class RoomServiceImpl implements RoomService {
     from player
     where room_id = roomId
     and ready = true
+
+    update room
+    set start = startStatus
+    where room_id = roomId
      */
     public List<Long> getReadyPlayers(Long roomId) {
-        return playerRepository.findReadyPlayersByRoomId(roomId);
+        List<Long> readyMember = playerRepository.findReadyPlayersByRoomId(roomId);
+        List<Player> totalMember = playerRepository.findAllByRoomId(roomId);
+        if (readyMember.size() == totalMember.size()) {
+            roomRepository.updateStart(roomId, true);
+        } else {
+            roomRepository.updateStart(roomId, false);
+        }
+        return readyMember;
+    }
+
+    public boolean getStartStatus(Long roomId) {
+        return roomRepository.findStartStatusByRoomId(roomId);
     }
 }

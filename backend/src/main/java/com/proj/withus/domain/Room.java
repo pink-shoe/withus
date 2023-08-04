@@ -33,7 +33,7 @@ public class Room {
     private int time;
 
     @ColumnDefault("false")
-    private int start;
+    private boolean start;
 
     @OneToMany(mappedBy = "room")
     @JsonIgnore

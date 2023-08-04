@@ -22,4 +22,5 @@ public interface RoomService {
     public Player getPlayerInRoom(Long memberId, Long roomId);
     public int modifyReady(Long playerId, boolean readyStatus);
     public List<Long> getReadyPlayers(Long roomId);
+    public boolean getStartStatus(Long roomId);
 }
