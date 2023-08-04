@@ -7,6 +7,7 @@ import { createRoomApi } from 'apis/roomApi';
 import { IUserAtom, userAtom } from 'stores/user';
 import { useAtom, useAtomValue } from 'jotai';
 import { useNavigate } from 'react-router-dom';
+import { roomAtom } from 'stores/room';
 
 interface ISettingModalContainerProps {
   // user: IUserAtom;
@@ -24,6 +25,7 @@ export default function SettingModalContainer({
   children,
 }: ISettingModalContainerProps) {
   const user = useAtomValue(userAtom);
+  const [roomInfo, setRoomInfo] = useAtom(roomAtom);
   const [mode, setMode] = useState('');
   const [round, setRound] = useState(0);
 
@@ -53,8 +55,12 @@ export default function SettingModalContainer({
   // 하지만 현재는 콘솔창에 모드와 라운드가 나타나도록 했음
   const handleSaveSetting = async () => {
     const result: any = await createRoomApi(user.memberId, round, mode);
+
     console.log(result);
-    if (result.status === 201) navigate(`/waitingrooms/${result.data.code}`);
+    if (result.status === 201) {
+      setRoomInfo(result.data);
+      navigate(`/waitingrooms/${result.data.roomCode}`);
+    }
   };
 
   // 모드의 옵션들
