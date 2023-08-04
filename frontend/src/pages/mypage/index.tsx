@@ -4,7 +4,7 @@ import { userAtom } from '../../stores/index';
 import Logo from '@components/common/Logo';
 import Container from '@components/common/Container';
 import ButtonComponent from '@components/common/ButtonComponent';
-import { myPageUpdateApi } from 'apis/myPageUpdateApi';
+import { userInfoUpdateApi } from 'apis/userInfoUpdateApi';
 import { Link } from '../../router';
 import InputComponent from '@components/common/InputComponent';
 
@@ -21,9 +21,9 @@ export default function Mypage() {
   };
 
   const onChangeNickName = () => {
-    myPageUpdateApi(user.nickname)
+    userInfoUpdateApi(user.nickname)
       .then(() => {
-        console.log('myPageUpdateApi 성공!');
+        console.log('userInfoUpdateApi 성공!');
         // 닉네임 변경되었다는 모달 띄우기
       })
       .catch((error) => {

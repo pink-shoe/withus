@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import Modal from '../components/common/Modal';
 import SettingModalContainer from '../components/common/SettingModal/SettingModalContainer';
 import { useNavigate } from 'react-router-dom';
-import { myPageApi } from 'apis/myPageApi';
+import { userInfoApi } from 'apis/userInfoApi';
 import { useAtom } from 'jotai';
 import { userAtom } from 'stores/index';
 import Background from '../components/common/Background';
@@ -17,7 +17,7 @@ export default function Lobby() {
   const [enterCode, setEnterCode] = useState('');
 
   useEffect(() => {
-    myPageApi(setUser).catch((error) => {
+    userInfoApi(setUser).catch((error) => {
       console.log('Error fetching data:', error);
     });
   }, []);

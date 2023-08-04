@@ -1,71 +1,63 @@
 import { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 export default function Carousel({
-  autoSlide = false,
-  autoSlideInterval = 3000,
+  autoSlide = true,
+  autoSlideInterval = 5000,
   slides,
-  guidelines,
 }: {
   autoSlide?: boolean;
   autoSlideInterval?: number;
   slides: string[];
-  guidelines: string[];
 }) {
   const [curr, setCurr] = useState(0);
+  const guide = [
+    // 두줄로 하니 비율이 깨져서 다 한줄로만!
+    'AI가 여러분의 팔을 인식해요!',
+    '여러사람은 동시 인식이 힘들어요!!',
+    '팔을 이용해서 제시된 도형을 맞춰요!!!',
+    '친구들과의 추억을 저장할 수 있어요!!!!',
+  ];
 
-  const goToPrevSlide = () => setCurr((curr) => (curr === 0 ? slides.length - 1 : curr - 1));
   const goToNextSlide = () => setCurr((curr) => (curr === slides.length - 1 ? 0 : curr + 1));
 
   useEffect(() => {
     if (!autoSlide) return;
     const slideInterval = setInterval(goToNextSlide, autoSlideInterval);
     return () => clearInterval(slideInterval);
-  }, []);
+  }, [curr]);
+
+  const onChangeCurr = (index: number) => {
+    setCurr(index);
+  };
 
   return (
-    <div className='overflow-hidden relative'>
-      <div
-        className='flex transition-transform ease-out duration-500'
-        style={{ transform: `translateX(-${curr * 100}%)` }}
-      >
-        {slides.map((img, index) => (
-          <img key={index} src={img} alt='' />
+    <div>
+      <p className='flex justify-center font-kdisplay text-2xl p-2 text-black hover:text-[#FF8D8D]'>
+        튜토리얼
+      </p>
+      {/* 이미지 와 설명글 */}
+      <div className='border-4 border-[#FF8D8D] rounded-lg w-80 h-68 mx-auto'>
+        <div className='flex justify-center'>
+          <img src={slides[curr]} className='w-60 h-60 p-2' />
+        </div>
+        <p className='flex justify-center p-2 font-kdisplay text-xl text-black hover:text-[#FF8D8D]'>
+          {guide[curr]}
+        </p>
+      </div>
+      {/* 밑에 버튼 */}
+      <div className='flex items-center justify-center gap-2 p-2'>
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            className={`transition-all w-5 h-5 rounded-full ${
+              curr === i
+                ? 'p-2 bg-opacity-100 bg-[#FF8D8D] border-2 border-[#FF8D8D]'
+                : 'p-2 bg-opacity-100 bg-white border-spacing-2 border-2 border-[#FF8D8D] hover:bg-[#FF8D8D]'
+            }`}
+            onClick={() => onChangeCurr(i)}
+          />
         ))}
       </div>
-      <div className='absolute inset-0 flex items-center justify-between p-2'>
-        <button
-          onClick={goToPrevSlide}
-          className='p-1 rounded-full shadow bg-white/80 text-gray-800 hover:bg-white'
-        >
-          <FontAwesomeIcon icon={faChevronLeft} size='2x' />
-        </button>
-        <button
-          onClick={goToNextSlide}
-          className='p-1 rounded-full shadow bg-white/80 text-gray-800 hover:bg-white'
-        >
-          <FontAwesomeIcon icon={faChevronRight} size='2x' />
-        </button>
-      </div>
-
-      <div className='absolute bottom-4 right-0 left-0'>
-        <div className='flex items-center justify-center gap-2'>
-          {slides.map((_, i) => (
-            <div
-              key={i}
-              className={`transition-all w-3 h-3 rounded-full ${
-                curr === i ? 'p-2' : 'bg-opacity-50'
-              }`}
-              style={{ backgroundColor: curr === i ? 'navy' : 'purple' }} // 현재 이미지의 번호에만 색상 적용
-            />
-          ))}
-        </div>
-      </div>
-      {/* <div className='bg-neutral-800 text-neutral-50 dark:bg-transparent absolute bottom-12 left-0 right-0 text-center'>
-        몇 번째 화면인지 설명이 적혀있던 공간
-        <p>{guidelines[curr]}</p>
-      </div> */}
     </div>
   );
 }

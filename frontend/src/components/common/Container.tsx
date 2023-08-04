@@ -7,7 +7,7 @@ interface IContainerProps {
 
 export default function Container({ children }: IContainerProps) {
   return (
-    <div className='lg:flex lg:flex-col gap-4 rounded-lg border-4 border-black w-full h-full bg-white '>
+    <div className='lg:flex lg:flex-col gap-4 rounded-lg border-2 border-[#FF8D8D] w-96 h-96 bg-white '>
       {children}
     </div>
   );

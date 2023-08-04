@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface IButtonProps {
-  version?: number;
+  type?: 'isSmall' | 'isBig' | undefined;
   onClick?: () => any;
   children: React.ReactNode;
 }
@@ -16,17 +16,19 @@ interface IButtonProps {
 //                     }`
 //                   }
 
-export default function ButtonComponent({ version, onClick, children }: IButtonProps) {
-  let windcss: string = 'rounded w-full  border-2  bg-violet-600  hover:border-indigo-500/100';
+export default function ButtonComponent({ type, onClick, children }: IButtonProps) {
+  let className: string =
+    'rounded w-56 h-8 border-2 border-white bg-[#FF8D8D]  hover:border-[#FF8D8D]';
 
-  if (version == 1) {
-    windcss = 'rounded w-full border-solid border-2 border-indigo-600';
+  if (type === 'isSmall') {
+    className = 'rounded w-56 h-8 border-2 bg-[#FF8D8D]  hover:border-[#FF8D8D]';
+  } else if (type === 'isBig') {
   } else {
   }
 
   return (
     <div className='flex justify-center'>
-      <button type='button' className={windcss} onClick={onClick}>
+      <button type='button' className={className} onClick={onClick}>
         {children}
       </button>
     </div>

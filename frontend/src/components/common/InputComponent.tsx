@@ -27,10 +27,8 @@ export default function InputComponent({
 
   return (
     <div className='sm:col-span-2 m-4'>
-      {label && (
-        <label className='block text-xl font-semibold leading-6 text-gray-900'>{label}</label>
-      )}
-      <div className='mt-2.5 '>
+      {label && <label className='font-kdisplay text-2xl hover:text-[#FF8D8D]'>{label}</label>}
+      <div className='mt-1.5'>
         <input
           className={windcss}
           type={type}

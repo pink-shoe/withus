@@ -23,7 +23,7 @@ const GuestLogin: React.FC<IGuestLoginProps> = ({
     setNickname((prev) => ({ ...prev, nickname: event.target.value }));
   };
   return (
-    <Container>
+    <div>
       <InputComponent
         label='닉네임 설정'
         type='text'
@@ -39,10 +39,14 @@ const GuestLogin: React.FC<IGuestLoginProps> = ({
         onChange={onChangeEnterCode}
       />
       <div className='flex justify-center'>
-        <p className='text-black hover:text-purple-600'>로그인한 유저만 방을 생성할 수 있습니다.</p>
+        <p className='font-kdisplay text-lg hover:text-[#FF8D8D] p-3'>
+          로그인한 유저만 방을 생성할 수 있습니다.
+        </p>
       </div>
-      <ButtonComponent onClick={onClickGuestLogin}>로그인</ButtonComponent>
-    </Container>
+      <ButtonComponent onClick={onClickGuestLogin}>
+        <div className='font-kdisplay text-xl text-white hover:text-black'>게스트 로그인</div>
+      </ButtonComponent>
+    </div>
   );
 };
 

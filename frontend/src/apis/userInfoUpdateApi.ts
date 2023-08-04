@@ -5,7 +5,7 @@ import axios from './axiosConfig';
 const apiUrl = `${import.meta.env.VITE_API}/api/members`; // 변동될 수 있음
 
 // Axios 요청 함수 정의
-export async function myPageUpdateApi(nickname: string) {
+export async function userInfoUpdateApi(nickname: string) {
   try {
     const nickname1 = nickname;
 

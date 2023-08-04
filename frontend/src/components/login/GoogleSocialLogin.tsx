@@ -20,5 +20,9 @@ export default function GoogleSocialLogin() {
     flow: 'auth-code',
   });
 
-  return <ButtonComponent onClick={googleSocialLogin}>Google ButtonComponent</ButtonComponent>;
+  return (
+    <ButtonComponent onClick={googleSocialLogin}>
+      <div className='font-kdisplay text-xl text-white hover:text-black'> 구글 로그인 </div>
+    </ButtonComponent>
+  );
 }
