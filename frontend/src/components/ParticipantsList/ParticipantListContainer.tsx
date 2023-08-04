@@ -1,68 +1,55 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import { ParticipantsPresenter } from './ParticipantListPresenter';
+import { IUserAtom } from 'stores/user';
 
+// export let localUser: IUser;
 interface IParticipantsContainerProps {
   type: 'WAIT' | 'GAME';
-  userId: number;
-  userName: string;
+  user: IUserAtom;
+  // onChangeUserName: (username: string) => void;
   publisher: any;
   streamList: any;
   readyStatus: boolean;
-  updateUserNameStatus: boolean;
-  onChangeUserName: (username: string) => void;
-  onChangeReadyStatus: (status: boolean) => void;
-  onChangeUpdateUserNameStatus: (status: boolean) => void;
+  // onChangeIsUpdateUserName: (status: boolean) => void;
 }
 export default function ParticipantsContainer({
   type,
-  userId,
-  userName: uname,
+  user,
   publisher,
   streamList,
-  readyStatus: isReady,
-  updateUserNameStatus: updateUnameStatus,
+  readyStatus,
   ...callback
 }: IParticipantsContainerProps) {
-  const [readyStatus, setReadyStatus] = useState(isReady);
-  const [userName, setUserName] = useState(uname);
-  const [updateUserNameStatus, setUpdateUsernameStatus] = useState(updateUnameStatus);
-  const onChangeReadyStatus = () => {
-    setReadyStatus((prev) => !prev);
-  };
+  const [userName, setUserName] = useState(user.nickname);
+  const [isUpdateUserName, setIsUpdateUserName] = useState(false);
   const onChangeUserName = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
-    console.log(e.target.value);
   };
 
-  const onChangeUpdateUserNameStatus = () => {
-    setUpdateUsernameStatus((prev) => !prev);
+  const updateUserName = () => {
+    setIsUpdateUserName(true);
   };
-
   const saveUserName = () => {
-    setUpdateUsernameStatus((prev) => !prev);
+    setIsUpdateUserName(false);
     console.log(userName);
     // stream에 userName update 처리 필요
   };
-  useEffect(() => {
-    callback.onChangeUserName(userName);
-  }, [userName, callback]);
+  // useEffect(() => {
+  //   callback.onChangeUserName(userName);
+  // }, [userName, callback]);
 
-  useEffect(() => {
-    callback.onChangeUpdateUserNameStatus(updateUserNameStatus);
-  }, [updateUserNameStatus, callback]);
+  // useEffect(() => {
+  //   callback.onChangeIsUpdateUserName(isUpdateUserName);
+  // }, [isUpdateUserName, callback]);
 
-  useEffect(() => {
-    onChangeReadyStatus();
-  }, [isReady]);
   return (
     <ParticipantsPresenter
       type={type}
       streamList={streamList}
-      userId={userId}
-      userName={uname}
+      user={user}
       onChangeUserName={onChangeUserName}
-      isUpdateUserName={updateUserNameStatus}
-      onChangeUpdateUserNameStatus={onChangeUpdateUserNameStatus}
+      isUpdateUserName={isUpdateUserName}
+      onChangeUpdateUserNameStatus={updateUserName}
       saveUserName={saveUserName}
     />
   );

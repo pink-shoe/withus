@@ -19,7 +19,7 @@ const setConnectionId = (user: IUser, conecctionId: string) => {
 
 export const useOpenvidu = (
   userId: number,
-  gameRoomId: string,
+  gameRoomId: number,
   isReady: boolean
   // ...callback: any
 ) => {

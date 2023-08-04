@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import { VideoStream } from '@components/VideoStream';
 import { useLocation } from 'react-router-dom';
-import { signalType, useOpenvidu } from 'hooks/useOpenvidu';
-import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer';
+import { IUser, signalType, useOpenvidu } from 'hooks/useOpenvidu';
 import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
 import ChatContainer from '@components/Chat/ChatContainer';
+import { useAtom } from 'jotai';
+import { IUserAtom, userAtom } from 'stores/user';
+import { IRoomAtom, roomAtom } from 'stores/room';
+import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer';
 import Board from '@components/common/Board';
 export default function WaitingRoom() {
   const location = useLocation();
@@ -13,14 +16,12 @@ export default function WaitingRoom() {
     location.pathname.lastIndexOf('/') + 1,
     location.pathname.length
   );
-
-  const [roomId, setRoomId] = useState<string>(currentPath);
-  const [userId, setUserId] = useState<number>(Math.floor(Math.random() * 100));
-  const [isHost, setIsHost] = useState<boolean>(false);
-  const [userName, setUserName] = useState('name' + userId);
+  const [user, setUser] = useAtom<IUserAtom>(userAtom);
+  const [roomInfo, setRoomInfo] = useAtom<IRoomAtom>(roomAtom);
+  const [isHost, setIsHost] = useState<boolean>(true);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
   const [readyStatus, setReadyStatus] = useState<boolean>(false);
-  const [updateUserNameStatus, setUpdateUserNameStatus] = useState<boolean>(false);
+  // const [isUpdateUserName, setIsUpdateUserName] = useState<boolean>(false);
 
   const {
     session,
@@ -32,7 +33,7 @@ export default function WaitingRoom() {
     onChangeCameraStatus,
     onChangeMicStatus,
     sendSignal,
-  } = useOpenvidu(userId!, roomId, readyStatus);
+  } = useOpenvidu(user.memberId!, roomInfo.roomId, readyStatus);
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
@@ -42,13 +43,16 @@ export default function WaitingRoom() {
     setReadyStatus(!readyStatus);
   };
 
-  const onChangeUserName = (userName: string) => {
-    setUserName(userName);
-  };
+  // const onChangeUserName = (userName: string) => {
+  //   setUserName(userName);
+  // };
 
-  const onChangeUpdateUserNameStatus = (updateUserNameStatus: boolean) => {
-    setUpdateUserNameStatus(!updateUserNameStatus);
-  };
+  // const onChangeIsUpdateUserName = (isUpdateteteUserName: boolean) => {
+  //   setIsUpdateUserName(!isUpdateUserName);
+  // };
+  // const onChangeUpdateUserNameStatus = (updateUserNameStatus: boolean) => {
+  //   setUpdateUserNameStatus(!updateUserNameStatus);
+  // };
 
   const receiveSignal = (type: signalType) => {
     if (session && publisher) {
@@ -99,16 +103,15 @@ export default function WaitingRoom() {
     <section className={`w-full flex  justify-between h-screen`}>
       {/* 참가자 목록 */}
       <ParticipantsContainer
-        userId={userId}
-        userName={userName}
-        onChangeUserName={onChangeUserName}
+        type={'WAIT'}
+        user={user}
+        // userId={userId}
+        // userName={userName}
+        // onChangeUserName={onChangeUserName}
         publisher={publisher}
         streamList={streamList}
         readyStatus={readyStatus}
-        updateUserNameStatus={updateUserNameStatus}
-        onChangeUpdateUserNameStatus={onChangeUpdateUserNameStatus}
-        onChangeReadyStatus={onChangeReadyStatus}
-        type={'WAIT'}
+        // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
       />
       {/* openvidu 화면 */}
       <div className=' h-full '>
@@ -119,7 +122,7 @@ export default function WaitingRoom() {
           <div className='aspect-[4/3]'>
             {publisher && (
               <div className='w-full'>
-                <VideoStream streamManager={publisher} name={userName} isMe={true} />
+                <VideoStream streamManager={publisher} name={user.nickname} isMe={true} />
               </div>
             )}
           </div>

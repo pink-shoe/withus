@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { useAtom } from 'jotai'; // Import useAtom hook
-import { userAtom } from '../../stores/index';
+import { userAtom } from '../../stores/user';
 import Logo from '@components/common/Logo';
 import Container from '@components/common/Container';
 import ButtonComponent from '@components/common/ButtonComponent';
-import { myPageUpdateApi } from 'apis/myPageUpdateApi';
 import { Link } from '../../router';
 import InputComponent from '@components/common/InputComponent';
+import { updateMemberApi } from 'apis/memberApi';
 
 export default function Mypage() {
   const [user, setUser] = useAtom(userAtom); // Access userAtom using useAtom
@@ -21,7 +21,7 @@ export default function Mypage() {
   };
 
   const onChangeNickName = () => {
-    myPageUpdateApi(user.nickname)
+    updateMemberApi(user.nickname)
       .then(() => {
         console.log('myPageUpdateApi 성공!');
         // 닉네임 변경되었다는 모달 띄우기

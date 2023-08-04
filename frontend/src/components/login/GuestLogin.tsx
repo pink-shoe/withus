@@ -2,7 +2,7 @@ import React from 'react';
 import ButtonComponent from '../common/ButtonComponent';
 import Container from '@components/common/Container';
 import { useAtom } from 'jotai';
-import { userAtom } from 'stores/index';
+import { userAtom } from 'stores/user';
 import InputComponent from '../common/InputComponent';
 
 interface IGuestLoginProps {

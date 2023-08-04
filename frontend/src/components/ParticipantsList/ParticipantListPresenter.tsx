@@ -2,13 +2,13 @@ import { FC } from 'react';
 import { IUser } from 'hooks/useOpenvidu';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faFloppyDisk } from '@fortawesome/free-regular-svg-icons';
+import { IUserAtom } from 'stores/user';
 export let localUser: IUser;
 
 interface IParticipantsPresenterProps {
   type: 'WAIT' | 'GAME';
   streamList: IStreamList[];
-  userId: number;
-  userName: string;
+  user: IUserAtom;
   onChangeUserName: any;
   isUpdateUserName: boolean;
   onChangeUpdateUserNameStatus: () => void;
@@ -23,8 +23,7 @@ interface IStreamList {
 export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
   type,
   streamList,
-  userId,
-  userName,
+  user,
   onChangeUserName,
   isUpdateUserName,
   onChangeUpdateUserNameStatus,
@@ -45,16 +44,18 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
               key={idx}
               className={
                 'flex relative justify-between items-center w-full text-justify border-bottom border-b-2 p-3 text-[#514148]' +
-                ` ${userId === stream.userId && stream.isReady ? 'bg-[#FFF5C0]' : 'bg-white'} `
+                ` ${
+                  user.memberId === stream.userId && stream.isReady ? 'bg-[#FFF5C0]' : 'bg-white'
+                } `
               }
             >
-              {userId === stream.userId ? (
+              {user.memberId === stream.userId ? (
                 isUpdateUserName ? (
                   <>
                     <input
                       className='w-full bg-transparent'
                       type='text'
-                      value={userName}
+                      value={user.nickname}
                       onChange={onChangeUserName}
                     />
                     {type === 'WAIT' && !stream.isReady ? (
