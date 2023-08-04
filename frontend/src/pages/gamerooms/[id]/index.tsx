@@ -1,12 +1,13 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
 import saveAs from 'file-saver';
 import { VideoStream } from '@components/VideoStream';
 import { useLocation } from 'react-router-dom';
-import { useOpenvidu } from 'hooks/useOpenvidu';
-import { ControllBarContainer } from '@components/Controllbar/ControllBarContainer';
+import { signalType, useOpenvidu } from 'hooks/useOpenvidu';
+import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer';
 import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
 import ChatContainer from '@components/Chat/ChatContainer';
+import { CountdownCircleTimer, useCountdown } from 'react-countdown-circle-timer';
 export default function GameRoom() {
   const location = useLocation();
 
@@ -23,8 +24,15 @@ export default function GameRoom() {
   const [readyStatus, setReadyStatus] = useState<boolean>(false);
   const [isUpdateUserName, setIsUpdateUserName] = useState<boolean>(false);
 
-  const { session, publisher, streamList, onChangeCameraStatus, onChangeMicStatus, sendMessage } =
-    useOpenvidu(userId!, roomId);
+  const {
+    session,
+    publisher,
+    streamList,
+    onChangeCameraStatus,
+    onChangeMicStatus,
+    sendSignal,
+    // receiveSignal,
+  } = useOpenvidu(userId!, roomId, readyStatus);
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
@@ -58,6 +66,22 @@ export default function GameRoom() {
       console.error('Error converting div to image:', error);
     }
   };
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [count, setCount] = useState(5);
+
+  const receiveSignal = (type: signalType) => {
+    if (session && publisher) {
+      publisher.stream.session.on('signal:' + type, (e: any) => {
+        const data = JSON.parse(e.data);
+        console.log(data);
+      });
+    }
+  };
+  useEffect(() => {
+    session && publisher && receiveSignal('READY');
+    session && publisher && receiveSignal('CANCEL_READY');
+  }, [session, publisher]);
+
   return (
     <section className={`w-full flex justify-between  h-screen`}>
       {/* 참가자 목록 */}
@@ -68,15 +92,39 @@ export default function GameRoom() {
         publisher={publisher}
         streamList={streamList}
         readyStatus={readyStatus}
-        onChangeIsUpdateUserName={onChangeIsUpdateUserName}
+        updateUserNameStatus={isUpdateUserName}
+        onChangeUpdateUserNameStatus={onChangeIsUpdateUserName}
+        onChangeReadyStatus={onChangeReadyStatus}
         type={'GAME'}
       />
       {/* openvidu 화면 */}
-      <div className=' w-1/2 h-full flex flex-col justify-between items-center'>
-        <header className=''>
+      <div className=' w-1/2 h-screen flex flex-col justify-between items-center'>
+        <header className=' h-fit flex items-center gap-2 '>
           <div className=' text-white font-extrabold text-6xl text-center py-3'>[] with us</div>
+          <CountdownCircleTimer
+            size={80}
+            isPlaying={isPlaying}
+            duration={count}
+            initialRemainingTime={30}
+            isSmoothColorTransition={true}
+            // updateInterval={1}
+            // colors='#aabbcc'
+            // colors="url(#test-it)"
+            colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+            colorsTime={[4, 2.66, 1.33, 0]}
+            onUpdate={(remainingTime) => {
+              console.log('Counter is ', count);
+              console.log('Remaining time is ', remainingTime);
+            }}
+            onComplete={() => ({ shouldRepeat: true })}
+            strokeWidth={20}
+          >
+            {({ remainingTime }) => (
+              <div className=' text-white text-3xl font-bold'>{remainingTime}</div>
+            )}
+          </CountdownCircleTimer>
         </header>
-        <div className='aspect-[4/3]'>
+        <div className='aspect-[4/3] h-auto max-w-full'>
           {publisher && (
             <div ref={divRef} className='aspect-[4/3] grid grid-flow-dense grid-rows-2 grid-cols-2'>
               {streamList?.map((stream: any, idx: number) => {
@@ -94,13 +142,16 @@ export default function GameRoom() {
             </div>
           )}
         </div>
-        <div className=' p-3'>
-          <ControllBarContainer
+        <div className=' h-fit p-3'>
+          <ControlBarContainer
+            type={'GAME'}
             isHost={isHost}
+            readyStatus={readyStatus}
             onChangeMicStatus={onChangeMicStatus}
             onChangeCameraStatus={onChangeCameraStatus}
             onChangeChatStatus={onChangeChatStatus}
             onChangeReadyStatus={onChangeReadyStatus}
+            sendSignal={sendSignal}
           />
         </div>
         {/* <button onClick={handleDownload}>다운로드</button> */}
@@ -109,7 +160,8 @@ export default function GameRoom() {
         chatStatus={chatStatus}
         session={session}
         publisher={publisher}
-        sendMessage={sendMessage}
+        sendSignal={sendSignal}
+        // receiveSignal={receiveSignal}
       />
     </section>
   );

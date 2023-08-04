@@ -6,6 +6,7 @@ export interface IUser {
   userId: number;
   streamManager?: any;
 }
+export type signalType = 'CHAT' | 'READY' | 'CANCEL_READY' | 'START' | 'ROUND';
 
 const getConnectionId = (user: IUser) => {
   return user.connectionId;
@@ -16,11 +17,25 @@ const setConnectionId = (user: IUser, conecctionId: string) => {
   return user;
 };
 
-export const useOpenvidu = (userId: number, gameRoomId: string) => {
+export const useOpenvidu = (
+  userId: number,
+  gameRoomId: number,
+  isReady: boolean
+  // ...callback: any
+) => {
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [publisher, setPublisher] = useState<any>();
   const [session, setSession] = useState<any>();
   const [userName, setUserName] = useState<string>('name' + userId);
+  const [readyStatus, setReadyStatus] = useState(isReady);
+  const onChangeReadyStatus = () => {
+    setReadyStatus((prev) => !prev);
+  };
+  useEffect(() => {
+    console.log(readyStatus);
+    onChangeReadyStatus();
+  }, [isReady]);
+
   const leaveSession = useCallback(() => {
     if (session) {
       session.disconnect();
@@ -40,7 +55,12 @@ export const useOpenvidu = (userId: number, gameRoomId: string) => {
       setSubscribers((prev) => {
         return [
           ...prev.filter((it) => it.userId !== +data.userId),
-          { streamManager: subscriber, userId: +data.userId, userName: 'name' + data.userId },
+          {
+            streamManager: subscriber,
+            userId: +data.userId,
+            userName: 'name' + data.userId,
+            isReady: false,
+          },
         ];
       });
     });
@@ -126,7 +146,7 @@ export const useOpenvidu = (userId: number, gameRoomId: string) => {
     [userName]
   );
 
-  const sendMessage = (message: string) => {
+  const sendSignal = (message: string, type: signalType) => {
     if (session && publisher && message) {
       let msg = message.replace(/ +(?= )/g, '');
       if (msg !== '' && msg !== ' ') {
@@ -136,9 +156,10 @@ export const useOpenvidu = (userId: number, gameRoomId: string) => {
               data: JSON.stringify({
                 message: message,
                 nickname: userName,
+                userId,
                 streamId: publisher.stream.streamId,
               }),
-              type: 'chat',
+              type,
             })
             .then(() => {
               console.log('Message successfully sent');
@@ -151,50 +172,79 @@ export const useOpenvidu = (userId: number, gameRoomId: string) => {
     }
   };
 
-  const receiveMessage = useCallback(
-    (messageList: any[]) => {
-      if (session && publisher) {
-        let msgList = messageList;
-        session
-          .on('signal:chat', (e: any) => {
-            console.log(e.data);
-            console.log(e.from);
-            console.log(e.type);
-            // const data = JSON.parse(e.data);
-            // msgList.push({
-            //   connectionId: e.from.connectionId,
-            //   nickname: data.nickname,
-            //   message: data.message,
-            // });
-          })
-          .then(() => {
-            console.log('Message successfully received');
-          })
-          .catch((err: any) => {
-            console.error(err);
-          });
-        // onChangeMsgList(msgList);
-        return msgList;
-      }
-      // return messageList;
-    },
-    [publisher]
-  );
+  // const receiveSignal = (type: signalType) => {
+  //   if (session && publisher) {
+  //     console.log(publisher);
+  //     session
+  //       .on('signal:' + type, (e: any) => {
+  //         console.log(e);
+  //         // const data = JSON.parse(e.data);
+  //         return e;
+  //         // msgList.push({
+  //         //   connectionId: e.from.connectionId,
+  //         //   nickname: data.nickname,
+  //         //   message: data.message,
+  //         // });
+  //       })
+  //       .then(() => {
+  //         console.log('Message successfully received');
+  //       })
+  //       .catch((err: any) => {
+  //         console.error(err);
+  //       });
+  //     // onChangeMsgList(msgList);
+  //     // return msgList;
+  //   }
+  //   // return messageList;
+  // };
+
+  const updateUserStatus = (uId: number, isReady?: boolean, uname?: string) => {
+    console.log('update', uId);
+    console.log(streamList, uId);
+    const subscriber = streamList.find((stream) => {
+      return stream.userId === uId;
+    });
+    const filteredSubscriberList = streamList.filter((stream) => {
+      return stream.userId !== uId;
+    });
+    console.log('tttt', subscriber);
+    const newSubscriber = { ...subscriber, uname, isReady };
+    // setSubscribers(filteredSubscriberList);
+    // setSubscribers((prev) => {
+    //   return [...prev.filter((it) => it.userId !== uId), { newSubscriber }];
+    // });
+    // setSubscribers((prev) => {
+    //   return [...prev, { ...subscriber, isReady, uname }];
+    // });
+    // setSubscribers((prev) => {
+    //   return [
+    //     ...prev.filter((it) => it.userId !== +uId),
+    //     {
+    //       ...subscriber,
+    //       uname,
+    //       isReady,
+    //     },
+    //   ];
+    // });
+  };
 
   const streamList = useMemo(
-    () => [{ streamManager: publisher, userId, userName }, ...subscribers],
-    [publisher, subscribers, userId, userName]
+    () => [{ streamManager: publisher, userId, userName, isReady: readyStatus }, ...subscribers],
+    [publisher, subscribers, userId, userName, readyStatus]
   );
 
   return {
+    // subscribers,
+    // setSubscribers,
     session,
     publisher,
     streamList,
     onChangeCameraStatus,
     onChangeMicStatus,
     onChangeUserName,
-    receiveMessage,
-    sendMessage,
+    updateUserStatus,
+    // receiveSignal,
+    sendSignal,
   };
 };
 

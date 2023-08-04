@@ -1,6 +1,6 @@
+import { getAlbumListApi } from 'apis/albumApi';
 import PaginationPresenter from './PaginationPresenter';
 import { useState, useEffect } from 'react';
-import { album } from 'apis/albumApi';
 
 interface IPaginationContainerProps {
   currentPage: number;
@@ -18,7 +18,7 @@ export default function PaginationContainer({
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const response = await album();
+        const response = await getAlbumListApi();
         setImages(response); // 가져온 이미지 객체(아이디, 주소, 저장날짜)를 images 배열에 저장
       } catch (error) {
         console.error('이미지 저장 실패');
