@@ -13,8 +13,7 @@ export async function getMemberApi(setUser: any) {
 
     setUser((prevUser: any) => ({
       ...prevUser,
-      memberId: response.data.id,
-      // memberId: response.data.memberId, // 백엔드 수정 시 해당 코드로 변경 예정
+      memberId: response.data.memberId, // 백엔드 수정 시 해당 코드로 변경 예정
       email: response.data.email,
       nickname: response.data.nickname,
     }));

@@ -1,9 +1,10 @@
+import Background from '@components/common/Background';
 import { Outlet } from 'react-router-dom';
 
 export default function WaitingRoomLayout() {
   return (
-    <div className='w-full h-screen flex overflow-y-hidden justify-center text-center'>
+    <Background>
       <Outlet />
-    </div>
+    </Background>
   );
 }

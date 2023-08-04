@@ -3,7 +3,7 @@
 // false일 때는 초대하기가 제외된 방 설정만 나타남
 import React, { Fragment, useState } from 'react';
 import SettingModalPresenter from './SettingModalPresenter';
-import { createRoomApi } from 'apis/room';
+import { createRoomApi } from 'apis/roomApi';
 import { IUserAtom, userAtom } from 'stores/user';
 import { useAtom, useAtomValue } from 'jotai';
 import { useNavigate } from 'react-router-dom';

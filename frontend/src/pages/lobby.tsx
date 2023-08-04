@@ -7,6 +7,8 @@ import { userAtom } from 'stores/user';
 import Background from '../components/common/Background';
 import Board from '../components/common/Board';
 import { getMemberApi } from 'apis/memberApi';
+import { participateRoomApi } from 'apis/roomApi';
+import { roomAtom } from 'stores/room';
 
 export default function Lobby() {
   const [user, setUser] = useAtom(userAtom);
@@ -46,21 +48,16 @@ export default function Lobby() {
   // 시작 버튼을 누르면 입력한 코드에 따라
   // 코드를 다시 입력해야 하거나, 대기실로 넘어감
   // 현재는 콘솔창에 코드가 출력되도록 함
-  const onClickParticipantBtn = () => {
-    // 예시 코드
-    if (enterCode !== 'ddddd') {
-      if (enterCode === '') {
-        // 공백이면 참여코드를 입력해달라는 창이 뜸
-        alert('참여코드를 입력해주세요😳');
-      } else {
-        // 존재하지 않는 코드를 입력하면 방이 존재하지 않는다고 뜸
-        console.log('잘못된 코드 입력');
-        alert('방이 존재하지 않습니다😥');
-        setEnterCode('');
-      }
+  const onClickParticipantBtn = async () => {
+    if (enterCode === '') {
+      // 공백이면 참여코드를 입력해달라는 창이 뜸
+      alert('참여코드를 입력해주세요😳');
     } else {
-      console.log(enterCode);
-      navigate(`/waitingrooms/${enterCode}`);
+      const result: any = await participateRoomApi(Number(enterCode), user.memberId);
+      if (result.status === 200) {
+        setEnterCode('');
+        navigate(`/waitingrooms/${enterCode}`);
+      }
     }
   };
 

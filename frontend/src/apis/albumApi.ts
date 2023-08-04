@@ -3,14 +3,16 @@ import axios from '.';
 
 // 사진 조회
 const apiUrl = '/albums'; // 변동될 수 있음
-
+export interface IAlbumProps {
+  imgId: number;
+  imgUrl: string;
+  savedAt: string;
+}
 // 토큰 주면 images[] 배열 줄거임.
-export async function getAlbumListApi(): Promise<
-  { imgId: number; imgUrl: string; savedAt: string }[]
-> {
+export async function getAlbumListApi(): Promise<IAlbumProps[]> {
   try {
     // Request body에 전달할 데이터는 없고 header는 자동
-    const response = await axios.post(apiUrl);
+    const response = await axios.get(apiUrl);
 
     // 요청이 성공하면 데이터를 출력합니다.
     console.log('성공:', response.data);
@@ -30,12 +32,11 @@ export async function getAlbumListApi(): Promise<
     return []; // 에러 발생 시 빈 배열을 반환합니다.
   }
 }
-export async function deleteAlbumApi(img_id: string) {
+export async function deleteAlbumApi(imgId: string) {
   try {
     // 특정 주소와 토큰을 변수로 설정합니다.
-    const apiUrl = `/albums/${img_id}`;
-    const response = await axios.get(apiUrl);
-    console.log(`앨범 사진 삭제 성공: ${img_id}`, response.data);
+    const response = await axios.get(apiUrl + `/${imgId}`);
+    console.log(`앨범 사진 삭제 성공: ${imgId}`, response.data);
   } catch (error) {
     console.error('실패:', (error as AxiosError).message);
   }
