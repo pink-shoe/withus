@@ -1,6 +1,7 @@
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
+import axios from '.';
 
-const apiUrl = `${import.meta.env.VITE_API}/api/members/guest`;
+const apiUrl = `/members/guest`;
 
 export async function GuestLoginApi(nickname: string) {
   try {
