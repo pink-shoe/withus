@@ -266,7 +266,7 @@ public class RoomController {
         SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
         Long memberId = socialMemberInfo.getId();
 
-        Long host = roomService.getHostId(roomId);
+        Long host = getHostId(roomId);
         if (host == null) {
             return new ResponseEntity<String>("방이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
