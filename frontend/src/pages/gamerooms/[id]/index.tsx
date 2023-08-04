@@ -70,6 +70,12 @@ export default function GameRoom() {
       console.error('Error converting div to image:', error);
     }
   };
+
+  useEffect(() => {
+    session && publisher && receiveSignal('READY');
+    session && publisher && receiveSignal('CANCEL_READY');
+  }, [session, publisher]);
+
   const [isPlaying, setIsPlaying] = useState(true);
   const [count, setCount] = useState(5);
 
@@ -96,9 +102,8 @@ export default function GameRoom() {
         publisher={publisher}
         streamList={streamList}
         readyStatus={readyStatus}
-        // updateUserNameStatus={isUpdateUserName}
-        // onChangeUpdateUserNameStatus={onChangeIsUpdateUserName}
-        // onChangeReadyStatus={onChangeReadyStatus}
+        // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
+        // type={'GAME'}
       />
       {/* openvidu 화면 */}
       <div className=' w-1/2 h-screen flex flex-col justify-between items-center'>
