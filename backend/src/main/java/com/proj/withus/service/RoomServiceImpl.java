@@ -65,15 +65,17 @@ public class RoomServiceImpl implements RoomService {
     해당 방에 대한 정보?
      */
     public void leaveRoom(Long roomId, Long memberId) {
-        playerRepository.deleteByRoomId(roomId);
+        Long hostId = roomRepository.findHostIdByRoomId(roomId);
 
-        /*
-        [방장일 경우 방 삭제하는 로직]
-         Room을 검색해서, memberId(방장)에 해당하는 Room이 있으면 삭제
-        delete from room
-        where id = memberId
-         */
-        roomRepository.deleteById(memberId);
+        if (hostId == memberId) {
+            System.out.println("방장임!!!!!!!!!!!!!!!!!");
+            playerRepository.deleteByRoomId(roomId);
+            roomRepository.deleteById(roomId);
+            return;
+        }
+
+        System.out.println("방장 아님!!!!!!!!!!!!!!");
+        playerRepository.deletePlayerByMemberId(memberId);
     }
 
     /*
