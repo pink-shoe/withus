@@ -22,11 +22,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Api(tags = "사진첩 api")
+@Api(tags = "사진첩 API", description = "사진첩 관련 기능을 처리하는 API (AlbumController)")
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping(value = "/albums", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/albums", produces = MediaType.APPLICATION_JSON_VALUE)
 @ApiResponses({
         @ApiResponse(code = 403, message = "권한 부족"),
         @ApiResponse(code = 401, message = "토큰 만료"),

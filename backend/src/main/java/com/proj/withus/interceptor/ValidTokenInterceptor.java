@@ -57,7 +57,7 @@ public class ValidTokenInterceptor implements HandlerInterceptor {
                 SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
                 memberId = socialMemberInfo.getId();
                 request.setAttribute("memberId", memberId);
-                request.setAttribute("token", token);
+                request.setAttribute("token", jwt);
             }
         }
         System.out.println("Valid check ~ id: " + memberId);

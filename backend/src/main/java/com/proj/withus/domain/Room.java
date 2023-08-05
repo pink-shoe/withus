@@ -1,6 +1,7 @@
 package com.proj.withus.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -15,6 +16,7 @@ public class Room {
 
     @Id @GeneratedValue
     @Column(name = "room_id")
+    @JsonProperty("roomId")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -22,15 +24,25 @@ public class Room {
     @JsonIgnore
     private Member member;
 
+    @JsonProperty("roomType")
     private String type;
 
+    @JsonProperty("roomCode")
     private int code;
 
+    @JsonProperty("roomLink")
+    private String link;
+
+    @JsonProperty("roomRound")
     @ColumnDefault("5")
     private int round;
 
+    @JsonProperty("roomTime")
     @ColumnDefault("5")
     private int time;
+
+    @ColumnDefault("false")
+    private boolean start;
 
     @OneToMany(mappedBy = "room")
     @JsonIgnore

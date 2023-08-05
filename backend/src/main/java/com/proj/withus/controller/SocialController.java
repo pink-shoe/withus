@@ -1,9 +1,6 @@
 package com.proj.withus.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +13,7 @@ import com.proj.withus.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Api(tags = "소셜 api")
+@Api(tags = "소셜 로그인 API", description = "소셜 로그인 기능을 처리하는 API (SocialController)")
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -40,11 +37,13 @@ public class SocialController {
 
     @ApiOperation(value = "소셜 로그인", notes = "인가 코드, 로그인 타입으로 소셜 로그인을 진행한다.")
     @ResponseBody
-    @GetMapping("/api/oauth/{login-type}") // pathvariable로 애초에 loginType 받고, 이걸로 jwt 만들기
+    @GetMapping("/api/oauth/{login_type}") // pathvariable로 애초에 loginType 받고, 이걸로 jwt 만들기
     public ResponseEntity<?> callback(
-            @RequestParam String code,
-            @PathVariable(value = "login-type", required = true) String loginType) {
+            @ApiParam(value = "소셜 서버에서 전달 받은 인가 코드 (Authorization code)", required = true) @RequestParam String code,
+            @ApiParam(value = "소셜 이름 (kakao 혹은 google)", required = true) @PathVariable(name = "login_type") String loginType) {
 
+        // 소셜 서버에서 전달 받은 인가 코드 (Authorization code)
+        // 소셜 이름 (kakao 혹은 google)
         String accessToken = "";
         Long memberId = -1L;
         String jwtToken = "";
@@ -57,6 +56,9 @@ public class SocialController {
 
             // 액세스 토큰 to 회원 정보
             memberId = socialService.getKakaoMemberInfo(accessToken);
+            if (memberId == -1L) {
+                return new ResponseEntity<String>("로그인에 실패했습니다.", HttpStatus.BAD_REQUEST);
+            }
             System.out.println("kakaoMemberInfo: " + memberId);
 
             // 회원 정보 to JWT
@@ -66,6 +68,9 @@ public class SocialController {
         } else if (loginType.equals("google")) {
             accessToken = socialService.getGoogleAccessToken(code);
             memberId = socialService.getGoogleMemberInfo(accessToken);
+            if (memberId == -1L) {
+                return new ResponseEntity<String>("로그인에 실패했습니다.", HttpStatus.BAD_REQUEST);
+            }
             jwtToken = jwtUtil.generateJwtToken(memberId, loginType);
         }
         System.out.println("memberId:" + memberId);
