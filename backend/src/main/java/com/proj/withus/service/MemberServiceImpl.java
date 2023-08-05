@@ -21,6 +21,10 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.findById(id).orElse(null);
     }
 
+    public Member createMember(Member member) {
+        return memberRepository.save(member);
+    }
+
     public Member updateMember(Long id, String nickname) {
         // nickname 유효성 검사
 
@@ -37,4 +41,6 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.deleteById(id);
         return memberRepository.findById(id).orElse(null);
     }
+
+
 }
