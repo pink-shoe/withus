@@ -32,12 +32,22 @@ public class RoomServiceImpl implements RoomService {
         Member member = memberRepository.findById(createRoomReq.getId())
             .orElseThrow(() -> new IllegalArgumentException("invalid" + createRoomReq.getId()));
 
+        // Room에 접근
         Room room = new Room();
         room.setMember(member);
         room.setCode(createCode());
         room.setType(createRoomReq.getRoomType());
         room.setRound(createRoomReq.getRoomRound());
-        return roomRepository.save(room);
+        Room savedRoom = roomRepository.save(room); // 영속성 전이 문제로, 일단 저장 후 Player에서 set Room
+
+        // Player에 접근
+        Player player = new Player();
+        player.setId(createRoomReq.getId());
+        player.setMember(memberRepository.findById(createRoomReq.getId()).orElseThrow(() -> new IllegalArgumentException("Member not found")));
+        player.setRoom(savedRoom);
+        playerRepository.save(player);
+
+        return savedRoom;
     }
 
     public Optional<Room> enterRoom(int roomCode, Long memberId) {
