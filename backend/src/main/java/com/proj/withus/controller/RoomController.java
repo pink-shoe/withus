@@ -129,7 +129,7 @@ public class RoomController {
             }
             // PlayerInfoDto playerInfo = PlayerInfoDto.builder()
             //     .memberId().build();
-            enterRoomRes.setPlayers(playerInfos); // List<>를 이렇게 set하는게 맞나..
+            enterRoomRes.setPlayers(playerInfos);
             return new ResponseEntity<EnterRoomRes>(enterRoomRes, HttpStatus.OK);
         }
 
