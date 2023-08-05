@@ -162,8 +162,8 @@ public class RoomController {
      */
     @ApiOperation(value = "방 옵션 수정", notes = "방장은 방 옵션을 수정한다.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "방 나가기 성공"),
-        @ApiResponse(code = 400, message = "방 나가기 실패"),
+        @ApiResponse(code = 200, message = "방 옵션 수정 성공"),
+        @ApiResponse(code = 400, message = "방 옵션 수정 실패"),
         @ApiResponse(code = 403, message = "권한 부족")
     })
     @ApiImplicitParam(name = "modifyRoomReq", value = "ModifyRoomReq object", dataTypeClass = ModifyRoomReq.class, paramType = "body")
