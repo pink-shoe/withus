@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.proj.withus.service.AwsS3Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,6 @@ import com.proj.withus.domain.dto.GetCaptureImageReq;
 import com.proj.withus.domain.dto.GetGameInfoRes;
 import com.proj.withus.domain.dto.GetTotalGameResultRes;
 import com.proj.withus.service.AlbumService;
-import com.proj.withus.service.AwsS3Service;
 import com.proj.withus.service.GameService;
 import com.proj.withus.util.JwtUtil;
 
