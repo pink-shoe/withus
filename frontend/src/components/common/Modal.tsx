@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 interface IModalProps {
   openModal: boolean;
@@ -22,7 +22,7 @@ export default function Modal({ openModal, closeModal, isSettingModal, children 
             <div className='bg-slate-50 w-[32rem] rounded-lg px-5 py-3'>
               {/* 닫기 버튼 */}
               {/* 세팅 모달에서만 닫기 버튼 존재 */}
-              {isSettingModal ? (
+              {/* {isSettingModal ? (
                 <div className='flex justify-end'>
                 <FontAwesomeIcon
                   icon={faXmark}
@@ -31,7 +31,7 @@ export default function Modal({ openModal, closeModal, isSettingModal, children 
                   className='cursor-pointer hover:text-red-500'
                 />
               </div>
-              ) : null}
+              ) : null} */}
               <div className='ms-5 my-3'>{children}</div>
               <div className='flex justify-center mt-10'></div>
             </div>

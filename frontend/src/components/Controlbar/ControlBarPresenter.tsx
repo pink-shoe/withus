@@ -47,17 +47,17 @@ export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
     <div className='w-full flex justify-center'>
       <div className='bottom-3 flex flex-wrap gap-3 justify-center items-center'>
         <button className={` w-16 h-16 rounded-full p-3 bg-red-500`} onClick={onClickExit}>
-          <FontAwesomeIcon icon={faDoorOpen} color={'white'} fontSize={`2rem`} />
+          {/* <FontAwesomeIcon icon={faDoorOpen} color={'white'} fontSize={`2rem`} /> */}
         </button>
         <button
           className={` w-16 h-16 rounded-full p-3 ${micStatus ? ' bg-[#D3D3D3]' : 'bg-[#FF7B7B]'}`}
           onClick={onChangeMicStatus}
         >
-          {micStatus ? (
+          {/* {micStatus ? (
             <FontAwesomeIcon icon={faMicrophone} color={'black'} fontSize={`2rem`} />
           ) : (
             <FontAwesomeIcon icon={faMicrophoneSlash} color={'white'} fontSize={`2rem`} />
-          )}
+          )} */}
         </button>
         {type === 'WAIT' && (
           <button
@@ -66,22 +66,22 @@ export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
             }`}
             onClick={onChangeCameraStatus}
           >
-            {cameraStatus ? (
+            {/* {cameraStatus ? (
               <FontAwesomeIcon icon={faVideo} color={'black'} fontSize={`2rem`} />
             ) : (
               <FontAwesomeIcon icon={faVideoSlash} color={'white'} fontSize={`2rem`} />
-            )}
+            )} */}
           </button>
         )}
         <button
           className={` w-16 h-16 rounded-full p-3 ${chatStatus ? ' bg-[#FF7B7B]' : 'bg-[#D3D3D3]'}`}
           onClick={onChangeChatStatus}
         >
-          {chatStatus ? (
+          {/* {chatStatus ? (
             <FontAwesomeIcon icon={faCommentSlash} color={'white'} fontSize={`2rem`} />
           ) : (
             <FontAwesomeIcon icon={faComment} color={'black'} fontSize={`2rem`} />
-          )}
+          )} */}
         </button>
         {isHost && (
           <>
@@ -91,7 +91,7 @@ export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
               }`}
               onClick={onChangeGameSettingModal}
             >
-              {gameSettingModal ? (
+              {/* {gameSettingModal ? (
                 <FontAwesomeIcon
                   icon={faGear}
                   color={'white'}
@@ -106,7 +106,7 @@ export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
                   fontSize={`2rem`}
                   className=' transition-transform'
                 />
-              )}
+              )} */}
             </button>
             <SettingModalContainer
               isUpdateModal={true}

@@ -7,7 +7,7 @@ import { signalType, useOpenvidu } from 'hooks/useOpenvidu';
 import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer';
 import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
 import ChatContainer from '@components/Chat/ChatContainer';
-import { CountdownCircleTimer, useCountdown } from 'react-countdown-circle-timer';
+// import { CountdownCircleTimer, useCountdown } from 'react-countdown-circle-timer';
 import { IUserAtom, userAtom } from 'stores/user';
 import { useAtom } from 'jotai';
 import { IRoomAtom, roomAtom } from 'stores/room';
@@ -109,7 +109,7 @@ export default function GameRoom() {
       <div className=' w-1/2 h-screen flex flex-col justify-between items-center'>
         <header className=' h-fit flex items-center gap-2 '>
           <div className=' text-white font-extrabold text-6xl text-center py-3'>[] with us</div>
-          <CountdownCircleTimer
+          {/* <CountdownCircleTimer
             size={80}
             isPlaying={isPlaying}
             duration={count}
@@ -130,7 +130,7 @@ export default function GameRoom() {
             {({ remainingTime }) => (
               <div className=' text-white text-3xl font-bold'>{remainingTime}</div>
             )}
-          </CountdownCircleTimer>
+          </CountdownCircleTimer> */}
         </header>
         <div className='aspect-[4/3] h-auto max-w-full'>
           {publisher && (

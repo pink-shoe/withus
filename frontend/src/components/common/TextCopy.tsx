@@ -15,7 +15,7 @@ export default function TextCopy({ text }: any) {
 
   return (
     <span className='ms-2'>
-      <FontAwesomeIcon
+      /* <FontAwesomeIcon
         icon={faClipboard}
         size='2xl'
         onClick={() => handleTextCopy(text)}

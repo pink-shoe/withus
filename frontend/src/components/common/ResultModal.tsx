@@ -43,7 +43,7 @@ export default function ResultModal() {
             <span className='me-5'>
               <span className='font-medium font-kdisplay text-2xl'>ROUND {i + 1}</span>
               <div className='text-center text-[#112364] text-3xl mt-2'>
-                <FontAwesomeIcon icon={faCircle} size='2xl' />
+                {/* <FontAwesomeIcon icon={faCircle} size='2xl' /> */}
               </div>
             </span>
             <img className='w-36 h-28 rounded-lg display: inline me-2' src={pictures[i]} />
@@ -56,7 +56,7 @@ export default function ResultModal() {
             <span className='me-5'>
               <span className='font-medium font-kdisplay text-2xl'>ROUND {i + 1}</span>
               <div className='text-center text-[#F84C4C] text-3xl mt-2'>
-                <FontAwesomeIcon icon={faX} size='2xl' />
+                {/* <FontAwesomeIcon icon={faX} size='2xl' /> */}
               </div>
             </span>
             <img className='w-36 h-28 rounded-lg display: inline me-3' src={pictures[i]} />

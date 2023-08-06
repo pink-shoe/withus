@@ -1,5 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-regular-svg-icons';
+import { IconLookup, IconDefinition, findIconDefinition } from '@fortawesome/fontawesome-svg-core';
+
 import { RefObject } from 'react';
 interface IChatPresenterProps {
   chatStatus: boolean;
@@ -10,6 +12,9 @@ interface IChatPresenterProps {
   onChangeMessage: (e: any) => void;
   onClickSendMsg: () => void;
 }
+const faPaperLookup: IconLookup = { prefix: 'far', iconName: 'paper-plane' };
+const faPaperIconDefinition: IconDefinition = findIconDefinition(faPaperLookup);
+
 export default function ChatPresenter({
   chatStatus,
   messageList,
@@ -72,7 +77,7 @@ export default function ChatPresenter({
               className='whitespace-nowrap bg- rounded-md bg-[#FEDCE3]  p-3'
               onClick={onClickSendMsg}
             >
-              <FontAwesomeIcon icon={faPaperPlane} color={'#FF8DA3'} fontSize={'28px'} />
+              {/* <FontAwesomeIcon icon={faPaperIconDefinition} color={'#FF8DA3'} fontSize={'28px'} /> */}
             </button>
           </div>
         </div>

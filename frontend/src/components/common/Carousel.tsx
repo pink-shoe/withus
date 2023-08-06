@@ -39,13 +39,13 @@ export default function Carousel({
           onClick={goToPrevSlide}
           className='p-1 rounded-full shadow bg-white/80 text-gray-800 hover:bg-white'
         >
-          <FontAwesomeIcon icon={faChevronLeft} size='2x' />
+          {/* <FontAwesomeIcon icon={faChevronLeft} size='2x' /> */}
         </button>
         <button
           onClick={goToNextSlide}
           className='p-1 rounded-full shadow bg-white/80 text-gray-800 hover:bg-white'
         >
-          <FontAwesomeIcon icon={faChevronRight} size='2x' />
+          {/* <FontAwesomeIcon icon={faChevronRight} size='2x' /> */}
         </button>
       </div>
 
