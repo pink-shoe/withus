@@ -181,7 +181,7 @@ public class GameController {
     @PostMapping("/image/upload")
     public ResponseEntity<?> saveImageToS3(
         HttpServletRequest request,
-        @RequestPart("multipartFile") List<MultipartFile> images) {
+        @RequestBody List<MultipartFile> images) {
         Long memberId = (Long) request.getAttribute("memberId");
 
         Long albumId = albumService.getAlbum(memberId);

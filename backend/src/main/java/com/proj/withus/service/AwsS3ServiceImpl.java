@@ -1,7 +1,12 @@
 package com.proj.withus.service;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -33,23 +38,37 @@ public class AwsS3ServiceImpl implements AwsS3Service{
 
 	private final AmazonS3Client amazonS3Client;
 
+	private final String localStorageDir = "C:/upload/";
+
 	public List<String> uploadFiles(List<MultipartFile> images) {
 		List<String> fileNameList = new ArrayList<>();
 
+		createDir();
+
 		images.forEach(file -> {
 			String fileName = createFileName(file.getOriginalFilename());
+			String localFile = localStorageDir + fileName;
+
+			File upload = saveLocal(file, localFile);
+
 			ObjectMetadata objectMetadata = new ObjectMetadata();
-			objectMetadata.setContentLength(file.getSize());
+			objectMetadata.setContentLength(upload.length());
 			objectMetadata.setContentType(file.getContentType());
 
-			try(InputStream inputStream = file.getInputStream()) {
+			try(InputStream inputStream = new FileInputStream(upload)) {
 				amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
 					.withCannedAcl(CannedAccessControlList.PublicRead));
 			} catch(IOException e) {
 				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
 			}
 
-			fileNameList.add(fileName);
+			fileNameList.add(upload.getName());
+
+			if (removeFile(localFile)) {
+				System.out.println("로컬에 있는 이미지 삭제 성공");
+			} else {
+				System.out.println("로컬 이미지 삭제 실패");
+			}
 		});
 
 		return fileNameList;
@@ -65,5 +84,36 @@ public class AwsS3ServiceImpl implements AwsS3Service{
 		} catch (StringIndexOutOfBoundsException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 형식의 파일(" + fileName + ") 입니다.");
 		}
+	}
+
+	private void createDir() {
+		Path dirPath = Paths.get(localStorageDir);
+		if (!Files.exists(dirPath)) {
+			try {
+				Files.createDirectories(dirPath);
+			} catch (IOException e) {
+				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "로컬 저장소 디렉토리를 생성할 수 없음");
+			}
+		}
+	}
+
+	private File saveLocal(MultipartFile file, String localFile) {
+		File upload;
+		try {
+			upload = new File(localFile);
+			file.transferTo(upload);
+		} catch (IOException e) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "로컬 파일 업로드 실패했습니다.");
+		}
+		return upload;
+	}
+
+	private boolean removeFile(String fileName) {
+		File localFile = new File(fileName);
+		if (localFile.exists()) {
+			localFile.delete();
+			return true;
+		}
+		return false;
 	}
 }
