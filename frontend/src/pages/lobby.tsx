@@ -17,7 +17,7 @@ export default function Lobby() {
   const [enterCode, setEnterCode] = useState('');
 
   useEffect(() => {
-    userInfoApi(setUser).catch((error) => {
+    userInfoApi().catch((error) => {
       console.log('Error fetching data:', error);
     });
   }, []);

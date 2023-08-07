@@ -33,7 +33,7 @@ export default function Carousel({
   return (
     <div>
       <p className='flex justify-center font-kdisplay text-2xl p-2 text-black hover:text-[#FF8D8D]'>
-        튜토리얼
+        플레이 방법
       </p>
       {/* 이미지 와 설명글 */}
       <div className='border-4 border-[#FF8D8D] rounded-lg w-80 h-68 mx-auto'>

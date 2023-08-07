@@ -44,7 +44,7 @@ const GuestLogin: React.FC<IGuestLoginProps> = ({
         </p>
       </div>
       <ButtonComponent onClick={onClickGuestLogin}>
-        <div className='font-kdisplay text-xl text-white hover:text-black'>게스트 로그인</div>
+        <div className='font-kdisplay text-xl text-black hover:text-white'>게스트 로그인</div>
       </ButtonComponent>
     </div>
   );
