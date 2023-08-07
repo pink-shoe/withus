@@ -1,10 +1,11 @@
 // 모달창 보여주기 화면(대기실 설정, 게임 결과)
 // 게임 결과는 현재 진행 중
-import React, { Fragment, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGear } from '@fortawesome/free-solid-svg-icons';
-import ResultModal from '../components/common/ResultModal';
+import React, { useState } from 'react';
+import { Settings } from 'react-feather';
 import SettingModalContainer from '../components/common/SettingModal/SettingModalContainer';
+import ResultModal from '../components/common/ResultModal';
+import EndGameModal from '../components/common/EndGameModal';
+
 
 export default function About() {
   const [updateModalStatus, setUpdateModalStatus] = useState(false);
@@ -18,7 +19,7 @@ export default function About() {
   };
 
   return (
-    <Fragment>
+    <div>
       {/* <FontAwesomeIcon
         onClick={openUpdateModal}
         icon={faGear}
@@ -37,8 +38,14 @@ export default function About() {
         openModal={updateModalStatus}
         closeModal={closeUpdateModal}
       ></SettingModalContainer>
-      <div>========구분선==========</div>
+      <div>==============구분선=================</div>
       <ResultModal></ResultModal>
-    </Fragment>
+      <div>==============구분선=================</div>
+      <EndGameModal></EndGameModal>
+      <div>==============구분선=================</div>
+      <div>==============구분선=================</div>
+      {/* <FontAwesomeIcon icon={faCircleUser} size="2xl" style={{color: "#ffffff"}} className='cursor-pointer me-1 text-[42px] z-50' /> */}
+      <Settings className='text-white cursor-pointer' />
+    </div>
   );
 }

@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faMicrophoneSlash, faVideoSlash } from '@fortawesome/free-solid-svg-icons';
-import { IconLookup, IconDefinition, findIconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { MicOff, VideoOff } from 'react-feather';
+
 interface IVideoStreamBoxProps {
   name: string;
   speaking: boolean;
@@ -10,10 +9,6 @@ interface IVideoStreamBoxProps {
   isMe: boolean;
   children: React.ReactNode;
 }
-const faMicrophoneSlash: IconLookup = { prefix: 'fas', iconName: 'microphone-slash' };
-const faMicrophoneSlashIconDefinition: IconDefinition = findIconDefinition(faMicrophoneSlash);
-const faVideoSlash: IconLookup = { prefix: 'fas', iconName: 'video-slash' };
-const faVideoSlashIconDefinition: IconDefinition = findIconDefinition(faVideoSlash);
 
 export const VideoStreamBox: FC<IVideoStreamBoxProps> = ({
   name,
@@ -32,20 +27,22 @@ export const VideoStreamBox: FC<IVideoStreamBoxProps> = ({
           {isMe && ' (나)'}
         </div>
         <div>
-          {/* {!micStatus ? (
-            <FontAwesomeIcon
-              icon={faMicrophoneSlashIconDefinition}
-              color={'red'}
-              fontSize={'16px'}
-            />
+          {!micStatus ? (
+            // <FontAwesomeIcon
+            //   icon={faMicrophoneSlashIconDefinition}
+            //   color={'red'}
+            //   fontSize={'16px'}
+            // />
+            <MicOff className='text-red text-2xl' />
           ) : (
             <></>
           )}
           {!videoStatus ? (
-            <FontAwesomeIcon icon={faVideoSlashIconDefinition} color={'red'} fontSize={'16px'} />
+            // <FontAwesomeIcon icon={faVideoSlashIconDefinition} color={'red'} fontSize={'16px'} />
+            <VideoOff className='text-red text-2xl' />
           ) : (
             <></>
-          )} */}
+          )}
         </div>
       </div>
     </div>
