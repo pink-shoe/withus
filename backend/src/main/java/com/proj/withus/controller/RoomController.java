@@ -60,6 +60,15 @@ public class RoomController {
 
     private final MemberService memberService;
 
+    @ApiOperation(value = "방 정보 조회", notes = "방 정보와 플레이어 정보를 조회한다.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "정보 조회 성공", response = GetRoomInfoRes.class),
+        @ApiResponse(code = 400, message = "정보 조회 실패"),
+        @ApiResponse(code = 403, message = "권한 부족")
+    })
+    @ApiImplicitParams(value = {
+        @ApiImplicitParam(name = "room_code", value = "방 코드", required = true, dataType = "int", paramType = "path")
+    })
     @GetMapping("/{room_code}")
     public ResponseEntity<?> getRoomInfo(
         HttpServletRequest request,
