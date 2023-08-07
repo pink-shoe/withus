@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import UserHeader from './UserHeader';
 
 interface IBackgroundProps {
@@ -7,8 +6,13 @@ interface IBackgroundProps {
 
 export default function Background({ children }: IBackgroundProps) {
   return (
-    <Fragment>
-      <div className='flex justify-center place-items-center h-screen bg-[#F9C7C8]'>{children}</div>
-    </Fragment>
+    <div className='min-w-[480px]'>
+      <div className='hover:text-red-300'>
+        <UserHeader />
+      </div>
+      <div className='flex justify-center place-items-center h-[46.7rem] tall:h-screen bg-[#F9C7C8]'>
+        {children}
+      </div>
+    </div>
   );
 }

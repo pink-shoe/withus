@@ -3,7 +3,7 @@ import { useAtom } from 'jotai';
 import Tutorial from '@components/login/Tutorial';
 import GuestLogin from '@components/login/GuestLogin';
 import Login from '@components/login/Login';
-import { userAtom } from '../../stores/index';
+import { userAtom } from '../../stores/user';
 import { useNavigate } from 'react-router-dom';
 import Background from '@components/common/Background';
 import Board from '@components/common/Board';

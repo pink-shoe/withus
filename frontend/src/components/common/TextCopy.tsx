@@ -1,5 +1,5 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClipboard } from '@fortawesome/free-solid-svg-icons';
+import React from 'react';
+import { Clipboard } from 'react-feather';
 
 export default function TextCopy({ text }: any) {
   // 클립보드에 텍스트를 저장하는 기능
@@ -15,12 +15,7 @@ export default function TextCopy({ text }: any) {
 
   return (
     <span className='ms-2'>
-      <FontAwesomeIcon
-        icon={faClipboard}
-        size='2xl'
-        onClick={() => handleTextCopy(text)}
-        className='cursor-pointer hover:text-violet-700'
-      />
+      <Clipboard onClick={() => handleTextCopy(text)} className='cursor-pointer hover:text-[#FF8DA3]'/>
     </span>
   );
 }

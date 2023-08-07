@@ -1,12 +1,18 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import Modal from '../components/common/Modal';
 import SettingModalContainer from '../components/common/SettingModal/SettingModalContainer';
 import { useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 import { userInfoApi } from 'apis/userInfoApi';
+=======
+>>>>>>> 299defa2efdb765e46304afc49ee5aa2a0705dcc
 import { useAtom } from 'jotai';
-import { userAtom } from 'stores/index';
+import { userAtom } from 'stores/user';
 import Background from '../components/common/Background';
 import Board from '../components/common/Board';
+import { getMemberApi } from 'apis/memberApi';
+import { participateRoomApi } from 'apis/roomApi';
+import { roomAtom } from 'stores/room';
 
 export default function Lobby() {
   const [user, setUser] = useAtom(userAtom);
@@ -17,12 +23,16 @@ export default function Lobby() {
   const [enterCode, setEnterCode] = useState('');
 
   useEffect(() => {
+<<<<<<< HEAD
     userInfoApi().catch((error) => {
+=======
+    getMemberApi(setUser).catch((error) => {
+>>>>>>> 299defa2efdb765e46304afc49ee5aa2a0705dcc
       console.log('Error fetching data:', error);
     });
   }, []);
 
-  console.log(`user확인: ${user}`);
+  console.log('user확인:', user);
 
   const openMakeModal = () => {
     setMakeRoomModal(true);
@@ -46,21 +56,16 @@ export default function Lobby() {
   // 시작 버튼을 누르면 입력한 코드에 따라
   // 코드를 다시 입력해야 하거나, 대기실로 넘어감
   // 현재는 콘솔창에 코드가 출력되도록 함
-  const onClickParticipantBtn = () => {
-    // 예시 코드
-    if (enterCode !== 'ddddd') {
-      if (enterCode === '') {
-        // 공백이면 참여코드를 입력해달라는 창이 뜸
-        alert('참여코드를 입력해주세요😳');
-      } else {
-        // 존재하지 않는 코드를 입력하면 방이 존재하지 않는다고 뜸
-        console.log('잘못된 코드 입력');
-        alert('방이 존재하지 않습니다😥');
-        setEnterCode('');
-      }
+  const onClickParticipantBtn = async () => {
+    if (enterCode === '') {
+      // 공백이면 참여코드를 입력해달라는 창이 뜸
+      alert('참여코드를 입력해주세요😳');
     } else {
-      console.log(enterCode);
-      navigate(`/waitingrooms/${enterCode}`);
+      const result: any = await participateRoomApi(Number(enterCode), user.memberId);
+      if (result.status === 200) {
+        setEnterCode('');
+        navigate(`/waitingrooms/${enterCode}`);
+      }
     }
   };
 
@@ -68,11 +73,12 @@ export default function Lobby() {
     <Fragment>
       <Background>
         <Board boardType={'LOBBY'}>
-          <div className='flex flex-auto justify-center content-center'>
-            <Fragment>
+          <div className='flex justify-center content-center'>
+            <div>
+            {/* <div className='grid grid-cols-1 md:grid-cols-2 gap-12 items-center'> */}
               <button
                 onClick={openMakeModal}
-                className='bg-[#FF8D8D] hover:bg-red-500 me-10 aspect-square h-96 rounded-xl font-medium font-kdisplay text-4xl text-white'
+                className='bg-[#FF8D8D] hover:bg-red-500 me-2 xl:aspect-square xl:h-96 lg:aspect-square lg:h-80 md:aspect-[3/4] md:h-80 sm:aspect-[3/4] sm:h-60 md:m-8 sm:me-4 aspect-[3/5] h-60 rounded-xl font-medium font-kdisplay text-4xl text-white'
               >
                 방 만들기
               </button>
@@ -81,15 +87,15 @@ export default function Lobby() {
                 openModal={makeRoomModal}
                 closeModal={closeMakeModal}
               ></SettingModalContainer>
-            </Fragment>
-            <Fragment>
+            </div>
+            <div>
               <button
                 onClick={openEnterModal}
-                className='bg-[#8D98FF] hover:bg-violet-700 ms-10 aspect-square h-96 rounded-xl font-medium font-kdisplay text-4xl text-white'
+                className='bg-[#8D98FF] hover:bg-violet-700 ms-2 xl:aspect-square xl:h-96 lg:aspect-square lg:h-80 md:aspect-[3/4] md:h-80 md:m-8 sm:ms-4 sm:aspect-[3/4] sm:h-60 aspect-[3/4] h-60 rounded-xl font-medium font-kdisplay text-4xl text-white'
               >
                 방 참여하기
               </button>
-              <Modal openModal={enterRoomModal} closeModal={closeEnterModal}>
+              <Modal openModal={enterRoomModal} closeModal={closeEnterModal} isSettingModal={true}>
                 <p className='text-[#514148] font-kdisplay font-medium text-4xl mb-10 text-center'>
                   참여 코드
                 </p>
@@ -114,7 +120,7 @@ export default function Lobby() {
                   </button>
                 </div>
               </Modal>
-            </Fragment>
+            </div>
           </div>
         </Board>
       </Background>

@@ -1,6 +1,6 @@
 // 결과를 나타내는 모달창
 // 현재 진행 중
-import { Fragment, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import Modal from './Modal';
 import picture1 from '@src/assets/loopy1.jpg';
 import picture2 from '@src/assets/loopy2.jpg';
@@ -13,9 +13,7 @@ import answer3 from '@src/assets/answer3.jpg';
 import answer4 from '@src/assets/answer4.jpg';
 import answer5 from '@src/assets/answer5.jpg';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faX } from '@fortawesome/free-solid-svg-icons';
-import { faCircle } from '@fortawesome/free-regular-svg-icons';
+import { X, Circle } from 'react-feather';
 export default function ResultModal() {
   let pictures = [picture1, picture2, picture3, picture4, picture5];
   let answers = [answer1, answer2, answer3, answer4, answer5];
@@ -43,7 +41,8 @@ export default function ResultModal() {
             <span className='me-5'>
               <span className='font-medium font-kdisplay text-2xl'>ROUND {i + 1}</span>
               <div className='text-center text-[#112364] text-3xl mt-2'>
-                <FontAwesomeIcon icon={faCircle} size='2xl' />
+                {/* <FontAwesomeIcon icon={faCircle} size='2xl' /> */}
+                <Circle />
               </div>
             </span>
             <img className='w-36 h-28 rounded-lg display: inline me-2' src={pictures[i]} />
@@ -56,7 +55,8 @@ export default function ResultModal() {
             <span className='me-5'>
               <span className='font-medium font-kdisplay text-2xl'>ROUND {i + 1}</span>
               <div className='text-center text-[#F84C4C] text-3xl mt-2'>
-                <FontAwesomeIcon icon={faX} size='2xl' />
+                {/* <FontAwesomeIcon icon={faX} size='2xl' /> */}
+                <X />
               </div>
             </span>
             <img className='w-36 h-28 rounded-lg display: inline me-3' src={pictures[i]} />
@@ -76,7 +76,7 @@ export default function ResultModal() {
       >
         게임 결과 확인
       </button>
-      <Modal openModal={modalStatus} closeModal={closeModal}>
+      <Modal openModal={modalStatus} closeModal={closeModal} isSettingModal={false}>
         <div className='text-center text-[#514148] font-medium font-kdisplay text-4xl mb-10'>
           🏆게임결과🏆
         </div>
