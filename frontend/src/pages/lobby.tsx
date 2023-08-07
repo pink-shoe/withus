@@ -72,7 +72,6 @@ export default function Lobby() {
               <button
                 onClick={openMakeModal}
                 className='bg-[#FF8D8D] hover:bg-red-500 me-2 xl:aspect-square xl:h-96 lg:aspect-square lg:h-80 md:aspect-[3/4] md:h-80 sm:aspect-[3/4] sm:h-60 md:m-8 sm:me-4 aspect-[3/5] h-60 rounded-xl font-medium font-kdisplay text-4xl text-white'
-                className='bg-[#FF8D8D] hover:bg-red-500 me-2 xl:aspect-square xl:h-96 lg:aspect-square lg:h-80 md:aspect-[3/4] md:h-80 sm:aspect-[3/4] sm:h-60 md:m-8 sm:me-4 aspect-[3/5] h-60 rounded-xl font-medium font-kdisplay text-4xl text-white'
               >
                 방 만들기
               </button>
@@ -89,7 +88,6 @@ export default function Lobby() {
               >
                 방 참여하기
               </button>
-              <Modal openModal={enterRoomModal} closeModal={closeEnterModal} isSettingModal={true}>
               <Modal openModal={enterRoomModal} closeModal={closeEnterModal} isSettingModal={true}>
                 <p className='text-[#514148] font-kdisplay font-medium text-4xl mb-10 text-center'>
                   참여 코드

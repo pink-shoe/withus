@@ -33,7 +33,7 @@ export default function Mypage() {
 
   return (
     <div>
-      <Background>
+      <Background isLobbyPage={true} isLobbyDropdown={false}>
         <Board boardType='LOBBY'>
           <Container type='isBig'>
             <div className='flex justify-center text-3xl pt-10 font-kdisplay'>회원 정보 수정</div>
