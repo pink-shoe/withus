@@ -6,6 +6,7 @@ import SettingModalContainer from '../components/common/SettingModal/SettingModa
 import ResultModal from '../components/common/ResultModal';
 import EndGameModal from '../components/common/EndGameModal';
 
+
 export default function About() {
   const [updateModalStatus, setUpdateModalStatus] = useState(false);
 
@@ -19,6 +20,8 @@ export default function About() {
 
   return (
     <div>
+      <Settings onClick={openUpdateModal} className='text-red hover:rotate-45' />
+
       {/* <FontAwesomeIcon
         onClick={openUpdateModal}
         icon={faGear}

@@ -40,9 +40,9 @@ export default function ResultModal() {
           <div className='flex justify-center mb-8' key={i}>
             <span className='me-5'>
               <span className='font-medium font-kdisplay text-2xl'>ROUND {i + 1}</span>
-              <div className='text-center text-[#112364] text-3xl mt-2'>
+              <div className='text-[#112364] mt-2 flex justify-center'>
                 {/* <FontAwesomeIcon icon={faCircle} size='2xl' /> */}
-                <Circle />
+                <Circle size='60' />
               </div>
             </span>
             <img className='w-36 h-28 rounded-lg display: inline me-2' src={pictures[i]} />
@@ -54,9 +54,9 @@ export default function ResultModal() {
           <div className='flex justify-center mb-8' key={i}>
             <span className='me-5'>
               <span className='font-medium font-kdisplay text-2xl'>ROUND {i + 1}</span>
-              <div className='text-center text-[#F84C4C] text-3xl mt-2'>
+              <div className='text-[#F84C4C] flex justify-center'>
                 {/* <FontAwesomeIcon icon={faX} size='2xl' /> */}
-                <X />
+                <X size='80' />
               </div>
             </span>
             <img className='w-36 h-28 rounded-lg display: inline me-3' src={pictures[i]} />
@@ -77,7 +77,7 @@ export default function ResultModal() {
         게임 결과 확인
       </button>
       <Modal openModal={modalStatus} closeModal={closeModal} isSettingModal={false}>
-        <div className='text-center text-[#514148] font-medium font-kdisplay text-4xl mb-10'>
+        <div className='text-center text-[#514148] font-medium font-kdisplay text-4xl mt-5 mb-10'>
           🏆게임결과🏆
         </div>
         <div className='overflow-y-auto h-96'>{repeatResult(pictures, answers, results)}</div>
