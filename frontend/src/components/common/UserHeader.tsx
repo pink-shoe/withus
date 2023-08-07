@@ -9,11 +9,11 @@ export default function UserHeader() {
       <span className='flex justify-end py-4 px-3'>
         <div className='cursor-pointer z-40'>
           <UserDropdown>
-            <ul className='hover:text-black font-kdisplay text-xl'>
-              <li className='bg-white text-center border-[#FA8D8D] border-2 mt-2 h-9 p-1 hover:text-red-300'><a href="/lobby">로비</a></li>  
-              <li className='bg-white text-center rounded-t-lg border-[#FA8D8D] mt-2 border-2 h-9 py-1 px-2 hover:text-red-300'><a href="/mypage">회원 정보 관리</a></li>  
-              <li className='bg-white text-center border-[#FA8D8D] border-2 h-9 p-1 hover:text-red-300'><a href="/mypage/photoalbum">사진첩</a></li>  
-              <li className='bg-white text-center rounded-b-lg border-[#FA8D8D] border-2 h-9 p-1 hover:text-red-300'>로그아웃</li>  
+            <ul className='hover:text-red-300 font-kdisplay text-xl'>
+              <li className='bg-white text-center border-[#FA8D8D] border-2 mt-2 h-9 p-1 text-red-300 hover:text-black'><a href="/lobby">로비</a></li>  
+              <li className='bg-white text-center rounded-t-lg border-[#FA8D8D] mt-2 border-2 h-9 py-1 px-2 text-red-300 hover:text-black'><a href="/mypage">회원 정보 관리</a></li>  
+              <li className='bg-white text-center border-[#FA8D8D] border-2 h-9 p-1 text-red-300 hover:text-black'><a href="/mypage/photoalbum">사진첩</a></li>  
+              <li className='bg-white text-center rounded-b-lg border-[#FA8D8D] border-2 h-9 p-1 text-red-300 hover:text-black'>로그아웃</li>  
             </ul>
           </UserDropdown>
 

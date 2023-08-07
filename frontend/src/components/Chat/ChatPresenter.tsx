@@ -1,6 +1,5 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperPlane } from '@fortawesome/free-regular-svg-icons';
-import { IconLookup, IconDefinition, findIconDefinition } from '@fortawesome/fontawesome-svg-core';
+import React from 'react';
+import { Send } from 'react-feather';
 
 import { RefObject } from 'react';
 interface IChatPresenterProps {
@@ -12,8 +11,6 @@ interface IChatPresenterProps {
   onChangeMessage: (e: any) => void;
   onClickSendMsg: () => void;
 }
-const faPaperLookup: IconLookup = { prefix: 'far', iconName: 'paper-plane' };
-const faPaperIconDefinition: IconDefinition = findIconDefinition(faPaperLookup);
 
 export default function ChatPresenter({
   chatStatus,
@@ -78,6 +75,7 @@ export default function ChatPresenter({
               onClick={onClickSendMsg}
             >
               {/* <FontAwesomeIcon icon={faPaperIconDefinition} color={'#FF8DA3'} fontSize={'28px'} /> */}
+              <Send className='text-[#FF8DA3] text-2xl' />
             </button>
           </div>
         </div>
