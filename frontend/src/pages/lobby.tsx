@@ -2,10 +2,6 @@ import { Fragment, useEffect, useState } from 'react';
 import Modal from '../components/common/Modal';
 import SettingModalContainer from '../components/common/SettingModal/SettingModalContainer';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
-import { userInfoApi } from 'apis/userInfoApi';
-=======
->>>>>>> 299defa2efdb765e46304afc49ee5aa2a0705dcc
 import { useAtom } from 'jotai';
 import { userAtom } from 'stores/user';
 import Background from '../components/common/Background';
@@ -23,11 +19,7 @@ export default function Lobby() {
   const [enterCode, setEnterCode] = useState('');
 
   useEffect(() => {
-<<<<<<< HEAD
-    userInfoApi().catch((error) => {
-=======
     getMemberApi(setUser).catch((error) => {
->>>>>>> 299defa2efdb765e46304afc49ee5aa2a0705dcc
       console.log('Error fetching data:', error);
     });
   }, []);
