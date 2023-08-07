@@ -26,6 +26,10 @@ public class RoomServiceImpl implements RoomService {
     private final MemberRepository memberRepository;
     private final PlayerRepository playerRepository;
 
+    public Optional<Room> getRoomByCode(int roomCode) {
+        return roomRepository.findRoomByCode(roomCode);
+    }
+
     public Room createRoom(CreateRoomReq createRoomReq) {
         System.out.println(createRoomReq.getId());
 

@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import com.proj.withus.domain.Member;
 import com.proj.withus.domain.Player;
+import com.proj.withus.domain.dto.GetRoomInfoRes;
+import com.proj.withus.domain.dto.PlayerInfo;
 import com.proj.withus.domain.dto.PlayerInfoDto;
 import com.proj.withus.repository.RoomRepository;
 import org.springframework.http.HttpStatus;
@@ -57,6 +59,46 @@ public class RoomController {
     private final RoomRepository roomRepository;
 
     private final MemberService memberService;
+
+    @GetMapping("/{room_code}")
+    public ResponseEntity<?> getRoomInfo(
+        HttpServletRequest request,
+        @PathVariable("room_code") int roomCode) {
+
+        Long memberId;
+        String token = (String) request.getAttribute("token");
+        try {
+            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
+            memberId = socialMemberInfo.getId();
+        } catch (Exception e) {
+            return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
+        }
+
+        Optional<Room> room = roomService.getRoomByCode(roomCode);
+        if (!room.isPresent()) {
+            return new ResponseEntity<String>("존재하지 않는 방입니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        Long roomId = room.get().getId();
+
+        List<Player> players = roomService.getPlayerList(roomId);
+        List<PlayerInfo> playerInfos = new ArrayList<>();
+        for (Player player : players) {
+            PlayerInfo playerInfo = PlayerInfo.builder()
+                .playerId(player.getId())
+                .nickname(memberService.getMemberInfo(player.getId()).getNickname())
+                .teamType(player.getTeamType())
+                .ready(player.isReady())
+                .build();
+            playerInfos.add(playerInfo);
+        }
+
+        GetRoomInfoRes getRoomInfoRes = GetRoomInfoRes.builder()
+            .room(room)
+            .playerInfos(playerInfos)
+            .build();
+        return new ResponseEntity<GetRoomInfoRes>(getRoomInfoRes, HttpStatus.OK);
+    }
 
     @ApiOperation(value = "방 생성", notes = "방장은 방을 생성한다.")
     @ApiResponses(value = {
@@ -121,16 +163,9 @@ public class RoomController {
                 playerInfo.setMemberId(player.getId());
                 playerInfo.setNickname(memberService.getMemberInfo(player.getId()).getNickname());
                 playerInfo.setReady(roomService.getReadyStatus(player.getId()));
-                // PlayerInfoDto.builder()
-                // .memberId(player.getId())
-                // .nickname(memberService.getMemberInfo(player.getId()).getNickname())
-                // .ready(roomService.getReadyStatus(player.getId()))
-                // .build();
 
                 playerInfos.add(playerInfo);
             }
-            // PlayerInfoDto playerInfo = PlayerInfoDto.builder()
-            //     .memberId().build();
             enterRoomRes.setPlayers(playerInfos);
             return new ResponseEntity<EnterRoomRes>(enterRoomRes, HttpStatus.OK);
         }

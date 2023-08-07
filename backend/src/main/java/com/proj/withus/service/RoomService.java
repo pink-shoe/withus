@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public interface RoomService {
 
+    public Optional<Room> getRoomByCode(int roomCode);
     public Room createRoom(CreateRoomReq createRoomReq);
     public Optional<Room> enterRoom(int roomCode, Long memberId);
     public void leaveRoom(Long roomId, Long memberId);
