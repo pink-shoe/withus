@@ -2,13 +2,17 @@ import { ReactNode } from 'react';
 
 interface IContainerProps {
   children: ReactNode;
-  // isBig, isSmall 구분으로 크기 나누기 등
+  type?: 'isBig' | 'isSmall';
 }
 
-export default function Container({ children }: IContainerProps) {
-  return (
-    <div className='lg:flex lg:flex-col gap-4 rounded-lg border-4 border-black w-full h-full bg-white '>
-      {children}
-    </div>
-  );
+export default function Container({ children, type }: IContainerProps) {
+  let containerCss =
+    'lg:flex lg:flex-col gap-4 rounded-lg border-2 border-[#FF8D8D] w-96 h-96 bg-white';
+
+  if (type === 'isBig') {
+    containerCss =
+      'lg:flex lg:flex-col gap-4 rounded-lg border-2 border-[#FF8D8D] w-1/2 h-96 bg-white';
+  }
+
+  return <div className={containerCss}>{children}</div>;
 }

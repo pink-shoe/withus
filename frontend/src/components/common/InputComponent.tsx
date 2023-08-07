@@ -1,39 +1,34 @@
 interface IInputProps {
-  type: 'text' | 'password' | 'email';
+  type: 'text' | 'password' | 'email' | 'entercode' | 'nickname';
   label?: string | undefined;
   placeholder?: string;
   value?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  version?: number;
 }
 
-export default function InputComponent({
-  type,
-  label,
-  placeholder,
-  value,
-  version,
-  onChange,
-}: IInputProps) {
-  let windcss: string;
+export default function InputComponent({ type, label, placeholder, value, onChange }: IInputProps) {
+  let inputCss =
+    'block w-80 h-8 mx-auto rounded-md py-1 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-[#FF8D8D] placeholder:text-[#FF8D8D] focus:ring-1 focus:ring-inset focus:ring-[#FF8D8D] sm:text-sm sm:leading-6 font-kdisplay';
+  let inputType = 'text';
+
   const inputId = label ? label : 'input';
   if (placeholder === undefined) placeholder = '입력해주세요';
-  if (version == 1) {
-    windcss = 'test중';
-  } else {
-    windcss =
-      'block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6';
+  if (type === 'email') {
+    inputType = 'email';
+  } else if (type === 'nickname') {
+    inputCss =
+      'block w-96 h-8 mx-auto rounded-md py-1 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-[#FF8D8D] placeholder:text-[#FF8D8D] focus:ring-1 focus:ring-inset focus:ring-[#FF8D8D] sm:text-sm sm:leading-6 font-kdisplay';
+  } else if (type === 'password') {
+    inputType = 'password';
   }
 
   return (
     <div className='sm:col-span-2 m-4'>
-      {label && (
-        <label className='block text-xl font-semibold leading-6 text-gray-900'>{label}</label>
-      )}
-      <div className='mt-2.5 '>
+      {label && <label className='font-kdisplay text-2xl hover:text-[#FF8D8D]'>{label}</label>}
+      <div className='mt-1.5'>
         <input
-          className={windcss}
-          type={type}
+          className={inputCss}
+          type={inputType}
           id={inputId}
           value={value}
           name={inputId}

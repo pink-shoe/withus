@@ -1,13 +1,10 @@
-import { Fragment } from 'react';
 import UserHeader from './UserHeader';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 
 interface IBackgroundProps {
   children: React.ReactNode;
 }
 
-export default function Background({children}: IBackgroundProps) {
+export default function Background({ children }: IBackgroundProps) {
   return (
     <div className='min-w-[480px]'>
       <div className='hover:text-red-300'>
@@ -17,5 +14,5 @@ export default function Background({children}: IBackgroundProps) {
         {children}
       </div>
     </div>
-  )
+  );
 }
