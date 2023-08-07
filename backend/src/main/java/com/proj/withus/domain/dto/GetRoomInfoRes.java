@@ -20,5 +20,5 @@ public class GetRoomInfoRes {
 
 	private List<PlayerInfo> playerInfos;
 
-
+	private Long hostId;
 }

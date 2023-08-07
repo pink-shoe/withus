@@ -105,6 +105,7 @@ public class RoomController {
         GetRoomInfoRes getRoomInfoRes = GetRoomInfoRes.builder()
             .room(room)
             .playerInfos(playerInfos)
+            .hostId(getHostId(roomId))
             .build();
         return new ResponseEntity<GetRoomInfoRes>(getRoomInfoRes, HttpStatus.OK);
     }
