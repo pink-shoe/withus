@@ -5,7 +5,7 @@ import { IUser, signalType, useOpenvidu } from 'hooks/useOpenvidu';
 import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
 import ChatContainer from '@components/Chat/ChatContainer';
 import { useAtom } from 'jotai';
-import { IUserAtom, userAtom } from 'stores/user';
+import { IPlayerAtom, IUserAtom, userAtom } from 'stores/user';
 import { IRoomAtom, roomAtom } from 'stores/room';
 import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer';
 import Board from '@components/common/Board';
@@ -22,7 +22,11 @@ export default function WaitingRoom() {
   const [chatStatus, setChatStatus] = useState<boolean>(true);
   const [readyStatus, setReadyStatus] = useState<boolean>(false);
   // const [isUpdateUserName, setIsUpdateUserName] = useState<boolean>(false);
-
+  // const player: IPlayerAtom = {
+  //   memberId: user.memberId,
+  //   nickname: user.nickname,
+  //   ready: readyStatus,
+  // };
   const {
     session,
     publisher,
@@ -33,7 +37,7 @@ export default function WaitingRoom() {
     onChangeCameraStatus,
     onChangeMicStatus,
     sendSignal,
-  } = useOpenvidu(user.memberId!, roomInfo.roomId, readyStatus);
+  } = useOpenvidu(user.memberId, user.nickname, readyStatus, Number(currentPath));
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
