@@ -35,6 +35,8 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Example;
+import io.swagger.annotations.ExampleProperty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -241,9 +243,21 @@ public class RoomController {
 
     @ApiOperation(value = "게임 준비 및 취소", notes = "사용자는 게임 준비 및 취소를 할 수 있다.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "준비 상태 갱신 성공"),
+        @ApiResponse(code = 200, message = "준비 상태 갱신 성공", examples = @Example(
+            value = @ExampleProperty(
+                mediaType = "application/json",
+                value = "memberId: [ \n 1, \n 2 \n]"
+            )
+        )),
         @ApiResponse(code = 400, message = "준비 상태 갱신 실패")
     })
+    @ApiImplicitParams(
+        value = {
+            @ApiImplicitParam(name = "is_ready", value = "준비 완료: ready, 준비 취소: cancel", required = true, dataType = "string", paramType = "path",
+                example = "ready"),
+            @ApiImplicitParam(name = "room_id", value = "참여한 방 번호", required = true, dataType = "Long", paramType = "path", example = "1")
+        }
+    )
     @GetMapping("/ready/{is_ready}/{room_id}")
     public ResponseEntity<?> setReady(
         HttpServletRequest request,
@@ -278,9 +292,18 @@ public class RoomController {
 
     @ApiOperation(value = "게임 시작 여부", notes = "게임 시작 여부를 알려준다.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "게임 시작 성공"),
+        @ApiResponse(code = 200, message = "게임 시작 성공", examples = @Example(
+            value = @ExampleProperty(
+                mediaType = "application/json",
+                value = "게임을 시작할 수 있습니다."
+            ))),
         @ApiResponse(code = 400, message = "게임 시작 실패")
     })
+    @ApiImplicitParams(
+        value = {
+            @ApiImplicitParam(name = "room_id", value = "참여한 방 번호", required = true, dataType = "Long", paramType = "path")
+        }
+    )
     @GetMapping("/start/{room_id}")
     public ResponseEntity<?> isStart(
         HttpServletRequest request,
