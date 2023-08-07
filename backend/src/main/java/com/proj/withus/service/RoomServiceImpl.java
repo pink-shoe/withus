@@ -163,7 +163,7 @@ public class RoomServiceImpl implements RoomService {
     set start = startStatus
     where room_id = roomId
      */
-    public List<Long> getReadyPlayers(Long roomId) {
+    public List<Player> getReadyPlayers(Long roomId) {
         List<Long> readyMember = playerRepository.findReadyPlayersByRoomId(roomId);
         List<Player> totalMember = playerRepository.findAllByRoomId(roomId);
         if (readyMember.size() == totalMember.size()) {
@@ -171,7 +171,8 @@ public class RoomServiceImpl implements RoomService {
         } else {
             roomRepository.updateStart(roomId, false);
         }
-        return readyMember;
+        // return readyMember;
+        return totalMember;
     }
 
     public boolean getReadyStatus(Long playerId) {
