@@ -1,3 +1,5 @@
+import Background from '@components/common/Background';
+import Logo from '@components/common/Logo/Logo';
 import { useEffect, useState } from 'react';
 import { VideoStream } from '@components/VideoStream';
 import { useLocation } from 'react-router-dom';
@@ -99,23 +101,28 @@ export default function WaitingRoom() {
   useEffect(() => {
     console.log(streamList);
   }, [streamList]);
+
   return (
-    <section className={`w-full flex  justify-between h-screen`}>
-      {/* 참가자 목록 */}
-      <ParticipantsContainer
-        type={'WAIT'}
-        user={user}
-        // userId={userId}
-        // userName={userName}
-        // onChangeUserName={onChangeUserName}
-        publisher={publisher}
-        streamList={streamList}
-        readyStatus={readyStatus}
-        // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
-      />
+    // <section >
+    <Background isLobbyPage={false}>
+      <div className='flex w-full h-full'>
+        {/* 참가자 목록 */}
+        <div className='justify-start bg-white z-40'>
+          <ParticipantsContainer
+            type={'WAIT'}
+            user={user}
+            // userId={userId}
+            // userName={userName}
+            // onChangeUserName={onChangeUserName}
+            publisher={publisher}
+            streamList={streamList}
+            readyStatus={readyStatus}
+            // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
+          />
+        </div>
       {/* openvidu 화면 */}
-      <div className=' h-full '>
-        <Board boardType={'WAIT'}>
+        <div className='w-full'>
+          <Board boardType='WAIT'>
           {/* <header className=''>
           <div className=' text-white font-extrabold text-6xl text-center py-3'>[] with us</div>
         </header> */}
@@ -127,7 +134,7 @@ export default function WaitingRoom() {
             )}
           </div>
         </Board>
-        <div className=' p-3'>
+        <div className='mt-5 p-3 align-bottom'>
           <ControlBarContainer
             type={'WAIT'}
             isHost={isHost}
@@ -146,6 +153,8 @@ export default function WaitingRoom() {
         publisher={publisher}
         sendSignal={sendSignal}
       />
-    </section>
+      </div>
+      </Background>
+    // </section>
   );
 }

@@ -80,7 +80,9 @@ export default function SettingModalPresenter({
                         placeholder='코드 입력'
                         type='text'
                       />
-                      <TextCopy text={code} />
+                      <div className='inline-block align-middle pb-2 ms-1'>
+                        <TextCopy text={code} />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -96,7 +98,9 @@ export default function SettingModalPresenter({
                       placeholder='URL 입력'
                       type='text'
                     />
-                    <TextCopy text={url} />
+                    <div className='inline-block align-middle pb-2 ms-1'>
+                      <TextCopy text={url} />
+                    </div>
                   </div>
                 </div>
               </Fragment>

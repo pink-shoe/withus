@@ -20,6 +20,8 @@ export default function About() {
 
   return (
     <div>
+      <Settings onClick={openUpdateModal} className='text-red hover:rotate-45' />
+
       {/* <FontAwesomeIcon
         onClick={openUpdateModal}
         icon={faGear}

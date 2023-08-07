@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useAtom } from 'jotai'; // Import useAtom hook
 import { userAtom } from '../../stores/user';
-import Logo from '@components/common/Logo';
 import Container from '@components/common/Container';
 import ButtonComponent from '@components/common/ButtonComponent';
 import { Link } from '../../router';
@@ -33,7 +32,6 @@ export default function Mypage() {
 
   return (
     <div>
-      <Logo />
       <Container>
         <p>마이 페이지</p>
         <InputComponent

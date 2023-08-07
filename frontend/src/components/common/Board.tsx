@@ -33,22 +33,22 @@ export default function Board({ boardType, children }: IBoardProps) {
         </div>
       ) : boardType === 'WAIT' ? (
         // 대기실 화면
-        <div className='h-[38rem] w-full'>
+          <div className='w-full mt-[4.5rem]'>
           <div className='static'>
             <div className='flex justify-center'>
-              <div className='drop-shadow-xl rounded-md bg-yellow-100 h-[2.5rem] w-2/3'></div>
+              <div className='drop-shadow-xl rounded-md bg-yellow-100 h-[2.5rem] w-10/12'></div>
             </div>
             <div className='w-full flex justify-center place-items-center'>
               <Logo isGameRoomLogo={false} />
             </div>
           </div>
           <div className='flex justify-center align-middle'>
-            <div className='flex justify-center place-items-center h-[34rem] w-7/12 bg-white'>
+            <div className='flex justify-center place-items-center h-[30rem] w-9/12 bg-white'>
               {children}
             </div>
           </div>
           <div className='flex justify-center'>
-            <div className='flex justify-center place-items-center drop-shadow-lg rounded-md bg-yellow-100 h-[2.5rem] w-2/3'></div>
+            <div className='flex justify-center place-items-center drop-shadow-lg rounded-md bg-yellow-100 h-[2.5rem] w-10/12'></div>
           </div>
         </div>
       ) : (

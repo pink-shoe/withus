@@ -63,7 +63,8 @@ export default function Lobby() {
 
   return (
     <Fragment>
-      <Background>
+      {/* 드롭다운 true는 로비 항목이 없고, false는 로비 항목이 있음*/}
+      <Background isLobbyDropdown={false} isLobbyPage={true}>
         <Board boardType={'LOBBY'}>
           <div className='flex justify-center content-center'>
             <div>
