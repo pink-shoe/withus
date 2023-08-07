@@ -5,6 +5,9 @@ import GuestLogin from '@components/login/GuestLogin';
 import Login from '@components/login/Login';
 import { userAtom } from '../../stores/user';
 import { useNavigate } from 'react-router-dom';
+import Background from '@components/common/Background';
+import Board from '@components/common/Board';
+import Container from '@components/common/Container';
 
 export default function Layout() {
   // Atom 값과 상태 업데이트 함수 가져오기
@@ -27,15 +30,6 @@ export default function Layout() {
     setEnterCode(event.target.value);
   }
 
-  function onChangeEmail(event: React.ChangeEvent<HTMLInputElement>) {
-    setUser((prev) => ({ ...prev, email: event.target.value }));
-    console.log(`이메일 확인: ${email}`);
-  }
-
-  function onChangeEmailPassword(event: React.ChangeEvent<HTMLInputElement>) {
-    setEmailPassword(event.target.value);
-  }
-
   function onClickGuestLogin() {
     setUser((prev) => ({ ...prev, nickname: nickname }));
     console.log('Nickname:', nickname);
@@ -43,47 +37,57 @@ export default function Layout() {
     // 게스트는 로비로 보내지 않고 바로 방으로 갈 수 있도록 변경할거임. --------- 게스트 로그인 api 로 가서 서버로 부터 받아오고 정리 아직 미정 --------
   }
 
-  function onClickSocialLogin() {
-    console.log('Email: ', email);
-    console.log('Email Password:', emailPassword);
-  }
-
   return (
-    // <div className="bg-[url('/src/assets/background2.jpg')] bg-cover">
-    <div className='h-screen bg-gradient-to-b from-sky-900 to-pink-800'>
-      <div className=' w-full h-[150px] text-5xl text-center items-center flex justify-center font-bold text-white'>
-        [] with us
-      </div>
-      {/* <div className='flex justify-center space-x-4 m-4'> */}
-      <div className='flex justify-center space-x-4'>
-        <button className='bg-white' onClick={() => setShowLoginForm(false)}>
-          Guest Login
-        </button>
-        <button className='bg-white' onClick={() => setShowLoginForm(true)}>
-          Social Login
-        </button>
-      </div>
-      <div className='flex justify-center'>
-        <div className='grid grid-cols-1 lg:grid-cols-2 gap-12 items-center'>
-          {showLoginForm ? (
-            <Login
-              email={email}
-              emailPassword={emailPassword}
-              onChangeEmail={onChangeEmail}
-              onChangeEmailPassword={onChangeEmailPassword}
-              onClickSocialLogin={onClickSocialLogin}
-            />
-          ) : (
-            <GuestLogin
-              enterCode={enterCode}
-              onChangeEnterCode={onChangeEnterCode}
-              onClickGuestLogin={onClickGuestLogin}
-            />
-          )}
+    <Background>
+      <Board boardType={'LOBBY'}>
+        <div className='flex flex-col justify-center'>
+          <div className='grid grid-cols-1 lg:grid-cols-2 gap-12 items-center'>
+            {showLoginForm ? (
+              <Container>
+                <div className='flex justify-around'>
+                  <button
+                    className='bg-[#FF8D8D] rounded-tl-md w-48 h-8'
+                    onClick={() => setShowLoginForm(false)}
+                  >
+                    <div className='font-kdisplay text-black hover:text-white'> 게스트 </div>
+                  </button>
+                  <button
+                    className='bg-white w-48 h-8 rounded-md'
+                    onClick={() => setShowLoginForm(true)}
+                  >
+                    <div className='font-kdisplay text-black'> 로그인 </div>
+                  </button>
+                </div>
+                <Login />
+              </Container>
+            ) : (
+              <Container>
+                <div className='flex justify-around'>
+                  <button
+                    className='bg-white w-48 h-8 rounded-md'
+                    onClick={() => setShowLoginForm(false)}
+                  >
+                    <div className='font-kdisplay text-black'> 게스트 </div>
+                  </button>
+                  <button
+                    className='bg-[#FF8D8D] rounded-tr-md w-48 h-8'
+                    onClick={() => setShowLoginForm(true)}
+                  >
+                    <div className='font-kdisplay text-black hover:text-white'> 로그인 </div>
+                  </button>
+                </div>
+                <GuestLogin
+                  enterCode={enterCode}
+                  onChangeEnterCode={onChangeEnterCode}
+                  onClickGuestLogin={onClickGuestLogin}
+                />
+              </Container>
+            )}
 
-          <Tutorial />
+            <Tutorial />
+          </div>
         </div>
-      </div>
-    </div>
+      </Board>
+    </Background>
   );
 }

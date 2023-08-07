@@ -7,10 +7,11 @@ export interface IUserAtom {
 }
 
 export interface IPlayerAtom {
-  playerId: number;
+  // playerId: number;
   memberId: number;
-  teamType: number;
-  roomdId: number;
+  nickname: string;
+  // teamType: number;
+  // roomdId: number;
   ready: boolean;
 }
 // Atom 생성: nickname, memberId, email을 전역 상태로 관리하는 객체 Atom
@@ -21,9 +22,10 @@ export const userAtom = atom<IUserAtom>({
 });
 
 export const playerAtom = atom<IPlayerAtom>({
-  playerId: 0,
+  // playerId: 0,
   memberId: 0,
-  teamType: 0,
-  roomdId: 0,
+  nickname: '',
+  // teamType: 0,
+  // roomdId: 0,
   ready: false,
 });

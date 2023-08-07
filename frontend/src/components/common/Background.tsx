@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import UserHeader from './UserHeader';
 
 interface IBackgroundProps {
@@ -10,23 +9,9 @@ interface IBackgroundProps {
 
 export default function Background({isLobbyDropdown, isLobbyPage, children}: IBackgroundProps) {
   return (
-    <div className='min-w-[640px] white'>
-      {isLobbyPage ? (
-        <Fragment>
-        <div className='hover:text-red-300'>
-            <UserHeader isLobbyDropdown={isLobbyDropdown} />
-        </div>
-        <div className='flex justify-center place-items-center h-[740px] md:h-screen tall:h-screen bg-[#F9C7C8]'>
-          {children}
-        </div>
-      </Fragment>
-      ): (
-        <Fragment>
-          <div className='flex justify-center place-items-center h-[805px] bg-[#F9C7C8]'>
-            {children}
-          </div>
-      </Fragment> 
-      )}
-    </div>
-  )
+    <Fragment>
+      <UserHeader />
+      <div className='flex justify-center place-items-center h-screen bg-[#F9C7C8]'>{children}</div>
+    </Fragment>
+  );
 }
