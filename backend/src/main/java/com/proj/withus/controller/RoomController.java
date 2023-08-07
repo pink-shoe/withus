@@ -246,7 +246,13 @@ public class RoomController {
         @ApiResponse(code = 200, message = "준비 상태 갱신 성공", examples = @Example(
             value = @ExampleProperty(
                 mediaType = "application/json",
-                value = "memberId: [ \n 1, \n 2 \n]"
+                value = "[\n"
+                    + "  {\n"
+                    + "    \"id\": 1,\n"
+                    + "    \"teamType\": 0,\n"
+                    + "    \"ready\": false\n"
+                    + "  }\n"
+                    + "]"
             )
         )),
         @ApiResponse(code = 400, message = "준비 상태 갱신 실패")
@@ -286,8 +292,8 @@ public class RoomController {
             return new ResponseEntity<String>("게임 준비에 실패했습니다.", HttpStatus.BAD_REQUEST);
         }
 
-        List<Long> readyPlayer = roomService.getReadyPlayers(roomId);
-        return new ResponseEntity<List<Long>>(readyPlayer, HttpStatus.OK);
+        List<Player> readyPlayer = roomService.getReadyPlayers(roomId);
+        return new ResponseEntity<List<Player>>(readyPlayer, HttpStatus.OK);
     }
 
     @ApiOperation(value = "게임 시작 여부", notes = "게임 시작 여부를 알려준다.")
@@ -295,7 +301,13 @@ public class RoomController {
         @ApiResponse(code = 200, message = "게임 시작 성공", examples = @Example(
             value = @ExampleProperty(
                 mediaType = "application/json",
-                value = "게임을 시작할 수 있습니다."
+                value = "[\n"
+                    + "  {\n"
+                    + "    \"id\": 1,\n"
+                    + "    \"teamType\": 0,\n"
+                    + "    \"ready\": true\n"
+                    + "  }\n"
+                    + "]"
             ))),
         @ApiResponse(code = 400, message = "게임 시작 실패")
     })
@@ -320,8 +332,8 @@ public class RoomController {
         if (!roomService.getStartStatus(roomId)) {
             return new ResponseEntity<String>("준비되지 않은 플레이어가 있습니다.", HttpStatus.BAD_REQUEST);
         }
-
-        return new ResponseEntity<String>("게임을 시작할 수 있습니다.", HttpStatus.OK);
+        List<Player> players = roomService.getPlayerList(roomId);
+        return new ResponseEntity<List<Player>>(players, HttpStatus.OK);
     }
 
     // 트랜잭션 전파 문제 생겨서 일단 Service -> Controller에서 처리
