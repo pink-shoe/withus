@@ -7,8 +7,8 @@ import { signalType, useOpenvidu } from 'hooks/useOpenvidu';
 import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer';
 import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
 import ChatContainer from '@components/Chat/ChatContainer';
-// import { CountdownCircleTimer, useCountdown } from 'react-countdown-circle-timer';
-import { IUserAtom, userAtom } from 'stores/user';
+import { CountdownCircleTimer, useCountdown } from 'react-countdown-circle-timer';
+import { IPlayerAtom, IUserAtom, userAtom } from 'stores/user';
 import { useAtom } from 'jotai';
 import { IRoomAtom, roomAtom } from 'stores/room';
 
@@ -24,7 +24,11 @@ export default function GameRoom() {
   const [chatStatus, setChatStatus] = useState<boolean>(true);
   const [readyStatus, setReadyStatus] = useState<boolean>(false);
   const [isUpdateUserName, setIsUpdateUserName] = useState<boolean>(false);
-
+  const player: IPlayerAtom = {
+    memberId: user.memberId,
+    nickname: user.nickname,
+    ready: readyStatus,
+  };
   const {
     session,
     publisher,
@@ -33,7 +37,7 @@ export default function GameRoom() {
     onChangeMicStatus,
     sendSignal,
     // receiveSignal,
-  } = useOpenvidu(user.memberId!, roomInfo.roomId, readyStatus);
+  } = useOpenvidu(user.memberId, user.nickname, readyStatus, roomInfo.roomId);
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
