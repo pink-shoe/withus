@@ -9,7 +9,7 @@ export async function getToken(roomId: string) {
 function createSession(roomId: string): Promise<any> {
   return new Promise((resolve, reject) => {
     var data = JSON.stringify({ customSessionId: roomId });
-
+    console.log('OPENVIDU_SERVER_SECRET', OPENVIDU_SERVER_SECRET);
     axios
       .post(OPENVIDU_SERVER_URL + '/api/sessions', data, {
         headers: {
