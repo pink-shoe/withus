@@ -2,10 +2,6 @@ import { Fragment, useEffect, useState } from 'react';
 import Modal from '../components/common/Modal';
 import SettingModalContainer from '../components/common/SettingModal/SettingModalContainer';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
-import { userInfoApi } from 'apis/userInfoApi';
-=======
->>>>>>> 299defa2efdb765e46304afc49ee5aa2a0705dcc
 import { useAtom } from 'jotai';
 import { userAtom } from 'stores/user';
 import Background from '../components/common/Background';
@@ -23,11 +19,7 @@ export default function Lobby() {
   const [enterCode, setEnterCode] = useState('');
 
   useEffect(() => {
-<<<<<<< HEAD
-    userInfoApi().catch((error) => {
-=======
     getMemberApi(setUser).catch((error) => {
->>>>>>> 299defa2efdb765e46304afc49ee5aa2a0705dcc
       console.log('Error fetching data:', error);
     });
   }, []);
@@ -75,7 +67,7 @@ export default function Lobby() {
         <Board boardType={'LOBBY'}>
           <div className='flex justify-center content-center'>
             <div>
-            {/* <div className='grid grid-cols-1 md:grid-cols-2 gap-12 items-center'> */}
+              {/* <div className='grid grid-cols-1 md:grid-cols-2 gap-12 items-center'> */}
               <button
                 onClick={openMakeModal}
                 className='bg-[#FF8D8D] hover:bg-red-500 me-2 xl:aspect-square xl:h-96 lg:aspect-square lg:h-80 md:aspect-[3/4] md:h-80 sm:aspect-[3/4] sm:h-60 md:m-8 sm:me-4 aspect-[3/5] h-60 rounded-xl font-medium font-kdisplay text-4xl text-white'
