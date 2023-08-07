@@ -6,16 +6,17 @@ import com.proj.withus.domain.Player;
 import com.proj.withus.domain.Room;
 import com.proj.withus.domain.dto.EnterRoomRes;
 import com.proj.withus.domain.dto.GuestLoginRes;
+import com.proj.withus.domain.dto.ModifyRoomReq;
 import com.proj.withus.domain.dto.PlayerInfoDto;
 import com.proj.withus.repository.RoomRepository;
 import com.proj.withus.service.MemberService;
 import com.proj.withus.service.RoomService;
 import com.proj.withus.util.JwtUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,10 @@ import java.util.Optional;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/members/guest")
+@RequestMapping(value = "/api/members/guest", produces = MediaType.APPLICATION_JSON_VALUE)
+@ApiResponses({
+        @ApiResponse(code = 400, message = "Bad Request", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: bad request \n}"))),
+})
 public class GuestController {
 
     private final MemberService memberService;
@@ -36,10 +40,22 @@ public class GuestController {
     private final RoomService roomService;
     private final RoomRepository roomRepository;
 
+    @ApiOperation(value = "게스트 회원가입", notes = "게스트는 회원가입을 한다. ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "게스트 가입 성공", response = GuestLoginRes.class),
+            @ApiResponse(code = 400, message = "게스트 가입 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}"))),
+    })
+    @ApiImplicitParams(
+            value = {
+                    @ApiImplicitParam(name = "room_code", value = "방 입장 코드", required = true, dataType = "int", paramType = "path"),
+                    @ApiImplicitParam(name = "nickname", value = "닉네임", required = true, dataType = "String", paramType = "body"),
+            }
+    )
     @PostMapping("/temp/{room_code}") // 게스트 회원가입 (api 설계서와 다르게 room_code를 추가함)
     public ResponseEntity<?> guestLogin(
             @PathVariable("room_code") int roomCode,
-            @ApiParam(value = "입장 방 코드", required = true) @RequestBody String nickname) {
+//            @ApiParam(value = "사용할 닉네임", required = true)
+            @RequestBody String nickname) {
         // 일단 회원 등록 먼저
         Member guest = new Member();
         guest.setNickname(nickname);
@@ -88,10 +104,17 @@ public class GuestController {
         }
     }
 
+    @ApiOperation(value = "게스트 닉네임 수정", notes = "게스트는 닉네임을 수정한다. ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "게스트 닉네임 수정 성공", response = Member.class),
+            @ApiResponse(code = 400, message = "게스트 닉네임 수정 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}"))),
+    })
+    @ApiImplicitParam(name = "nickname", value = "닉네임", required = true, dataType = "String", paramType = "body")
     @PutMapping
     public ResponseEntity<?> modifyGuestNickname(
             HttpServletRequest request,
-            @ApiParam(value = "변경할 닉네임", required = true) @RequestBody String nickname) {
+//            @ApiParam(value = "변경할 닉네임", required = true)
+            @RequestBody String nickname) {
 
         Long memberId = (Long) request.getAttribute("memberId");
         Member updatedInfo = memberService.updateMember(memberId, nickname);

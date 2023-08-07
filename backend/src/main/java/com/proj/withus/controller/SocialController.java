@@ -19,9 +19,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @ApiResponses({
-        @ApiResponse(code = 200, message = "로그인 성공"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "토큰 만료"),
+        @ApiResponse(code = 200, message = "로그인 성공", response = String.class, examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "jwtToken"))),
+        @ApiResponse(code = 400, message = "Bad Request", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: bad request \n}"))),
+        @ApiResponse(code = 401, message = "토큰 만료", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 401, \n message: token expired \n}"))),
 })
 public class SocialController {
 

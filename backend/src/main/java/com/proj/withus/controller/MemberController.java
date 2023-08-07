@@ -30,8 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/members", produces = MediaType.APPLICATION_JSON_VALUE)
 @ApiResponses({
-        @ApiResponse(code = 401, message = "토큰 만료"),
-        @ApiResponse(code = 403, message = "권한 부족")
+        @ApiResponse(code = 401, message = "토큰 만료", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 401, \n message: token expired \n}"))),
+        @ApiResponse(code = 403, message = "권한 부족", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 403, \n message: auth \n}")))
 })
 public class MemberController {
 
@@ -42,8 +42,8 @@ public class MemberController {
 
     @ApiOperation(value = "회원 정보 조회", notes = "마이페이지에서 회원 정보를 조회한다.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "조회 성공"),
-            @ApiResponse(code = 400, message = "회원이 존재하지 않음")
+            @ApiResponse(code = 200, message = "조회 성공", response = Member.class),
+            @ApiResponse(code = 400, message = "회원이 존재하지 않음", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
     })
     @GetMapping
     private ResponseEntity<?> getMemberInfo(HttpServletRequest request) {
@@ -58,13 +58,19 @@ public class MemberController {
 
     @ApiOperation(value = "회원 정보 수정", notes = "회원의 닉네임을 입력받고 수정한다. (json이 아닌 문자열 입력)")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "수정 성공"),
-            @ApiResponse(code = 400, message = "회원이 존재하지 않음")
+            @ApiResponse(code = 200, message = "수정 성공", response = Member.class),
+            @ApiResponse(code = 400, message = "회원이 존재하지 않음", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
     })
+//    @ApiImplicitParams(
+//            value = {
+//                    @ApiImplicitParam(name = "nickname", value = "수정할 닉네임", required = true, dataTypeClass = String.class, paramType = "body")
+//            }
+//    )
     @PatchMapping
     private ResponseEntity<?> updateMemberInfo(
             HttpServletRequest request,
-            @ApiParam(value = "변경할 닉네임 (json이 아닌 문자열)", required = true) @RequestBody String nickname) {
+            @ApiParam(value = "변경할 닉네임 (json이 아닌 문자열)", required = true)
+            @RequestBody String nickname) {
 
         Long memberId = (Long) request.getAttribute("memberId");
         Member updatedInfo = memberService.updateMember(memberId, nickname);
@@ -80,8 +86,8 @@ public class MemberController {
 
     @ApiOperation(value = "회원 탈퇴", notes = "회원 정보를 삭제한다.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "탈퇴 성공"),
-            @ApiResponse(code = 400, message = "탈퇴 실패")
+            @ApiResponse(code = 200, message = "탈퇴 성공", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "ok"))),
+            @ApiResponse(code = 400, message = "탈퇴 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
     })
     @DeleteMapping
     private ResponseEntity deleteMemberInfo(HttpServletRequest request) {
