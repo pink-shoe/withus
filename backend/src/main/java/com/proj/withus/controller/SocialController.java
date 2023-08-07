@@ -1,6 +1,7 @@
 package com.proj.withus.controller;
 
 import io.swagger.annotations.*;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import com.proj.withus.util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.client.RestTemplate;
 
 @Api(tags = "소셜 로그인 API", description = "소셜 로그인 기능을 처리하는 API (SocialController)")
 @RestController
@@ -75,6 +77,32 @@ public class SocialController {
         }
         System.out.println("memberId:" + memberId);
         return new ResponseEntity<>(jwtToken, HttpStatus.OK);
+    }
+
+//    @ApiOperation(value = "소셜 로그아웃", notes = "소셜 로그아웃을 진행한다.")
+//    @ResponseBody
+//    @GetMapping("/api/oauth/logout/{login_type}")
+//    public ResponseEntity<?> logout(@ApiParam(value = "소셜 이름 (kakao 혹은 google)", required = true) @PathVariable(name = "login_type") String loginType) {
+//
+//        if (loginType.equals("kakao")) {
+//            RestTemplate restTemplate = new RestTemplate();
+////            HttpHeaders headers = new HttpHeaders();
+//
+//            String kakaoLogoutEndpoint = "https://kauth.kakao.com/oauth/logout" +
+//                    "?client_id=" + "7ea82d8a610fe51bcf3eca267069b264" +
+//                    "&logout_redirect_uri=" + "http://localhost:9001/api/oauth/kakao";
+//
+//            String response = restTemplate.getForObject(kakaoLogoutEndpoint, String.class);
+//            return new ResponseEntity<String>(response, HttpStatus.OK);
+//        }
+//        return new ResponseEntity<String>("임시 response", HttpStatus.OK);
+//    }
+
+    @ApiOperation(value = "소셜 로그아웃", notes = "소셜 로그아웃을 진행한다.")
+    @ResponseBody
+    @GetMapping("/api/oauth/logout/{login_type}")
+    public ResponseEntity<?> logout(@ApiParam(value = "소셜 이름 (kakao 혹은 google)", required = true) @PathVariable(name = "login_type") String loginType) {
+        return ResponseEntity.ok("hi");
     }
 
 //    // authorization code 확인용
