@@ -12,10 +12,10 @@ import Board from '@components/common/Board';
 export default function WaitingRoom() {
   const location = useLocation();
 
-  // const currentPath = location.pathname.slice(
-  //   location.pathname.lastIndexOf('/') + 1,
-  //   location.pathname.length
-  // );
+  const currentPath = location.pathname.slice(
+    location.pathname.lastIndexOf('/') + 1,
+    location.pathname.length
+  );
   const [user, setUser] = useAtom<IUserAtom>(userAtom);
   const [roomInfo, setRoomInfo] = useAtom<IRoomAtom>(roomAtom);
   const [isHost, setIsHost] = useState<boolean>(true);
@@ -37,7 +37,7 @@ export default function WaitingRoom() {
     onChangeCameraStatus,
     onChangeMicStatus,
     sendSignal,
-  } = useOpenvidu(user.memberId, user.nickname, readyStatus, roomInfo.roomId);
+  } = useOpenvidu(user.memberId, user.nickname, readyStatus, Number(currentPath));
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
