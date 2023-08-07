@@ -1,6 +1,7 @@
 import { OpenVidu } from 'openvidu-browser';
 import { getToken } from 'apis/openviduApi';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { IPlayerAtom } from 'stores/user';
 export interface IUser {
   connectionId: string;
   userId: number;
@@ -19,22 +20,23 @@ const setConnectionId = (user: IUser, conecctionId: string) => {
 
 export const useOpenvidu = (
   userId: number,
-  gameRoomId: number,
-  isReady: boolean
+  nickname: string,
+  ready: boolean,
+  gameRoomId: number
   // ...callback: any
 ) => {
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [publisher, setPublisher] = useState<any>();
   const [session, setSession] = useState<any>();
-  const [userName, setUserName] = useState<string>('name' + userId);
-  const [readyStatus, setReadyStatus] = useState(isReady);
+  const [userName, setUserName] = useState<string>(nickname);
+  const [readyStatus, setReadyStatus] = useState(ready);
   const onChangeReadyStatus = () => {
     setReadyStatus((prev) => !prev);
   };
   useEffect(() => {
     console.log(readyStatus);
     onChangeReadyStatus();
-  }, [isReady]);
+  }, [ready]);
 
   const leaveSession = useCallback(() => {
     if (session) {
@@ -57,8 +59,8 @@ export const useOpenvidu = (
           ...prev.filter((it) => it.userId !== +data.userId),
           {
             streamManager: subscriber,
-            userId: +data.userId,
-            userName: 'name' + data.userId,
+            userId,
+            userName,
             isReady: false,
           },
         ];
@@ -155,8 +157,8 @@ export const useOpenvidu = (
             .signal({
               data: JSON.stringify({
                 message: message,
-                nickname: userName,
-                userId,
+                nickname: nickname,
+                userId: userId,
                 streamId: publisher.stream.streamId,
               }),
               type,
@@ -230,7 +232,7 @@ export const useOpenvidu = (
 
   const streamList = useMemo(
     () => [{ streamManager: publisher, userId, userName, isReady: readyStatus }, ...subscribers],
-    [publisher, subscribers, userId, userName, readyStatus]
+    [publisher, subscribers, userId, readyStatus]
   );
 
   return {
