@@ -1,16 +1,9 @@
 import { FC } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faVideo,
-  faVideoSlash,
-  faMicrophone,
-  faMicrophoneSlash,
-  faDoorOpen,
-  faGear,
-  faComment,
-  faCommentSlash,
-} from '@fortawesome/free-solid-svg-icons';
+import React from 'react';
+import { Video, VideoOff, Mic, MicOff, LogOut, Settings, MessageCircle } from 'react-feather';
+
 import SettingModalContainer from '@components/common/SettingModal/SettingModalContainer';
+import { color } from 'html2canvas/dist/types/css/types/color';
 
 interface IControlBarPresenterProps {
   type: 'WAIT' | 'GAME';
@@ -47,16 +40,19 @@ export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
     <div className='w-full flex justify-center'>
       <div className='bottom-3 flex flex-wrap gap-3 justify-center items-center'>
         <button className={` w-16 h-16 rounded-full p-3 bg-red-500`} onClick={onClickExit}>
-          <FontAwesomeIcon icon={faDoorOpen} color={'white'} fontSize={`2rem`} />
+          <LogOut className='text-white text-2xl' />
+          {/* <FontAwesomeIcon icon={LogOut} color={'white'} fontSize={`2rem`} /> */}
         </button>
         <button
           className={` w-16 h-16 rounded-full p-3 ${micStatus ? ' bg-[#D3D3D3]' : 'bg-[#FF7B7B]'}`}
           onClick={onChangeMicStatus}
         >
           {micStatus ? (
-            <FontAwesomeIcon icon={faMicrophone} color={'black'} fontSize={`2rem`} />
+            // <FontAwesomeIcon icon={Mic} color={'black'} fontSize={`2rem`} />
+            <Mic className='text-black text-2xl' />
           ) : (
-            <FontAwesomeIcon icon={faMicrophoneSlash} color={'white'} fontSize={`2rem`} />
+            // <FontAwesomeIcon icon={MicOff} color={'white'} fontSize={`2rem`} />
+            <MicOff className='text-white text-2xl' />
           )}
         </button>
         {type === 'WAIT' && (
@@ -67,9 +63,11 @@ export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
             onClick={onChangeCameraStatus}
           >
             {cameraStatus ? (
-              <FontAwesomeIcon icon={faVideo} color={'black'} fontSize={`2rem`} />
+              // <FontAwesomeIcon icon={Video} color={'black'} fontSize={`2rem`} />
+              <Video className='text-black text-2xl' />
             ) : (
-              <FontAwesomeIcon icon={faVideoSlash} color={'white'} fontSize={`2rem`} />
+              // <FontAwesomeIcon icon={VideoOff} color={'white'} fontSize={`2rem`} />
+              <VideoOff className='text-white text-2xl' />
             )}
           </button>
         )}
@@ -78,9 +76,11 @@ export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
           onClick={onChangeChatStatus}
         >
           {chatStatus ? (
-            <FontAwesomeIcon icon={faCommentSlash} color={'white'} fontSize={`2rem`} />
+            // <FontAwesomeIcon icon={faCommentSlash} color={'white'} fontSize={`2rem`} />
+            <MessageCircle className='text-white text-2xl' />
           ) : (
-            <FontAwesomeIcon icon={faComment} color={'black'} fontSize={`2rem`} />
+            // <FontAwesomeIcon icon={MessageCircle} color={'black'} fontSize={`2rem`} />
+            <MessageCircle className='text-black text-2xl' />
           )}
         </button>
         {isHost && (
@@ -92,20 +92,22 @@ export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
               onClick={onChangeGameSettingModal}
             >
               {gameSettingModal ? (
-                <FontAwesomeIcon
-                  icon={faGear}
-                  color={'white'}
-                  fontSize={`2rem`}
-                  rotation={90}
-                  className=' transition-transform'
-                />
+                // <FontAwesomeIcon
+                //   icon={Settings}
+                //   color={'white'}
+                //   fontSize={`2rem`}
+                //   rotation={90}
+                //   className=' transition-transform'
+                // />
+                <Settings className='transition-transform' color='white' rotate={90} />
               ) : (
-                <FontAwesomeIcon
-                  icon={faGear}
-                  color={'black'}
-                  fontSize={`2rem`}
-                  className=' transition-transform'
-                />
+                // <FontAwesomeIcon
+                //   icon={Settings}
+                //   color={'black'}
+                //   fontSize={`2rem`}
+                //   className=' transition-transform'
+                // />
+                <Settings className='transition-transform' color='white' rotate={90} />
               )}
             </button>
             <SettingModalContainer

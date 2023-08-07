@@ -1,7 +1,8 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { IUser } from 'hooks/useOpenvidu';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPenToSquare, faFloppyDisk } from '@fortawesome/free-regular-svg-icons';
+import { Edit, Save } from 'react-feather';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { Edit, Save } from '@fortawesome/free-regular-svg-icons';
 import { IUserAtom } from 'stores/user';
 export let localUser: IUser;
 
@@ -20,6 +21,7 @@ interface IStreamList {
   userName: string;
   isReady: boolean;
 }
+
 export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
   type,
   streamList,
@@ -60,7 +62,8 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
                     />
                     {type === 'WAIT' && !stream.isReady ? (
                       <button onClick={saveUserName}>
-                        <FontAwesomeIcon icon={faFloppyDisk} />
+                        {/* <FontAwesomeIcon icon={faFloppyDiskIconDefinition} /> */}
+                        <Save />
                       </button>
                     ) : (
                       <div></div>
@@ -77,7 +80,8 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
                     />
                     {type === 'WAIT' && !stream.isReady ? (
                       <button onClick={onChangeUpdateUserNameStatus}>
-                        <FontAwesomeIcon icon={faPenToSquare} />
+                          {/* <FontAwesomeIcon icon={faPenToSquareIconDefinition} /> */}
+                          <Edit />
                       </button>
                     ) : (
                       <div></div>

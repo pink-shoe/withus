@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMicrophoneSlash, faVideoSlash } from '@fortawesome/free-solid-svg-icons';
+import { MicOff, VideoOff } from 'react-feather';
+
 interface IVideoStreamBoxProps {
   name: string;
   speaking: boolean;
@@ -28,12 +28,18 @@ export const VideoStreamBox: FC<IVideoStreamBoxProps> = ({
         </div>
         <div>
           {!micStatus ? (
-            <FontAwesomeIcon icon={faMicrophoneSlash} color={'red'} fontSize={'16px'} />
+            // <FontAwesomeIcon
+            //   icon={faMicrophoneSlashIconDefinition}
+            //   color={'red'}
+            //   fontSize={'16px'}
+            // />
+            <MicOff className='text-red text-2xl' />
           ) : (
             <></>
           )}
           {!videoStatus ? (
-            <FontAwesomeIcon icon={faVideoSlash} color={'red'} fontSize={'16px'} />
+            // <FontAwesomeIcon icon={faVideoSlashIconDefinition} color={'red'} fontSize={'16px'} />
+            <VideoOff className='text-red text-2xl' />
           ) : (
             <></>
           )}

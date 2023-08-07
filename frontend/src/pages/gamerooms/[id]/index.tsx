@@ -113,7 +113,7 @@ export default function GameRoom() {
       <div className=' w-1/2 h-screen flex flex-col justify-between items-center'>
         <header className=' h-fit flex items-center gap-2 '>
           <div className=' text-white font-extrabold text-6xl text-center py-3'>[] with us</div>
-          <CountdownCircleTimer
+          {/* <CountdownCircleTimer
             size={80}
             isPlaying={isPlaying}
             duration={count}
@@ -134,7 +134,7 @@ export default function GameRoom() {
             {({ remainingTime }) => (
               <div className=' text-white text-3xl font-bold'>{remainingTime}</div>
             )}
-          </CountdownCircleTimer>
+          </CountdownCircleTimer> */}
         </header>
         <div className='aspect-[4/3] h-auto max-w-full'>
           {publisher && (

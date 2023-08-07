@@ -1,5 +1,6 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperPlane } from '@fortawesome/free-regular-svg-icons';
+import React from 'react';
+import { Send } from 'react-feather';
+
 import { RefObject } from 'react';
 interface IChatPresenterProps {
   chatStatus: boolean;
@@ -10,6 +11,7 @@ interface IChatPresenterProps {
   onChangeMessage: (e: any) => void;
   onClickSendMsg: () => void;
 }
+
 export default function ChatPresenter({
   chatStatus,
   messageList,
@@ -72,7 +74,8 @@ export default function ChatPresenter({
               className='whitespace-nowrap bg- rounded-md bg-[#FEDCE3]  p-3'
               onClick={onClickSendMsg}
             >
-              <FontAwesomeIcon icon={faPaperPlane} color={'#FF8DA3'} fontSize={'28px'} />
+              {/* <FontAwesomeIcon icon={faPaperIconDefinition} color={'#FF8DA3'} fontSize={'28px'} /> */}
+              <Send className='text-[#FF8DA3] text-2xl' />
             </button>
           </div>
         </div>
