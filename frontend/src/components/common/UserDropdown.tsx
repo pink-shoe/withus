@@ -17,7 +17,6 @@ export default function UserDropdown({children}: IUserDropdownProps) {
       </div>
       <div>
       {openDropdown && children}
-
       </div>
     </div>
   );
