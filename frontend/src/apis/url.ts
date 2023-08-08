@@ -17,7 +17,6 @@ export const REDIRECT_URI_NAVER: string =
 
 export const OPENVIDU_SERVER_URL =
   // 'http://localhost:5000';
-  (DEV ? 'http://localhost' : 'http://connectwithus.site') + DEV
-    ? PORT_OPENVIDU
-    : PORT_OPENVIDU_SERVER;
+  (DEV ? 'http://localhost' : 'http://connectwithus.site') +
+  (DEV ? PORT_OPENVIDU : PORT_OPENVIDU_SERVER);
 export const OPENVIDU_SERVER_SECRET = DEV ? 'MY_SECRET' : 'WITHUS';
