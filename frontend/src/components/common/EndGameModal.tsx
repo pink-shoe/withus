@@ -5,7 +5,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Modal from './Modal';
 
-
 export default function EndGameModal() {
   const [modalStatus, setModalStatus] = useState(false);
   const token = localStorage.getItem('token');
@@ -40,11 +39,13 @@ export default function EndGameModal() {
       >
         게임 종료
       </button>
-      <Modal openModal={modalStatus} closeModal={closeModal} isSettingModal={true}>
-        <div className='text-[#514148] font-medium text-3xl my-10 text-center me-3 font-kdisplay'>인원 부족으로 게임을 종료합니다😥</div>
+      <Modal openModal={modalStatus} closeModal={closeModal} isSettingModal={false}>
+        <div className='text-[#514148] font-medium text-3xl my-16 text-center me-3 font-kdisplay'>
+          <span className='text-red-500'>인원 부족</span>으로 게임을 종료합니다😥
+        </div>
         {/* 로그인이 되어있는 유저라면 로비, 게스트라면 로그인 페이지로 이동 */}
         <div className='flex justify-center'>
-          <button onClick={onClickEndGame} className='text-[#514148] font-medium text-4xl text-center mt-5 font-kdisplay bg-[#FA8D8D] w-40 pt-2 h-16 rounded-lg'>확인</button>
+          <button onClick={onClickEndGame} className='text-white font-medium text-4xl text-center font-kdisplay bg-[#FA8D8D] w-40 pt-2 h-16 rounded-lg hover:bg-red-500'>확인</button>
         </div>
       </Modal>
     </div>
