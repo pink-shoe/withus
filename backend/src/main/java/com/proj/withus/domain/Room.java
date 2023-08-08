@@ -2,6 +2,7 @@ package com.proj.withus.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -38,8 +39,9 @@ public class Room {
     private int round;
 
     @JsonProperty("roomTime")
-    @ColumnDefault("5")
-    private int time;
+//    @ColumnDefault("5")
+    @Builder.Default
+    private int time = 5;
 
     @ColumnDefault("false")
     private boolean start;
