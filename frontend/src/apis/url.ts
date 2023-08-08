@@ -3,7 +3,7 @@ const DEV = process.env.NODE_ENV === 'development' ? true : false;
 const PORT_WEB = ':3000';
 const PORT_SERVER = ':9001';
 const PORT_OPENVIDU = ':4443';
-const PORT_OPENVIDU_SERVER = ':5000';
+const PORT_OPENVIDU_SERVER = ':8443';
 
 const URL_LOCAL = 'http://localhost';
 const URL_RELEASE = 'http://connectwithus.site';
@@ -17,5 +17,6 @@ export const REDIRECT_URI_NAVER: string =
 
 export const OPENVIDU_SERVER_URL =
   // 'http://localhost:5000';
-  (DEV ? 'http://localhost' : 'http://connectwithus.site') + PORT_OPENVIDU_SERVER;
+  (DEV ? 'http://localhost' : 'http://connectwithus.site') +
+  (DEV ? PORT_OPENVIDU : PORT_OPENVIDU_SERVER);
 export const OPENVIDU_SERVER_SECRET = DEV ? 'MY_SECRET' : 'WITHUS';

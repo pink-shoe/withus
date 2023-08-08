@@ -1,18 +1,14 @@
-import { Fragment } from "react";
-import UserHeader from "./UserHeader";
+import { Fragment } from 'react';
+import UserHeader from './UserHeader';
 
 interface IBackgroundProps {
   // isLobbyDropdown true는 로비 항목이 없고, false는 로비 항목이 있음
   isLobbyDropdown?: any;
-  isLobbyPage: boolean;
+  isLobbyPage?: boolean;
   children: React.ReactNode;
 }
 
-export default function Background({
-  isLobbyDropdown,
-  isLobbyPage,
-  children,
-}: IBackgroundProps) {
+export default function Background({isLobbyDropdown, isLobbyPage, children}: IBackgroundProps) {
   return (
     <Fragment>
       {isLobbyPage ? (
