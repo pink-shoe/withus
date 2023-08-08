@@ -11,7 +11,7 @@ function createSession(roomId: string): Promise<any> {
     var data = JSON.stringify({ customSessionId: roomId });
     console.log('OPENVIDU_SERVER_SECRET', OPENVIDU_SERVER_SECRET);
     axios
-      .post(OPENVIDU_SERVER_URL + '/api/sessions', data, {
+      .post(OPENVIDU_SERVER_URL + '/openvidu/api/sessions', data, {
         headers: {
           Authorization: 'Basic ' + btoa('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
           'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ function createToken(roomId: string): Promise<any> {
   return new Promise((resolve, reject) => {
     var data = {};
     axios
-      .post(OPENVIDU_SERVER_URL + '/api/sessions/' + roomId + '/connections', data, {
+      .post(OPENVIDU_SERVER_URL + '/openvidu/api/sessions/' + roomId + '/connection', data, {
         headers: {
           Authorization: 'Basic ' + btoa('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
           'Content-Type': 'application/json',
