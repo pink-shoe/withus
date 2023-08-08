@@ -11,16 +11,18 @@ import java.util.Optional;
 
 public interface RoomService {
 
+    public Optional<Room> getRoomByCode(int roomCode);
     public Room createRoom(CreateRoomReq createRoomReq);
     public Optional<Room> enterRoom(int roomCode, Long memberId);
     public void leaveRoom(Long roomId, Long memberId);
     public int modifyRoom(ModifyRoomReq req, Long roomId);
+    public Optional<Room> getRoomInfo(Long roomId);
     public int modifyNickname(Long id, String nickname);
     //    public Long getHostId(Long roomId);
     public List<Player> getPlayerList(Long roomId);
     public int createCode(); // Impl에서만 따로 private으로 관리 고려해 볼 것
     public Player getPlayerInRoom(Long memberId, Long roomId);
-    public int modifyReady(Long playerId, boolean readyStatus);
+    public int modifyReady(Long playerId);
     public List<Player> getReadyPlayers(Long roomId);
     public boolean getReadyStatus(Long playerId);
     public boolean getStartStatus(Long roomId);

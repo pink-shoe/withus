@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import com.proj.withus.domain.Member;
 import com.proj.withus.domain.Player;
+import com.proj.withus.domain.dto.GetRoomInfoRes;
+import com.proj.withus.domain.dto.PlayerInfo;
 import com.proj.withus.domain.dto.PlayerInfoDto;
 import com.proj.withus.repository.RoomRepository;
 import org.springframework.http.HttpStatus;
@@ -48,7 +50,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/rooms", produces = MediaType.APPLICATION_JSON_VALUE)
 @ApiResponses({
-    @ApiResponse(code = 401, message = "토큰 만료")
+    @ApiResponse(code = 401, message = "토큰 만료", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 401, \n message: token expired \n}")))
 })
 public class RoomController {
 
@@ -58,10 +60,60 @@ public class RoomController {
 
     private final MemberService memberService;
 
+    @ApiOperation(value = "방 정보 조회", notes = "방 정보와 플레이어 정보를 조회한다.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "정보 조회 성공", response = GetRoomInfoRes.class),
+        @ApiResponse(code = 400, message = "정보 조회 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}"))),
+        @ApiResponse(code = 403, message = "권한 부족", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 403, \n message: auth problem \n}")))
+    })
+    @ApiImplicitParams(value = {
+        @ApiImplicitParam(name = "room_code", value = "방 입장 코드", required = true, dataType = "int", paramType = "path")
+    })
+    @GetMapping("/info/{room_code}")
+    public ResponseEntity<?> getRoomInfo(
+        HttpServletRequest request,
+        @PathVariable("room_code") int roomCode) {
+
+        Long memberId;
+        String token = (String) request.getAttribute("token");
+        try {
+            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
+            memberId = socialMemberInfo.getId();
+        } catch (Exception e) {
+            return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
+        }
+
+        Optional<Room> room = roomService.getRoomByCode(roomCode);
+        if (!room.isPresent()) {
+            return new ResponseEntity<String>("존재하지 않는 방입니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        Long roomId = room.get().getId();
+
+        List<Player> players = roomService.getPlayerList(roomId);
+        List<PlayerInfo> playerInfos = new ArrayList<>();
+        for (Player player : players) {
+            PlayerInfo playerInfo = PlayerInfo.builder()
+                .playerId(player.getId())
+                .nickname(memberService.getMemberInfo(player.getId()).getNickname())
+                .teamType(player.getTeamType())
+                .ready(player.isReady())
+                .build();
+            playerInfos.add(playerInfo);
+        }
+
+        GetRoomInfoRes getRoomInfoRes = GetRoomInfoRes.builder()
+            .room(room)
+            .playerInfos(playerInfos)
+            .hostId(getHostId(roomId))
+            .build();
+        return new ResponseEntity<GetRoomInfoRes>(getRoomInfoRes, HttpStatus.OK);
+    }
+
     @ApiOperation(value = "방 생성", notes = "방장은 방을 생성한다.")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "방 만들기 성공"),
-        @ApiResponse(code = 400, message = "방 만들기 실패")
+        @ApiResponse(code = 201, message = "방 만들기 성공", response = Integer.class, examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "479053"))),
+        @ApiResponse(code = 400, message = "방 만들기 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
     })
     @ApiImplicitParam(name = "createRoomReq", value = "CreateRoomReq object", dataTypeClass = CreateRoomReq.class, paramType = "body")
     @PostMapping
@@ -78,26 +130,31 @@ public class RoomController {
         //            return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
         //        }
         Room newRoom = roomService.createRoom(createRoomReq);
-        return new ResponseEntity<Room>(newRoom, HttpStatus.CREATED);
+        return new ResponseEntity<Integer>(newRoom.getCode(), HttpStatus.CREATED);
+        // return new ResponseEntity<Room>(newRoom, HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "방 입장", notes = "참가자는 방에 참여한다.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "방 입장 성공"),
-        @ApiResponse(code = 400, message = "방 입장 실패"),
-        @ApiResponse(code = 403, message = "권한 부족")
+        @ApiResponse(code = 200, message = "방 입장 성공", response = String.class, examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "ok"))),
+        @ApiResponse(code = 400, message = "방 입장 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}"))),
+        @ApiResponse(code = 403, message = "권한 부족", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 403, \n message: auth problem \n}")))
     })
-    @GetMapping("/{room_code}/{member_id}")
+    @ApiImplicitParams(
+        value = {
+            @ApiImplicitParam(name = "room_code", value = "방 코드", required = true, dataType = "int", paramType = "path"),
+        }
+    )
+    @GetMapping("/{room_code}")
     public ResponseEntity<?> enterRoom(
         HttpServletRequest request,
-        @PathVariable("room_code") int roomCode,
-        @PathVariable("member_id") Long memberId) {
-        Long id = -1L;
+        @PathVariable("room_code") int roomCode) {
+        Long memberId = -1L;
         String loginType = "";
         String token = (String) request.getAttribute("token");
         try {
             SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
-            id = socialMemberInfo.getId();
+            memberId = socialMemberInfo.getId();
             loginType = socialMemberInfo.getLoginType();
         } catch (Exception e) {
             return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
@@ -107,46 +164,47 @@ public class RoomController {
         // Optional<>은 isPresent()로 확인!
         if (!room.isPresent()) {
             return new ResponseEntity<String>("존재하지 않는 방입니다.", HttpStatus.BAD_REQUEST);
-        } else {
-            EnterRoomRes enterRoomRes = new EnterRoomRes();
-            enterRoomRes.setRoomId(room.get().getId());
-            enterRoomRes.setRoomType(room.get().getType());
-            enterRoomRes.setCode(String.valueOf(room.get().getCode()));
-            enterRoomRes.setHostId(getHostId(room.get().getId()));
-
-            List<Player> playerList = roomService.getPlayerList(room.get().getId());
-            List<PlayerInfoDto> playerInfos = new ArrayList<>();
-            for (Player player : playerList) {
-                PlayerInfoDto playerInfo = new PlayerInfoDto();
-                playerInfo.setMemberId(player.getId());
-                playerInfo.setNickname(memberService.getMemberInfo(player.getId()).getNickname());
-                playerInfo.setReady(roomService.getReadyStatus(player.getId()));
-                // PlayerInfoDto.builder()
-                // .memberId(player.getId())
-                // .nickname(memberService.getMemberInfo(player.getId()).getNickname())
-                // .ready(roomService.getReadyStatus(player.getId()))
-                // .build();
-
-                playerInfos.add(playerInfo);
-            }
-            // PlayerInfoDto playerInfo = PlayerInfoDto.builder()
-            //     .memberId().build();
-            enterRoomRes.setPlayers(playerInfos);
-            return new ResponseEntity<EnterRoomRes>(enterRoomRes, HttpStatus.OK);
         }
+        // else {
+            // EnterRoomRes enterRoomRes = new EnterRoomRes();
+            // enterRoomRes.setRoomId(room.get().getId());
+            // enterRoomRes.setRoomType(room.get().getType());
+            // enterRoomRes.setCode(String.valueOf(room.get().getCode()));
+            // enterRoomRes.setHostId(getHostId(room.get().getId()));
+            //
+            // List<Player> playerList = roomService.getPlayerList(room.get().getId());
+            // List<PlayerInfoDto> playerInfos = new ArrayList<>();
+            // for (Player player : playerList) {
+            //     PlayerInfoDto playerInfo = new PlayerInfoDto();
+            //     playerInfo.setMemberId(player.getId());
+            //     playerInfo.setNickname(memberService.getMemberInfo(player.getId()).getNickname());
+            //     playerInfo.setReady(roomService.getReadyStatus(player.getId()));
+            //
+            //     playerInfos.add(playerInfo);
+            // }
+            // enterRoomRes.setPlayers(playerInfos);
+            // return new ResponseEntity<EnterRoomRes>(enterRoomRes, HttpStatus.OK);
+            // return new ResponseEntity<Integer>(roomCode, HttpStatus.OK);
 
+        // }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation(value = "방 나가기", notes = "참가자는 방에서 나간다.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "방 나가기 성공"),
-        @ApiResponse(code = 400, message = "방 나가기 실패")
+        @ApiResponse(code = 200, message = "방 나가기 성공", response = String.class, examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "방 나가기 성공"))),
+        @ApiResponse(code = 400, message = "방 나가기 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
     })
-    @DeleteMapping("/{room_id}/{member_id}")
+    @ApiImplicitParams(
+        value = {
+            @ApiImplicitParam(name = "room_id", value = "참여한 방 번호", required = true, dataType = "Long", paramType = "path"),
+            // @ApiImplicitParam(name = "member_id", value = "회원 id", required = true, dataType = "Long", paramType = "path")
+        }
+    )
+    @DeleteMapping("/{room_id}")
     public ResponseEntity<?> leaveRoom(
         HttpServletRequest request,
-        @PathVariable("room_id") Long roomId,
-        @PathVariable("member_id") Long pathMemberId) {
+        @PathVariable("room_id") Long roomId) {
 
         String token = (String) request.getAttribute("token");
         SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
@@ -164,11 +222,16 @@ public class RoomController {
      */
     @ApiOperation(value = "방 옵션 수정", notes = "방장은 방 옵션을 수정한다.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "방 옵션 수정 성공"),
-        @ApiResponse(code = 400, message = "방 옵션 수정 실패"),
-        @ApiResponse(code = 403, message = "권한 부족")
+        @ApiResponse(code = 200, message = "방 옵션 수정 성공", response = Integer.class, examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "479053"))),
+        @ApiResponse(code = 400, message = "방 옵션 수정 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}"))),
+        @ApiResponse(code = 403, message = "권한 부족", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 403, \n message: auth problem \n}")))
     })
-    @ApiImplicitParam(name = "modifyRoomReq", value = "ModifyRoomReq object", dataTypeClass = ModifyRoomReq.class, paramType = "body")
+    @ApiImplicitParams(
+        value = {
+            @ApiImplicitParam(name = "room_id", value = "참여한 방 번호", required = true, dataType = "Long", paramType = "path"),
+            @ApiImplicitParam(name = "modifyRoomReq", value = "ModifyRoomReq object", dataTypeClass = ModifyRoomReq.class, paramType = "body")
+        }
+    )
     @PutMapping("/{room_id}")
     public ResponseEntity<?> modifyRoom(
         HttpServletRequest request,
@@ -181,14 +244,14 @@ public class RoomController {
             SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
             System.out.println("-------------------------------");
             Long id = socialMemberInfo.getId();
-            System.out.println("memberId:~~ ");
-            System.out.println(id);
-            log.info("memberId:~~ ", id);
+            // System.out.println("memberId:~~ ");
+            // System.out.println(id);
+            // log.info("memberId:~~ ", id);
             // 방장 체크 // 이렇게 깊은건 어떻게 처리하는게 깔끔한지 알아보기 (depth 3 이상)
             Long hostId = getHostId(roomId);
-            log.info("hostId:~~ ", hostId);
-            System.out.println(hostId);
-            System.out.println("hostId");
+            // log.info("hostId:~~ ", hostId);
+            // System.out.println(hostId);
+            // System.out.println("hostId");
 
             if (hostId != id) {
                 return new ResponseEntity<String>("방장이 아닙니다.", HttpStatus.FORBIDDEN);
@@ -204,19 +267,25 @@ public class RoomController {
             return new ResponseEntity<String>("토큰이 만료되었습니다.", HttpStatus.UNAUTHORIZED);
         }
         roomService.modifyRoom(modifyRoomReq, roomId); // 반환 받아도 됨
-        return new ResponseEntity<String>("성공", HttpStatus.OK);
+        return new ResponseEntity<Integer>(roomService.getRoomInfo(roomId).get().getCode(), HttpStatus.OK);
+        // return new ResponseEntity<String>("성공", HttpStatus.OK);
     }
 
     @ApiOperation(value = "유저 닉네임 수정", notes = "방에서 유저는 닉네임을 변경한다.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "닉네임 수정 성공"),
-        @ApiResponse(code = 400, message = "닉네임 수정 실패"),
-        @ApiResponse(code = 403, message = "권한 부족")
+        @ApiResponse(code = 200, message = "닉네임 수정 성공", response = String.class, examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "닉네임이 수정되었습니다."))),
+        @ApiResponse(code = 400, message = "닉네임 수정 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}"))),
+        @ApiResponse(code = 403, message = "권한 부족", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 403, \n message: auth problem \n}")))
     })
+    @ApiImplicitParams(
+        value = {
+            @ApiImplicitParam(name = "nickname", value = "수정할 닉네임", required = true, dataType = "String", paramType = "body")
+        }
+    )
     @PutMapping("/members/social")
     public ResponseEntity<?> modifyNickname(
         HttpServletRequest request,
-        @RequestBody() String nickname) {
+        @RequestBody String nickname) {
         log.info("nickname", nickname);
         Long id = -1L;
         String token = (String) request.getAttribute("token");
@@ -243,36 +312,18 @@ public class RoomController {
 
     @ApiOperation(value = "게임 준비 및 취소", notes = "사용자는 게임 준비 및 취소를 할 수 있다.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "준비 상태 갱신 성공", examples = @Example(
-            value = @ExampleProperty(
-                mediaType = "application/json",
-                value = "[\n"
-                    + "  {\n"
-                    + "    \"id\": 1,\n"
-                    + "    \"teamType\": 0,\n"
-                    + "    \"ready\": false\n"
-                    + "  }\n"
-                    + "]"
-            )
-        )),
-        @ApiResponse(code = 400, message = "준비 상태 갱신 실패")
+        @ApiResponse(code = 200, message = "준비 상태 갱신 성공", response = Integer.class, examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "479053"))),
+        @ApiResponse(code = 400, message = "준비 상태 갱신 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
     })
     @ApiImplicitParams(
         value = {
-            @ApiImplicitParam(name = "is_ready", value = "준비 완료: ready, 준비 취소: cancel", required = true, dataType = "string", paramType = "path",
-                example = "ready"),
             @ApiImplicitParam(name = "room_id", value = "참여한 방 번호", required = true, dataType = "Long", paramType = "path", example = "1")
         }
     )
-    @GetMapping("/ready/{is_ready}/{room_id}")
+    @GetMapping("/ready/{room_id}")
     public ResponseEntity<?> setReady(
         HttpServletRequest request,
-        @PathVariable("is_ready") String isReady,
         @PathVariable("room_id") Long roomId) {
-
-        if (isReady.trim().equals("")) {
-            return new ResponseEntity<String>("준비 상태가 설정되지 않았습니다.", HttpStatus.BAD_REQUEST);
-        }
 
         SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
         Long memberId = socialMemberInfo.getId();
@@ -282,34 +333,22 @@ public class RoomController {
             return new ResponseEntity<String>("참가자가 아닙니다.", HttpStatus.UNAUTHORIZED);
         }
 
+
         try {
-            if (isReady.equals("ready")) {
-                roomService.modifyReady(player.getId(), true);
-            } else if (isReady.equals("cancel")) {
-                roomService.modifyReady(player.getId(), false);
-            }
+            roomService.modifyReady(player.getId());
         } catch (Exception e) {
             return new ResponseEntity<String>("게임 준비에 실패했습니다.", HttpStatus.BAD_REQUEST);
         }
 
         List<Player> readyPlayer = roomService.getReadyPlayers(roomId);
-        return new ResponseEntity<List<Player>>(readyPlayer, HttpStatus.OK);
+        // return new ResponseEntity<List<Player>>(readyPlayer, HttpStatus.OK);
+        return new ResponseEntity<Integer>(roomService.getRoomInfo(roomId).get().getCode(), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "게임 시작 여부", notes = "게임 시작 여부를 알려준다.")
+    @ApiOperation(value = "게임 시작 가능 여부", notes = "게임 시작 여부를 알려준다.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "게임 시작 성공", examples = @Example(
-            value = @ExampleProperty(
-                mediaType = "application/json",
-                value = "[\n"
-                    + "  {\n"
-                    + "    \"id\": 1,\n"
-                    + "    \"teamType\": 0,\n"
-                    + "    \"ready\": true\n"
-                    + "  }\n"
-                    + "]"
-            ))),
-        @ApiResponse(code = 400, message = "게임 시작 실패")
+        @ApiResponse(code = 200, message = "게임 시작 성공", response = Boolean.class, examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "true"))),
+        @ApiResponse(code = 400, message = "게임 시작 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
     })
     @ApiImplicitParams(
         value = {
@@ -333,7 +372,8 @@ public class RoomController {
             return new ResponseEntity<String>("준비되지 않은 플레이어가 있습니다.", HttpStatus.BAD_REQUEST);
         }
         List<Player> players = roomService.getPlayerList(roomId);
-        return new ResponseEntity<List<Player>>(players, HttpStatus.OK);
+        // return new ResponseEntity<List<Player>>(players, HttpStatus.OK);
+        return new ResponseEntity<Boolean>(true, HttpStatus.OK);
     }
 
     // 트랜잭션 전파 문제 생겨서 일단 Service -> Controller에서 처리

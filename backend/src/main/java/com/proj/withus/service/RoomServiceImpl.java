@@ -26,6 +26,10 @@ public class RoomServiceImpl implements RoomService {
     private final MemberRepository memberRepository;
     private final PlayerRepository playerRepository;
 
+    public Optional<Room> getRoomByCode(int roomCode) {
+        return roomRepository.findRoomByCode(roomCode);
+    }
+
     public Room createRoom(CreateRoomReq createRoomReq) {
         System.out.println(createRoomReq.getId());
 
@@ -101,6 +105,10 @@ public class RoomServiceImpl implements RoomService {
         return resultVal;
     }
 
+    public Optional<Room> getRoomInfo(Long roomId) {
+        return roomRepository.findRoomById(roomId);
+    }
+
     public int modifyNickname(Long id, String nickname) {
         return memberRepository.updateNickname(id, nickname);
     }
@@ -149,8 +157,8 @@ public class RoomServiceImpl implements RoomService {
     set ready = readyStatus
     where player_id = playerId
      */
-    public int modifyReady(Long playerId, boolean readyStatus) {
-        return playerRepository.updateReady(playerId, readyStatus);
+    public int modifyReady(Long playerId) {
+        return playerRepository.updateReady(playerId);
     }
 
     /*
