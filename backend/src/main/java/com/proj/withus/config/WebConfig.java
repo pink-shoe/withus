@@ -17,7 +17,9 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new ValidTokenInterceptor())
                 .addPathPatterns("/**")
                 .excludePathPatterns("/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs", "/swagger-ui/index.html")
-                .excludePathPatterns("/api/oauth/**"); // real pattern
+                .excludePathPatterns("/api/oauth/**")
+                .excludePathPatterns("/api/members/guest/temp"); // /{room_code} 추가해야함
+
 //                .excludePathPatterns("/kakao/login") // practice pattern
 //                .excludePathPatterns("/auth/google/callback")
     }

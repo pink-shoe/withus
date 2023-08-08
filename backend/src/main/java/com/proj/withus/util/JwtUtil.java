@@ -34,6 +34,7 @@ public class JwtUtil {
                 .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
+        System.out.println("tempJwtToken");
         System.out.println(tempJwtToken);
 
         return tempJwtToken;
@@ -64,7 +65,8 @@ public class JwtUtil {
 
     public SocialMemberInfo extractMemberId(String jwtToken) {
         System.out.println("jwtToken: " + jwtToken); //
-        jwtToken = jwtToken.substring(7);
+//        jwtToken = jwtToken.substring(7);
+        jwtToken = jwtToken.replace("Bearer ", "");
         System.out.println("jwtToken: " + jwtToken); //
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET_KEY)
@@ -75,6 +77,8 @@ public class JwtUtil {
         memberInfoByJwt.setId(Long.parseLong(claims.get("memberId", String.class)));
         memberInfoByJwt.setLoginType(claims.get("loginType", String.class));
 
+        System.out.println("memberInfoByJwt");
+        System.out.println(memberInfoByJwt);
         return memberInfoByJwt;
     }
 }

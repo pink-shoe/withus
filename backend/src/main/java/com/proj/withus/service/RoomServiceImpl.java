@@ -10,43 +10,59 @@ import com.proj.withus.repository.PlayerRepository;
 import com.proj.withus.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
+@Transactional
 public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
     private final MemberRepository memberRepository;
     private final PlayerRepository playerRepository;
 
+    public Optional<Room> getRoomByCode(int roomCode) {
+        return roomRepository.findRoomByCode(roomCode);
+    }
+
     public Room createRoom(CreateRoomReq createRoomReq) {
         System.out.println(createRoomReq.getId());
 
         Member member = memberRepository.findById(createRoomReq.getId())
-                        .orElseThrow(() -> new IllegalArgumentException("invalid" + createRoomReq.getId()));
+            .orElseThrow(() -> new IllegalArgumentException("invalid" + createRoomReq.getId()));
 
+        // Room에 접근
         Room room = new Room();
         room.setMember(member);
         room.setCode(createCode());
         room.setType(createRoomReq.getRoomType());
         room.setRound(createRoomReq.getRoomRound());
-        return roomRepository.save(room);
+        Room savedRoom = roomRepository.save(room); // 영속성 전이 문제로, 일단 저장 후 Player에서 set Room
+
+        // Player에 접근
+        Player player = new Player();
+        player.setId(createRoomReq.getId());
+        player.setMember(memberRepository.findById(createRoomReq.getId()).orElseThrow(() -> new IllegalArgumentException("Member not found")));
+        player.setRoom(savedRoom);
+        playerRepository.save(player);
+
+        return savedRoom;
     }
 
-    public Optional<Room> enterRoom(Long roomId, Long memberId) {
+    public Optional<Room> enterRoom(int roomCode, Long memberId) {
         // 해당 방에 참가자 등록하기 (Player 테이블) // team type 일단 패스
         Player player = new Player();
-        player.setRoom(roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("Room not found")));
+        player.setId(memberId);
+        player.setRoom(roomRepository.findRoomByCode(roomCode).orElseThrow(() -> new IllegalArgumentException("Room not found")));
         player.setMember(memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Member not found")));
         Player savedPlayer = playerRepository.save(player); // 반환을 지정해줘도, 주지 않아도 됨 // 예외 처리를 위해서는 받는게 좋지 않을까
 
-        return roomRepository.findById(roomId);
+        return roomRepository.findRoomByCode(roomCode);
     }
 
     /*
@@ -65,15 +81,17 @@ public class RoomServiceImpl implements RoomService {
     해당 방에 대한 정보?
      */
     public void leaveRoom(Long roomId, Long memberId) {
-        playerRepository.deleteByRoomId(roomId);
+        Long hostId = roomRepository.findHostIdByRoomId(roomId);
 
-        /*
-        [방장일 경우 방 삭제하는 로직]
-         Room을 검색해서, memberId(방장)에 해당하는 Room이 있으면 삭제
-        delete from room
-        where id = memberId
-         */
-        roomRepository.deleteById(memberId);
+        if (hostId == memberId) {
+            System.out.println("방장임!!!!!!!!!!!!!!!!!");
+            playerRepository.deleteByRoomId(roomId);
+            roomRepository.deleteById(roomId);
+            return;
+        }
+
+        System.out.println("방장 아님!!!!!!!!!!!!!!");
+        playerRepository.deletePlayerByMemberId(memberId);
     }
 
     /*
@@ -81,9 +99,14 @@ public class RoomServiceImpl implements RoomService {
     set type = roomType, code = roomCode, round = roomRound // roomCode는 없음
     where room_id = roomId
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     public int modifyRoom(ModifyRoomReq req, Long roomId) {
         int resultVal = roomRepository.updateRoom(req, roomId);
         return resultVal;
+    }
+
+    public Optional<Room> getRoomInfo(Long roomId) {
+        return roomRepository.findRoomById(roomId);
     }
 
     public int modifyNickname(Long id, String nickname) {
@@ -95,10 +118,12 @@ public class RoomServiceImpl implements RoomService {
     from room
     where room_id = roomId
     */
-    public Long getHostId(Long roomId) {
-        Long hostId = roomRepository.findHostIdByRoomId(roomId);
-        return hostId;
-    }
+    //    public Long getHostId(Long roomId) {
+    //        Long hostId = roomRepository.findHostIdByRoomId(roomId);
+    //        System.out.println("hostId~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    //        System.out.println(hostId);
+    //        return hostId;
+    //    }
 
     /*
     select *
@@ -117,5 +142,52 @@ public class RoomServiceImpl implements RoomService {
         return randomCode;
     }
 
+    /*
+    select *
+    from player
+    where room_id = roomId
+    and member_id = memberId
+     */
+    public Player getPlayerInRoom(Long memberId, Long roomId) {
+        return playerRepository.findPlayerByMemberIdAndRoomId(memberId, roomId);
+    }
 
+    /*
+    update player
+    set ready = readyStatus
+    where player_id = playerId
+     */
+    public int modifyReady(Long playerId) {
+        return playerRepository.updateReady(playerId);
+    }
+
+    /*
+    select *
+    from player
+    where room_id = roomId
+    and ready = true
+
+    update room
+    set start = startStatus
+    where room_id = roomId
+     */
+    public List<Player> getReadyPlayers(Long roomId) {
+        List<Long> readyMember = playerRepository.findReadyPlayersByRoomId(roomId);
+        List<Player> totalMember = playerRepository.findAllByRoomId(roomId);
+        if (readyMember.size() == totalMember.size()) {
+            roomRepository.updateStart(roomId, true);
+        } else {
+            roomRepository.updateStart(roomId, false);
+        }
+        // return readyMember;
+        return totalMember;
+    }
+
+    public boolean getReadyStatus(Long playerId) {
+        return playerRepository.findPlayerById(playerId);
+    }
+
+    public boolean getStartStatus(Long roomId) {
+        return roomRepository.findStartStatusByRoomId(roomId);
+    }
 }

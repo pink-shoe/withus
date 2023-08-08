@@ -16,7 +16,7 @@ public class ModifyRoomReq {
     private final String roomType;
 
     @ApiModelProperty(value = "방 입장 코드", required = true)
-    private final String roomCode;
+    private final int roomCode;
 
     @ApiModelProperty(value = "방 입장 링크", required = true)
     private final String roomLink;

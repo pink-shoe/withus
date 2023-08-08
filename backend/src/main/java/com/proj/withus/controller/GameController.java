@@ -36,13 +36,15 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Api(tags = "게임 진행 api")
+import javax.servlet.http.HttpServletRequest;
+
+@Api(tags = "게임 진행 API", description = "게임 진행 관련 기능을 처리하는 API (GameController)")
 @RestController
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/games", produces = MediaType.APPLICATION_JSON_VALUE)
 @ApiResponses({
-        @ApiResponse(code = 401, message = "토큰 만료")
+        @ApiResponse(code = 401, message = "토큰 만료", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 401, \n message: token expired \n}")))
 })
 public class GameController {
 
@@ -53,8 +55,11 @@ public class GameController {
 
     @ApiOperation(value = "게임 정보 조회", notes = "게임 시작 후 게임 기본 정보를 불러온다.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "조회 성공"),
-            @ApiResponse(code = 400, message = "게임 정보가 존재하지 않음")
+            @ApiResponse(code = 200, message = "조회 성공", response = GetGameInfoRes.class),
+            @ApiResponse(code = 400, message = "게임 정보가 존재하지 않음", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
+    })
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(name = "room_id", value = "방 id", required = true, dataType = "Long", paramType = "path")
     })
     @GetMapping("/{room_id}")
     public ResponseEntity<?> getGameInfo(
@@ -85,8 +90,8 @@ public class GameController {
 
     @ApiOperation(value = "사진 캡처 요청", notes = "라운드 종료 후 캡처한 사진을 불러와 AI 서버에 전송한다.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "AI 서버에 사진 전송 성공"),
-            @ApiResponse(code = 400, message = "AI 서버에 사진 전송 실패")
+            @ApiResponse(code = 200, message = "AI 서버에 사진 전송 성공", response = String.class),
+            @ApiResponse(code = 400, message = "AI 서버에 사진 전송 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
     })
 
     @ApiImplicitParam(name = "getCaptureImageReq", value = "GetCaptureImageReq object", dataTypeClass = GetCaptureImageReq.class, paramType = "body")
@@ -103,8 +108,8 @@ public class GameController {
 
     @ApiOperation(value = "게임 결과 요청", notes = "AI 서버에서 게임 결과를 전달받는다.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "AI 서버로부터 결과 수신 성공"),
-            @ApiResponse(code = 400, message = "AI 서버로부터 결과 수신 실패")
+            @ApiResponse(code = 200, message = "AI 서버로부터 결과 수신 성공", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "ok"))),
+            @ApiResponse(code = 400, message = "AI 서버로부터 결과 수신 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
     })
     @GetMapping
     public ResponseEntity<?> getGameResult() {
@@ -116,10 +121,11 @@ public class GameController {
 
     @ApiOperation(value = "총 게임 결과 요청", notes = "모든 라운드 종료 후 전체 게임 결과를 전달한다.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "모든 게임 결과 전송 성공"),
-            @ApiResponse(code = 400, message = "모든 게임 결과 전송 실패"),
-            @ApiResponse(code = 403, message = "권한 없음")
+            @ApiResponse(code = 200, message = "모든 게임 결과 전송 성공", response = GetTotalGameResultRes.class, responseContainer = "List"),
+            @ApiResponse(code = 400, message = "모든 게임 결과 전송 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}"))),
+            @ApiResponse(code = 403, message = "권한 없음", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 403, \n message: auth \n}")))
     })
+    @ApiImplicitParam(name = "room_id", value = "방 id", required = true, dataType = "Long", paramType = "path")
     @GetMapping("/result/{room_id}")
     public ResponseEntity<?> getGameTotalResult(
             @PathVariable(value = "room_id", required = true) Long roomId,
@@ -175,9 +181,10 @@ public class GameController {
 
     @ApiOperation(value = "선택된 사진 저장", notes = "모든 라운드 종료 후 유저는 저장하고 싶은 사진을 선택해 저장한다.(S3)")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "선택한 사진 저장 성공"),
-            @ApiResponse(code = 400, message = "선택한 사진 저장 실패")
+            @ApiResponse(code = 200, message = "선택한 사진 저장 성공", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "ok"))),
+            @ApiResponse(code = 400, message = "선택한 사진 저장 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
     })
+    @ApiImplicitParam(name = "getSelectedImagesReq", value = "GetSelectedImages object", dataTypeClass = GetSelectedImagesReq.class, paramType = "body")
     @PostMapping("/image/upload")
     public ResponseEntity<?> saveImageToS3(
         HttpServletRequest request,
