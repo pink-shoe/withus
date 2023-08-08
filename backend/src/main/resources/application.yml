@@ -59,7 +59,7 @@ spring:
 
 kakao:
   rest-api-key: 7ea82d8a610fe51bcf3eca267069b264
-  redirect-uri: http://connectwithus.site/kakao
+  redirect-uri: https://connectwithus.site/kakao
 #  redirect-uri: http://localhost:9001/api/oauth/kakao
 
 
