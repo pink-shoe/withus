@@ -8,6 +8,7 @@ var app = express();
 
 // Environment variable: PORT where the node server is listening
 var SERVER_PORT = process.env.SERVER_PORT || 5000;
+
 // Environment variable: URL where our OpenVidu server is listening
 //var OPENVIDU_URL = process.env.OPENVIDU_URL || 'http://localhost:4443';
 var OPENVIDU_URL = process.env.OPENVIDU_URL || 'https://connectwithus.site:4443';
