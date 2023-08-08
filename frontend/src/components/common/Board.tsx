@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import Logo from './Logo/Logo';
 
-export type boardType = 'GAME' | 'WAIT' | 'LOBBY';
+export type boardType = 'GAME' | 'WAIT' | 'LOBBY' | 'ALBUM';
 
 interface IBoardProps {
   boardType: boardType;
@@ -51,10 +51,24 @@ export default function Board({ boardType, children }: IBoardProps) {
             <div className='flex justify-center place-items-center drop-shadow-lg rounded-md bg-yellow-100 h-[2.5rem] w-2/3'></div>
           </div>
         </div>
-      ) : (
+      ) : boardType === 'ALBUM' ? (
         // 로비 화면(다른 곳에서도 사용 가능)
+        <div className='h-full min-w-[490px] 2sm:w-full pl-12 pt-12 pb-8'>
+          <div className='flex justify-center'>
+            <div className='drop-shadow-xl rounded-md bg-yellow-100 h-[2.5rem] w-11/12'></div>
+          </div>
+          <div className='flex justify-center align-middle'>
+            <div className='flex justify-center place-items-center h-[600px] w-10/12 bg-white'>
+              {children}
+            </div>
+          </div>
+          <div className='flex justify-center'>
+            <div className='flex justify-center place-items-center drop-shadow-lg rounded-md bg-yellow-100 h-[2.5rem] w-11/12'></div>
+          </div>
+        </div>
+      ) : (
         <div className='h-[38rem] min-w-[490px] 2sm:w-full'>
-          <div className='static'>   
+          <div className='static'>
             <div className='flex justify-center'>
               <div className='drop-shadow-xl rounded-md bg-yellow-100 h-[2.5rem] w-10/12'></div>
             </div>

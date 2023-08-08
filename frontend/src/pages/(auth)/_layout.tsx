@@ -49,13 +49,13 @@ export default function Layout() {
                     className='bg-[#FF8D8D] rounded-tl-md w-48 h-8'
                     onClick={() => setShowLoginForm(false)}
                   >
-                    <div className='font-kdisplay text-black hover:text-white'> 게스트 </div>
+                    <div className='font-kdisplay text-lg text-black hover:text-white'>게스트</div>
                   </button>
                   <button
                     className='bg-white w-48 h-8 rounded-md'
                     onClick={() => setShowLoginForm(true)}
                   >
-                    <div className='font-kdisplay text-black'> 로그인 </div>
+                    <div className='font-kdisplay text-lg text-black'> 로그인 </div>
                   </button>
                 </div>
                 <Login />
@@ -67,13 +67,13 @@ export default function Layout() {
                     className='bg-white w-48 h-8 rounded-md'
                     onClick={() => setShowLoginForm(false)}
                   >
-                    <div className='font-kdisplay text-black'> 게스트 </div>
+                    <div className='font-kdisplay text-lg text-black'> 게스트 </div>
                   </button>
                   <button
                     className='bg-[#FF8D8D] rounded-tr-md w-48 h-8'
                     onClick={() => setShowLoginForm(true)}
                   >
-                    <div className='font-kdisplay text-black hover:text-white'> 로그인 </div>
+                    <div className='font-kdisplay text-lg text-black hover:text-white'>로그인</div>
                   </button>
                 </div>
                 <GuestLogin
