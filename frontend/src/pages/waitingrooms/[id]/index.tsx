@@ -138,7 +138,7 @@ export default function WaitingRoom() {
               )}
             </div>
           </Board>
-          <div className='mt-5 p-3 align-bottom'>
+          <div className='mt-5 p-2 align-bottom'>
             <ControlBarContainer
               type={'WAIT'}
               isHost={isHost}
