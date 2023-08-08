@@ -160,9 +160,15 @@ public class SocialServiceImpl implements SocialService {
             kakaoMember.setNickname(kakaoMemberInfo.getNickname());
             kakaoMember.setLoginType(kakaoMemberInfo.getLoginType());
 
-            memberRepository.save(kakaoMember);
-            memberId = memberRepository.findByEmail(kakaoMember.getEmail()).getId();
-            albumService.createAlbum(kakaoMember);
+            Member existingMember = memberRepository.findByEmail(kakaoMember.getEmail());
+
+            if (existingMember == null) {
+                memberRepository.save(kakaoMember);
+                memberId = memberRepository.findByEmail(kakaoMember.getEmail()).getId();
+                albumService.createAlbum(kakaoMember);
+            } else {
+                memberId = memberRepository.findByEmail(kakaoMember.getEmail()).getId();
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
