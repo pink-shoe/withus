@@ -6,7 +6,7 @@ const PORT_OPENVIDU = ':4443';
 // const PORT_OPENVIDU_SERVER = ':5000';
 
 const URL_LOCAL = 'http://localhost';
-const URL_RELEASE = 'http://connectwithus.site';
+const URL_RELEASE = 'https://connectwithus.site';
 
 export const REDIRECT_URI_KAKAO: string =
   (DEV ? `${URL_LOCAL}${PORT_SERVER}` : URL_RELEASE) + '/kakao'; // 8080
@@ -17,5 +17,5 @@ export const REDIRECT_URI_NAVER: string =
 
 export const OPENVIDU_SERVER_URL =
   // 'http://localhost:5000';
-  (DEV ? 'http://localhost' : 'http://connectwithus.site') + PORT_OPENVIDU;
+  (DEV ? 'http://localhost' : 'https://connectwithus.site') + PORT_OPENVIDU;
 export const OPENVIDU_SERVER_SECRET = DEV ? 'MY_SECRET' : 'WITHUS';
