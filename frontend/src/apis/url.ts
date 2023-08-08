@@ -2,8 +2,7 @@ const DEV = process.env.NODE_ENV === 'development' ? true : false;
 
 const PORT_WEB = ':3000';
 const PORT_SERVER = ':9001';
-// const PORT_OPENVIDU = ':4443';
-const PORT_OPENVIDU = ':8443';
+const PORT_OPENVIDU = ':4443';
 // const PORT_OPENVIDU_SERVER = ':5000';
 
 const URL_LOCAL = 'http://localhost';
