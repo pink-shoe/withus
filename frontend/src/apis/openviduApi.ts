@@ -31,7 +31,7 @@ function createSession(roomId: string): Promise<any> {
             'No connection to OpenVidu Server. This may be a certificate error at ' +
               OPENVIDU_SERVER_URL
           );
-          window.location.assign(OPENVIDU_SERVER_URL + '/accept-certificate');
+          // window.location.assign(OPENVIDU_SERVER_URL + '/accept-certificate');
         }
       });
   });
