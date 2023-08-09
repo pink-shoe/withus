@@ -1,8 +1,6 @@
 import React, { FC, useState } from 'react';
 import { IUser } from 'hooks/useOpenvidu';
 import { Edit, Save } from 'react-feather';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { Edit, Save } from '@fortawesome/free-regular-svg-icons';
 import { IUserAtom } from 'stores/user';
 export let localUser: IUser;
 
@@ -90,8 +88,8 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
                     />
                     {type === 'WAIT' && !stream.isReady ? (
                       <button onClick={onChangeUpdateUserNameStatus}>
-                          {/* <FontAwesomeIcon icon={faPenToSquareIconDefinition} /> */}
-                          <Edit />
+                        {/* <FontAwesomeIcon icon={faPenToSquareIconDefinition} /> */}
+                        <Edit />
                       </button>
                     ) : (
                       <div></div>

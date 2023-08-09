@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { ParticipantsPresenter } from './ParticipantListPresenter';
 import { IUserAtom } from 'stores/user';
 
