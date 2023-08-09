@@ -71,21 +71,26 @@ export const ControlBarContainer: FC<IControlBarProps> = ({
 
   // useEffect(() => {
   //   callback.onChangeReadyStatus(readyStatus);
-  //   changeReadyStatus();
+  //   readyStatus ? onClickCancelBtn() : onClickReadyBtn();
+  //   // changeReadyStatus();
   // }, [readyStatus, callback]);
 
-  useEffect(() => {
-    readyStatus ? onClickCancelBtn() : onClickReadyBtn();
-  }, [readyStatus]);
+  // useEffect(() => {
+  //   readyStatus ? onClickCancelBtn() : onClickReadyBtn();
+  // }, [readyStatus]);
+
   const onClickReadyBtn = async () => {
     sendSignal('준비완료', 'READY');
-    const result = await readyApi(roomId);
+    const result = (await readyApi(roomId)) as any;
     console.log('change ready', result);
+    if (result.status === 200) setReadyStatus(true);
   };
+
   const onClickCancelBtn = async () => {
     sendSignal('준비해제', 'CANCEL_READY');
-    const result = await cancelApi(roomId);
+    const result = (await cancelApi(roomId)) as any;
     console.log('change ready', result);
+    if (result.status === 200) setReadyStatus(false);
   };
   return (
     <ControlBarPresenter

@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { signalType, useOpenvidu } from 'hooks/useOpenvidu';
 import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
 import ChatContainer from '@components/Chat/ChatContainer';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import { IUserAtom, userAtom } from 'stores/user';
 import { IPlayerInfo, IRoomAtom, roomAtom } from 'stores/room';
 import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer';
@@ -22,7 +22,6 @@ export default function WaitingRoom() {
   const [roomInfo, setRoomInfo] = useAtom(roomAtom);
   const [isHost, setIsHost] = useState<boolean>(false);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
-  // const [readyStatus, setReadyStatus] = useState<boolean>(false);
 
   const [playerList, setPlayerList] = useState<IPlayerInfo[]>([]);
 
@@ -41,18 +40,14 @@ export default function WaitingRoom() {
     if (data) {
       setRoomInfo(data as IRoomAtom);
       const roomInfo = data as IRoomAtom;
-      // console.log('asdf', roomInfo);
       roomInfo.playerInfos && setPlayerList(roomInfo.playerInfos);
       roomInfo.hostId && setIsHost(roomInfo.hostId === user.memberId);
 
       if (roomInfo.playerInfos) {
-        // setIsReady()
-        // console.log('player', roomInfo.playerInfos);
         const player = roomInfo.playerInfos.find((player) => {
           return player.playerId === user.memberId;
         });
         player && setIsReady(player?.ready);
-        // getRoomData();
       }
     }
   }, [data]);
@@ -78,10 +73,6 @@ export default function WaitingRoom() {
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
   };
-
-  // const onChangeReadyStatus = (readyStatus: boolean) => {
-  //   setIs(!readyStatus);
-  // };
 
   // const onChangeUserName = (userName: string) => {
   //   setUserName(userName);
@@ -118,9 +109,9 @@ export default function WaitingRoom() {
   // useEffect(() => {
   //   getRoomData();
   // }, [receiveSignal]);
-  // useEffect(() => {
-  //   console.log(streamList);
-  // }, [streamList]);
+  useEffect(() => {
+    getRoomData();
+  }, [streamList]);
 
   return (
     // <section >
@@ -163,6 +154,7 @@ export default function WaitingRoom() {
                 onChangeMicStatus={onChangeMicStatus}
                 onChangeCameraStatus={onChangeCameraStatus}
                 onChangeChatStatus={onChangeChatStatus}
+                // onChangeReadyStatus={onChangeReadyStatus}
                 sendSignal={sendSignal}
                 roomId={roomInfo.room.roomId}
               />
