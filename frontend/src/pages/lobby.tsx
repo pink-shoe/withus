@@ -53,7 +53,7 @@ export default function Lobby() {
       // 공백이면 참여코드를 입력해달라는 창이 뜸
       alert('참여코드를 입력해주세요😳');
     } else {
-      const result: any = await participateRoomApi(Number(enterCode), user.memberId);
+      const result: any = await participateRoomApi(Number(enterCode));
       if (result.status === 200) {
         setEnterCode('');
         navigate(`/waitingrooms/${enterCode}`);

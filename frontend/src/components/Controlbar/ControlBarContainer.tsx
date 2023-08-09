@@ -3,10 +3,12 @@ import { FC, useEffect, useState } from 'react';
 import { ControlBarPresenter } from './ControlBarPresenter';
 import { useNavigate } from 'react-router-dom';
 import { signalType } from 'hooks/useOpenvidu';
+import { readyApi } from 'apis/roomApi';
 
 interface IControlBarProps {
   type: 'WAIT' | 'GAME';
   isHost: boolean;
+  roomId: number;
   readyStatus: boolean;
   onChangeMicStatus: (status: boolean) => void;
   onChangeCameraStatus: (status: boolean) => void;
@@ -18,6 +20,7 @@ interface IControlBarProps {
 export const ControlBarContainer: FC<IControlBarProps> = ({
   type,
   isHost,
+  roomId,
   readyStatus: isReady,
   sendSignal,
   ...callback
@@ -67,8 +70,14 @@ export const ControlBarContainer: FC<IControlBarProps> = ({
 
   useEffect(() => {
     callback.onChangeReadyStatus(readyStatus);
-    readyStatus ? sendSignal('준비완료', 'READY') : sendSignal('준비해제', 'CANCEL_READY');
+    changeReadyStatus();
   }, [readyStatus, callback]);
+
+  const changeReadyStatus = async () => {
+    const result = await readyApi(roomId);
+    readyStatus ? sendSignal('준비완료', 'READY') : sendSignal('준비해제', 'CANCEL_READY');
+    console.log('change ready', result);
+  };
   return (
     <ControlBarPresenter
       type={type}

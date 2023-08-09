@@ -1,24 +1,23 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { ParticipantsPresenter } from './ParticipantListPresenter';
 import { IUserAtom } from 'stores/user';
+import { IPlayerInfo } from 'stores/room';
 
 // export let localUser: IUser;
 interface IParticipantsContainerProps {
   type: 'WAIT' | 'GAME';
   user: IUserAtom;
+  isHost: boolean;
   // onChangeUserName: (username: string) => void;
-  publisher: any;
-  streamList: any;
-  readyStatus: boolean;
+  playerList: IPlayerInfo[];
+  // readyStatus: boolean;
   // onChangeIsUpdateUserName: (status: boolean) => void;
 }
 export default function ParticipantsContainer({
   type,
   user,
-  publisher,
-  streamList,
-  readyStatus,
-  ...callback
+  isHost,
+  playerList,
 }: IParticipantsContainerProps) {
   const [userName, setUserName] = useState(user.nickname);
   const [isUpdateUserName, setIsUpdateUserName] = useState(false);
@@ -42,15 +41,24 @@ export default function ParticipantsContainer({
   //   callback.onChangeIsUpdateUserName(isUpdateUserName);
   // }, [isUpdateUserName, callback]);
 
+  // useEffect(() => {
+  //   console.log('plist', pList);
+  //   setPlayerList(pList);
+  //   console.log(playerList);
+  // }, []);
+  // useEffect(() => {
+  //   console.log('players', playerList);
+  // }, [playerList]);
   return (
     <ParticipantsPresenter
       type={type}
-      streamList={streamList}
+      playerList={playerList}
       user={user}
       onChangeUserName={onChangeUserName}
       isUpdateUserName={isUpdateUserName}
       onChangeUpdateUserNameStatus={updateUserName}
       saveUserName={saveUserName}
+      isHost={isHost}
     />
   );
 }

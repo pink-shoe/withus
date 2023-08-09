@@ -13,6 +13,7 @@ import { useAtom } from 'jotai';
 import { IRoomAtom, roomAtom } from 'stores/room';
 import Background from '@components/common/Background';
 import Board from '@components/common/Board';
+import { getRoomInfoApi } from 'apis/roomApi';
 
 export default function GameRoom() {
   const location = useLocation();
@@ -20,17 +21,28 @@ export default function GameRoom() {
   const currentPath = Number(
     location.pathname.slice(location.pathname.lastIndexOf('/') + 1, location.pathname.length)
   );
+
+  // const getRoomData = async () => {
+  //   const result = (await getRoomInfoApi(currentPath)) as IRoomAtom;
+  //   result && setRoomInfo(result);
+  // };
+
+  // useEffect(() => {
+  //   getRoomData();
+  //   console.log(roomInfo);
+  // }, []);
+
   const [user, setUser] = useAtom<IUserAtom>(userAtom);
-  const [roomInfo, setRoomInfo] = useAtom<IRoomAtom>(roomAtom);
+  const [roomInfo, setRoomInfo] = useAtom(roomAtom);
   const [isHost, setIsHost] = useState<boolean>(true);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
   const [readyStatus, setReadyStatus] = useState<boolean>(false);
   const [isUpdateUserName, setIsUpdateUserName] = useState<boolean>(false);
-  const player: IPlayerAtom = {
-    memberId: user.memberId,
-    nickname: user.nickname,
-    ready: readyStatus,
-  };
+  // const player: IPlayerAtom = {
+  //   memberId: user.memberId,
+  //   nickname: user.nickname,
+  //   ready: readyStatus,
+  // };
   const {
     session,
     publisher,
@@ -39,7 +51,7 @@ export default function GameRoom() {
     onChangeMicStatus,
     sendSignal,
     // receiveSignal,
-  } = useOpenvidu(user.memberId, user.nickname, readyStatus, roomInfo.roomId);
+  } = useOpenvidu(user.memberId, user.nickname, readyStatus, roomInfo.room.roomId!);
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
@@ -98,6 +110,10 @@ export default function GameRoom() {
     session && publisher && receiveSignal('CANCEL_READY');
   }, [session, publisher]);
 
+  useEffect(() => {
+    console.log('streamList', streamList);
+  }, [streamList]);
+
   return (
     <Background isLobbyPage={false}>
       <div className='flex w-full h-full'>
@@ -107,11 +123,8 @@ export default function GameRoom() {
             type={'GAME'}
             user={user}
             // onChangeUserName={onChangeUserName}
-            publisher={publisher}
-            streamList={streamList}
-            readyStatus={readyStatus}
-            // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
-            // type={'GAME'}
+            playerList={roomInfo.playerInfos} // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
+            isHost={isHost} // type={'GAME'}
           />
         </div>
         {/* openvidu 화면 */}
@@ -173,6 +186,7 @@ export default function GameRoom() {
               onChangeChatStatus={onChangeChatStatus}
               onChangeReadyStatus={onChangeReadyStatus}
               sendSignal={sendSignal}
+              roomId={roomInfo.room.roomId}
             />
           </div>
           {/* <button onClick={handleDownload}>다운로드</button> */}

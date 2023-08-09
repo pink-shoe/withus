@@ -1,7 +1,7 @@
 import { OpenVidu } from 'openvidu-browser';
 import { getToken } from 'apis/openviduApi';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { IPlayerAtom } from 'stores/user';
+// import { IPlayerAtom } from 'stores/user';
 export interface IUser {
   connectionId: string;
   userId: number;
@@ -9,6 +9,12 @@ export interface IUser {
 }
 export type signalType = 'CHAT' | 'READY' | 'CANCEL_READY' | 'START' | 'ROUND';
 
+export interface IStreamList {
+  streamManager: any;
+  userId: number;
+  nickname: string;
+  isReady: boolean;
+}
 const getConnectionId = (user: IUser) => {
   return user.connectionId;
 };
@@ -28,8 +34,8 @@ export const useOpenvidu = (
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [publisher, setPublisher] = useState<any>();
   const [session, setSession] = useState<any>();
-  const [userName, setUserName] = useState<string>(nickname);
-  const [readyStatus, setReadyStatus] = useState(ready);
+  // const [userName, setUserName] = useState<string>(nickname);
+  const [readyStatus, setReadyStatus] = useState<boolean>(ready);
   const onChangeReadyStatus = () => {
     setReadyStatus((prev) => !prev);
   };
@@ -59,9 +65,9 @@ export const useOpenvidu = (
           ...prev.filter((it) => it.userId !== +data.userId),
           {
             streamManager: subscriber,
-            userId,
-            userName,
-            isReady: false,
+            userId: +data.userId,
+            nickname: data.nickname,
+            isReady: data.isReady,
           },
         ];
       });
@@ -139,14 +145,14 @@ export const useOpenvidu = (
     [publisher]
   );
 
-  const onChangeUserName = useCallback(
-    (nickname: string) => {
-      setUserName(nickname!);
-      console.log(publisher);
-      // sendSignalUserChanged({ nickname: nickname! });
-    },
-    [userName]
-  );
+  // const onChangeUserName = useCallback(
+  //   (nickname: string) => {
+  //     setUserName(nickname!);
+  //     console.log(publisher);
+  //     // sendSignalUserChanged({ nickname: nickname! });
+  //   },
+  //   [userName]
+  // );
 
   const sendSignal = (message: string, type: signalType) => {
     if (session && publisher && message) {
@@ -231,7 +237,7 @@ export const useOpenvidu = (
   };
 
   const streamList = useMemo(
-    () => [{ streamManager: publisher, userId, userName, isReady: readyStatus }, ...subscribers],
+    () => [{ streamManager: publisher, userId, nickname, isReady: readyStatus }, ...subscribers],
     [publisher, subscribers, userId, readyStatus]
   );
 
@@ -243,7 +249,7 @@ export const useOpenvidu = (
     streamList,
     onChangeCameraStatus,
     onChangeMicStatus,
-    onChangeUserName,
+    // onChangeUserName,
     updateUserStatus,
     // receiveSignal,
     sendSignal,
