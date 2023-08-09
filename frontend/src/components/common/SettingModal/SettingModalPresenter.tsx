@@ -48,7 +48,13 @@ export default function SettingModalPresenter({
   return (
     <Fragment>
       <div className='font-kdisplay'>
-        <Modal mode={mode} round={round} openModal={openModal} closeModal={closeModal} isSettingModal={true}>
+        <Modal
+          mode={mode}
+          round={round}
+          openModal={openModal}
+          closeModal={closeModal}
+          isSettingModal={true}
+        >
           <p className='text-[#514148] font-medium text-4xl mb-10 text-center'>방 설정</p>
           <div className='ms-2.5'>
             <div className='flex my-7'>
@@ -80,7 +86,9 @@ export default function SettingModalPresenter({
                         placeholder='코드 입력'
                         type='text'
                       />
-                      <TextCopy text={code} />
+                      <div className='inline-block align-middle pb-2 ms-1'>
+                        <TextCopy text={code} />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -96,7 +104,9 @@ export default function SettingModalPresenter({
                       placeholder='URL 입력'
                       type='text'
                     />
-                    <TextCopy text={url} />
+                    <div className='inline-block align-middle pb-2 ms-1'>
+                      <TextCopy text={url} />
+                    </div>
                   </div>
                 </div>
               </Fragment>

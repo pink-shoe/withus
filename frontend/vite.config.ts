@@ -12,6 +12,17 @@ export default defineConfig({
       output: './src/router.ts',
     }),
   ],
+  server: {
+    proxy: {
+      '/openvidu/api': {
+        target: 'http://localhost:4443',
+        changeOrigin: true,
+        secure: false,
+        // ws:true,
+        // rewrite:(path=>path.replace())
+      },
+    },
+  },
   resolve: {
     alias: {
       '@src': '/src',

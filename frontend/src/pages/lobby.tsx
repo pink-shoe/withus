@@ -63,11 +63,12 @@ export default function Lobby() {
 
   return (
     <Fragment>
-      <Background>
+      {/* 드롭다운 true는 로비 항목이 없고, false는 로비 항목이 있음*/}
+      <Background isLobbyDropdown={true} isLobbyPage={true}>
         <Board boardType={'LOBBY'}>
           <div className='flex justify-center content-center'>
             <div>
-            {/* <div className='grid grid-cols-1 md:grid-cols-2 gap-12 items-center'> */}
+              {/* <div className='grid grid-cols-1 md:grid-cols-2 gap-12 items-center'> */}
               <button
                 onClick={openMakeModal}
                 className='bg-[#FF8D8D] hover:bg-red-500 me-2 xl:aspect-square xl:h-96 lg:aspect-square lg:h-80 md:aspect-[3/4] md:h-80 sm:aspect-[3/4] sm:h-60 md:m-8 sm:me-4 aspect-[3/5] h-60 rounded-xl font-medium font-kdisplay text-4xl text-white'

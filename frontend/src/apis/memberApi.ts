@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios';
 import axios from '.';
+import { useNavigate } from 'react-router-dom';
 
 // 특정 주소와 토큰을 변수로 설정합니다.
 const apiUrl = '/members'; // 변동될 수 있음
@@ -40,9 +41,13 @@ export async function updateMemberApi(nickname: string) {
 }
 
 export async function deleteMemberApi(nickname: string) {
+  const navigate = useNavigate();
   try {
     const response = await axios.delete(apiUrl);
+    localStorage.removeItem('token');
+    navigate('/login');
     console.log('성공:', response);
+
     return response;
   } catch (error) {
     console.log('실패:', (error as AxiosError).message);

@@ -1,5 +1,5 @@
 import { useGoogleLogin } from '@react-oauth/google';
-import ButtonComponent from '@components/common/ButtonComponent';
+import googleSymbol from '../../assets/googleSymbol.png';
 import axios from 'axios';
 
 export default function GoogleSocialLogin() {
@@ -20,5 +20,13 @@ export default function GoogleSocialLogin() {
     flow: 'auth-code',
   });
 
-  return <ButtonComponent onClick={googleSocialLogin}>Google ButtonComponent</ButtonComponent>;
+  return (
+    <button
+      className='bg-white text-[rgba(0,0,0,0.85)] text-30 font-bold px-4 w-64 h-8 mx-auto rounded-[12px] border-2 border-black hover:text-[#4285F4] flex items-center'
+      onClick={googleSocialLogin}
+    >
+      <img src={googleSymbol} className='h-4 w-auto inline-block' />
+      <span className='mx-auto'>구글 로그인</span>
+    </button>
+  );
 }

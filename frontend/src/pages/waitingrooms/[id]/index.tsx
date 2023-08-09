@@ -1,3 +1,5 @@
+import Background from '@components/common/Background';
+import Logo from '@components/common/Logo/Logo';
 import { useEffect, useState } from 'react';
 import { VideoStream } from '@components/VideoStream';
 import { useLocation } from 'react-router-dom';
@@ -103,53 +105,60 @@ export default function WaitingRoom() {
   useEffect(() => {
     console.log(streamList);
   }, [streamList]);
+
   return (
-    <section className={`w-full flex  justify-between h-screen`}>
-      {/* 참가자 목록 */}
-      <ParticipantsContainer
-        type={'WAIT'}
-        user={user}
-        // userId={userId}
-        // userName={userName}
-        // onChangeUserName={onChangeUserName}
-        publisher={publisher}
-        streamList={streamList}
-        readyStatus={readyStatus}
-        // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
-      />
-      {/* openvidu 화면 */}
-      <div className=' h-full '>
-        <Board boardType={'WAIT'}>
-          {/* <header className=''>
-          <div className=' text-white font-extrabold text-6xl text-center py-3'>[] with us</div>
-        </header> */}
-          <div className='aspect-[4/3]'>
-            {publisher && (
-              <div className='w-full'>
-                <VideoStream streamManager={publisher} name={user.nickname} isMe={true} />
-              </div>
-            )}
-          </div>
-        </Board>
-        <div className=' p-3'>
-          <ControlBarContainer
+    // <section >
+    <Background isLobbyPage={false}>
+      <div className='flex w-full h-full'>
+        {/* 참가자 목록 */}
+        <div className='justify-start bg-white z-40'>
+          <ParticipantsContainer
             type={'WAIT'}
-            isHost={isHost}
+            user={user}
+            // userId={userId}
+            // userName={userName}
+            // onChangeUserName={onChangeUserName}
+            publisher={publisher}
+            streamList={streamList}
             readyStatus={readyStatus}
-            onChangeMicStatus={onChangeMicStatus}
-            onChangeCameraStatus={onChangeCameraStatus}
-            onChangeChatStatus={onChangeChatStatus}
-            onChangeReadyStatus={onChangeReadyStatus}
-            sendSignal={sendSignal}
+            // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
           />
         </div>
+        {/* openvidu 화면 */}
+        <div className='w-full'>
+          <Board boardType='WAIT'>
+            {/* <header className=''>
+          <div className=' text-white font-extrabold text-6xl text-center py-3'>[] with us</div>
+        </header> */}
+            <div className='aspect-[4/3]'>
+              {publisher && (
+                <div className='w-full'>
+                  <VideoStream streamManager={publisher} name={user.nickname} isMe={true} />
+                </div>
+              )}
+            </div>
+          </Board>
+          <div className='mt-5 p-2 align-bottom'>
+            <ControlBarContainer
+              type={'WAIT'}
+              isHost={isHost}
+              readyStatus={readyStatus}
+              onChangeMicStatus={onChangeMicStatus}
+              onChangeCameraStatus={onChangeCameraStatus}
+              onChangeChatStatus={onChangeChatStatus}
+              onChangeReadyStatus={onChangeReadyStatus}
+              sendSignal={sendSignal}
+            />
+          </div>
+        </div>
+        <ChatContainer
+          chatStatus={chatStatus}
+          session={session}
+          publisher={publisher}
+          sendSignal={sendSignal}
+        />
       </div>
-      <ChatContainer
-        chatStatus={chatStatus}
-        session={session}
-        publisher={publisher}
-        sendSignal={sendSignal}
-      />
-    </section>
+    </Background>
+    // </section>
   );
 }

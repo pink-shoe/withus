@@ -1,8 +1,6 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { IUser } from 'hooks/useOpenvidu';
 import { Edit, Save } from 'react-feather';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { Edit, Save } from '@fortawesome/free-regular-svg-icons';
 import { IUserAtom } from 'stores/user';
 export let localUser: IUser;
 
@@ -33,9 +31,18 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
 }) => {
   return (
     <div id='participantsList' className=' w-52 bg-white '>
-      <div className='bg-[#C4C6EC] p-3 text-white whitespace-nowrap font-bold text-xl '>
-        협동전 &nbsp; 1/5(판)
-      </div>
+      {type === 'GAME' ? (
+        // 게임 페이지에서는 '판'이 존재하고
+        <div className='bg-[#C4C6EC] p-3 text-white whitespace-nowrap font-bold text-xl '>
+          협동전 &nbsp; 1/5(판)
+        </div>
+      ) : (
+        // 대기실에서는 '판'이 존재하지 않음
+        <div className='bg-[#C4C6EC] p-3 text-white whitespace-nowrap font-bold text-xl '>
+          협동전
+        </div>
+      )}
+
       <div className='bg-[#FF8DA3] p-3 text-white whitespace-nowrap font-bold text-xl'>
         현재 플레이어({streamList.length})
       </div>
@@ -80,8 +87,8 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
                     />
                     {type === 'WAIT' && !stream.isReady ? (
                       <button onClick={onChangeUpdateUserNameStatus}>
-                          {/* <FontAwesomeIcon icon={faPenToSquareIconDefinition} /> */}
-                          <Edit />
+                        {/* <FontAwesomeIcon icon={faPenToSquareIconDefinition} /> */}
+                        <Edit />
                       </button>
                     ) : (
                       <div></div>

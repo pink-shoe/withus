@@ -81,7 +81,7 @@ export const useOpenvidu = (
     getToken(String(gameRoomId)).then((token) => {
       console.log(gameRoomId, token);
       session!
-        .connect(token, JSON.stringify({ userId }))
+        .connect(token.token, JSON.stringify({ userId }))
         .then(async () => {
           await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
           const devices = await openVidu.getDevices();

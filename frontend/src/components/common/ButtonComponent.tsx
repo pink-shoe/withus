@@ -1,33 +1,32 @@
 import React from 'react';
 
 interface IButtonProps {
-  version?: number;
+  type?: 'isSmall' | 'isBig' | 'tiny' | 'tinyPointed';
   onClick?: () => any;
   children: React.ReactNode;
 }
 
-// version을 타입으로 없애고 코드 수정 필요 일단 넘겨!
-// className={
-//                     'border-2 rounded-lg p-2 w-11/12 text-justify whitespace-break-spaces ' +
-//                     `${
-//                       msg.connectionId === publisher.stream.connection.connectionId
-//                         ? ' bg-white'
-//                         : ' bg-[#ede4fd]'
-//                     }`
-//                   }
+export default function ButtonComponent({ type, onClick, children }: IButtonProps) {
+  let buttonCss: string;
+  let textCss: string;
 
-export default function ButtonComponent({ version, onClick, children }: IButtonProps) {
-  let windcss: string = 'rounded w-full  border-2  bg-violet-600  hover:border-indigo-500/100';
-
-  if (version == 1) {
-    windcss = 'rounded w-full border-solid border-2 border-indigo-600';
+  if (type === 'isBig') {
+    buttonCss = 'rounded-xl w-96 h-8 bg-[#FF8D8D]  hover:border-[#FF8D8D]';
+    textCss = 'font-kdisplay text-xl';
+  } else if (type === 'tiny') {
+    buttonCss = 'rounded w-24 h-8 border-2 bg-white hover:border-[#FF8D8D]';
+    textCss = 'font-kdisplay';
+  } else if (type === 'tinyPointed') {
+    buttonCss = 'rounded w-36 h-8 bg-[#FF8D8D]  hover:border-[#FF8D8D]';
+    textCss = 'font-kdisplay';
   } else {
+    buttonCss = 'rounded-xl w-64 h-8 bg-[#FF8D8D]  hover:border-[#FF8D8D]';
+    textCss = 'font-kdisplay text-lg';
   }
-
   return (
     <div className='flex justify-center'>
-      <button type='button' className={windcss} onClick={onClick}>
-        {children}
+      <button type='button' className={buttonCss} onClick={onClick}>
+        <div className={textCss}>{children}</div>
       </button>
     </div>
   );
