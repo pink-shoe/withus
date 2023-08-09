@@ -57,6 +57,7 @@ export default function SettingModalContainer({
     const result: any = await createRoomApi(user.memberId, round, mode);
 
     console.log(result);
+
     if (result.status === 201) {
       setRoomInfo(result.data);
       navigate(`/waitingrooms/${result.data}`);

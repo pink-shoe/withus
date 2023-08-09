@@ -80,7 +80,9 @@ export default function SettingModalPresenter({
                       <div className='inline-block p-1 border-2 border-[#FF8DA3] font-medium text-2xl text-center text-[#514148] font-kdisplay rounded-l-lg'>
                         Code
                       </div>
-                      <div className='inline-block p-1 w-[13.4rem] border-y-2 border-e-2 border-[#FF8DA3] rounded-r-lg font-medium text-2xl text-center text-[#514148] font-kdisplay'>{}</div>
+                      <div className='inline-block p-1 w-[13.4rem] border-y-2 border-e-2 border-[#FF8DA3] rounded-r-lg font-medium text-2xl text-center text-[#514148] font-kdisplay'>
+                        {round}dddd
+                      </div>
                       {/* <input 
                         value={code}
                         onChange={codeEnter}
@@ -89,7 +91,7 @@ export default function SettingModalPresenter({
                         type='text'
                       /> */}
                       <div className='inline-block align-middle pb-2 ms-1'>
-                        <TextCopy text={code} />
+                        <TextCopy text={round} />
                       </div>
                     </div>
                   </div>
