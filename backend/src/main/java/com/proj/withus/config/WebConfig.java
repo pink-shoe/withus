@@ -18,7 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns("/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs", "/swagger-ui/index.html")
                 .excludePathPatterns("/api/oauth/**")
-                .excludePathPatterns("/api/members/guest/temp"); // /{room_code} 추가해야함
+                .excludePathPatterns("/api/members/guest/room"); // /{room_code} 추가해야함
 
 //                .excludePathPatterns("/kakao/login") // practice pattern
 //                .excludePathPatterns("/auth/google/callback")
