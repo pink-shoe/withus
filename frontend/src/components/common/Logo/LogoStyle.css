@@ -39,7 +39,8 @@
   }
 
   .logo-album {
-    color: aquamarine;
+    color: black;
+    font-size: 130px;
   }
 }
 
@@ -79,6 +80,11 @@
     border-color: var(--collection-1-primary-font);
     color: #ffffff;
     text-shadow: 10px 6px 1px rgba(0,0,0,0.75);
+  }
+
+  .logo-album {
+    color: black;
+    font-size: 130px;
   }
 }
 

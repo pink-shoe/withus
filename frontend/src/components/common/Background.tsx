@@ -18,7 +18,7 @@ export default function Background({isLobbyDropdown, isLobbyPage, children}: IBa
             <div className="hover:text-red-300">
               <UserHeader isLobbyDropdown={isLobbyDropdown} />
             </div>
-            <div className="flex justify-center place-items-center h-[7400px] tall:h-screen bg-[#F9C7C8]">
+            <div className="flex justify-center place-items-center h-[740px] tall:h-screen bg-[#F9C7C8]">
               {children}
             </div>
           </Fragment>
