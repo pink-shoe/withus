@@ -7,7 +7,6 @@ import { signalType, useOpenvidu } from 'hooks/useOpenvidu';
 import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer';
 import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
 import ChatContainer from '@components/Chat/ChatContainer';
-// import { CountdownCircleTimer, useCountdown } from 'react-countdown-circle-timer';
 import { IPlayerAtom, IUserAtom, userAtom } from 'stores/user';
 import { useAtom } from 'jotai';
 import { IRoomAtom, roomAtom } from 'stores/room';
@@ -82,9 +81,6 @@ export default function GameRoom() {
     session && publisher && receiveSignal('CANCEL_READY');
   }, [session, publisher]);
 
-  // const [isPlaying, setIsPlaying] = useState(true);
-  // const [count, setCount] = useState(5);
-
   const receiveSignal = (type: signalType) => {
     if (session && publisher) {
       publisher.stream.session.on('signal:' + type, (e: any) => {
@@ -117,56 +113,28 @@ export default function GameRoom() {
         {/* openvidu 화면 */}
         <div className='w-full'>
           <Board boardType='GAME'>
-            <header className=' h-fit flex items-center gap-2 '>
-              
-
-                {/* <CountdownCircleTimer
-            size={80}
-            isPlaying={isPlaying}
-            duration={count}
-            initialRemainingTime={30}
-            isSmoothColorTransition={true}
-            // updateInterval={1}
-            // colors='#aabbcc'
-            // colors="url(#test-it)"
-            colors={['#004777', '#F7B801', '#A30000', '#A30000']}
-            colorsTime={[4, 2.66, 1.33, 0]}
-            onUpdate={(remainingTime) => {
-              console.log('Counter is ', count);
-              console.log('Remaining time is ', remainingTime);
-            }}
-            onComplete={() => ({ shouldRepeat: true })}
-            strokeWidth={20}
-          >
-            {({ remainingTime }) => (
-              <div className=' text-white text-3xl font-bold'>{remainingTime}</div>
-            )}
-              </CountdownCircleTimer> */}
-              
-
-              </header>
-              <div className='aspect-[4/3]'>
-                {publisher && (
-                  <div
-                    ref={divRef}
-                    className='aspect-[4/3] grid grid-flow-dense grid-rows-2 grid-cols-2'
-                  >
-                    {streamList?.map((stream: any, idx: number) => {
-                      // const userInfo = streamList.find((it: any) => it.userId === stream.userId);
-                      return (
-                        <div className='w-full h-full' key={idx}>
-                          <VideoStream
-                            streamManager={stream.streamManager}
-                            name={stream.userName}
-                            isMe={stream.userId === user.memberId}
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-
+            <header className=' h-fit flex items-center'></header>
+            <div className='aspect-[4/3]'>
+              {publisher && (
+                <div
+                  ref={divRef}
+                  className='aspect-[4/3] grid grid-flow-dense grid-rows-2 grid-cols-2'
+                >
+                  {streamList?.map((stream: any, idx: number) => {
+                    // const userInfo = streamList.find((it: any) => it.userId === stream.userId);
+                    return (
+                      <div className='w-full h-full xl:h-[17rem]' key={idx}>
+                        <VideoStream
+                          streamManager={stream.streamManager}
+                          name={stream.userName}
+                          isMe={stream.userId === user.memberId}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </Board>
           <div className='p-2 mt-2 align-bottom'>
             <ControlBarContainer
