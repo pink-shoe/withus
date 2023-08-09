@@ -9,9 +9,18 @@ export default function GoogleSocialLogin() {
       console.log(code);
       const googlebackURL = `${import.meta.env.VITE_API}/api/oauth/google`;
 
-      axios.get(googlebackURL, { params: { code } }).then((data: any) => {
-        console.log(`구글 로그인 토큰 받기 성공 ${data}`);
-        localStorage.setItem('token', data);
+      axios.get(googlebackURL, { params: { code } }).then((response) => {
+        const { jwtToken, accessToken } = response.data;
+
+        console.log(`구글 로그인 토큰 받기 성공!! jwtToken:${jwtToken} accessToken:${accessToken}`);
+
+        if (jwtToken) {
+          localStorage.setItem('token', jwtToken);
+        }
+
+        if (accessToken) {
+          localStorage.setItem('accessToken', accessToken);
+        }
       });
     },
     onError: (errorResponse) => {

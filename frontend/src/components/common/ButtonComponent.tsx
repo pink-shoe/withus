@@ -17,7 +17,7 @@ export default function ButtonComponent({ type, onClick, children }: IButtonProp
     buttonCss = 'rounded w-24 h-8 border-2 bg-white hover:border-[#FF8D8D]';
     textCss = 'font-kdisplay';
   } else if (type === 'tinyPointed') {
-    buttonCss = 'rounded w-36 h-8 bg-[#FF8D8D]  hover:border-[#FF8D8D]';
+    buttonCss = 'rounded w-28 h-8 bg-[#FF8D8D]  hover:border-[#FF8D8D]';
     textCss = 'font-kdisplay';
   } else {
     buttonCss = 'rounded-xl w-64 h-8 bg-[#FF8D8D]  hover:border-[#FF8D8D]';
