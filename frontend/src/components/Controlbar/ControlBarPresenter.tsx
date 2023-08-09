@@ -37,7 +37,7 @@ export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
   onClickExit,
 }) => {
   return (
-    <div className='w-full flex justify-center'>
+    <div className='w-full flex justify-center font-kdisplay'>
       <div className='bottom-3 flex flex-wrap gap-3 justify-center items-center'>
         <button className={` w-15 h-15 rounded-full p-3 bg-red-500`} onClick={onClickExit}>
           <LogOut className='text-white' size='35' />
@@ -121,21 +121,21 @@ export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
         {type === 'WAIT' &&
           (isHost ? (
             <button
-              className={` whitespace-nowrap w-fit h-15 rounded-lg p-3 bg-[#FF8DA3] text-white font-bold text-lg`}
+              className={` whitespace-nowrap w-fit h-15 rounded-lg p-3 bg-[#FF8DA3] text-white font-medium text-lg`}
               onClick={() => {}}
             >
               시작하기
             </button>
           ) : readyStatus ? (
             <button
-              className={` whitespace-nowrap w-fit h-16 rounded-lg p-3 bg-[#8E8E8E] text-white font-bold text-lg`}
+              className={` whitespace-nowrap w-fit h-16 rounded-lg p-3 bg-[#8E8E8E] text-white font-medium text-lg`}
               onClick={onChangeReadyStatus}
             >
               준비취소
             </button>
           ) : (
             <button
-              className={` whitespace-nowrap w-fit h-16 rounded-lg p-3 bg-[#FF8DA3] text-white font-bold text-lg`}
+              className={` whitespace-nowrap w-fit h-16 rounded-lg p-3 bg-[#FF8DA3] text-white font-medium text-lg`}
               onClick={onChangeReadyStatus}
             >
               준비하기
