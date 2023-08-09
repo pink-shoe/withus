@@ -157,8 +157,12 @@ public class RoomServiceImpl implements RoomService {
     set ready = readyStatus
     where player_id = playerId
      */
-    public int modifyReady(Long playerId) {
-        return playerRepository.updateReady(playerId);
+    public int setReady(Long playerId) {
+        return playerRepository.setReady(playerId);
+    }
+
+    public int cancelReady(Long playerId) {
+        return playerRepository.cancelReady(playerId);
     }
 
     /*

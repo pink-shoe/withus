@@ -22,7 +22,8 @@ public interface RoomService {
     public List<Player> getPlayerList(Long roomId);
     public int createCode(); // Impl에서만 따로 private으로 관리 고려해 볼 것
     public Player getPlayerInRoom(Long memberId, Long roomId);
-    public int modifyReady(Long playerId);
+    public int setReady(Long playerId);
+    public int cancelReady(Long playerId);
     public List<Player> getReadyPlayers(Long roomId);
     public boolean getReadyStatus(Long playerId);
     public boolean getStartStatus(Long roomId);
