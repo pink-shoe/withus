@@ -1,5 +1,4 @@
-import { AxiosError } from 'axios';
-import axios from '.';
+import axios, { AxiosError } from 'axios';
 
 const apiUrl = `/members/guest`;
 
