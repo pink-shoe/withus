@@ -124,11 +124,6 @@ public class RoomController {
         System.out.println("createRoomReq.getId()" + createRoomReq.getId());
         System.out.println("createRoomReq.getRoomType()" + createRoomReq.getRoomType());
 
-        //        try {
-        //            Long id = jwtUtil.extractMemberId(token);
-        //        } catch (Exception e) {
-        //            return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
-        //        }
         Room newRoom = roomService.createRoom(createRoomReq);
         return new ResponseEntity<Integer>(newRoom.getCode(), HttpStatus.CREATED);
         // return new ResponseEntity<Room>(newRoom, HttpStatus.CREATED);
@@ -187,7 +182,7 @@ public class RoomController {
             // return new ResponseEntity<Integer>(roomCode, HttpStatus.OK);
 
         // }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<String>("방 입장이 완료되었습니다.", HttpStatus.OK);
     }
 
     @ApiOperation(value = "방 나가기", notes = "참가자는 방에서 나간다.")
@@ -325,8 +320,11 @@ public class RoomController {
         HttpServletRequest request,
         @PathVariable("room_id") Long roomId) {
 
-        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
+        String token = (String) request.getAttribute("token");
+        System.out.println("ready check: " + token);
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
         Long memberId = socialMemberInfo.getId();
+        System.out.println("ready member id check: " + memberId.toString());
 
         Player player = roomService.getPlayerInRoom(memberId, roomId);
         if (player == null) {

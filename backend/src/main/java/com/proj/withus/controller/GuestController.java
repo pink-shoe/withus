@@ -51,7 +51,7 @@ public class GuestController {
                     @ApiImplicitParam(name = "nickname", value = "닉네임", required = true, dataType = "String", paramType = "body"),
             }
     )
-    @PostMapping("/temp/{room_code}") // 게스트 회원가입 (api 설계서와 다르게 room_code를 추가함)
+    @PostMapping("/room/{room_code}") // 게스트 회원가입 (api 설계서와 다르게 room_code를 추가함)
     public ResponseEntity<?> guestLogin(
             @PathVariable("room_code") int roomCode,
 //            @ApiParam(value = "사용할 닉네임", required = true)

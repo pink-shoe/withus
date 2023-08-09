@@ -32,7 +32,7 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
 
     @Modifying
     // @Query("update Player p set p.ready = :readyStatus where p.id = :playerId")
-    @Query(value = "update player set ready = not ready where player_id = 1", nativeQuery = true)
+    @Query(value = "update player set ready = not ready where player_id = :playerId", nativeQuery = true)
     int updateReady(@Param("playerId") Long playerId);
 
     @Query("select p.ready from Player p where p.id = :playerId")
