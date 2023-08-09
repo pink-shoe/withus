@@ -23,8 +23,20 @@ export default function KakaoRedirection() {
       .then(
         (result) => {
           console.log(result.data); // 받아온 데이터 확인
-          // 받아온 데이터 처리 코드 작성
-          localStorage.setItem('token', result.data);
+          const { jwtToken, accessToken } = result.data;
+
+          console.log(`jwttoken확인: ${jwtToken}`);
+          console.log(`accesstoken확인: ${accessToken}`);
+
+          if (jwtToken) {
+            localStorage.setItem('token', jwtToken);
+          }
+
+          if (accessToken) {
+            localStorage.setItem('accessToken', accessToken);
+          }
+
+          navigate('/lobby'); // login이 성공했다면 해당 페이지로 이동
 
           navigate('/lobby'); // login이 성공했다면 해당 페이지로 이동
         },

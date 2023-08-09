@@ -63,7 +63,9 @@ export default function PhotoAlbum({ photoFrameNumber, backgroundNumber }: IPhot
         BackgroundURL={BackGroundURL}
         photoFrameNumber={photoFrameNumber}
       />
-      <PaginationContainer currentPage={currentPage} onClickPage={onClickPage} images={images} />
+      <div className='relative z-50'>
+        <PaginationContainer currentPage={currentPage} onClickPage={onClickPage} images={images} />
+      </div>
     </div>
   );
 }
