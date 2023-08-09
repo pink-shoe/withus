@@ -32,21 +32,21 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
   saveUserName,
 }) => {
   return (
-    <div id='participantsList' className=' w-52 bg-white '>
+    <div id='participantsList' className=' w-52 bg-white font-kdisplay'>
 
       {type === 'GAME' ? (
       // 게임 페이지에서는 '판'이 존재하고 
-      <div className='bg-[#C4C6EC] p-3 text-white whitespace-nowrap font-bold text-xl '>
+      <div className='bg-[#C4C6EC] p-3 text-white whitespace-nowrap font-medium text-xl '>
         협동전 &nbsp; 1/5(판)
         </div>
         // 대기실에서는 '판'이 존재하지 않음
       ) : (
-        <div className='bg-[#C4C6EC] p-3 text-white whitespace-nowrap font-bold text-xl '>
+        <div className='bg-[#C4C6EC] p-3 text-white whitespace-nowrap font-medium text-xl '>
           협동전
         </div>
       )}
 
-      <div className='bg-[#FF8DA3] p-3 text-white whitespace-nowrap font-bold text-xl'>
+      <div className='bg-[#FF8DA3] p-3 text-white whitespace-nowrap font-medium text-xl'>
         현재 플레이어({streamList.length})
       </div>
       <div className='bg-white w-full text-justify'>
@@ -55,7 +55,7 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
             <div
               key={idx}
               className={
-                'flex relative justify-between items-center w-full text-justify border-bottom border-b-2 p-3 text-[#514148]' +
+                'flex relative justify-between items-center w-full text-justify border-bottom border-b-2 p-3 text-[#514148] text-xl' +
                 ` ${
                   user.memberId === stream.userId && stream.isReady ? 'bg-[#FFF5C0]' : 'bg-white'
                 } `
