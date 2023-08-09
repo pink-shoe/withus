@@ -3,6 +3,7 @@ import Modal from '../Modal';
 import SelectBox from '../SelectBox';
 import TextCopy from '../TextCopy';
 import GameStartButton from '../GameStartButton';
+import { IRoomAtom } from 'stores/room';
 
 interface ISettingModalPresenterProps {
   mode: string;
@@ -79,13 +80,14 @@ export default function SettingModalPresenter({
                       <div className='inline-block p-1 border-2 border-[#FF8DA3] font-medium text-2xl text-center text-[#514148] font-kdisplay rounded-l-lg'>
                         Code
                       </div>
-                      <input
+                      <div className='inline-block p-1 w-[13.4rem] border-y-2 border-e-2 border-[#FF8DA3] rounded-r-lg font-medium text-2xl text-center text-[#514148] font-kdisplay'>{}</div>
+                      {/* <input 
                         value={code}
                         onChange={codeEnter}
                         className='p-1 w-[13.4rem] border-y-2 border-e-2 border-[#FF8DA3] rounded-r-lg font-medium text-2xl text-center text-[#514148] font-kdisplay'
                         placeholder='코드 입력'
                         type='text'
-                      />
+                      /> */}
                       <div className='inline-block align-middle pb-2 ms-1'>
                         <TextCopy text={code} />
                       </div>
