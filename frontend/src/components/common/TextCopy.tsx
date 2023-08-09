@@ -14,8 +14,8 @@ export default function TextCopy({ text }: any) {
   };
 
   return (
-    <span className='ms-2'>
-      <Clipboard onClick={() => handleTextCopy(text)} className='cursor-pointer hover:text-[#FF8DA3]'/>
-    </span>
+    <div>
+      <Clipboard size='30' onClick={() => handleTextCopy(text)} className='cursor-pointer hover:text-[#FF8DA3]'/>
+    </div>
   );
 }

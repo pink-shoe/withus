@@ -38,7 +38,7 @@ export default function Layout() {
   }
 
   return (
-    <Background>
+    <Background isLobbyPage={false}>
       <Board boardType={'LOBBY'}>
         <div className='flex flex-col justify-center'>
           <div className='grid grid-cols-1 lg:grid-cols-2 gap-12 items-center'>

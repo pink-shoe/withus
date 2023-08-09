@@ -24,7 +24,7 @@ export default function ChatPresenter({
   return (
     <>
       {chatStatus ? (
-        <div id='' className=' w-80 bg-white flex flex-col'>
+        <div id='' className='w-80 bg-white flex flex-col z-40'>
           <div className='  text-center bg-gradient-to-b leading-[150%] from-[#FEDCE3] from-70% to-white to-90%  p-3 pb-8 text-white whitespace-nowrap font-bold text-xl'>
             채팅
           </div>
