@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from 'react';
 import { ControlBarPresenter } from './ControlBarPresenter';
 import { useNavigate } from 'react-router-dom';
 import { signalType } from 'hooks/useOpenvidu';
-import { readyApi } from 'apis/roomApi';
+import { cancelApi, exitRoomApi, readyApi } from 'apis/roomApi';
 
 interface IControlBarProps {
   type: 'WAIT' | 'GAME';
@@ -13,7 +13,7 @@ interface IControlBarProps {
   onChangeMicStatus: (status: boolean) => void;
   onChangeCameraStatus: (status: boolean) => void;
   onChangeChatStatus: (status: boolean) => void;
-  onChangeReadyStatus: (status: boolean) => void;
+  // onChangeReadyStatus: (status: boolean) => void;
   sendSignal: (message: string, type: signalType) => void;
 }
 
@@ -52,8 +52,9 @@ export const ControlBarContainer: FC<IControlBarProps> = ({
     setReadyStatus((prev) => !prev);
   };
 
-  const onClickExit = () => {
-    navigate('/lobby');
+  const onClickExit = async () => {
+    const result: any = await exitRoomApi(roomId);
+    if (result.status === 200) navigate('/lobby');
   };
 
   useEffect(() => {
@@ -68,14 +69,22 @@ export const ControlBarContainer: FC<IControlBarProps> = ({
     callback.onChangeChatStatus(chatStatus);
   }, [chatStatus, callback]);
 
-  useEffect(() => {
-    callback.onChangeReadyStatus(readyStatus);
-    changeReadyStatus();
-  }, [readyStatus, callback]);
+  // useEffect(() => {
+  //   callback.onChangeReadyStatus(readyStatus);
+  //   changeReadyStatus();
+  // }, [readyStatus, callback]);
 
-  const changeReadyStatus = async () => {
+  useEffect(() => {
+    readyStatus ? onClickCancelBtn() : onClickReadyBtn();
+  }, [readyStatus]);
+  const onClickReadyBtn = async () => {
+    sendSignal('준비완료', 'READY');
     const result = await readyApi(roomId);
-    readyStatus ? sendSignal('준비완료', 'READY') : sendSignal('준비해제', 'CANCEL_READY');
+    console.log('change ready', result);
+  };
+  const onClickCancelBtn = async () => {
+    sendSignal('준비해제', 'CANCEL_READY');
+    const result = await cancelApi(roomId);
     console.log('change ready', result);
   };
   return (
@@ -93,6 +102,8 @@ export const ControlBarContainer: FC<IControlBarProps> = ({
       readyStatus={readyStatus}
       onChangeReadyStatus={onChangeReadyStatus}
       onClickExit={onClickExit}
+      onClickReadyBtn={onClickReadyBtn}
+      onClickCancelBtn={onClickCancelBtn}
     />
   );
 };

@@ -78,11 +78,10 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
                     <input
                       className='w-full truncate bg-transparent'
                       type='text'
-                      value={player.nickname}
+                      value={'(나) ' + player.nickname}
                       onChange={onChangeUserName}
                       disabled
                     />
-                    <span> (나)</span>
                     {type === 'WAIT' && !player.ready ? (
                       <button onClick={onChangeUpdateUserNameStatus}>
                         {/* <FontAwesomeIcon icon={faPenToSquareIconDefinition} /> */}

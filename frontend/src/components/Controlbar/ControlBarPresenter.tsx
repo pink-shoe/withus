@@ -19,6 +19,8 @@ interface IControlBarPresenterProps {
   readyStatus: boolean;
   onChangeReadyStatus: () => void;
   onClickExit: () => void;
+  onClickReadyBtn: () => void;
+  onClickCancelBtn: () => void;
 }
 
 export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
@@ -34,6 +36,8 @@ export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
   onChangeGameSettingModal,
   readyStatus,
   onChangeReadyStatus,
+  onClickCancelBtn,
+  onClickReadyBtn,
   onClickExit,
 }) => {
   return (

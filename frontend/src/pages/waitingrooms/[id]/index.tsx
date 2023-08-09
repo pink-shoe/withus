@@ -14,36 +14,46 @@ import { getRoomInfoApi } from 'apis/roomApi';
 import { useQuery } from '@tanstack/react-query';
 export default function WaitingRoom() {
   const location = useLocation();
-
   const currentPath = Number(
     location.pathname.slice(location.pathname.lastIndexOf('/') + 1, location.pathname.length)
   );
 
-  const { data } = useQuery(['rooms/info'], () => getRoomInfoApi(currentPath));
-
   const [user, setUser] = useAtom<IUserAtom>(userAtom);
-  const roomInfo = useAtomValue<IRoomAtom>(roomAtom);
-  // const [roomInfo, setRoomInfo] = useAtom(roomAtom);
-  const setRoomInfo = useSetAtom(roomAtom);
+  const [roomInfo, setRoomInfo] = useAtom(roomAtom);
   const [isHost, setIsHost] = useState<boolean>(false);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
-  const [readyStatus, setReadyStatus] = useState<boolean>(false);
+  // const [readyStatus, setReadyStatus] = useState<boolean>(false);
+
   const [playerList, setPlayerList] = useState<IPlayerInfo[]>([]);
-  // const getRoomData = async () => {
-  //   const result = (await getRoomInfoApi(currentPath)) as IRoomAtom;
-  //   console.log('result', result);
-  //   setRoomInfo(result);
-  //   setPlayerList(result.playerInfos);
-  // };
+
+  const { data } = useQuery(['rooms/info'], () => getRoomInfoApi(currentPath), {});
+  const [isReady, setIsReady] = useState<boolean>(false);
+  const getRoomData = async () => {
+    const result = (await getRoomInfoApi(currentPath)) as IRoomAtom;
+    if (result) {
+      setRoomInfo(result);
+      setPlayerList(result.playerInfos);
+      setIsHost(result.hostId === user.memberId);
+    }
+  };
 
   useEffect(() => {
     if (data) {
       setRoomInfo(data as IRoomAtom);
       const roomInfo = data as IRoomAtom;
-      console.log('asdf', roomInfo);
+      // console.log('asdf', roomInfo);
       roomInfo.playerInfos && setPlayerList(roomInfo.playerInfos);
       roomInfo.hostId && setIsHost(roomInfo.hostId === user.memberId);
-      // getRoomData();
+
+      if (roomInfo.playerInfos) {
+        // setIsReady()
+        // console.log('player', roomInfo.playerInfos);
+        const player = roomInfo.playerInfos.find((player) => {
+          return player.playerId === user.memberId;
+        });
+        player && setIsReady(player?.ready);
+        // getRoomData();
+      }
     }
   }, [data]);
 
@@ -59,19 +69,19 @@ export default function WaitingRoom() {
     streamList,
     // subscribers,
     // setSubscribers,
-    updateUserStatus,
+    // updateUserStatus,
     onChangeCameraStatus,
     onChangeMicStatus,
     sendSignal,
-  } = useOpenvidu(user.memberId, user.nickname, readyStatus, Number(currentPath));
+  } = useOpenvidu(user.memberId, user.nickname, Number(currentPath));
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
   };
 
-  const onChangeReadyStatus = (readyStatus: boolean) => {
-    setReadyStatus(!readyStatus);
-  };
+  // const onChangeReadyStatus = (readyStatus: boolean) => {
+  //   setIs(!readyStatus);
+  // };
 
   // const onChangeUserName = (userName: string) => {
   //   setUserName(userName);
@@ -87,32 +97,12 @@ export default function WaitingRoom() {
   const receiveSignal = (type: signalType) => {
     if (session && publisher) {
       publisher.stream.session.on('signal:' + type, (e: any) => {
-        const data = JSON.parse(e.data);
-        type === 'READY'
-          ? updateUserStatus(data.userId, true)
-          : type === 'CANCEL_READY'
-          ? updateUserStatus(data.userId, false)
-          : null;
-        // const newStreamList = streamList.map((stream) => {
-        //   if (stream.userId === data.userId) {
-        //     if (type === 'READY') return { ...stream, isReady: true };
-        //     else if (type === 'CANCEL_READY') return { ...stream, isReady: false };
-        //     console.log('test', userId, stream);
-        //   }
-        //   console.log('testtest', data.userId, stream.userId);
-        //   return { ...stream };
-        // });
+        const result = JSON.parse(e.data);
+        console.log(result);
 
-        // // setSubscribers((prev) => {
-
-        // // })
-        // console.log('tt', newStreamList);
-        // setSubscribers(newStreamList);
-        // type === 'READY' ?
-
-        // : type === 'CANCEL_READY' ? :
-
-        console.log(data);
+        // console.log(data);
+        // if (e.data) console.log(e.data);
+        if (e.data) getRoomData();
       });
     }
   };
@@ -122,10 +112,12 @@ export default function WaitingRoom() {
   // }, [readyStatus]);
 
   useEffect(() => {
-    session && publisher && receiveSignal('READY');
-    session && publisher && receiveSignal('CANCEL_READY');
+    session && publisher && (receiveSignal('READY'), receiveSignal('CANCEL_READY'));
   }, [session, publisher]);
 
+  // useEffect(() => {
+  //   getRoomData();
+  // }, [receiveSignal]);
   // useEffect(() => {
   //   console.log(streamList);
   // }, [streamList]);
@@ -167,11 +159,10 @@ export default function WaitingRoom() {
               <ControlBarContainer
                 type={'WAIT'}
                 isHost={isHost}
-                readyStatus={readyStatus}
+                readyStatus={isReady}
                 onChangeMicStatus={onChangeMicStatus}
                 onChangeCameraStatus={onChangeCameraStatus}
                 onChangeChatStatus={onChangeChatStatus}
-                onChangeReadyStatus={onChangeReadyStatus}
                 sendSignal={sendSignal}
                 roomId={roomInfo.room.roomId}
               />

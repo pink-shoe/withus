@@ -51,7 +51,7 @@ export default function GameRoom() {
     onChangeMicStatus,
     sendSignal,
     // receiveSignal,
-  } = useOpenvidu(user.memberId, user.nickname, readyStatus, roomInfo.room.roomId!);
+  } = useOpenvidu(user.memberId, user.nickname, roomInfo.room.roomId!);
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
@@ -184,7 +184,6 @@ export default function GameRoom() {
               onChangeMicStatus={onChangeMicStatus}
               onChangeCameraStatus={onChangeCameraStatus}
               onChangeChatStatus={onChangeChatStatus}
-              onChangeReadyStatus={onChangeReadyStatus}
               sendSignal={sendSignal}
               roomId={roomInfo.room.roomId}
             />
