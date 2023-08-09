@@ -12,10 +12,10 @@ export default function PaginationPresenter({
   totalPages,
 }: IPaginationPresenterProps) {
   return (
-    <div className='flex justify-center mt-8 py-4'>
+    <div className='flex justify-center'>
       {/* Pagination */}
       <button
-        className='px-4 py-2 m-2 border rounded bg-white hover:bg-blue-500'
+        className='px-4 py-2 border rounded bg-white hover:bg-blue-500'
         onClick={() => onClickPage(currentPage - 1)}
         disabled={currentPage === 1}
       >
@@ -25,7 +25,7 @@ export default function PaginationPresenter({
         typeof pageNum === 'number' ? (
           <button
             key={index}
-            className={`px-4 py-2 m-1 border rounded ${
+            className={`px-4 py-2  border rounded ${
               pageNum === currentPage ? 'bg-blue-500' : 'bg-white'
             }`}
             onClick={() => onClickPage(pageNum)}
@@ -37,7 +37,7 @@ export default function PaginationPresenter({
         )
       )}
       <button
-        className='px-4 py-2 m-2 border rounded bg-white hover:bg-blue-500'
+        className='px-4 py-2 border rounded bg-white hover:bg-blue-500'
         onClick={() => onClickPage(currentPage + 1)}
         disabled={currentPage === totalPages}
       >

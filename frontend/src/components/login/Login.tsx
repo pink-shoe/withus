@@ -9,8 +9,8 @@ export default function Login() {
   return (
     <div className='flex flex-col justify-center h-screen'>
       <div className='flex flex-wrap justify-center mb-10'>
-        <p className='font-kdisplay text-4xl flex'>나만의 방과 사진첩을</p>
-        <p className='font-kdisplay text-4xl flex'>구경해보세요!!</p>
+        <p className='font-kdisplay text-4xl flex hover:text-[#FF8D8D]'>나만의 방과 사진첩을</p>
+        <p className='font-kdisplay text-4xl flex hover:text-[#FF8D8D]'>구경해보세요!!</p>
       </div>
       <KakaoLogin />
       <div className='mt-4'>
