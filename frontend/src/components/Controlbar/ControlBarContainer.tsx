@@ -3,17 +3,17 @@ import { FC, useEffect, useState } from 'react';
 import { ControlBarPresenter } from './ControlBarPresenter';
 import { useNavigate } from 'react-router-dom';
 import { signalType } from 'hooks/useOpenvidu';
-import { cancelApi, exitRoomApi, readyApi } from 'apis/roomApi';
+import { cancelApi, checkStartApi, exitRoomApi, readyApi } from 'apis/roomApi';
 
 interface IControlBarProps {
   type: 'WAIT' | 'GAME';
   isHost: boolean;
   roomId: number;
-  readyStatus: boolean;
+  roomCode: number;
+  readyStatus?: boolean;
   onChangeMicStatus: (status: boolean) => void;
   onChangeCameraStatus: (status: boolean) => void;
   onChangeChatStatus: (status: boolean) => void;
-  // onChangeReadyStatus: (status: boolean) => void;
   sendSignal: (message: string, type: signalType) => void;
 }
 
@@ -21,6 +21,7 @@ export const ControlBarContainer: FC<IControlBarProps> = ({
   type,
   isHost,
   roomId,
+  roomCode,
   readyStatus: isReady,
   sendSignal,
   ...callback
@@ -44,12 +45,9 @@ export const ControlBarContainer: FC<IControlBarProps> = ({
     if (chatStatus) {
     }
   };
+
   const onChangeGameSettingModal = () => {
     setGameSettingModal((prev) => !prev);
-  };
-
-  const onChangeReadyStatus = () => {
-    setReadyStatus((prev) => !prev);
   };
 
   const onClickExit = async () => {
@@ -69,16 +67,6 @@ export const ControlBarContainer: FC<IControlBarProps> = ({
     callback.onChangeChatStatus(chatStatus);
   }, [chatStatus, callback]);
 
-  // useEffect(() => {
-  //   callback.onChangeReadyStatus(readyStatus);
-  //   readyStatus ? onClickCancelBtn() : onClickReadyBtn();
-  //   // changeReadyStatus();
-  // }, [readyStatus, callback]);
-
-  // useEffect(() => {
-  //   readyStatus ? onClickCancelBtn() : onClickReadyBtn();
-  // }, [readyStatus]);
-
   const onClickReadyBtn = async () => {
     sendSignal('준비완료', 'READY');
     const result = (await readyApi(roomId)) as any;
@@ -92,6 +80,16 @@ export const ControlBarContainer: FC<IControlBarProps> = ({
     console.log('change ready', result);
     if (result.status === 200) setReadyStatus(false);
   };
+
+  const onClickStartBtn = async () => {
+    sendSignal(`${roomId}`, 'START');
+    const result = (await checkStartApi(roomId)) as any;
+    console.log('game start', result);
+    console.log(result);
+    navigate(`/gamerooms/${roomCode}`);
+    // if (result.status === 200) console.log(result);
+  };
+
   return (
     <ControlBarPresenter
       type={type}
@@ -105,10 +103,10 @@ export const ControlBarContainer: FC<IControlBarProps> = ({
       gameSettingModal={gameSettingModal}
       onChangeGameSettingModal={onChangeGameSettingModal}
       readyStatus={readyStatus}
-      onChangeReadyStatus={onChangeReadyStatus}
       onClickExit={onClickExit}
       onClickReadyBtn={onClickReadyBtn}
       onClickCancelBtn={onClickCancelBtn}
+      onClickStartBtn={onClickStartBtn}
     />
   );
 };

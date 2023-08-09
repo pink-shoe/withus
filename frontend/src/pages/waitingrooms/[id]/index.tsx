@@ -1,7 +1,7 @@
 import Background from '@components/common/Background';
 import { useEffect, useState } from 'react';
 import { VideoStream } from '@components/VideoStream';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { signalType, useOpenvidu } from 'hooks/useOpenvidu';
 import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
 import ChatContainer from '@components/Chat/ChatContainer';
@@ -17,12 +17,12 @@ export default function WaitingRoom() {
   const currentPath = Number(
     location.pathname.slice(location.pathname.lastIndexOf('/') + 1, location.pathname.length)
   );
+  const navigate = useNavigate();
 
   const [user, setUser] = useAtom<IUserAtom>(userAtom);
   const [roomInfo, setRoomInfo] = useAtom(roomAtom);
   const [isHost, setIsHost] = useState<boolean>(false);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
-
   const [playerList, setPlayerList] = useState<IPlayerInfo[]>([]);
 
   const { data } = useQuery(['rooms/info'], () => getRoomInfoApi(currentPath), {});
@@ -89,32 +89,24 @@ export default function WaitingRoom() {
     if (session && publisher) {
       publisher.stream.session.on('signal:' + type, (e: any) => {
         const result = JSON.parse(e.data);
-        console.log(result);
-
-        // console.log(data);
-        // if (e.data) console.log(e.data);
+        console.log('game start', type, result);
+        if (type === 'START') navigate(`/gamerooms/${currentPath}`);
         if (e.data) getRoomData();
       });
     }
   };
 
-  // useEffect(() => {
-  //   console.log('wait ', readyStatus);
-  // }, [readyStatus]);
-
   useEffect(() => {
-    session && publisher && (receiveSignal('READY'), receiveSignal('CANCEL_READY'));
+    session &&
+      publisher &&
+      (receiveSignal('READY'), receiveSignal('CANCEL_READY'), receiveSignal('START'));
   }, [session, publisher]);
 
-  // useEffect(() => {
-  //   getRoomData();
-  // }, [receiveSignal]);
   useEffect(() => {
     getRoomData();
   }, [streamList]);
 
   return (
-    // <section >
     <Background isLobbyPage={false}>
       <div className='flex w-full h-full'>
         {/* 참가자 목록 */}
@@ -127,7 +119,8 @@ export default function WaitingRoom() {
               // userName={userName}
               // onChangeUserName={onChangeUserName}
               playerList={playerList}
-              isHost={isHost} // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
+              isHost={isHost}
+              // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
             />
           )}
         </div>
@@ -154,9 +147,9 @@ export default function WaitingRoom() {
                 onChangeMicStatus={onChangeMicStatus}
                 onChangeCameraStatus={onChangeCameraStatus}
                 onChangeChatStatus={onChangeChatStatus}
-                // onChangeReadyStatus={onChangeReadyStatus}
                 sendSignal={sendSignal}
                 roomId={roomInfo.room.roomId}
+                roomCode={Number(currentPath)}
               />
             )}
           </div>
@@ -169,6 +162,5 @@ export default function WaitingRoom() {
         />
       </div>
     </Background>
-    // </section>
   );
 }

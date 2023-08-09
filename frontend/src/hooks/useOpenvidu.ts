@@ -13,7 +13,6 @@ export interface IStreamList {
   streamManager: any;
   userId: number;
   nickname: string;
-  // isReady: boolean;
 }
 const getConnectionId = (user: IUser) => {
   return user.connectionId;
@@ -67,7 +66,6 @@ export const useOpenvidu = (
             streamManager: subscriber,
             userId: +data.userId,
             nickname: data.nickname,
-            isReady: data.isReady,
           },
         ];
       });
@@ -233,22 +231,16 @@ export const useOpenvidu = (
   //   // });
   // };
 
-  const streamList = useMemo(
+  const streamList: any = useMemo(
     () => [
       {
         streamManager: publisher,
         userId,
         nickname,
-        // isReady: readyStatus
       },
       ...subscribers,
     ],
-    [
-      publisher,
-      subscribers,
-      userId,
-      // readyStatus
-    ]
+    [publisher, subscribers, userId]
   );
 
   return {

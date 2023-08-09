@@ -50,7 +50,7 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
               key={idx}
               className={
                 'flex relative justify-between items-center w-full text-justify border-bottom border-b-2 p-3 text-[#514148] text-xl' +
-                ` ${player.ready ? 'bg-[#FFF5C0]' : 'bg-white'} `
+                ` ${type === 'WAIT' && player.ready ? 'bg-[#FFF5C0]' : 'bg-white'} `
               }
             >
               {user.memberId === player.playerId ? (
@@ -99,7 +99,7 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
                   disabled
                 />
               )}
-              {player.ready && (
+              {type === 'WAIT' && player.ready && (
                 <div className=' text-[#FF8DA3] whitespace-nowrap absolute right-2 top-2'>
                   준비완료
                 </div>

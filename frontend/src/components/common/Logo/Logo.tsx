@@ -31,8 +31,8 @@ export default function Logo({ isGameRoomLogo }: ILogoProps) {
               colors={['#FA8D8D', '#FA8D8D', '#F84C4C', '#F84C4C']}
               colorsTime={[4, 2.66, 1.33, 0]}
               onUpdate={(remainingTime) => {
-                console.log('Counter is ', count);
-                console.log('Remaining time is ', remainingTime);
+                // console.log('Counter is ', count);
+                // console.log('Remaining time is ', remainingTime);
               }}
               onComplete={() => ({ shouldRepeat: true })}
               strokeWidth={20}

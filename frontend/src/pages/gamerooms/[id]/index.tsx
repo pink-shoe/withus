@@ -10,67 +10,57 @@ import ChatContainer from '@components/Chat/ChatContainer';
 import { CountdownCircleTimer, useCountdown } from 'react-countdown-circle-timer';
 import { IPlayerAtom, IUserAtom, userAtom } from 'stores/user';
 import { useAtom } from 'jotai';
-import { IRoomAtom, roomAtom } from 'stores/room';
+import { IPlayerInfo, IRoomAtom, roomAtom } from 'stores/room';
 import Background from '@components/common/Background';
 import Board from '@components/common/Board';
 import { getRoomInfoApi } from 'apis/roomApi';
+import { useQuery } from '@tanstack/react-query';
 
 export default function GameRoom() {
   const location = useLocation();
-
   const currentPath = Number(
     location.pathname.slice(location.pathname.lastIndexOf('/') + 1, location.pathname.length)
   );
-
-  // const getRoomData = async () => {
-  //   const result = (await getRoomInfoApi(currentPath)) as IRoomAtom;
-  //   result && setRoomInfo(result);
-  // };
-
-  // useEffect(() => {
-  //   getRoomData();
-  //   console.log(roomInfo);
-  // }, []);
 
   const [user, setUser] = useAtom<IUserAtom>(userAtom);
   const [roomInfo, setRoomInfo] = useAtom(roomAtom);
   const [isHost, setIsHost] = useState<boolean>(true);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
-  const [readyStatus, setReadyStatus] = useState<boolean>(false);
-  const [isUpdateUserName, setIsUpdateUserName] = useState<boolean>(false);
-  // const player: IPlayerAtom = {
-  //   memberId: user.memberId,
-  //   nickname: user.nickname,
-  //   ready: readyStatus,
-  // };
-  const {
-    session,
-    publisher,
-    streamList,
-    onChangeCameraStatus,
-    onChangeMicStatus,
-    sendSignal,
-    // receiveSignal,
-  } = useOpenvidu(user.memberId, user.nickname, roomInfo.room.roomId!);
+  const [playerList, setPlayerList] = useState<IPlayerInfo[]>([]);
+
+  const { data } = useQuery(['rooms/info'], () => getRoomInfoApi(currentPath), {});
+  const [isReady, setIsReady] = useState<boolean>(false);
+  const getRoomData = async () => {
+    const result = (await getRoomInfoApi(currentPath)) as IRoomAtom;
+    if (result) {
+      setRoomInfo(result);
+      setPlayerList(result.playerInfos);
+      setIsHost(result.hostId === user.memberId);
+    }
+  };
+  useEffect(() => {
+    if (data) {
+      setRoomInfo(data as IRoomAtom);
+      const roomInfo = data as IRoomAtom;
+      roomInfo.playerInfos && setPlayerList(roomInfo.playerInfos);
+      roomInfo.hostId && setIsHost(roomInfo.hostId === user.memberId);
+
+      if (roomInfo.playerInfos) {
+        const player = roomInfo.playerInfos.find((player) => {
+          return player.playerId === user.memberId;
+        });
+        player && setIsReady(player?.ready);
+      }
+    }
+  }, [data]);
+
+  const { session, publisher, streamList, onChangeCameraStatus, onChangeMicStatus, sendSignal } =
+    useOpenvidu(user.memberId, user.nickname, roomInfo.room.roomId!);
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
   };
 
-  const onChangeReadyStatus = (readyStatus: boolean) => {
-    setReadyStatus(!readyStatus);
-  };
-
-  // const onChangeUserName = (userName: string) => {
-  //   setUser((prevUser: IUserAtom) => ({
-  //     ...prevUser,
-  //     nickname: userName,
-  //   }));
-  // };
-
-  const onChangeIsUpdateUserName = (isUpdateUserName: boolean) => {
-    setIsUpdateUserName(!isUpdateUserName);
-  };
   const divRef = useRef<HTMLDivElement>(null);
 
   const handleDownload = async () => {
@@ -89,29 +79,26 @@ export default function GameRoom() {
     }
   };
 
-  useEffect(() => {
-    session && publisher && receiveSignal('READY');
-    session && publisher && receiveSignal('CANCEL_READY');
-  }, [session, publisher]);
-
   // const [isPlaying, setIsPlaying] = useState(true);
   // const [count, setCount] = useState(5);
 
   const receiveSignal = (type: signalType) => {
     if (session && publisher) {
       publisher.stream.session.on('signal:' + type, (e: any) => {
-        const data = JSON.parse(e.data);
-        console.log(data);
+        const result = JSON.parse(e.data);
+        console.log(result);
+
+        if (e.data) getRoomData();
       });
     }
   };
   useEffect(() => {
-    session && publisher && receiveSignal('READY');
-    session && publisher && receiveSignal('CANCEL_READY');
+    session && publisher && receiveSignal('ROUND');
   }, [session, publisher]);
 
   useEffect(() => {
-    console.log('streamList', streamList);
+    getRoomData();
+    console.log('streamlist', streamList);
   }, [streamList]);
 
   return (
@@ -122,9 +109,8 @@ export default function GameRoom() {
           <ParticipantsContainer
             type={'GAME'}
             user={user}
-            // onChangeUserName={onChangeUserName}
-            playerList={roomInfo.playerInfos} // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
-            isHost={isHost} // type={'GAME'}
+            playerList={roomInfo.playerInfos}
+            isHost={isHost}
           />
         </div>
         {/* openvidu 화면 */}
@@ -180,12 +166,13 @@ export default function GameRoom() {
             <ControlBarContainer
               type={'GAME'}
               isHost={isHost}
-              readyStatus={readyStatus}
+              readyStatus={isReady}
               onChangeMicStatus={onChangeMicStatus}
               onChangeCameraStatus={onChangeCameraStatus}
               onChangeChatStatus={onChangeChatStatus}
               sendSignal={sendSignal}
               roomId={roomInfo.room.roomId}
+              roomCode={Number(currentPath)}
             />
           </div>
           {/* <button onClick={handleDownload}>다운로드</button> */}
@@ -195,7 +182,6 @@ export default function GameRoom() {
           session={session}
           publisher={publisher}
           sendSignal={sendSignal}
-          // receiveSignal={receiveSignal}
         />
       </div>
     </Background>
