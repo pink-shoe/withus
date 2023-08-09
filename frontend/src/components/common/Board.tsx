@@ -1,7 +1,6 @@
 import { Fragment } from 'react';
 import Logo from './Logo/Logo';
-import './Logo/LogoStyle.css'
-
+import './Logo/LogoStyle.css';
 
 export type boardType = 'GAME' | 'WAIT' | 'LOBBY' | 'ALBUM';
 
@@ -21,7 +20,7 @@ export default function Board({ boardType, children }: IBoardProps) {
               <div className='drop-shadow-xl rounded-md bg-yellow-100 h-[2.5rem] w-10/12'></div>
             </div>
             <div className='flex justify-center'>
-              <Logo isGameRoomLogo={true} />
+              <Logo logoType={'GAMELOGO'} />
             </div>
           </div>
           <div className='flex justify-center align-middle'>
@@ -39,10 +38,10 @@ export default function Board({ boardType, children }: IBoardProps) {
           <div className='static'>
             <div className='flex justify-center'>
               <div className='drop-shadow-xl rounded-md bg-yellow-100 h-[2.5rem] w-10/12'></div>
-              </div>
-              <div className='flex justify-center'>
-                <Logo isGameRoomLogo={false} />
-              </div>
+            </div>
+            <div className='flex justify-center'>
+              <Logo logoType={'LOBBYLOGO'} />
+            </div>
           </div>
           <div className='flex justify-center align-middle'>
             <div className='flex justify-center place-items-center h-[30rem] w-9/12 bg-white'>
@@ -54,12 +53,14 @@ export default function Board({ boardType, children }: IBoardProps) {
           </div>
         </div>
       ) : boardType === 'ALBUM' ? (
-        // 로비 화면(다른 곳에서도 사용 가능)
+        // 사진첩 화면
         <div className='h-full min-w-[490px] 2sm:w-full pl-12 pt-12 pb-8'>
           <div className='flex justify-center'>
             <div className='drop-shadow-xl rounded-md bg-yellow-100 h-[2.5rem] w-11/12'></div>
           </div>
           <div className='flex justify-center align-middle'>
+            {/* 로고 만들어서 지금 여기 있어!! */}
+            <Logo logoType={'ALBUMLOGO'}></Logo>
             <div className='flex justify-center place-items-center h-[600px] w-10/12 bg-white'>
               {children}
             </div>
@@ -69,13 +70,14 @@ export default function Board({ boardType, children }: IBoardProps) {
           </div>
         </div>
       ) : (
+        // 로비 화면(다른 곳에서도 사용 가능)
         <div className='h-[38rem] min-w-[490px] 2sm:w-full'>
           <div className='static'>
             <div className='flex justify-center'>
               <div className='drop-shadow-xl rounded-md bg-yellow-100 h-[2.5rem] w-10/12'></div>
             </div>
             <div className='w-full flex justify-center'>
-              <Logo isGameRoomLogo={false} />
+              <Logo logoType={'LOBBYLOGO'} />
             </div>
           </div>
           <div className='flex justify-center align-middle'>
