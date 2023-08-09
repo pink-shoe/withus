@@ -16,7 +16,7 @@ export default function UserHeader({ isLobbyDropdown }: IUserHeaderProps) {
     userLogoutApi();
     console.log('로그아웃 됨');
     localStorage.removeItem('token');
-    localStorage.removeItem('acessToken');
+    localStorage.removeItem('accessToken');
     navigate('/login');
   };
 
