@@ -12,7 +12,7 @@ export default function KakaoRedirection() {
   const [isLoading, setIsLoading] = useState(true);
 
   function handleKakaoLogin() {
-    console.log(`handleKakaologin 함수 스타트! 카카오 ${code}`);
+    console.log(`handleKakaologin 스타트! code: ${code}`);
 
     axios
       .get(kakaobackURL, {

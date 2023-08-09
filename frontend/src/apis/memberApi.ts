@@ -38,7 +38,7 @@ export async function deleteMemberApi(nickname: string) {
   const navigate = useNavigate();
   try {
     const response = await axios.delete(apiUrl);
-    localStorage.removeItem('jwttoken');
+    localStorage.removeItem('token');
     navigate('/login');
     console.log('성공:', response);
 
