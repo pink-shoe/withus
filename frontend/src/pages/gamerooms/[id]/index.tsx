@@ -168,7 +168,7 @@ export default function GameRoom() {
               </div>
 
           </Board>
-          <div className='p-3 mt-2 align-bottom'>
+          <div className='p-2 mt-2 align-bottom'>
             <ControlBarContainer
               type={'GAME'}
               isHost={isHost}
