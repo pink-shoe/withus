@@ -9,55 +9,57 @@ import ParticipantsContainer from '@components/ParticipantsList/ParticipantListC
 import ChatContainer from '@components/Chat/ChatContainer';
 import { IPlayerAtom, IUserAtom, userAtom } from 'stores/user';
 import { useAtom } from 'jotai';
-import { IRoomAtom, roomAtom } from 'stores/room';
+import { IPlayerInfo, IRoomAtom, roomAtom } from 'stores/room';
 import Background from '@components/common/Background';
 import Board from '@components/common/Board';
+import { getRoomInfoApi } from 'apis/roomApi';
+import { useQuery } from '@tanstack/react-query';
 
 export default function GameRoom() {
   const location = useLocation();
-
   const currentPath = Number(
     location.pathname.slice(location.pathname.lastIndexOf('/') + 1, location.pathname.length)
   );
+
   const [user, setUser] = useAtom<IUserAtom>(userAtom);
-  const [roomInfo, setRoomInfo] = useAtom<IRoomAtom>(roomAtom);
+  const [roomInfo, setRoomInfo] = useAtom(roomAtom);
   const [isHost, setIsHost] = useState<boolean>(true);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
-  const [readyStatus, setReadyStatus] = useState<boolean>(false);
-  const [isUpdateUserName, setIsUpdateUserName] = useState<boolean>(false);
-  const player: IPlayerAtom = {
-    memberId: user.memberId,
-    nickname: user.nickname,
-    ready: readyStatus,
+  const [playerList, setPlayerList] = useState<IPlayerInfo[]>([]);
+
+  const { data } = useQuery(['rooms/info'], () => getRoomInfoApi(currentPath), {});
+  const [isReady, setIsReady] = useState<boolean>(false);
+  const getRoomData = async () => {
+    const result = (await getRoomInfoApi(currentPath)) as IRoomAtom;
+    if (result) {
+      setRoomInfo(result);
+      setPlayerList(result.playerInfos);
+      setIsHost(result.hostId === user.memberId);
+    }
   };
-  const {
-    session,
-    publisher,
-    streamList,
-    onChangeCameraStatus,
-    onChangeMicStatus,
-    sendSignal,
-    // receiveSignal,
-  } = useOpenvidu(user.memberId, user.nickname, readyStatus, roomInfo.roomId);
+  useEffect(() => {
+    if (data) {
+      setRoomInfo(data as IRoomAtom);
+      const roomInfo = data as IRoomAtom;
+      roomInfo.playerInfos && setPlayerList(roomInfo.playerInfos);
+      roomInfo.hostId && setIsHost(roomInfo.hostId === user.memberId);
+
+      if (roomInfo.playerInfos) {
+        const player = roomInfo.playerInfos.find((player) => {
+          return player.playerId === user.memberId;
+        });
+        player && setIsReady(player?.ready);
+      }
+    }
+  }, [data]);
+
+  const { session, publisher, streamList, onChangeCameraStatus, onChangeMicStatus, sendSignal } =
+    useOpenvidu(user.memberId, user.nickname, roomInfo.room.roomId!);
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
   };
 
-  const onChangeReadyStatus = (readyStatus: boolean) => {
-    setReadyStatus(!readyStatus);
-  };
-
-  // const onChangeUserName = (userName: string) => {
-  //   setUser((prevUser: IUserAtom) => ({
-  //     ...prevUser,
-  //     nickname: userName,
-  //   }));
-  // };
-
-  const onChangeIsUpdateUserName = (isUpdateUserName: boolean) => {
-    setIsUpdateUserName(!isUpdateUserName);
-  };
   const divRef = useRef<HTMLDivElement>(null);
 
   const handleDownload = async () => {
@@ -81,18 +83,27 @@ export default function GameRoom() {
     session && publisher && receiveSignal('CANCEL_READY');
   }, [session, publisher]);
 
+  // const [isPlaying, setIsPlaying] = useState(true);
+  // const [count, setCount] = useState(5);
+
   const receiveSignal = (type: signalType) => {
     if (session && publisher) {
       publisher.stream.session.on('signal:' + type, (e: any) => {
-        const data = JSON.parse(e.data);
-        console.log(data);
+        const result = JSON.parse(e.data);
+        console.log(result);
+
+        if (e.data) getRoomData();
       });
     }
   };
   useEffect(() => {
-    session && publisher && receiveSignal('READY');
-    session && publisher && receiveSignal('CANCEL_READY');
+    session && publisher && receiveSignal('ROUND');
   }, [session, publisher]);
+
+  useEffect(() => {
+    getRoomData();
+    console.log('streamlist', streamList);
+  }, [streamList]);
 
   return (
     <Background isLobbyPage={false}>
@@ -102,36 +113,34 @@ export default function GameRoom() {
           <ParticipantsContainer
             type={'GAME'}
             user={user}
-            // onChangeUserName={onChangeUserName}
-            publisher={publisher}
-            streamList={streamList}
-            readyStatus={readyStatus}
-            // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
-            // type={'GAME'}
+            playerList={roomInfo.playerInfos}
+            isHost={isHost}
           />
         </div>
         {/* openvidu 화면 */}
         <div className='w-full'>
           <Board boardType='GAME'>
-            <header className=' h-fit flex items-center'></header>
+            <header className=' h-fit flex items-center gap-2 '></header>
             <div className='aspect-[4/3]'>
               {publisher && (
                 <div
                   ref={divRef}
                   className='aspect-[4/3] grid grid-flow-dense grid-rows-2 grid-cols-2'
                 >
-                  {streamList?.map((stream: any, idx: number) => {
-                    // const userInfo = streamList.find((it: any) => it.userId === stream.userId);
-                    return (
-                      <div className='w-full h-full xl:h-[17rem]' key={idx}>
-                        <VideoStream
-                          streamManager={stream.streamManager}
-                          name={stream.userName}
-                          isMe={stream.userId === user.memberId}
-                        />
-                      </div>
-                    );
-                  })}
+                  {streamList
+                    .sort((a: any, b: any) => b.userId - a.userId)
+                    ?.map((stream: any, idx: number) => {
+                      // const userInfo = streamList.find((it: any) => it.userId === stream.userId);
+                      return (
+                        <div className='w-full h-full' key={idx}>
+                          <VideoStream
+                            streamManager={stream.streamManager}
+                            name={stream.userName}
+                            isMe={stream.userId === user.memberId}
+                          />
+                        </div>
+                      );
+                    })}
                 </div>
               )}
             </div>
@@ -140,12 +149,13 @@ export default function GameRoom() {
             <ControlBarContainer
               type={'GAME'}
               isHost={isHost}
-              readyStatus={readyStatus}
+              readyStatus={isReady}
               onChangeMicStatus={onChangeMicStatus}
               onChangeCameraStatus={onChangeCameraStatus}
               onChangeChatStatus={onChangeChatStatus}
-              onChangeReadyStatus={onChangeReadyStatus}
               sendSignal={sendSignal}
+              roomId={roomInfo.room.roomId}
+              roomCode={Number(currentPath)}
             />
           </div>
           {/* <button onClick={handleDownload}>다운로드</button> */}
@@ -155,7 +165,6 @@ export default function GameRoom() {
           session={session}
           publisher={publisher}
           sendSignal={sendSignal}
-          // receiveSignal={receiveSignal}
         />
       </div>
     </Background>

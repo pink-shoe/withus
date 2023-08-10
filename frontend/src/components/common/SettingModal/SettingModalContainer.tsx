@@ -59,7 +59,7 @@ export default function SettingModalContainer({
     console.log(result);
     if (result.status === 201) {
       setRoomInfo(result.data);
-      navigate(`/waitingrooms/${result.data.roomCode}`);
+      navigate(`/waitingrooms/${result.data}`);
     }
   };
 
