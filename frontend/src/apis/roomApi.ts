@@ -73,6 +73,7 @@ export const updateRoomApi = async (
 export const exitRoomApi = async (roomId: number) => {
   try {
     // 헤더에 토큰을 포함하여 요청을 보냅니다.
+    // const response = await axios.delete(apiUrl + `/${roomId}`);
     const response = await axios.delete(apiUrl + `/${roomId}`);
     console.log('성공:', response.data);
     return response;
