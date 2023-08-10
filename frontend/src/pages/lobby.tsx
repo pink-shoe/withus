@@ -8,7 +8,6 @@ import Background from '../components/common/Background';
 import Board from '../components/common/Board';
 import { getMemberApi } from 'apis/memberApi';
 import { participateRoomApi } from 'apis/roomApi';
-import { roomAtom } from 'stores/room';
 
 export default function Lobby() {
   const [user, setUser] = useAtom(userAtom);
@@ -19,9 +18,15 @@ export default function Lobby() {
   const [enterCode, setEnterCode] = useState('');
 
   useEffect(() => {
-    getMemberApi(setUser).catch((error) => {
-      console.log('Error fetching data:', error);
-    });
+    const accessToken = localStorage.getItem('accessToken');
+
+    if (!accessToken) {
+      navigate('/login');
+    } else {
+      getMemberApi(setUser).catch((error) => {
+        console.log('Error fetching data:', error);
+      });
+    }
   }, []);
 
   console.log('user확인:', user);

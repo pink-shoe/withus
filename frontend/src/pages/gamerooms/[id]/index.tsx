@@ -139,7 +139,6 @@ export default function GameRoom() {
                   {streamList
                     .sort((a: any, b: any) => b.userId - a.userId)
                     ?.map((stream: any, idx: number) => {
-                      // const userInfo = streamList.find((it: any) => it.userId === stream.userId);
                       return (
                         <div className='w-full h-full' key={idx}>
                           <VideoStream
