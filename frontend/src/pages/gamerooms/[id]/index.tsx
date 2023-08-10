@@ -14,6 +14,7 @@ import Background from '@components/common/Background';
 import Board from '@components/common/Board';
 import { getRoomInfoApi } from 'apis/roomApi';
 import { useQuery } from '@tanstack/react-query';
+import { IGameInfo, getGameInfoApi, sendCaptureImageApi } from 'apis/gameApi';
 
 export default function GameRoom() {
   const location = useLocation();
@@ -23,35 +24,38 @@ export default function GameRoom() {
 
   const [user, setUser] = useAtom<IUserAtom>(userAtom);
   const [roomInfo, setRoomInfo] = useAtom(roomAtom);
+  const [gameRoomInfo, setGameRoomInfo] = useState<IGameInfo>();
   const [isHost, setIsHost] = useState<boolean>(true);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
-  const [playerList, setPlayerList] = useState<IPlayerInfo[]>([]);
+  // const [playerList, setPlayerList] = useState<IPlayerInfo[]>([]);
 
   const { data } = useQuery(['rooms/info'], () => getRoomInfoApi(currentPath), {});
-  const [isReady, setIsReady] = useState<boolean>(false);
-  const getRoomData = async () => {
-    const result = (await getRoomInfoApi(currentPath)) as IRoomAtom;
+  const { data: gameRoomData } = useQuery(
+    ['games/info'],
+    () => getGameInfoApi((data as IRoomAtom).room.roomId),
+    { enabled: !data }
+  );
+  const getGameData = async () => {
+    const room = data as IRoomAtom;
+    const result = (await getGameInfoApi(room.room.roomId)) as IGameInfo;
     if (result) {
-      setRoomInfo(result);
-      setPlayerList(result.playerInfos);
-      setIsHost(result.hostId === user.memberId);
+      setGameRoomInfo(result);
     }
   };
   useEffect(() => {
     if (data) {
       setRoomInfo(data as IRoomAtom);
       const roomInfo = data as IRoomAtom;
-      roomInfo.playerInfos && setPlayerList(roomInfo.playerInfos);
       roomInfo.hostId && setIsHost(roomInfo.hostId === user.memberId);
-
-      if (roomInfo.playerInfos) {
-        const player = roomInfo.playerInfos.find((player) => {
-          return player.playerId === user.memberId;
-        });
-        player && setIsReady(player?.ready);
-      }
     }
   }, [data]);
+
+  useEffect(() => {
+    if (gameRoomData) {
+      const gameData = gameRoomData as IGameInfo;
+      setGameRoomInfo(gameData);
+    }
+  }, [gameRoomData]);
 
   const { session, publisher, streamList, onChangeCameraStatus, onChangeMicStatus, sendSignal } =
     useOpenvidu(user.memberId, user.nickname, roomInfo.room.roomId!);
@@ -61,30 +65,30 @@ export default function GameRoom() {
   };
 
   const divRef = useRef<HTMLDivElement>(null);
-
   const handleDownload = async () => {
     if (!divRef.current) return;
 
     try {
       const div = divRef.current;
       const canvas = await html2canvas(div, { scale: 1 });
-      canvas.toBlob((blob) => {
-        if (blob !== null) {
-          saveAs(blob, 'result.png');
-        }
-      });
+      console.log(canvas.toDataURL());
+      const gameroom = gameRoomData as IGameInfo;
+      const result = await sendCaptureImageApi(
+        canvas.toDataURL(),
+        gameroom.currentRound,
+        gameroom.room.roomId,
+        gameroom.shapes.shapeId
+      );
+      console.log(result);
+      // canvas.toBlob((blob) => {
+      //   if (blob !== null) {
+      //     saveAs(blob, 'result.png');
+      //   }
+      // });
     } catch (error) {
       console.error('Error converting div to image:', error);
     }
   };
-
-  useEffect(() => {
-    session && publisher && receiveSignal('READY');
-    session && publisher && receiveSignal('CANCEL_READY');
-  }, [session, publisher]);
-
-  // const [isPlaying, setIsPlaying] = useState(true);
-  // const [count, setCount] = useState(5);
 
   const receiveSignal = (type: signalType) => {
     if (session && publisher) {
@@ -92,7 +96,7 @@ export default function GameRoom() {
         const result = JSON.parse(e.data);
         console.log(result);
 
-        if (e.data) getRoomData();
+        if (e.data) getGameData();
       });
     }
   };
@@ -101,7 +105,7 @@ export default function GameRoom() {
   }, [session, publisher]);
 
   useEffect(() => {
-    getRoomData();
+    getGameData();
     console.log('streamlist', streamList);
   }, [streamList]);
 
@@ -127,6 +131,7 @@ export default function GameRoom() {
             <div className='aspect-[4/3]'>
               {publisher && (
                 <div
+                  id='captureDiv'
                   ref={divRef}
                   className='aspect-[4/3] grid grid-flow-dense grid-rows-2 grid-cols-2'
                 >
@@ -152,7 +157,6 @@ export default function GameRoom() {
             <ControlBarContainer
               type={'GAME'}
               isHost={isHost}
-              readyStatus={isReady}
               onChangeMicStatus={onChangeMicStatus}
               onChangeCameraStatus={onChangeCameraStatus}
               onChangeChatStatus={onChangeChatStatus}
