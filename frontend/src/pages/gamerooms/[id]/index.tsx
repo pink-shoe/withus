@@ -13,7 +13,7 @@ import { IPlayerInfo, IRoomAtom, roomAtom } from 'stores/room';
 import Background from '@components/common/Background';
 import Board from '@components/common/Board';
 import { useQuery } from '@tanstack/react-query';
-import { IGameInfo, getGameInfoApi } from 'apis/gameApi';
+import { IGameInfo, getGameInfoApi, getGameResultApi } from 'apis/gameApi';
 
 export default function GameRoom() {
   const location = useLocation();
@@ -28,7 +28,6 @@ export default function GameRoom() {
   const [isHost, setIsHost] = useState<boolean>(false);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
   const [playerList, setPlayerList] = useState<IPlayerInfo[]>([]);
-
   const { data } = useQuery(['games/info'], () => getGameInfoApi(roomInfo.room.roomId));
   const getGameData = async () => {
     const result = (await getGameInfoApi(roomInfo.room.roomId)) as IGameInfo;
@@ -36,6 +35,8 @@ export default function GameRoom() {
       setGameRoomInfo(result);
       setPlayerList(result.playerInfos);
       setIsHost(result.hostId === user.memberId);
+      // 해당 부분은 api 연결 후 추가 확인 필요.
+      if (result.currentRound === result.room.roomRound) await getGameResultApi(result.room.roomId);
     }
   };
 
