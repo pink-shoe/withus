@@ -32,4 +32,7 @@ public class GetGameInfoRes {
     @ApiModelProperty(value = "현재 라운드", required = true, example = "1")
     @Builder.Default
     private int currentRound = 1;
+
+    @ApiModelProperty(value = "방장", required = true, example = "1")
+    private Long hostId;
 }
