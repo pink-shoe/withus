@@ -176,9 +176,9 @@ public class RoomServiceImpl implements RoomService {
     where room_id = roomId
      */
     public List<Player> getReadyPlayers(Long roomId) {
-        List<Long> readyMember = playerRepository.findReadyPlayersByRoomId(roomId);
+        List<Long> readyMember = playerRepository.findReadyPlayersByRoomIdWithoutHost(roomId, roomRepository.findHostIdByRoomId(roomId));
         List<Player> totalMember = playerRepository.findAllByRoomId(roomId);
-        if (readyMember.size() == totalMember.size()) {
+        if (readyMember.size() == totalMember.size() - 1) { // host 제외
             roomRepository.updateStart(roomId, true);
         } else {
             roomRepository.updateStart(roomId, false);

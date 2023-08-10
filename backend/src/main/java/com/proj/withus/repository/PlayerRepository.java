@@ -27,9 +27,6 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
     @Query("delete from Player p where p.member.id = :memberId ")
     int deletePlayerByMemberId(@Param("memberId") Long memberId);
 
-    @Query("select p.member.id from Player p where p.room.id = :roomId and p.ready = true")
-    List<Long> findReadyPlayersByRoomId(@Param("roomId") Long roomId);
-
     @Modifying
     // @Query("update Player p set p.ready = :readyStatus where p.id = :playerId")
     @Query(value = "update player set ready = 1 where player_id = :playerId", nativeQuery = true)
@@ -42,4 +39,6 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
     @Query("select p.ready from Player p where p.id = :playerId")
     boolean findPlayerById(@Param("playerId") Long playerId);
 
+    @Query("select p.id from Player p where p.room.id = :roomId and p.ready = true and p.id != :hostId")
+    List<Long> findReadyPlayersByRoomIdWithoutHost(@Param("roomId") Long roomId, @Param("hostId") Long hostId);
 }
