@@ -40,6 +40,7 @@ export default function WaitingRoom() {
     if (data) {
       setRoomInfo(data as IRoomAtom);
       const roomInfo = data as IRoomAtom;
+      console.log('roominfo', roomInfo);
       roomInfo.playerInfos && setPlayerList(roomInfo.playerInfos);
       roomInfo.hostId && setIsHost(roomInfo.hostId === user.memberId);
 
@@ -68,7 +69,7 @@ export default function WaitingRoom() {
     onChangeCameraStatus,
     onChangeMicStatus,
     sendSignal,
-  } = useOpenvidu(user.memberId, user.nickname, Number(currentPath));
+  } = useOpenvidu(user.memberId, user.nickname, currentPath);
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
@@ -89,9 +90,8 @@ export default function WaitingRoom() {
     if (session && publisher) {
       publisher.stream.session.on('signal:' + type, (e: any) => {
         const result = JSON.parse(e.data);
-        console.log('game start', type, result);
         if (type === 'START') navigate(`/gamerooms/${currentPath}`);
-        if (e.data) getRoomData();
+        if (result) getRoomData();
       });
     }
   };
@@ -104,6 +104,7 @@ export default function WaitingRoom() {
 
   useEffect(() => {
     getRoomData();
+    console.log('streamlist', streamList);
   }, [streamList]);
 
   return (
