@@ -25,7 +25,12 @@ export async function getMemberApi(setUser: any) {
 
 export async function updateMemberApi(nickname: string) {
   try {
-    const response = await axios.patch(apiUrl, nickname, {});
+    console.log(`nickname 변경 시작! nickname: ${nickname}`);
+    const response = await axios.put(apiUrl, null, {
+      params: {
+        nickname: nickname,
+      },
+    });
 
     console.log('성공:', response.data);
   } catch (error) {
@@ -38,7 +43,7 @@ export async function deleteMemberApi(nickname: string) {
   const navigate = useNavigate();
   try {
     const response = await axios.delete(apiUrl);
-    localStorage.removeItem('jwttoken');
+    localStorage.removeItem('token');
     navigate('/login');
     console.log('성공:', response);
 

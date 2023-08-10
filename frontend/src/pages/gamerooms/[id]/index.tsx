@@ -7,78 +7,80 @@ import { signalType, useOpenvidu } from 'hooks/useOpenvidu';
 import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer';
 import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
 import ChatContainer from '@components/Chat/ChatContainer';
-import { CountdownCircleTimer, useCountdown } from 'react-countdown-circle-timer';
-import { IPlayerAtom, IUserAtom, userAtom } from 'stores/user';
+import { IUserAtom, userAtom } from 'stores/user';
 import { useAtom } from 'jotai';
-import { IRoomAtom, roomAtom } from 'stores/room';
+import { IPlayerInfo, IRoomAtom, roomAtom } from 'stores/room';
 import Background from '@components/common/Background';
 import Board from '@components/common/Board';
 import { getRoomInfoApi } from 'apis/roomApi';
+import { useQuery } from '@tanstack/react-query';
+import { IGameInfo, getGameInfoApi, sendCaptureImageApi } from 'apis/gameApi';
 
 export default function GameRoom() {
   const location = useLocation();
-
   const currentPath = Number(
     location.pathname.slice(location.pathname.lastIndexOf('/') + 1, location.pathname.length)
   );
 
-  // const getRoomData = async () => {
-  //   const result = (await getRoomInfoApi(currentPath)) as IRoomAtom;
-  //   result && setRoomInfo(result);
-  // };
-
-  // useEffect(() => {
-  //   getRoomData();
-  //   console.log(roomInfo);
-  // }, []);
-
   const [user, setUser] = useAtom<IUserAtom>(userAtom);
   const [roomInfo, setRoomInfo] = useAtom(roomAtom);
+  const [gameRoomInfo, setGameRoomInfo] = useState<IGameInfo>();
   const [isHost, setIsHost] = useState<boolean>(true);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
-  const [readyStatus, setReadyStatus] = useState<boolean>(false);
-  const [isUpdateUserName, setIsUpdateUserName] = useState<boolean>(false);
-  // const player: IPlayerAtom = {
-  //   memberId: user.memberId,
-  //   nickname: user.nickname,
-  //   ready: readyStatus,
-  // };
-  const {
-    session,
-    publisher,
-    streamList,
-    onChangeCameraStatus,
-    onChangeMicStatus,
-    sendSignal,
-    // receiveSignal,
-  } = useOpenvidu(user.memberId, user.nickname, roomInfo.room.roomId!);
+  // const [playerList, setPlayerList] = useState<IPlayerInfo[]>([]);
+
+  const { data } = useQuery(['rooms/info'], () => getRoomInfoApi(currentPath), {});
+  const { data: gameRoomData } = useQuery(
+    ['games/info'],
+    () => getGameInfoApi((data as IRoomAtom).room.roomId),
+    { enabled: !data }
+  );
+  const getGameData = async () => {
+    const room = data as IRoomAtom;
+    const result = (await getGameInfoApi(room.room.roomId)) as IGameInfo;
+    if (result) {
+      setGameRoomInfo(result);
+    }
+  };
+  useEffect(() => {
+    if (data) {
+      setRoomInfo(data as IRoomAtom);
+      const roomInfo = data as IRoomAtom;
+      roomInfo.hostId && setIsHost(roomInfo.hostId === user.memberId);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (gameRoomData) {
+      const gameData = gameRoomData as IGameInfo;
+      setGameRoomInfo(gameData);
+    }
+  }, [gameRoomData]);
+
+  const { session, publisher, streamList, onChangeCameraStatus, onChangeMicStatus, sendSignal } =
+    useOpenvidu(user.memberId, user.nickname, roomInfo.room.roomId!);
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
   };
 
-  const onChangeReadyStatus = (readyStatus: boolean) => {
-    setReadyStatus(!readyStatus);
-  };
-
-  // const onChangeUserName = (userName: string) => {
-  //   setUser((prevUser: IUserAtom) => ({
-  //     ...prevUser,
-  //     nickname: userName,
-  //   }));
-  // };
-
-  const onChangeIsUpdateUserName = (isUpdateUserName: boolean) => {
-    setIsUpdateUserName(!isUpdateUserName);
-  };
   const divRef = useRef<HTMLDivElement>(null);
-
   const handleDownload = async () => {
     if (!divRef.current) return;
 
     try {
       const div = divRef.current;
       const canvas = await html2canvas(div, { scale: 1 });
+      console.log(canvas.toDataURL());
+      const gameroom = gameRoomData as IGameInfo;
+      // flask 쪽 rest api 연결 완료 시 해당 주석 제거 후 api 연결.
+      // const result = await sendCaptureImageApi(
+      //   canvas.toDataURL(),
+      //   gameroom.currentRound,
+      //   gameroom.room.roomId,
+      //   gameroom.shapes.shapeId
+      // );
+      // console.log(result);
       canvas.toBlob((blob) => {
         if (blob !== null) {
           saveAs(blob, 'result.png');
@@ -89,29 +91,23 @@ export default function GameRoom() {
     }
   };
 
-  useEffect(() => {
-    session && publisher && receiveSignal('READY');
-    session && publisher && receiveSignal('CANCEL_READY');
-  }, [session, publisher]);
-
-  // const [isPlaying, setIsPlaying] = useState(true);
-  // const [count, setCount] = useState(5);
-
   const receiveSignal = (type: signalType) => {
     if (session && publisher) {
       publisher.stream.session.on('signal:' + type, (e: any) => {
-        const data = JSON.parse(e.data);
-        console.log(data);
+        const result = JSON.parse(e.data);
+        console.log(result);
+
+        if (e.data) getGameData();
       });
     }
   };
   useEffect(() => {
-    session && publisher && receiveSignal('READY');
-    session && publisher && receiveSignal('CANCEL_READY');
+    session && publisher && receiveSignal('ROUND');
   }, [session, publisher]);
 
   useEffect(() => {
-    console.log('streamList', streamList);
+    getGameData();
+    console.log('streamlist', streamList);
   }, [streamList]);
 
   return (
@@ -122,56 +118,37 @@ export default function GameRoom() {
           <ParticipantsContainer
             type={'GAME'}
             user={user}
-            // onChangeUserName={onChangeUserName}
-            playerList={roomInfo.playerInfos} // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
-            isHost={isHost} // type={'GAME'}
+            playerList={roomInfo.playerInfos}
+            hostId={roomInfo.hostId}
+            currentRound={0}
+            roomRound={roomInfo.room.roomRound}
+            roomType={roomInfo.room.roomType}
           />
         </div>
         {/* openvidu 화면 */}
         <div className='w-full'>
           <Board boardType='GAME'>
-            <header className=' h-fit flex items-center gap-2 '>
-              {/* <CountdownCircleTimer
-            size={80}
-            isPlaying={isPlaying}
-            duration={count}
-            initialRemainingTime={30}
-            isSmoothColorTransition={true}
-            // updateInterval={1}
-            // colors='#aabbcc'
-            // colors="url(#test-it)"
-            colors={['#004777', '#F7B801', '#A30000', '#A30000']}
-            colorsTime={[4, 2.66, 1.33, 0]}
-            onUpdate={(remainingTime) => {
-              console.log('Counter is ', count);
-              console.log('Remaining time is ', remainingTime);
-            }}
-            onComplete={() => ({ shouldRepeat: true })}
-            strokeWidth={20}
-          >
-            {({ remainingTime }) => (
-              <div className=' text-white text-3xl font-bold'>{remainingTime}</div>
-            )}
-              </CountdownCircleTimer> */}
-            </header>
+            <header className=' h-fit flex items-center gap-2 '></header>
             <div className='aspect-[4/3]'>
               {publisher && (
                 <div
+                  id='captureDiv'
                   ref={divRef}
                   className='aspect-[4/3] grid grid-flow-dense grid-rows-2 grid-cols-2'
                 >
-                  {streamList?.map((stream: any, idx: number) => {
-                    // const userInfo = streamList.find((it: any) => it.userId === stream.userId);
-                    return (
-                      <div className='w-full h-full' key={idx}>
-                        <VideoStream
-                          streamManager={stream.streamManager}
-                          name={stream.userName}
-                          isMe={stream.userId === user.memberId}
-                        />
-                      </div>
-                    );
-                  })}
+                  {streamList
+                    .sort((a: any, b: any) => b.userId - a.userId)
+                    ?.map((stream: any, idx: number) => {
+                      return (
+                        <div className='w-full h-full' key={idx}>
+                          <VideoStream
+                            streamManager={stream.streamManager}
+                            name={stream.userName}
+                            isMe={stream.userId === user.memberId}
+                          />
+                        </div>
+                      );
+                    })}
                 </div>
               )}
             </div>
@@ -180,22 +157,21 @@ export default function GameRoom() {
             <ControlBarContainer
               type={'GAME'}
               isHost={isHost}
-              readyStatus={readyStatus}
               onChangeMicStatus={onChangeMicStatus}
               onChangeCameraStatus={onChangeCameraStatus}
               onChangeChatStatus={onChangeChatStatus}
               sendSignal={sendSignal}
               roomId={roomInfo.room.roomId}
+              roomCode={Number(currentPath)}
             />
           </div>
-          {/* <button onClick={handleDownload}>다운로드</button> */}
+          <button onClick={handleDownload}>다운로드</button>
         </div>
         <ChatContainer
           chatStatus={chatStatus}
           session={session}
           publisher={publisher}
           sendSignal={sendSignal}
-          // receiveSignal={receiveSignal}
         />
       </div>
     </Background>

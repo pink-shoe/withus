@@ -1,11 +1,11 @@
 import Background from '@components/common/Background';
 import { useEffect, useState } from 'react';
 import { VideoStream } from '@components/VideoStream';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { signalType, useOpenvidu } from 'hooks/useOpenvidu';
 import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
 import ChatContainer from '@components/Chat/ChatContainer';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import { IUserAtom, userAtom } from 'stores/user';
 import { IPlayerInfo, IRoomAtom, roomAtom } from 'stores/room';
 import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer';
@@ -17,13 +17,12 @@ export default function WaitingRoom() {
   const currentPath = Number(
     location.pathname.slice(location.pathname.lastIndexOf('/') + 1, location.pathname.length)
   );
+  const navigate = useNavigate();
 
   const [user, setUser] = useAtom<IUserAtom>(userAtom);
   const [roomInfo, setRoomInfo] = useAtom(roomAtom);
   const [isHost, setIsHost] = useState<boolean>(false);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
-  // const [readyStatus, setReadyStatus] = useState<boolean>(false);
-
   const [playerList, setPlayerList] = useState<IPlayerInfo[]>([]);
 
   const { data } = useQuery(['rooms/info'], () => getRoomInfoApi(currentPath), {});
@@ -41,18 +40,15 @@ export default function WaitingRoom() {
     if (data) {
       setRoomInfo(data as IRoomAtom);
       const roomInfo = data as IRoomAtom;
-      // console.log('asdf', roomInfo);
+      console.log('roominfo', roomInfo);
       roomInfo.playerInfos && setPlayerList(roomInfo.playerInfos);
       roomInfo.hostId && setIsHost(roomInfo.hostId === user.memberId);
 
       if (roomInfo.playerInfos) {
-        // setIsReady()
-        // console.log('player', roomInfo.playerInfos);
         const player = roomInfo.playerInfos.find((player) => {
           return player.playerId === user.memberId;
         });
         player && setIsReady(player?.ready);
-        // getRoomData();
       }
     }
   }, [data]);
@@ -73,15 +69,11 @@ export default function WaitingRoom() {
     onChangeCameraStatus,
     onChangeMicStatus,
     sendSignal,
-  } = useOpenvidu(user.memberId, user.nickname, Number(currentPath));
+  } = useOpenvidu(user.memberId, user.nickname, currentPath);
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
   };
-
-  // const onChangeReadyStatus = (readyStatus: boolean) => {
-  //   setIs(!readyStatus);
-  // };
 
   // const onChangeUserName = (userName: string) => {
   //   setUserName(userName);
@@ -98,37 +90,29 @@ export default function WaitingRoom() {
     if (session && publisher) {
       publisher.stream.session.on('signal:' + type, (e: any) => {
         const result = JSON.parse(e.data);
-        console.log(result);
-
-        // console.log(data);
-        // if (e.data) console.log(e.data);
-        if (e.data) getRoomData();
+        if (type === 'START') navigate(`/gamerooms/${currentPath}`);
+        if (result) getRoomData();
       });
     }
   };
 
-  // useEffect(() => {
-  //   console.log('wait ', readyStatus);
-  // }, [readyStatus]);
-
   useEffect(() => {
-    session && publisher && (receiveSignal('READY'), receiveSignal('CANCEL_READY'));
+    session &&
+      publisher &&
+      (receiveSignal('READY'), receiveSignal('CANCEL_READY'), receiveSignal('START'));
   }, [session, publisher]);
 
-  // useEffect(() => {
-  //   getRoomData();
-  // }, [receiveSignal]);
-  // useEffect(() => {
-  //   console.log(streamList);
-  // }, [streamList]);
+  useEffect(() => {
+    getRoomData();
+    console.log('streamlist', streamList);
+  }, [streamList]);
 
   return (
-    // <section >
     <Background isLobbyPage={false}>
       <div className='flex w-full h-full'>
         {/* 참가자 목록 */}
         <div className='justify-start bg-white z-40'>
-          {playerList && (
+          {(data as IRoomAtom) && playerList && roomInfo && (
             <ParticipantsContainer
               type={'WAIT'}
               user={user}
@@ -136,7 +120,9 @@ export default function WaitingRoom() {
               // userName={userName}
               // onChangeUserName={onChangeUserName}
               playerList={playerList}
-              isHost={isHost} // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
+              hostId={roomInfo.hostId}
+              roomRound={roomInfo.room.roomRound}
+              roomType={roomInfo.room.roomType} // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
             />
           )}
         </div>
@@ -165,6 +151,7 @@ export default function WaitingRoom() {
                 onChangeChatStatus={onChangeChatStatus}
                 sendSignal={sendSignal}
                 roomId={roomInfo.room.roomId}
+                roomCode={Number(currentPath)}
               />
             )}
           </div>
@@ -177,6 +164,5 @@ export default function WaitingRoom() {
         />
       </div>
     </Background>
-    // </section>
   );
 }

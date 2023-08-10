@@ -1,7 +1,6 @@
 import { OpenVidu } from 'openvidu-browser';
 import { getToken } from 'apis/openviduApi';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-// import { IPlayerAtom } from 'stores/user';
 export interface IUser {
   connectionId: string;
   userId: number;
@@ -13,7 +12,6 @@ export interface IStreamList {
   streamManager: any;
   userId: number;
   nickname: string;
-  // isReady: boolean;
 }
 const getConnectionId = (user: IUser) => {
   return user.connectionId;
@@ -24,25 +22,10 @@ const setConnectionId = (user: IUser, conecctionId: string) => {
   return user;
 };
 
-export const useOpenvidu = (
-  userId: number,
-  nickname: string,
-  // ready: boolean,
-  gameRoomId: number
-  // ...callback: any
-) => {
+export const useOpenvidu = (userId: number, nickname: string, gameRoomId: number) => {
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [publisher, setPublisher] = useState<any>();
   const [session, setSession] = useState<any>();
-  // const [userName, setUserName] = useState<string>(nickname);
-  // const [readyStatus, setReadyStatus] = useState<boolean>(ready);
-  // const onChangeReadyStatus = () => {
-  //   setReadyStatus((prev) => !prev);
-  // };
-  // useEffect(() => {
-  //   // console.log(readyStatus);
-  //   onChangeReadyStatus();
-  // }, [ready]);
 
   const leaveSession = useCallback(() => {
     if (session) {
@@ -67,7 +50,6 @@ export const useOpenvidu = (
             streamManager: subscriber,
             userId: +data.userId,
             nickname: data.nickname,
-            isReady: data.isReady,
           },
         ];
       });
@@ -85,7 +67,6 @@ export const useOpenvidu = (
     });
 
     getToken(String(gameRoomId)).then((token) => {
-      // console.log(gameRoomId, token);
       session!
         .connect(token.token, JSON.stringify({ userId }))
         .then(async () => {
@@ -180,80 +161,19 @@ export const useOpenvidu = (
     }
   };
 
-  // const receiveSignal = (type: signalType) => {
-  //   if (session && publisher) {
-  //     console.log(publisher);
-  //     session
-  //       .on('signal:' + type, (e: any) => {
-  //         console.log(e);
-  //         // const data = JSON.parse(e.data);
-  //         return e;
-  //         // msgList.push({
-  //         //   connectionId: e.from.connectionId,
-  //         //   nickname: data.nickname,
-  //         //   message: data.message,
-  //         // });
-  //       })
-  //       .then(() => {
-  //         console.log('Message successfully received');
-  //       })
-  //       .catch((err: any) => {
-  //         console.error(err);
-  //       });
-  //     // onChangeMsgList(msgList);
-  //     // return msgList;
-  //   }
-  //   // return messageList;
-  // };
-
-  // const updateUserStatus = (uId: number, isReady?: boolean, uname?: string) => {
-  //   const subscriber = streamList.find((stream) => {
-  //     return stream.userId === uId;
-  //   });
-  //   const filteredSubscriberList = streamList.filter((stream) => {
-  //     return stream.userId !== uId;
-  //   });
-  //   const newSubscriber = { ...subscriber, uname, isReady };
-  //   // setSubscribers(filteredSubscriberList);
-  //   // setSubscribers((prev) => {
-  //   //   return [...prev.filter((it) => it.userId !== uId), { newSubscriber }];
-  //   // });
-  //   // setSubscribers((prev) => {
-  //   //   return [...prev, { ...subscriber, isReady, uname }];
-  //   // });
-  //   // setSubscribers((prev) => {
-  //   //   return [
-  //   //     ...prev.filter((it) => it.userId !== +uId),
-  //   //     {
-  //   //       ...subscriber,
-  //   //       uname,
-  //   //       isReady,
-  //   //     },
-  //   //   ];
-  //   // });
-  // };
-
-  const streamList = useMemo(
+  const streamList: any = useMemo(
     () => [
       {
         streamManager: publisher,
         userId,
         nickname,
-        // isReady: readyStatus
       },
-      ...subscribers,
+      ...subscribers.filter((it) => it.userId !== userId),
     ],
-    [
-      publisher,
-      subscribers,
-      userId,
-      // readyStatus
-    ]
+    [publisher, subscribers, userId]
   );
 
   return {
-    // subscribers,
-    // setSubscribers,
     session,
     publisher,
     streamList,
@@ -261,7 +181,6 @@ export const useOpenvidu = (
     onChangeMicStatus,
     // onChangeUserName,
     // updateUserStatus,
-    // receiveSignal,
     sendSignal,
   };
 };

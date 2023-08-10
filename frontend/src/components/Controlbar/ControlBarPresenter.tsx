@@ -1,9 +1,7 @@
 import { FC } from 'react';
-import React from 'react';
 import { Video, VideoOff, Mic, MicOff, LogOut, Settings, MessageCircle } from 'react-feather';
 
 import SettingModalContainer from '@components/common/SettingModal/SettingModalContainer';
-import { color } from 'html2canvas/dist/types/css/types/color';
 
 interface IControlBarPresenterProps {
   type: 'WAIT' | 'GAME';
@@ -16,11 +14,11 @@ interface IControlBarPresenterProps {
   onChangeChatStatus: () => void;
   gameSettingModal: boolean;
   onChangeGameSettingModal: () => void;
-  readyStatus: boolean;
-  onChangeReadyStatus: () => void;
+  readyStatus?: boolean;
   onClickExit: () => void;
   onClickReadyBtn: () => void;
   onClickCancelBtn: () => void;
+  onClickStartBtn: () => void;
 }
 
 export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
@@ -35,10 +33,10 @@ export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
   gameSettingModal,
   onChangeGameSettingModal,
   readyStatus,
-  onChangeReadyStatus,
   onClickCancelBtn,
   onClickReadyBtn,
   onClickExit,
+  onClickStartBtn,
 }) => {
   return (
     <div className='w-full flex justify-center font-kdisplay'>
@@ -87,7 +85,7 @@ export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
             <MessageCircle className='text-black' size='35' />
           )}
         </button>
-        {isHost && (
+        {type === 'WAIT' && isHost && (
           <>
             <button
               className={` w-15 h-15 rounded-full p-3 ${
@@ -127,21 +125,21 @@ export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
           (isHost ? (
             <button
               className={` whitespace-nowrap w-fit h-15 rounded-lg p-3 bg-[#FF8DA3] text-white font-medium text-lg`}
-              onClick={() => {}}
+              onClick={onClickStartBtn}
             >
               시작하기
             </button>
           ) : readyStatus ? (
             <button
               className={` whitespace-nowrap w-fit h-16 rounded-lg p-3 bg-[#8E8E8E] text-white font-medium text-lg`}
-              onClick={onChangeReadyStatus}
+              onClick={onClickCancelBtn}
             >
               준비취소
             </button>
           ) : (
             <button
               className={` whitespace-nowrap w-fit h-16 rounded-lg p-3 bg-[#FF8DA3] text-white font-medium text-lg`}
-              onClick={onChangeReadyStatus}
+              onClick={onClickReadyBtn}
             >
               준비하기
             </button>
