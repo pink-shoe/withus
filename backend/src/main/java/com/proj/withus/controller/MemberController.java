@@ -4,13 +4,7 @@ import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.proj.withus.domain.Album;
 import com.proj.withus.domain.Member;
@@ -66,11 +60,11 @@ public class MemberController {
 //                    @ApiImplicitParam(name = "nickname", value = "수정할 닉네임", required = true, dataTypeClass = String.class, paramType = "body")
 //            }
 //    )
-    @PatchMapping
+    @PutMapping
     private ResponseEntity<?> updateMemberInfo(
             HttpServletRequest request,
-            @ApiParam(value = "변경할 닉네임 (json이 아닌 문자열)", required = true)
-            @RequestBody String nickname) {
+            @ApiParam(value = "변경할 닉네임", required = true)
+            @RequestParam String nickname) {
 
         Long memberId = (Long) request.getAttribute("memberId");
         Member updatedInfo = memberService.updateMember(memberId, nickname);
