@@ -168,14 +168,12 @@ export const useOpenvidu = (userId: number, nickname: string, gameRoomId: number
         userId,
         nickname,
       },
-      ...subscribers,
+      ...subscribers.filter((it) => it.userId !== userId),
     ],
     [publisher, subscribers, userId]
   );
 
   return {
-    // subscribers,
-    // setSubscribers,
     session,
     publisher,
     streamList,
@@ -183,7 +181,6 @@ export const useOpenvidu = (userId: number, nickname: string, gameRoomId: number
     onChangeMicStatus,
     // onChangeUserName,
     // updateUserStatus,
-    // receiveSignal,
     sendSignal,
   };
 };
