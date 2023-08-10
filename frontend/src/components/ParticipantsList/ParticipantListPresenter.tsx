@@ -9,6 +9,7 @@ interface IParticipantsPresenterProps {
   type: 'WAIT' | 'GAME';
   playerList: IPlayerInfo[];
   user: IUserAtom;
+  userName: string;
   hostId: number;
   currentRound?: number;
   roomRound: number;
@@ -23,6 +24,7 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
   type,
   playerList,
   user,
+  userName,
   hostId,
   currentRound,
   roomRound,
@@ -60,14 +62,13 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
                   isUpdateUserName ? (
                     <>
                       <input
-                        className='bg-transparent'
+                        className='bg-transparent w-full'
                         type='text'
-                        value={user.nickname}
+                        value={userName}
                         onChange={onChangeUserName}
                       />
                       {type === 'WAIT' && !player.ready ? (
                         <button onClick={saveUserName}>
-                          {/* <FontAwesomeIcon icon={faFloppyDiskIconDefinition} /> */}
                           <Save />
                         </button>
                       ) : (
