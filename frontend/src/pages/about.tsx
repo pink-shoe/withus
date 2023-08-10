@@ -36,6 +36,7 @@ export default function About() {
         대기실 방 설정
       </button> */}
       <SettingModalContainer
+        boardType='WAIT'
         isUpdateModal={true}
         openModal={updateModalStatus}
         closeModal={closeUpdateModal}

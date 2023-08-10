@@ -121,10 +121,8 @@ export default function GameRoom() {
             playerList={roomInfo.playerInfos}
             hostId={roomInfo.hostId}
             currentRound={0}
-            roomRound={0}
-            roomType='coop'
-            // roomRound={roomInfo.room.roomRound}
-            // roomType={roomInfo.room.roomType}
+            roomRound={roomInfo.room.roomRound}
+            roomType={roomInfo.room.roomType}
           />
         </div>
         {/* openvidu 화면 */}
