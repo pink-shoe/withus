@@ -110,7 +110,7 @@ export default function GameRoom() {
       <div className='flex w-full h-full'>
         {/* 참가자 목록 */}
         <div className='justify-start bg-white z-40'>
-          {(data as IGameInfo) && playerList && gameRoomInfo && (
+          {(data as IGameInfo) && playerList && gameRoomInfo && gameRoomInfo.room && (
             <ParticipantsContainer
               type={'GAME'}
               user={user}
