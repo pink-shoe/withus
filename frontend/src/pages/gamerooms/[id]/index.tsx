@@ -146,18 +146,20 @@ export default function GameRoom() {
                   ref={divRef}
                   className='aspect-[4/3] grid grid-flow-dense grid-rows-2 grid-cols-2'
                 >
-                  {streamList?.map((stream: any, idx: number) => {
-                    // const userInfo = streamList.find((it: any) => it.userId === stream.userId);
-                    return (
-                      <div className='w-full h-full' key={idx}>
-                        <VideoStream
-                          streamManager={stream.streamManager}
-                          name={stream.userName}
-                          isMe={stream.userId === user.memberId}
-                        />
-                      </div>
-                    );
-                  })}
+                  {streamList
+                    .sort((a: any, b: any) => a.userId - b.userId)
+                    .map((stream: any, idx: number) => {
+                      // const userInfo = streamList.find((it: any) => it.userId === stream.userId);
+                      return (
+                        <div className='w-full h-full' key={idx}>
+                          <VideoStream
+                            streamManager={stream.streamManager}
+                            name={stream.userName}
+                            isMe={stream.userId === user.memberId}
+                          />
+                        </div>
+                      );
+                    })}
                 </div>
               )}
             </div>
