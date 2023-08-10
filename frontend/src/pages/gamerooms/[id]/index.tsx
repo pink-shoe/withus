@@ -73,18 +73,19 @@ export default function GameRoom() {
       const canvas = await html2canvas(div, { scale: 1 });
       console.log(canvas.toDataURL());
       const gameroom = gameRoomData as IGameInfo;
-      const result = await sendCaptureImageApi(
-        canvas.toDataURL(),
-        gameroom.currentRound,
-        gameroom.room.roomId,
-        gameroom.shapes.shapeId
-      );
-      console.log(result);
-      // canvas.toBlob((blob) => {
-      //   if (blob !== null) {
-      //     saveAs(blob, 'result.png');
-      //   }
-      // });
+      // flask 쪽 rest api 연결 완료 시 해당 주석 제거 후 api 연결.
+      // const result = await sendCaptureImageApi(
+      //   canvas.toDataURL(),
+      //   gameroom.currentRound,
+      //   gameroom.room.roomId,
+      //   gameroom.shapes.shapeId
+      // );
+      // console.log(result);
+      canvas.toBlob((blob) => {
+        if (blob !== null) {
+          saveAs(blob, 'result.png');
+        }
+      });
     } catch (error) {
       console.error('Error converting div to image:', error);
     }
