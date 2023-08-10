@@ -102,6 +102,7 @@ public class GameController {
                 .room(room)
                 .playerInfos(playerInfos)
                 .shapes(shapes)
+                .hostId(room.getMember().getId())
                 .build());
     }
 
