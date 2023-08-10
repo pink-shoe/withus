@@ -121,8 +121,10 @@ export default function WaitingRoom() {
               // onChangeUserName={onChangeUserName}
               playerList={playerList}
               hostId={roomInfo.hostId}
-              roomRound={roomInfo.room.roomRound}
-              roomType={roomInfo.room.roomType} // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
+              roomRound={0}
+              roomType='coop'
+              // roomRound={roomInfo.room.roomRound}
+              // roomType={roomInfo.room.roomType} // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
             />
           )}
         </div>
