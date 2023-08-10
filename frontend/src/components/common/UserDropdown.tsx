@@ -1,3 +1,5 @@
+// UserHeader를 클릭했을 때 나오는 Dropdown
+
 import { useState } from "react";
 import React from 'react';
 import { User } from 'react-feather';
@@ -17,7 +19,6 @@ export default function UserDropdown({children}: IUserDropdownProps) {
       </div>
       <div>
       {openDropdown && children}
-
       </div>
     </div>
   );

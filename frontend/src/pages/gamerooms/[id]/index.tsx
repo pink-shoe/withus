@@ -7,10 +7,11 @@ import { signalType, useOpenvidu } from 'hooks/useOpenvidu';
 import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer';
 import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
 import ChatContainer from '@components/Chat/ChatContainer';
-import { CountdownCircleTimer, useCountdown } from 'react-countdown-circle-timer';
 import { IPlayerAtom, IUserAtom, userAtom } from 'stores/user';
 import { useAtom } from 'jotai';
 import { IRoomAtom, roomAtom } from 'stores/room';
+import Background from '@components/common/Background';
+import Board from '@components/common/Board';
 
 export default function GameRoom() {
   const location = useLocation();
@@ -80,9 +81,6 @@ export default function GameRoom() {
     session && publisher && receiveSignal('CANCEL_READY');
   }, [session, publisher]);
 
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [count, setCount] = useState(5);
-
   const receiveSignal = (type: signalType) => {
     if (session && publisher) {
       publisher.stream.session.on('signal:' + type, (e: any) => {
@@ -97,84 +95,69 @@ export default function GameRoom() {
   }, [session, publisher]);
 
   return (
-    <section className={`w-full flex justify-between  h-screen`}>
-      {/* 참가자 목록 */}
-      <ParticipantsContainer
-        type={'GAME'}
-        user={user}
-        // onChangeUserName={onChangeUserName}
-        publisher={publisher}
-        streamList={streamList}
-        readyStatus={readyStatus}
-        // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
-        // type={'GAME'}
-      />
-      {/* openvidu 화면 */}
-      <div className=' w-1/2 h-screen flex flex-col justify-between items-center'>
-        <header className=' h-fit flex items-center gap-2 '>
-          <div className=' text-white font-extrabold text-6xl text-center py-3'>[] with us</div>
-          {/* <CountdownCircleTimer
-            size={80}
-            isPlaying={isPlaying}
-            duration={count}
-            initialRemainingTime={30}
-            isSmoothColorTransition={true}
-            // updateInterval={1}
-            // colors='#aabbcc'
-            // colors="url(#test-it)"
-            colors={['#004777', '#F7B801', '#A30000', '#A30000']}
-            colorsTime={[4, 2.66, 1.33, 0]}
-            onUpdate={(remainingTime) => {
-              console.log('Counter is ', count);
-              console.log('Remaining time is ', remainingTime);
-            }}
-            onComplete={() => ({ shouldRepeat: true })}
-            strokeWidth={20}
-          >
-            {({ remainingTime }) => (
-              <div className=' text-white text-3xl font-bold'>{remainingTime}</div>
-            )}
-          </CountdownCircleTimer> */}
-        </header>
-        <div className='aspect-[4/3] h-auto max-w-full'>
-          {publisher && (
-            <div ref={divRef} className='aspect-[4/3] grid grid-flow-dense grid-rows-2 grid-cols-2'>
-              {streamList?.map((stream: any, idx: number) => {
-                // const userInfo = streamList.find((it: any) => it.userId === stream.userId);
-                return (
-                  <div className='w-full h-full' key={idx}>
-                    <VideoStream
-                      streamManager={stream.streamManager}
-                      name={stream.userName}
-                      isMe={stream.userId === user.memberId}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-        <div className=' h-fit p-3'>
-          <ControlBarContainer
+    <Background isLobbyPage={false}>
+      <div className='flex w-full h-full'>
+        {/* 참가자 목록 */}
+        <div className='justify-start bg-white z-40'>
+          <ParticipantsContainer
             type={'GAME'}
-            isHost={isHost}
+            user={user}
+            // onChangeUserName={onChangeUserName}
+            publisher={publisher}
+            streamList={streamList}
             readyStatus={readyStatus}
-            onChangeMicStatus={onChangeMicStatus}
-            onChangeCameraStatus={onChangeCameraStatus}
-            onChangeChatStatus={onChangeChatStatus}
-            onChangeReadyStatus={onChangeReadyStatus}
-            sendSignal={sendSignal}
+            // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
+            // type={'GAME'}
           />
         </div>
-        {/* <button onClick={handleDownload}>다운로드</button> */}
+        {/* openvidu 화면 */}
+        <div className='w-full'>
+          <Board boardType='GAME'>
+            <header className=' h-fit flex items-center'></header>
+            <div className='aspect-[4/3]'>
+              {publisher && (
+                <div
+                  ref={divRef}
+                  className='aspect-[4/3] grid grid-flow-dense grid-rows-2 grid-cols-2'
+                >
+                  {streamList?.map((stream: any, idx: number) => {
+                    // const userInfo = streamList.find((it: any) => it.userId === stream.userId);
+                    return (
+                      <div className='w-full h-full xl:h-[17rem]' key={idx}>
+                        <VideoStream
+                          streamManager={stream.streamManager}
+                          name={stream.userName}
+                          isMe={stream.userId === user.memberId}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </Board>
+          <div className='p-2 mt-2 align-bottom'>
+            <ControlBarContainer
+              type={'GAME'}
+              isHost={isHost}
+              readyStatus={readyStatus}
+              onChangeMicStatus={onChangeMicStatus}
+              onChangeCameraStatus={onChangeCameraStatus}
+              onChangeChatStatus={onChangeChatStatus}
+              onChangeReadyStatus={onChangeReadyStatus}
+              sendSignal={sendSignal}
+            />
+          </div>
+          {/* <button onClick={handleDownload}>다운로드</button> */}
+        </div>
+        <ChatContainer
+          chatStatus={chatStatus}
+          session={session}
+          publisher={publisher}
+          sendSignal={sendSignal}
+          // receiveSignal={receiveSignal}
+        />
       </div>
-      <ChatContainer
-        chatStatus={chatStatus}
-        session={session}
-        publisher={publisher}
-        sendSignal={sendSignal}
-        // receiveSignal={receiveSignal}
-      />
-    </section>
+    </Background>
   );
 }

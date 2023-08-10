@@ -1,6 +1,9 @@
 // 대기실 입장 전까지 Header
+// User 아이콘이 있고, 이 아이콘을 클릭하면 Dropdown이 나옴
+
 import { Link, useNavigate } from 'react-router-dom';
 import UserDropdown from './UserDropdown';
+import { userLogoutApi } from 'apis/userLogout';
 
 interface IUserHeaderProps {
   isLobbyDropdown?: boolean;
@@ -10,10 +13,10 @@ export default function UserHeader({ isLobbyDropdown }: IUserHeaderProps) {
   const navigate = useNavigate();
 
   const onClickLogout = (): void => {
-    // Remove token from localStorage
+    userLogoutApi();
+    console.log('로그아웃 됨');
     localStorage.removeItem('token');
-
-    // Navigate to '/login' page
+    localStorage.removeItem('accessToken');
     navigate('/login');
   };
 
@@ -23,6 +26,7 @@ export default function UserHeader({ isLobbyDropdown }: IUserHeaderProps) {
         <div className='cursor-pointer z-40'>
           {isLobbyDropdown ? (
             // 로비 페이지에서 드롭다운
+            // '로비'라는 항목이 없음
             <UserDropdown>
               <ul className='hover:text-red-300 font-kdisplay text-xl'>
                 <li className='bg-white text-center rounded-t-lg border-[#FA8D8D] mt-2 border-2 h-9 py-1 px-4 text-[#FA8D8D] hover:text-black'>

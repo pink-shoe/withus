@@ -18,14 +18,7 @@ export async function getMemberApi(setUser: any) {
       email: response.data.email,
       nickname: response.data.nickname,
     }));
-
-    // setUser({
-    //   memberId: response.data.memberId,
-    //   email: response.data.email,
-    //   nickname: response.data.nickname,
-    // }); 이런식의 코드는 권장되지 않음 왜냐면 값의 일부만 변형될 때 삭제될 가능성이 있어서
   } catch (error) {
-    // 요청이 실패하면 에러를 출력합니다.
     console.error('실패:', (error as AxiosError).message);
   }
 }
@@ -40,6 +33,7 @@ export async function updateMemberApi(nickname: string) {
   }
 }
 
+//회원탈퇴
 export async function deleteMemberApi(nickname: string) {
   const navigate = useNavigate();
   try {

@@ -1,21 +1,19 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 import Spinner from '@components/common/Spinner';
 
-export default function KakaoRedirection() {
+export default function GoogleRedirection() {
   const code = new URL(document.location.toString()).searchParams.get('code');
   const navigate = useNavigate();
-  const kakaobackURL = `${import.meta.env.VITE_API}/api/oauth/kakao`;
-  console.log(`카카오 리다이렉션 확인 카카오 URL: ${kakaobackURL}`);
-
+  const googlebackURL = `${import.meta.env.VITE_API}/api/oauth/google`;
   const [isLoading, setIsLoading] = useState(true);
 
-  function handleKakaoLogin() {
-    console.log(`handleKakaologin 스타트! code: ${code}`);
+  function handleGoogleLogin() {
+    console.log(`handleGooglelogin 스타트! code: ${code}`);
 
     axios
-      .get(kakaobackURL, {
+      .get(googlebackURL, {
         params: {
           code,
         },
@@ -39,13 +37,13 @@ export default function KakaoRedirection() {
           navigate('/lobby'); // login이 성공했다면 해당 페이지로 이동
         },
         (error) => {
-          console.error('카카오 로그인 실패:', error);
-          navigate('/login'); // 로그인 실패시 실패 화면으로 이동
+          console.error('구글 로그인 실패:', error);
+          navigate('/login'); // 구글 실패시 실패 화면으로 이동
         }
       );
   }
 
-  useEffect(handleKakaoLogin, [navigate, code]); // navigate or code가 변경될 시 자동으로 handleKakaoLogin 실행
+  useEffect(handleGoogleLogin, [navigate, code]); // navigate or code가 변경될 시 자동으로 handleKakaoLogin 실행
   if (isLoading) {
     return <Spinner />;
   }

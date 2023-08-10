@@ -8,9 +8,9 @@ const axios = Axios.create({
 
 axios.interceptors.request.use(
   (config) => {
-    const accessToken = localStorage.getItem('token');
-    console.log(accessToken);
-    config.headers['Authorization'] = accessToken ? `Bearer ${accessToken}` : '';
+    const jwtToken = localStorage.getItem('token');
+    console.log(jwtToken);
+    config.headers['Authorization'] = jwtToken ? `Bearer ${jwtToken}` : '';
     return config;
   },
   (err) => err

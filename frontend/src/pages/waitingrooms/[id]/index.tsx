@@ -124,41 +124,41 @@ export default function WaitingRoom() {
             // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
           />
         </div>
-      {/* openvidu 화면 */}
+        {/* openvidu 화면 */}
         <div className='w-full'>
           <Board boardType='WAIT'>
-          {/* <header className=''>
+            {/* <header className=''>
           <div className=' text-white font-extrabold text-6xl text-center py-3'>[] with us</div>
         </header> */}
-          <div className='aspect-[4/3]'>
-            {publisher && (
-              <div className='w-full'>
-                <VideoStream streamManager={publisher} name={user.nickname} isMe={true} />
-              </div>
-            )}
+            <div className='aspect-[4/3]'>
+              {publisher && (
+                <div className='w-full'>
+                  <VideoStream streamManager={publisher} name={user.nickname} isMe={true} />
+                </div>
+              )}
+            </div>
+          </Board>
+          <div className='mt-5 p-2 align-bottom'>
+            <ControlBarContainer
+              type={'WAIT'}
+              isHost={isHost}
+              readyStatus={readyStatus}
+              onChangeMicStatus={onChangeMicStatus}
+              onChangeCameraStatus={onChangeCameraStatus}
+              onChangeChatStatus={onChangeChatStatus}
+              onChangeReadyStatus={onChangeReadyStatus}
+              sendSignal={sendSignal}
+            />
           </div>
-        </Board>
-        <div className='mt-5 p-3 align-bottom'>
-          <ControlBarContainer
-            type={'WAIT'}
-            isHost={isHost}
-            readyStatus={readyStatus}
-            onChangeMicStatus={onChangeMicStatus}
-            onChangeCameraStatus={onChangeCameraStatus}
-            onChangeChatStatus={onChangeChatStatus}
-            onChangeReadyStatus={onChangeReadyStatus}
-            sendSignal={sendSignal}
-          />
         </div>
+        <ChatContainer
+          chatStatus={chatStatus}
+          session={session}
+          publisher={publisher}
+          sendSignal={sendSignal}
+        />
       </div>
-      <ChatContainer
-        chatStatus={chatStatus}
-        session={session}
-        publisher={publisher}
-        sendSignal={sendSignal}
-      />
-      </div>
-      </Background>
+    </Background>
     // </section>
   );
 }

@@ -1,31 +1,21 @@
-import { getAlbumListApi } from 'apis/albumApi';
 import PaginationPresenter from './PaginationPresenter';
-import { useState, useEffect } from 'react';
 
 interface IPaginationContainerProps {
   currentPage: number;
   onClickPage: (page: number) => void;
+  images: any;
 }
 
 export default function PaginationContainer({
   currentPage,
   onClickPage,
+  images,
 }: IPaginationContainerProps) {
-  const [images, setImages] = useState<{ imgId: number; imgUrl: string; savedAt: string }[]>([]);
   const imagesPerPage = 4; // 한 페이지에 보여줄 이미지 개수
   const totalPages = Math.ceil(images.length / imagesPerPage);
 
-  useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const response = await getAlbumListApi();
-        setImages(response); // 가져온 이미지 객체(아이디, 주소, 저장날짜)를 images 배열에 저장
-      } catch (error) {
-        console.error('이미지 저장 실패');
-      }
-    };
-    fetchImages();
-  }, []);
+  console.log(`length: ${images.length}`);
+  console.log(`totalPages: ${totalPages}`);
 
   const generatePageNumbers = () => {
     const pageNumbers = [];
