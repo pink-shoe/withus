@@ -8,20 +8,25 @@ import Background from '../components/common/Background';
 import Board from '../components/common/Board';
 import { getMemberApi } from 'apis/memberApi';
 import { participateRoomApi } from 'apis/roomApi';
-import { roomAtom } from 'stores/room';
 
 export default function Lobby() {
   const [user, setUser] = useAtom(userAtom);
   const navigate = useNavigate();
   const [makeRoomModal, setMakeRoomModal] = useState(false);
   const [enterRoomModal, setEnterRoomModal] = useState(false);
-  // inviteCode는 초대 코드를 의미함
+  const [warningModal, setWarningModal] = useState(false);
   const [enterCode, setEnterCode] = useState('');
 
   useEffect(() => {
-    getMemberApi(setUser).catch((error) => {
-      console.log('Error fetching data:', error);
-    });
+    const accessToken = localStorage.getItem('accessToken');
+
+    if (!accessToken) {
+      navigate('/login');
+    } else {
+      getMemberApi(setUser).catch((error) => {
+        console.log('Error fetching data:', error);
+      });
+    }
   }, []);
 
   console.log('user확인:', user);
@@ -41,6 +46,10 @@ export default function Lobby() {
     setEnterCode('');
   };
 
+  const closeWarningModal = () => {
+    setWarningModal(false);
+  };
+
   const writeCode = (event: any) => {
     setEnterCode(event.target.value);
   };
@@ -51,9 +60,10 @@ export default function Lobby() {
   const onClickParticipantBtn = async () => {
     if (enterCode === '') {
       // 공백이면 참여코드를 입력해달라는 창이 뜸
+      <Modal openModal={true} ></Modal>
       alert('참여코드를 입력해주세요😳');
     } else {
-      const result: any = await participateRoomApi(Number(enterCode), user.memberId);
+      const result: any = await participateRoomApi(Number(enterCode));
       if (result.status === 200) {
         setEnterCode('');
         navigate(`/waitingrooms/${enterCode}`);
@@ -92,14 +102,14 @@ export default function Lobby() {
                 <p className='text-[#514148] font-kdisplay font-medium text-4xl mb-10 text-center'>
                   참여 코드
                 </p>
-                <div className='flex mb-7'>
-                  <span className='me-5 font-kdisplay font-medium text-2xl flex items-center'>
+                <div className='flex justify-center mb-8'>
+                  {/* <span className='me-5 font-kdisplay font-medium text-2xl flex items-center'>
                     참여코드
-                  </span>
+                  </span> */}
                   <input
-                    className='p-2 border-2 w-[19rem] border-[#8D98FF] focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 rounded-md font-medium text-2xl text-center text-[#514148] font-kdisplay'
+                    className='p-2 border-2 w-[22rem] border-[#8D98FF] focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 rounded-md font-medium text-2xl text-center text-[#514148] font-kdisplay'
                     placeholder='참여코드 입력'
-                    type='text'
+                    type='number'
                     value={enterCode}
                     onChange={writeCode}
                   />
@@ -107,7 +117,7 @@ export default function Lobby() {
                 <div className='flex justify-center'>
                   <button
                     onClick={onClickParticipantBtn}
-                    className='bg-[#8D98FF] hover:bg-violet-700 w-72 h-12 rounded-md font-medium font-kdisplay text-2xl text-white'
+                    className='bg-[#8D98FF] hover:bg-violet-700 w-[22rem] h-12 rounded-md font-medium font-kdisplay text-2xl text-white'
                   >
                     참여
                   </button>

@@ -26,7 +26,7 @@ export const VideoStreamBox: FC<IVideoStreamBoxProps> = ({
           {name}
           {isMe && ' (나)'}
         </div>
-        <div>
+        <div className='flex'>
           {!micStatus ? (
             // <FontAwesomeIcon
             //   icon={faMicrophoneSlashIconDefinition}

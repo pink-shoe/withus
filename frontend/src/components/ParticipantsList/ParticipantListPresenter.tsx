@@ -1,29 +1,32 @@
 import React, { FC, useState } from 'react';
-import { IUser } from 'hooks/useOpenvidu';
-import { Edit, Save } from 'react-feather';
+import { IStreamList, IUser } from 'hooks/useOpenvidu';
+import { Edit, Save, Sun } from 'react-feather';
 import { IUserAtom } from 'stores/user';
+import { IPlayerInfo, IRoomAtom } from 'stores/room';
 export let localUser: IUser;
 
 interface IParticipantsPresenterProps {
   type: 'WAIT' | 'GAME';
-  streamList: IStreamList[];
+  playerList: IPlayerInfo[];
   user: IUserAtom;
+  hostId: number;
+  currentRound?: number;
+  roomRound: number;
+  roomType: string;
   onChangeUserName: any;
   isUpdateUserName: boolean;
   onChangeUpdateUserNameStatus: () => void;
   saveUserName: () => void;
 }
-interface IStreamList {
-  streamManager: any;
-  userId: number;
-  userName: string;
-  isReady: boolean;
-}
 
 export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
   type,
-  streamList,
+  playerList,
   user,
+  hostId,
+  currentRound,
+  roomRound,
+  roomType,
   onChangeUserName,
   isUpdateUserName,
   onChangeUpdateUserNameStatus,
@@ -31,85 +34,80 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
 }) => {
   return (
     <div id='participantsList' className=' w-52 bg-white font-kdisplay'>
-
-      {type === 'GAME' ? (
-      // 게임 페이지에서는 '판'이 존재하고 
       <div className='bg-[#C4C6EC] p-3 text-white whitespace-nowrap font-medium text-xl '>
-        협동전 &nbsp; 1/5(판)
-        </div>
-        // 대기실에서는 '판'이 존재하지 않음
-      ) : (
-        <div className='bg-[#C4C6EC] p-3 text-white whitespace-nowrap font-medium text-xl '>
-          협동전
-        </div>
-      )}
-
+        {type === 'GAME'
+          ? `${roomType === 'coop' ? '협동전' : '팀전'} ${currentRound}/${roomRound}(판)`
+          : `${roomType === 'coop' ? '협동전' : '팀전'} 총 ${roomRound}(판)`}
+      </div>
       <div className='bg-[#FF8DA3] p-3 text-white whitespace-nowrap font-medium text-xl'>
-        현재 플레이어({streamList.length})
+        현재 플레이어({playerList && playerList.length ? playerList.length : 0})
       </div>
       <div className='bg-white w-full text-justify'>
-        {streamList.map((stream, idx) => {
+        {playerList?.map((player, idx) => {
           return (
             <div
               key={idx}
               className={
                 'flex relative justify-between items-center w-full text-justify border-bottom border-b-2 p-3 text-[#514148] text-xl' +
-                ` ${
-                  user.memberId === stream.userId && stream.isReady ? 'bg-[#FFF5C0]' : 'bg-white'
-                } `
+                ` ${type === 'WAIT' && player.ready ? 'bg-[#FFF5C0]' : 'bg-white'} `
               }
             >
-              {user.memberId === stream.userId ? (
-                isUpdateUserName ? (
-                  <>
-                    <input
-                      className='w-full bg-transparent'
-                      type='text'
-                      value={user.nickname}
-                      onChange={onChangeUserName}
-                    />
-                    {type === 'WAIT' && !stream.isReady ? (
-                      <button onClick={saveUserName}>
-                        {/* <FontAwesomeIcon icon={faFloppyDiskIconDefinition} /> */}
-                        <Save />
-                      </button>
-                    ) : (
-                      <div></div>
-                    )}
-                  </>
+              <div className='flex w-full'>
+                {hostId === player.playerId && (
+                  <span className='whitespace-nowrap text-[#1D1D1D]'>(방장)</span>
+                )}
+                {user.memberId === player.playerId ? (
+                  isUpdateUserName ? (
+                    <>
+                      <input
+                        className='bg-transparent'
+                        type='text'
+                        value={user.nickname}
+                        onChange={onChangeUserName}
+                      />
+                      {type === 'WAIT' && !player.ready ? (
+                        <button onClick={saveUserName}>
+                          {/* <FontAwesomeIcon icon={faFloppyDiskIconDefinition} /> */}
+                          <Save />
+                        </button>
+                      ) : (
+                        <div></div>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <input
+                        className='w-full truncate bg-transparent'
+                        type='text'
+                        value={'(나) ' + player.nickname}
+                        onChange={onChangeUserName}
+                        disabled
+                      />
+                      {type === 'WAIT' && !player.ready ? (
+                        <button onClick={onChangeUpdateUserNameStatus}>
+                          {/* <FontAwesomeIcon icon={faPenToSquareIconDefinition} /> */}
+                          <Edit />
+                        </button>
+                      ) : (
+                        <div></div>
+                      )}
+                    </>
+                  )
                 ) : (
-                  <>
-                    <input
-                      className='w-full truncate bg-transparent'
-                      type='text'
-                      value={stream.userName + ' (나)'}
-                      onChange={onChangeUserName}
-                      disabled
-                    />
-                    {type === 'WAIT' && !stream.isReady ? (
-                      <button onClick={onChangeUpdateUserNameStatus}>
-                        {/* <FontAwesomeIcon icon={faPenToSquareIconDefinition} /> */}
-                        <Edit />
-                      </button>
-                    ) : (
-                      <div></div>
-                    )}
-                  </>
-                )
-              ) : (
-                <input
-                  className='w-full bg-transparent'
-                  type='text'
-                  value={stream.userName}
-                  onChange={onChangeUserName}
-                  disabled
-                />
-              )}
-              {stream.isReady && (
-                <div className=' text-[#FF8DA3] whitespace-nowrap absolute right-2 top-2'>
-                  준비완료
-                </div>
-              )}
+                  <input
+                    className='w-full bg-transparent'
+                    type='text'
+                    value={player.nickname}
+                    onChange={onChangeUserName}
+                    disabled
+                  />
+                )}
+                {type === 'WAIT' && player.ready && (
+                  <div className=' text-[#FF8DA3] whitespace-nowrap absolute right-2 top-2'>
+                    준비완료
+                  </div>
+                )}
+              </div>
             </div>
           );
         })}
