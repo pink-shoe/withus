@@ -74,11 +74,11 @@ public class AwsS3ServiceImpl implements AwsS3Service{
 		return fileNameList;
 	}
 
-	private String createFileName(String fileName) {
+	public String createFileName(String fileName) {
 		return UUID.randomUUID().toString().concat(getFileExtension(fileName));
 	}
 
-	private String getFileExtension(String fileName) {
+	public String getFileExtension(String fileName) {
 		try {
 			return fileName.substring(fileName.lastIndexOf("."));
 		} catch (StringIndexOutOfBoundsException e) {
@@ -86,7 +86,7 @@ public class AwsS3ServiceImpl implements AwsS3Service{
 		}
 	}
 
-	private void createDir() {
+	public void createDir() {
 		Path dirPath = Paths.get(localStorageDir);
 		if (!Files.exists(dirPath)) {
 			try {
@@ -97,7 +97,7 @@ public class AwsS3ServiceImpl implements AwsS3Service{
 		}
 	}
 
-	private File saveLocal(MultipartFile file, String localFile) {
+	public File saveLocal(MultipartFile file, String localFile) {
 		File upload;
 		try {
 			upload = new File(localFile);
