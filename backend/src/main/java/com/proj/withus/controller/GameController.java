@@ -1,5 +1,6 @@
 package com.proj.withus.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,7 @@ import com.proj.withus.domain.dto.GetCaptureImageReq;
 import com.proj.withus.domain.dto.GetGameInfoRes;
 import com.proj.withus.domain.dto.GetTotalGameResultRes;
 import com.proj.withus.service.AlbumService;
+import com.proj.withus.service.AwsS3ServiceImpl;
 import com.proj.withus.service.GameService;
 import com.proj.withus.util.JwtUtil;
 
@@ -49,6 +51,9 @@ public class GameController {
     private final AlbumService albumService;
     private final AwsS3Service awsS3Service;
     private final JwtUtil jwtUtil;
+
+    //test용
+    private final AwsS3ServiceImpl awsS3ServiceImpl;
 
     @ApiOperation(value = "게임 정보 조회", notes = "게임 시작 후 게임 기본 정보를 불러온다.")
     @ApiResponses(value = {
@@ -90,7 +95,6 @@ public class GameController {
             @ApiResponse(code = 200, message = "AI 서버에 사진 전송 성공", response = String.class),
             @ApiResponse(code = 400, message = "AI 서버에 사진 전송 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
     })
-
     @ApiImplicitParam(name = "getCaptureImageReq", value = "GetCaptureImageReq object", dataTypeClass = GetCaptureImageReq.class, paramType = "body")
     @PostMapping("/image")
     public ResponseEntity<?> getCaptureImage(
@@ -210,5 +214,26 @@ public class GameController {
         }
 
         return new ResponseEntity<String>("S3에 이미지 업로드 성공", HttpStatus.OK);
+    }
+
+
+    @ApiOperation(value = "사진 보내기(테스트용)", notes = "사진 전송 여부 확인 테스트")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "사진 전송 성공", response = String.class),
+        @ApiResponse(code = 400, message = "사진 전송 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
+    })
+    @ApiImplicitParam(name = "image", value = "form data image", dataTypeClass = MultipartFile.class, paramType = "body")
+    @PostMapping(value = "/image/test", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> getTestImage(
+        HttpServletRequest request,
+        @RequestPart MultipartFile image) {
+
+        awsS3ServiceImpl.createDir();
+
+        String fileName = awsS3ServiceImpl.createFileName(image.getOriginalFilename());
+
+        File upload = awsS3ServiceImpl.saveLocal(image, "C:/upload/" + fileName);
+
+        return new ResponseEntity<String>("사진 테스트 성공", HttpStatus.OK);
     }
 }
