@@ -46,6 +46,10 @@ export default function Lobby() {
     setEnterCode('');
   };
 
+  const openWarningModal = () => {
+    setWarningModal(true);
+  }
+
   const closeWarningModal = () => {
     setWarningModal(false);
   };
@@ -60,8 +64,7 @@ export default function Lobby() {
   const onClickParticipantBtn = async () => {
     if (enterCode === '') {
       // 공백이면 참여코드를 입력해달라는 창이 뜸
-      <Modal openModal={true} ></Modal>
-      alert('참여코드를 입력해주세요😳');
+      setWarningModal(true);
     } else {
       const result: any = await participateRoomApi(Number(enterCode));
       if (result.status === 200) {
@@ -114,14 +117,25 @@ export default function Lobby() {
                     onChange={writeCode}
                   />
                 </div>
-                <div className='flex justify-center'>
-                  <button
-                    onClick={onClickParticipantBtn}
-                    className='bg-[#8D98FF] hover:bg-violet-700 w-[22rem] h-12 rounded-md font-medium font-kdisplay text-2xl text-white'
-                  >
-                    참여
-                  </button>
-                </div>
+                <Fragment>
+                  <div className='flex justify-center'>
+                    <button
+                      onClick={onClickParticipantBtn}
+                      className='bg-[#8D98FF] hover:bg-violet-700 w-[22rem] h-12 rounded-md font-medium font-kdisplay text-2xl text-white'
+                    >
+                      참여
+                    </button>
+                    <Modal openModal={warningModal} isSettingModal={false}>
+                      <div className='font-kdisplay text-4xl mt-12 pb-10 flex justify-center'>
+                        참여코드를 입력해주세요😳
+                      </div>
+                      <div className='flex justify-center'>
+                      <button onClick={closeWarningModal} className='bg-[#FA8D8D] w-1/2 h-12 font-kdisplay text-2xl text-white rounded-lg hover:bg-red-500'>확인</button>
+
+                      </div>
+                    </Modal>
+                  </div>
+                </Fragment>
               </Modal>
             </div>
           </div>
