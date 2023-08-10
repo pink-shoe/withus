@@ -91,11 +91,11 @@ export default function SettingModalPresenter({
                       <div className='inline-block p-1 border-2 border-[#FF8DA3] font-medium text-2xl text-center text-[#514148] font-kdisplay rounded-l-lg'>
                         Code
                       </div>
-                      <div className='inline-block p-1 w-[13.4rem] border-y-2 border-e-2 border-[#FF8DA3] rounded-r-lg font-medium text-2xl text-center text-[#514148] font-kdisplay'>
+                      <div className='inline-block p-1 w-[12.7rem] border-y-2 border-e-2 border-[#FF8DA3] rounded-r-lg font-medium text-2xl text-center text-[#514148] font-kdisplay'>
                         {roomCode}
                       </div>
                       
-                      <div className='inline-block align-middle pb-2 ms-1'>
+                      <div className='inline-block align-middle pb-2 ms-[6px]'>
                         <TextCopy text={roomCode} />
                       </div>
                     </div>
@@ -107,8 +107,8 @@ export default function SettingModalPresenter({
                       <span>Url</span>
                     </div>
                     
-                    <div className='inline-block p-1 border-y-2 border-e-2 w-[20.7rem] border-[#FF8DA3] rounded-r-lg font-medium text-2xl text-center text-[#514148] font-kdisplay'>
-                      <div className='overflow-x-auto w-[20.1rem]'>{roomUrl}</div>
+                    <div className='inline-block p-1 border-y-2 border-e-2 w-[20.1rem] border-[#FF8DA3] rounded-r-lg font-medium text-2xl text-center text-[#514148] font-kdisplay'>
+                      <div className='overflow-x-auto w-[19rem]'>{roomUrl}</div>
                     </div>
                     <div className='inline-block pt-7 ms-[6px]'>
                       <TextCopy text={roomUrl} />
@@ -118,7 +118,11 @@ export default function SettingModalPresenter({
               </Fragment>
             ) : null}
           </div>
-          <GameStartButton onClickStartBtn={handleSaveSetting} />
+          {boardType === 'LOBBY' ? (
+            <GameStartButton buttonType='START' onClickStartBtn={handleSaveSetting} />
+          ) : (
+            <GameStartButton buttonType='SAVE' onClickStartBtn={handleSaveSetting} />
+          )}
         </Modal>
       </div>
     </Fragment>
