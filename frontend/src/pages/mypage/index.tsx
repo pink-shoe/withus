@@ -13,14 +13,14 @@ export default function Mypage() {
   const navigate = useNavigate();
   console.log(`닉네임 확인: ${user.nickname}`);
 
-  const onChangeNickname = (data: any) => {
+  const onChangeNickName = (data: any) => {
     setUser((prevUser) => ({
       ...prevUser,
       nickname: data.target.value,
     }));
   };
 
-  const onChangeNickName = () => {
+  const UpdateNickName = () => {
     updateMemberApi(user.nickname)
       .then(() => {})
       .catch((error) => {
@@ -44,10 +44,10 @@ export default function Mypage() {
                 label='변경할 닉네임'
                 value={user.nickname} // Access the nickname from the userAtom
                 placeholder={user.nickname}
-                onChange={onChangeNickname}
+                onChange={onChangeNickName}
               />
             </div>
-            <ButtonComponent type='isBig' onClick={onChangeNickName}>
+            <ButtonComponent type='isBig' onClick={UpdateNickName}>
               닉네임 변경하기
             </ButtonComponent>
             <ButtonComponent type='isBig' onClick={onClickGoLobby}>
