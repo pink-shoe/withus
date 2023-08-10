@@ -24,7 +24,7 @@ public class GetGameInfoRes {
     private Room room;
 
     @ApiModelProperty(value = "참가자 정보", required = true)
-    private List<Player> players;
+    private List<PlayerInfo> playerInfos;
 
     @ApiModelProperty(value = "문제 정보", required = true)
     private List<Shape> shapes;

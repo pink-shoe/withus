@@ -121,6 +121,13 @@ public class RoomController {
         HttpServletRequest request,
         @RequestBody CreateRoomReq createRoomReq) { // dto 새로 만들어야 함
 
+        // 유효성 검사(임시)
+        if (createRoomReq.getRoomRound() <= 5) {
+            createRoomReq.setRoomRound(5);
+        }
+        if (!createRoomReq.getRoomType().trim().equals("coop") || !createRoomReq.getRoomType().trim().equals("team")) {
+            createRoomReq.setRoomType("coop");
+        }
         System.out.println("createRoomReq.getId()" + createRoomReq.getId());
         System.out.println("createRoomReq.getRoomType()" + createRoomReq.getRoomType());
 

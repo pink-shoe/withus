@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import com.proj.withus.domain.dto.GetSelectedImagesReq;
+import com.proj.withus.domain.dto.PlayerInfo;
 import com.proj.withus.service.AwsS3Service;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,7 @@ import com.proj.withus.domain.dto.GetTotalGameResultRes;
 import com.proj.withus.service.AlbumService;
 import com.proj.withus.service.AwsS3ServiceImpl;
 import com.proj.withus.service.GameService;
+import com.proj.withus.service.MemberService;
 import com.proj.withus.util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -50,6 +52,7 @@ public class GameController {
     private final GameService gameService;
     private final AlbumService albumService;
     private final AwsS3Service awsS3Service;
+    private final MemberService memberService;
     private final JwtUtil jwtUtil;
 
     //test용
@@ -78,6 +81,17 @@ public class GameController {
         if (players == null) {
             return new ResponseEntity<>("플레이어 정보가 없음", HttpStatus.BAD_REQUEST);
         }
+        List<PlayerInfo> playerInfos = new ArrayList<>();
+        for (Player player : players) {
+            PlayerInfo playerInfo = PlayerInfo.builder()
+                .playerId(player.getId())
+                .nickname(memberService.getMemberInfo(player.getId()).getNickname())
+                .teamType(player.getTeamType())
+                .ready(player.isReady())
+                .build();
+            playerInfos.add(playerInfo);
+        }
+
         List<Shape> shapes = gameService.getShapeInfo(room.getRound());
         if (shapes == null) {
             return new ResponseEntity<>("모양 데이터셋이 부족함", HttpStatus.BAD_REQUEST);
@@ -85,7 +99,7 @@ public class GameController {
 
         return ResponseEntity.ok(GetGameInfoRes.builder()
                 .room(room)
-                .players(players)
+                .playerInfos(playerInfos)
                 .shapes(shapes)
                 .build());
     }
