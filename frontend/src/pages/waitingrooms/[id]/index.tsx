@@ -25,7 +25,7 @@ export default function WaitingRoom() {
   const [chatStatus, setChatStatus] = useState<boolean>(true);
   const [playerList, setPlayerList] = useState<IPlayerInfo[]>([]);
 
-  const { data } = useQuery(['rooms/info'], () => getRoomInfoApi(currentPath), {});
+  const { data } = useQuery(['rooms/info'], () => getRoomInfoApi(currentPath));
   const [isReady, setIsReady] = useState<boolean>(false);
   const getRoomData = async () => {
     const result = (await getRoomInfoApi(currentPath)) as IRoomAtom;
@@ -38,9 +38,8 @@ export default function WaitingRoom() {
 
   useEffect(() => {
     if (data) {
-      setRoomInfo(data as IRoomAtom);
       const roomInfo = data as IRoomAtom;
-      console.log('roominfo', roomInfo);
+      setRoomInfo(roomInfo);
       roomInfo.playerInfos && setPlayerList(roomInfo.playerInfos);
       roomInfo.hostId && setIsHost(roomInfo.hostId === user.memberId);
 
