@@ -82,12 +82,12 @@ export const ControlBarContainer: FC<IControlBarProps> = ({
   };
 
   const onClickStartBtn = async () => {
-    sendSignal(`${roomId}`, 'START');
     const result = (await checkStartApi(roomId)) as any;
     console.log('game start', result);
-    console.log(result);
-    navigate(`/gamerooms/${roomCode}`);
-    // if (result.status === 200) console.log(result);
+    if (result.status === 200) {
+      sendSignal(`${roomId}`, 'START');
+      navigate(`/gamerooms/${roomCode}`);
+    }
   };
 
   return (
