@@ -1,19 +1,16 @@
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
+import axios from '.';
 
 const apiUrl = `/logout`;
 
-export async function UserLogoutApi() {
+export async function userLogoutApi() {
   try {
-    const token = localStorage.getItem('token');
     const accessToken = localStorage.getItem('accessToken');
-    const headers = {
-      token: token,
-    };
     const requestBody = {
       accessToken: accessToken,
     };
 
-    const response = await axios.post(apiUrl, requestBody, { headers });
+    const response = await axios.post(apiUrl, requestBody);
 
     console.log('성공:', response.data);
   } catch (error) {

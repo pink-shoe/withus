@@ -3,7 +3,5 @@
 import { Outlet } from 'react-router-dom';
 
 export default function WaitingRoomLayout() {
-  return (
-    <Outlet />
-  );
+  return <Outlet />;
 }

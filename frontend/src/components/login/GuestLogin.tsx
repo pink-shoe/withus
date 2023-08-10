@@ -22,12 +22,12 @@ const GuestLogin: React.FC<IGuestLoginProps> = ({
   const onChangeNickname = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNickname((prev) => ({ ...prev, nickname: event.target.value }));
   };
+
   return (
     <div>
       <InputComponent
         label='닉네임 설정'
         type='text'
-        value={nickname}
         placeholder='닉네임'
         onChange={onChangeNickname}
       />

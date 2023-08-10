@@ -1,10 +1,9 @@
 import KakaoLogin from './KakaoLogin';
-import Naverlogin from './NaverLogin';
 import GoogleSocialLogin from './GoogleSocialLogin';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 export default function Login() {
-  const GOOGLE_GOOGLECLIENT_ID = import.meta.env.VITE_GOOGLECLIENT_ID;
+  const GOOGLE_GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLECLIENT_ID;
 
   return (
     <div className='flex flex-col justify-center h-screen'>
@@ -14,7 +13,7 @@ export default function Login() {
       </div>
       <KakaoLogin />
       <div className='mt-4'>
-        <GoogleOAuthProvider clientId={`${GOOGLE_GOOGLECLIENT_ID}`}>
+        <GoogleOAuthProvider clientId={`${GOOGLE_GOOGLE_CLIENT_ID}`}>
           <GoogleSocialLogin />
         </GoogleOAuthProvider>
       </div>
