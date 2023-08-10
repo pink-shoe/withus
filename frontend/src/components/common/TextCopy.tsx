@@ -1,5 +1,6 @@
 import React from 'react';
 import { Clipboard } from 'react-feather';
+import Modal from './Modal';
 
 export default function TextCopy({ text }: any) {
   // 클립보드에 텍스트를 저장하는 기능
