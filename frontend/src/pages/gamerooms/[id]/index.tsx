@@ -7,7 +7,7 @@ import { signalType, useOpenvidu } from 'hooks/useOpenvidu';
 import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer';
 import ParticipantsContainer from '@components/ParticipantsList/ParticipantListContainer';
 import ChatContainer from '@components/Chat/ChatContainer';
-import { IPlayerAtom, IUserAtom, userAtom } from 'stores/user';
+import { IUserAtom, userAtom } from 'stores/user';
 import { useAtom } from 'jotai';
 import { IPlayerInfo, IRoomAtom, roomAtom } from 'stores/room';
 import Background from '@components/common/Background';
@@ -161,7 +161,7 @@ export default function GameRoom() {
               roomCode={Number(currentPath)}
             />
           </div>
-          {/* <button onClick={handleDownload}>다운로드</button> */}
+          <button onClick={handleDownload}>다운로드</button>
         </div>
         <ChatContainer
           chatStatus={chatStatus}
