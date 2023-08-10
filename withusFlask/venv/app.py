@@ -1,7 +1,8 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 # from flask_restx import Api
 import tensorflow as tf
 from PIL import Image
+
 
 from tensorflow.python.keras.utils import np_utils
 from keras.datasets import mnist
@@ -12,8 +13,11 @@ from numpy import argmax
 
 import pymysql
 import configparser
+import base64
 
 import os
+import io
+import cv2
 
 app = Flask(__name__)
 
@@ -29,12 +33,17 @@ def receive_capture():
 
         shapeInfo = getShapeInfo(data.get('shapeId')[0])
 
-        print('-----image 전---------')
-        if 'image' in request.files:
-            image = request.files['image']
-            image.save(os.path.join('static', 'doggggg.jfif'))
-            print("---- image 중 -------")
-        print('----- image 후-------')
+        imgdata = base64.b64decode(str(data['image']))
+        dataBytesIO = io.BytesIO(imgdata)
+        image = Image.open(dataBytesIO)
+
+        image_cv2 = np.array(image)
+        image_cv2 = cv2.cvtColor(image_cv2, cv2.COLOR_RGB2BGR)
+
+        # 이미지 표시
+        cv2.imshow('Captured Image', image_cv2)
+        cv2.waitKey(0)  # 키 입력을 기다림
+
         # ai model에서 처리 -> isCorrect, correctRate
         isCorrect = True
         correctRate = 80
@@ -73,7 +82,7 @@ def getShapeInfo(shapeId):
     return shape
 
 # 추후에 AI 모델 교체할 것
-def run_mode():
+def run_model():
     model = tf.keras.models.load_model('venv/Include/model/mnist_mlp_model.h5')
 
     # input data
