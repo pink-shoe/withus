@@ -94,7 +94,7 @@ export default function WaitingRoom() {
       publisher.stream.session.on('signal:' + type, (e: any) => {
         const result = JSON.parse(e.data);
         if (type === 'START') navigate(`/gamerooms/${currentPath}`);
-        if (result) getRoomData();
+        if (result && currentPath) getRoomData();
       });
     }
   };
@@ -115,7 +115,7 @@ export default function WaitingRoom() {
       <div className='flex w-full h-full'>
         {/* 참가자 목록 */}
         <div className='justify-start bg-white z-40'>
-          {(data as IRoomAtom) && playerList && roomInfo && (
+          {(data as IRoomAtom) && playerList && roomInfo && roomInfo.room && (
             <ParticipantsContainer
               type={'WAIT'}
               user={user}
