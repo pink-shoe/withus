@@ -22,10 +22,7 @@ export default function Mypage() {
 
   const onChangeNickName = () => {
     updateMemberApi(user.nickname)
-      .then(() => {
-        console.log('userInfoUpdateApi 보내는 중!');
-        // 닉네임 변경되었다는 모달 띄우기
-      })
+      .then(() => {})
       .catch((error) => {
         console.error('Error updating nickname:', error);
       });
