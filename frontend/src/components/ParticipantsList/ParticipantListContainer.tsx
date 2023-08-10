@@ -7,17 +7,22 @@ import { IPlayerInfo } from 'stores/room';
 interface IParticipantsContainerProps {
   type: 'WAIT' | 'GAME';
   user: IUserAtom;
-  isHost: boolean;
-  // onChangeUserName: (username: string) => void;
+  hostId: number;
   playerList: IPlayerInfo[];
-  // readyStatus: boolean;
+  currentRound?: number;
+  roomRound: number;
+  roomType: string;
+  // onChangeUserName: (username: string) => void;
   // onChangeIsUpdateUserName: (status: boolean) => void;
 }
 export default function ParticipantsContainer({
   type,
   user,
-  isHost,
+  hostId,
   playerList,
+  currentRound,
+  roomRound,
+  roomType,
 }: IParticipantsContainerProps) {
   const [userName, setUserName] = useState(user.nickname);
   const [isUpdateUserName, setIsUpdateUserName] = useState(false);
@@ -58,7 +63,10 @@ export default function ParticipantsContainer({
       isUpdateUserName={isUpdateUserName}
       onChangeUpdateUserNameStatus={updateUserName}
       saveUserName={saveUserName}
-      isHost={isHost}
+      hostId={hostId}
+      currentRound={currentRound}
+      roomRound={roomRound}
+      roomType={roomType}
     />
   );
 }

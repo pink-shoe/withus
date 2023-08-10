@@ -112,7 +112,7 @@ export default function WaitingRoom() {
       <div className='flex w-full h-full'>
         {/* 참가자 목록 */}
         <div className='justify-start bg-white z-40'>
-          {playerList && (
+          {(data as IRoomAtom) && playerList && roomInfo && (
             <ParticipantsContainer
               type={'WAIT'}
               user={user}
@@ -120,8 +120,9 @@ export default function WaitingRoom() {
               // userName={userName}
               // onChangeUserName={onChangeUserName}
               playerList={playerList}
-              isHost={isHost}
-              // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
+              hostId={roomInfo.hostId}
+              roomRound={roomInfo.room.roomRound}
+              roomType={roomInfo.room.roomType} // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
             />
           )}
         </div>
