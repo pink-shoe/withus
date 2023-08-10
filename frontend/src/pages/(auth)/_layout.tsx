@@ -12,7 +12,7 @@ import { guestLoginApi } from 'apis/guestApi';
 
 export default function Layout() {
   // Atom 값과 상태 업데이트 함수 가져오기
-  const [{ email, nickname }, setUser] = useAtom(userAtom);
+  const [User, setUser] = useAtom(userAtom);
   const [enterCode, setEnterCode] = useState('');
   const [emailPassword, setEmailPassword] = useState('');
   const [showLoginForm, setShowLoginForm] = useState(false);
@@ -32,11 +32,10 @@ export default function Layout() {
   }
 
   function onClickGuestLogin() {
-    setUser((prev) => ({ ...prev, nickname: nickname }));
-    console.log('Nickname:', nickname);
+    console.log('Nickname:', User.nickname);
     console.log('Enter Code:', enterCode);
     // 게스트는 로비로 보내지 않고 바로 방으로 갈 수 있도록 변경할거임. --------- 게스트 로그인 api 로 가서 서버로 부터 받아오고 정리 아직 미정 --------
-    guestLoginApi(nickname, enterCode);
+    guestLoginApi(User.nickname, enterCode, setUser, navigate);
   }
 
   return (
