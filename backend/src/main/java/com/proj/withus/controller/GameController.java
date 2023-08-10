@@ -71,9 +71,10 @@ public class GameController {
             @PathVariable(value = "room_id", required = true) Long roomId,
             HttpServletRequest request) {
 
-        Long hostId = (Long) request.getAttribute("memberId");
+        Long memberId = (Long) request.getAttribute("memberId");
 
-        Room room = gameService.getRoomInfo(hostId);
+        Room room = gameService.getRoomInfo(memberId);
+
         if (room == null) {
             return new ResponseEntity<>("방 정보가 없음", HttpStatus.BAD_REQUEST);
         }

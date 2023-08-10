@@ -45,6 +45,6 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
     @Query("select p.id from Player p where p.room.id = :roomId and p.ready = true and p.id != :hostId")
     List<Long> findReadyPlayersByRoomIdWithoutHost(@Param("roomId") Long roomId, @Param("hostId") Long hostId);
 
-    @Query("select p.room.id from Player p where p.id = :playerId")
-    Long findRoomIdByPlayerId(Long playerId);
+    @Query("select p.room from Player p where p.id = :playerId")
+    Room findRoomIdByPlayerId(Long playerId);
 }

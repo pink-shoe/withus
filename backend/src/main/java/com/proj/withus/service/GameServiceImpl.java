@@ -41,9 +41,8 @@ public class GameServiceImpl implements GameService {
     private final ShapeRepository shapeRepository;
 
     @Override
-    public Room getRoomInfo(Long roomId) {
-        // return playerRepository.findRoomById(memberId);
-        return roomRepository.findRoomById(roomId).orElse(null);
+    public Room getRoomInfo(Long memberId) {
+         return playerRepository.findRoomIdByPlayerId(memberId);
     }
 
 
