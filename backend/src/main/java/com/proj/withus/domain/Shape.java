@@ -1,6 +1,8 @@
 package com.proj.withus.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +16,7 @@ public class Shape {
 
 	@Id @GeneratedValue
 	@Column(name = "shape_id")
+	@JsonProperty("shapeId")
 	private Long id;
 
 	private String shapeUrl;
