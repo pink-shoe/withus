@@ -114,7 +114,7 @@ public class GuestController {
     public ResponseEntity<?> modifyGuestNickname(
             HttpServletRequest request,
 //            @ApiParam(value = "변경할 닉네임", required = true)
-            @RequestBody String nickname) {
+            @RequestParam String nickname) {
 
         Long memberId = (Long) request.getAttribute("memberId");
         Member updatedInfo = memberService.updateMember(memberId, nickname);

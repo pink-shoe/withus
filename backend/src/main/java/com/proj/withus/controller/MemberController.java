@@ -63,8 +63,8 @@ public class MemberController {
     @PutMapping
     private ResponseEntity<?> updateMemberInfo(
             HttpServletRequest request,
-            @ApiParam(value = "변경할 닉네임 (json이 아닌 문자열)", required = true)
-            @RequestBody String nickname) {
+            @ApiParam(value = "변경할 닉네임", required = true)
+            @RequestParam String nickname) {
 
         Long memberId = (Long) request.getAttribute("memberId");
         Member updatedInfo = memberService.updateMember(memberId, nickname);
