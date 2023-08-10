@@ -102,7 +102,10 @@ export default function WaitingRoom() {
   useEffect(() => {
     session &&
       publisher &&
-      (receiveSignal('READY'), receiveSignal('CANCEL_READY'), receiveSignal('START'));
+      (receiveSignal('READY'),
+      receiveSignal('CANCEL_READY'),
+      receiveSignal('START'),
+      receiveSignal('UPDATE'));
   }, [session, publisher]);
 
   useEffect(() => {
@@ -126,6 +129,7 @@ export default function WaitingRoom() {
               hostId={roomInfo.hostId}
               roomRound={roomInfo.room.roomRound}
               roomType={roomInfo.room.roomType} // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
+              sendSignal={sendSignal}
             />
           )}
         </div>

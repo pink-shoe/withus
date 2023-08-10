@@ -2,6 +2,8 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { ParticipantsPresenter } from './ParticipantListPresenter';
 import { IUserAtom } from 'stores/user';
 import { IPlayerInfo } from 'stores/room';
+import { updateMemberNicknameApi } from 'apis/roomApi';
+import { signalType } from 'hooks/useOpenvidu';
 
 // export let localUser: IUser;
 interface IParticipantsContainerProps {
@@ -12,6 +14,7 @@ interface IParticipantsContainerProps {
   currentRound?: number;
   roomRound: number;
   roomType: string;
+  sendSignal?: (message: string, type: signalType) => void;
   // onChangeUserName: (username: string) => void;
   // onChangeIsUpdateUserName: (status: boolean) => void;
 }
@@ -23,6 +26,7 @@ export default function ParticipantsContainer({
   currentRound,
   roomRound,
   roomType,
+  sendSignal,
 }: IParticipantsContainerProps) {
   const [userName, setUserName] = useState(user.nickname);
   const [isUpdateUserName, setIsUpdateUserName] = useState(false);
@@ -33,10 +37,15 @@ export default function ParticipantsContainer({
   const updateUserName = () => {
     setIsUpdateUserName(true);
   };
-  const saveUserName = () => {
-    setIsUpdateUserName(false);
-    console.log(userName);
-    // stream에 userName update 처리 필요
+  const saveUserName = async () => {
+    if (type === 'WAIT' && sendSignal) {
+      setIsUpdateUserName(false);
+      console.log(userName);
+      const result: any = await updateMemberNicknameApi(userName);
+      console.log(result);
+      if (result.status === 200) sendSignal(`${user.memberId} ${userName}`, 'UPDATE');
+      // stream에 userName update 처리 필요
+    }
   };
   // useEffect(() => {
   //   callback.onChangeUserName(userName);
@@ -67,6 +76,7 @@ export default function ParticipantsContainer({
       currentRound={currentRound}
       roomRound={roomRound}
       roomType={roomType}
+      userName={userName}
     />
   );
 }
