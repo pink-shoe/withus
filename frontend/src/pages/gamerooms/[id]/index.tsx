@@ -9,12 +9,11 @@ import ParticipantsContainer from '@components/ParticipantsList/ParticipantListC
 import ChatContainer from '@components/Chat/ChatContainer';
 import { IUserAtom, userAtom } from 'stores/user';
 import { useAtom } from 'jotai';
-import { IPlayerInfo, IRoomAtom, roomAtom } from 'stores/room';
+import { IPlayerInfo, roomAtom } from 'stores/room';
 import Background from '@components/common/Background';
 import Board from '@components/common/Board';
-import { getRoomInfoApi } from 'apis/roomApi';
 import { useQuery } from '@tanstack/react-query';
-import { IGameInfo, getGameInfoApi, sendCaptureImageApi } from 'apis/gameApi';
+import { IGameInfo, getGameInfoApi } from 'apis/gameApi';
 
 export default function GameRoom() {
   const location = useLocation();
@@ -29,36 +28,31 @@ export default function GameRoom() {
   const [chatStatus, setChatStatus] = useState<boolean>(true);
   // const [playerList, setPlayerList] = useState<IPlayerInfo[]>([]);
 
-  const { data } = useQuery(['rooms/info'], () => getRoomInfoApi(currentPath), {});
-  const { data: gameRoomData } = useQuery(
-    ['games/info'],
-    () => getGameInfoApi((data as IRoomAtom).room.roomId),
-    { enabled: !data }
+  const { data: gameRoomData } = useQuery(['games/info'], () =>
+    getGameInfoApi(roomInfo.room.roomId)
   );
   const getGameData = async () => {
-    const room = data as IRoomAtom;
-    const result = (await getGameInfoApi(room.room.roomId)) as IGameInfo;
+    const result = (await getGameInfoApi(roomInfo.room.roomId)) as IGameInfo;
     if (result) {
       setGameRoomInfo(result);
+      // setPlayerList(result.playerInfos);
     }
   };
-  useEffect(() => {
-    if (data) {
-      setRoomInfo(data as IRoomAtom);
-      const roomInfo = data as IRoomAtom;
-      roomInfo.hostId && setIsHost(roomInfo.hostId === user.memberId);
-    }
-  }, [data]);
 
   useEffect(() => {
     if (gameRoomData) {
       const gameData = gameRoomData as IGameInfo;
       setGameRoomInfo(gameData);
+      // setPlayerList(gameData.playerInfos);
     }
   }, [gameRoomData]);
 
   const { session, publisher, streamList, onChangeCameraStatus, onChangeMicStatus, sendSignal } =
-    useOpenvidu(user.memberId, user.nickname, roomInfo.room.roomId!);
+    useOpenvidu(
+      user.memberId,
+      // user.nickname,
+      roomInfo.room.roomId!
+    );
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
@@ -139,13 +133,20 @@ export default function GameRoom() {
                   {streamList
                     .sort((a: any, b: any) => b.userId - a.userId)
                     ?.map((stream: any, idx: number) => {
+                      const player = roomInfo.playerInfos.find(
+                        (player: IPlayerInfo, idx: number) => {
+                          return player.playerId === stream.userId;
+                        }
+                      );
                       return (
                         <div className='w-full h-full' key={idx}>
-                          <VideoStream
-                            streamManager={stream.streamManager}
-                            name={stream.userName}
-                            isMe={stream.userId === user.memberId}
-                          />
+                          {player && (
+                            <VideoStream
+                              streamManager={stream.streamManager}
+                              name={player.nickname}
+                              isMe={stream.userId === user.memberId}
+                            />
+                          )}
                         </div>
                       );
                     })}

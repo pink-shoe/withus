@@ -11,7 +11,7 @@ export type signalType = 'CHAT' | 'READY' | 'CANCEL_READY' | 'START' | 'ROUND';
 export interface IStreamList {
   streamManager: any;
   userId: number;
-  nickname: string;
+  // nickname: string;
 }
 const getConnectionId = (user: IUser) => {
   return user.connectionId;
@@ -22,7 +22,11 @@ const setConnectionId = (user: IUser, conecctionId: string) => {
   return user;
 };
 
-export const useOpenvidu = (userId: number, nickname: string, gameRoomId: number) => {
+export const useOpenvidu = (
+  userId: number,
+  // nickname: string,
+  gameRoomId: number
+) => {
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [publisher, setPublisher] = useState<any>();
   const [session, setSession] = useState<any>();
@@ -49,7 +53,7 @@ export const useOpenvidu = (userId: number, nickname: string, gameRoomId: number
           {
             streamManager: subscriber,
             userId: +data.userId,
-            nickname: data.nickname,
+            // nickname: data.nickname,
           },
         ];
       });
@@ -144,7 +148,7 @@ export const useOpenvidu = (userId: number, nickname: string, gameRoomId: number
             .signal({
               data: JSON.stringify({
                 message: message,
-                nickname,
+                // nickname,
                 userId,
                 streamId: publisher.stream.streamId,
               }),
@@ -166,7 +170,7 @@ export const useOpenvidu = (userId: number, nickname: string, gameRoomId: number
       {
         streamManager: publisher,
         userId,
-        nickname,
+        // nickname,
       },
       ...subscribers.filter((it) => it.userId !== userId),
     ],

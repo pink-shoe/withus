@@ -23,7 +23,8 @@ export interface IShape {
 }
 export interface IGameInfo {
   currentRound: number;
-  players: IPlayerInfo;
+  hostId: number;
+  playerInfos: IPlayerInfo[];
   room: IRoom;
   shapes: IShape;
 }

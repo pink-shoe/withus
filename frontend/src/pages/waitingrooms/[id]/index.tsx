@@ -69,7 +69,11 @@ export default function WaitingRoom() {
     onChangeCameraStatus,
     onChangeMicStatus,
     sendSignal,
-  } = useOpenvidu(user.memberId, user.nickname, currentPath);
+  } = useOpenvidu(
+    user.memberId,
+    // user.nickname,
+    currentPath
+  );
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
