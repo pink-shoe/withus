@@ -26,7 +26,11 @@ export async function getMemberApi(setUser: any) {
 export async function updateMemberApi(nickname: string) {
   try {
     console.log(`nickname 변경 시작! nickname: ${nickname}`);
-    const response = await axios.patch(apiUrl, nickname);
+    const response = await axios.put(apiUrl, null, {
+      params: {
+        nickname: nickname,
+      },
+    });
 
     console.log('성공:', response.data);
   } catch (error) {

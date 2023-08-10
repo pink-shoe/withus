@@ -13,11 +13,7 @@ export default function UserHeader({ isLobbyDropdown }: IUserHeaderProps) {
   const navigate = useNavigate();
 
   const onClickLogout = (): void => {
-    userLogoutApi();
-    console.log('로그아웃 됨');
-    localStorage.removeItem('token');
-    localStorage.removeItem('accessToken');
-    navigate('/login');
+    userLogoutApi(navigate);
   };
 
   return (
