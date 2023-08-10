@@ -114,7 +114,10 @@ export default function GameRoom() {
             type={'GAME'}
             user={user}
             playerList={roomInfo.playerInfos}
-            isHost={isHost}
+            hostId={roomInfo.hostId}
+            currentRound={0}
+            roomRound={roomInfo.room.roomRound}
+            roomType={roomInfo.room.roomType}
           />
         </div>
         {/* openvidu 화면 */}
