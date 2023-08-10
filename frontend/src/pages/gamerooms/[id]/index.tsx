@@ -130,7 +130,6 @@ export default function GameRoom() {
                   {streamList
                     .sort((a: any, b: any) => b.userId - a.userId)
                     ?.map((stream: any, idx: number) => {
-                      // const userInfo = streamList.find((it: any) => it.userId === stream.userId);
                       return (
                         <div className='w-full h-full' key={idx}>
                           <VideoStream
@@ -158,7 +157,7 @@ export default function GameRoom() {
               roomCode={Number(currentPath)}
             />
           </div>
-          {/* <button onClick={handleDownload}>다운로드</button> */}
+          <button onClick={handleDownload}>다운로드</button>
         </div>
         <ChatContainer
           chatStatus={chatStatus}
