@@ -253,7 +253,7 @@ public class GameController {
 
     @ApiOperation(value = "MVP 선정", notes = "플레이어는 MVP를 투표해 선정한다.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "MVP 선정 성공", response = GetTotalGameResultRes.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "MVP 선정 성공", response = String.class, examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "mvp 선정 성공"))),
         @ApiResponse(code = 400, message = "MVP 선정 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}"))),
         @ApiResponse(code = 403, message = "권한 없음", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 403, \n message: auth \n}")))
     })
@@ -280,5 +280,38 @@ public class GameController {
         }
 
         return new ResponseEntity<String>("mvp 선정 성공", HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "MVP 결과 요청", notes = "MVP로 선정된 플레이어 정보를 조회한다.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "MVP 결과 요청 성공", response = Player.class, responseContainer = "List"),
+        @ApiResponse(code = 400, message = "MVP 결과 요청 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}"))),
+        @ApiResponse(code = 403, message = "권한 없음", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 403, \n message: auth \n}")))
+    })
+    @ApiImplicitParams(value = {
+        @ApiImplicitParam(name = "room_id", value = "방 id", required = true, dataType = "Long", paramType = "path"),
+    })
+    @GetMapping("/vote/{room_id}")
+    public ResponseEntity<?> getMvpPlayer(
+        @PathVariable(value = "room_id", required = true) Long roomId,
+        HttpServletRequest request) {
+
+        Long memberId = (Long) request.getAttribute("memberId");
+        if (memberId == null) {
+            return new ResponseEntity<>("인증되지 않은 사용자", HttpStatus.FORBIDDEN);
+        }
+
+        List<Player> players = gameService.getPlayersInfo(roomId);
+
+        int maxVote = 0;
+        List<Player> mvpPlayers = new ArrayList<>();
+        for (Player player : players) {
+            if (player.getVote() >= maxVote) {
+                maxVote = player.getVote();
+                mvpPlayers.add(player);
+            }
+        }
+
+        return new ResponseEntity<List<Player>>(mvpPlayers, HttpStatus.OK);
     }
 }
