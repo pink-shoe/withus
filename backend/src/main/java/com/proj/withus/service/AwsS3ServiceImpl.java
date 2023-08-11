@@ -4,12 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.transaction.Transactional;
 
@@ -23,6 +19,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.proj.withus.util.ImageUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,19 +34,15 @@ public class AwsS3ServiceImpl implements AwsS3Service{
 	private String bucket;
 
 	private final AmazonS3Client amazonS3Client;
-
-	private final String localStorageDir = "C:/upload/";
+	private final ImageUtil imageUtil;
 
 	public List<String> uploadFiles(List<MultipartFile> images) {
 		List<String> fileNameList = new ArrayList<>();
 
-		createDir();
-
 		images.forEach(file -> {
-			String fileName = createFileName(file.getOriginalFilename());
-			String localFile = localStorageDir + fileName;
+			String fileName = imageUtil.createFileName(file.getOriginalFilename());
 
-			File upload = saveLocal(file, localFile);
+			File upload = imageUtil.saveLocal(file, fileName);
 
 			ObjectMetadata objectMetadata = new ObjectMetadata();
 			objectMetadata.setContentLength(upload.length());
@@ -64,7 +57,7 @@ public class AwsS3ServiceImpl implements AwsS3Service{
 
 			fileNameList.add(upload.getName());
 
-			if (removeFile(localFile)) {
+			if (imageUtil.removeFile(fileName)) {
 				System.out.println("로컬에 있는 이미지 삭제 성공");
 			} else {
 				System.out.println("로컬 이미지 삭제 실패");
@@ -72,48 +65,5 @@ public class AwsS3ServiceImpl implements AwsS3Service{
 		});
 
 		return fileNameList;
-	}
-
-	public String createFileName(String fileName) {
-		return UUID.randomUUID().toString().concat(getFileExtension(fileName));
-	}
-
-	public String getFileExtension(String fileName) {
-		try {
-			return fileName.substring(fileName.lastIndexOf("."));
-		} catch (StringIndexOutOfBoundsException e) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 형식의 파일(" + fileName + ") 입니다.");
-		}
-	}
-
-	public void createDir() {
-		Path dirPath = Paths.get(localStorageDir);
-		if (!Files.exists(dirPath)) {
-			try {
-				Files.createDirectories(dirPath);
-			} catch (IOException e) {
-				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "로컬 저장소 디렉토리를 생성할 수 없음");
-			}
-		}
-	}
-
-	public File saveLocal(MultipartFile file, String localFile) {
-		File upload;
-		try {
-			upload = new File(localFile);
-			file.transferTo(upload);
-		} catch (IOException e) {
-			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "로컬 파일 업로드 실패했습니다.");
-		}
-		return upload;
-	}
-
-	private boolean removeFile(String fileName) {
-		File localFile = new File(fileName);
-		if (localFile.exists()) {
-			localFile.delete();
-			return true;
-		}
-		return false;
 	}
 }

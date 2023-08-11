@@ -6,10 +6,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.proj.withus.domain.dto.GetSelectedImagesReq;
-import com.proj.withus.domain.dto.PlayerInfo;
-import com.proj.withus.service.AwsS3Service;
-import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,17 +23,26 @@ import com.proj.withus.domain.Room;
 import com.proj.withus.domain.Shape;
 import com.proj.withus.domain.dto.GetCaptureImageReq;
 import com.proj.withus.domain.dto.GetGameInfoRes;
+import com.proj.withus.domain.dto.GetSelectedImagesReq;
 import com.proj.withus.domain.dto.GetTotalGameResultRes;
+import com.proj.withus.domain.dto.PlayerInfo;
 import com.proj.withus.service.AlbumService;
-import com.proj.withus.service.AwsS3ServiceImpl;
+import com.proj.withus.service.AwsS3Service;
 import com.proj.withus.service.GameService;
 import com.proj.withus.service.MemberService;
+import com.proj.withus.util.ImageUtil;
 import com.proj.withus.util.JwtUtil;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Example;
+import io.swagger.annotations.ExampleProperty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Api(tags = "게임 진행 API", description = "게임 진행 관련 기능을 처리하는 API (GameController)")
 @RestController
@@ -56,7 +61,7 @@ public class GameController {
     private final JwtUtil jwtUtil;
 
     //test용
-    private final AwsS3ServiceImpl awsS3ServiceImpl;
+    private final ImageUtil imageUtil;
 
     @ApiOperation(value = "게임 정보 조회", notes = "게임 시작 후 게임 기본 정보를 불러온다.")
     @ApiResponses(value = {
@@ -244,11 +249,9 @@ public class GameController {
         HttpServletRequest request,
         @RequestPart MultipartFile image) {
 
-        awsS3ServiceImpl.createDir();
+        String fileName = imageUtil.createFileName(image.getOriginalFilename());
 
-        String fileName = awsS3ServiceImpl.createFileName(image.getOriginalFilename());
-
-        File upload = awsS3ServiceImpl.saveLocal(image, "C:/upload/" + fileName);
+        File upload = imageUtil.saveLocal(image, fileName);
 
         return new ResponseEntity<String>("사진 테스트 성공", HttpStatus.OK);
     }
