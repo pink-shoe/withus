@@ -109,11 +109,11 @@ public class GuestController {
             @ApiResponse(code = 200, message = "게스트 닉네임 수정 성공", response = Member.class),
             @ApiResponse(code = 400, message = "게스트 닉네임 수정 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}"))),
     })
-    @ApiImplicitParam(name = "nickname", value = "닉네임", required = true, dataType = "String", paramType = "body")
+//    @ApiImplicitParam(name = "nickname", value = "닉네임", required = true, dataType = "String", paramType = "body")
     @PutMapping
     public ResponseEntity<?> modifyGuestNickname(
             HttpServletRequest request,
-//            @ApiParam(value = "변경할 닉네임", required = true)
+            @ApiParam(value = "변경할 닉네임", required = true)
             @RequestParam String nickname) {
 
         Long memberId = (Long) request.getAttribute("memberId");

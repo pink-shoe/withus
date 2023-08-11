@@ -246,14 +246,7 @@ public class RoomController {
             SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
             System.out.println("-------------------------------");
             Long id = socialMemberInfo.getId();
-            // System.out.println("memberId:~~ ");
-            // System.out.println(id);
-            // log.info("memberId:~~ ", id);
-            // 방장 체크 // 이렇게 깊은건 어떻게 처리하는게 깔끔한지 알아보기 (depth 3 이상)
             Long hostId = getHostId(roomId);
-            // log.info("hostId:~~ ", hostId);
-            // System.out.println(hostId);
-            // System.out.println("hostId");
 
             if (hostId != id) {
                 return new ResponseEntity<String>("방장이 아닙니다.", HttpStatus.FORBIDDEN);
