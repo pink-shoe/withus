@@ -7,11 +7,32 @@ import InputComponent from '@components/common/InputComponent';
 import { updateMemberApi } from 'apis/memberApi';
 import Board from '@components/common/Board';
 import Background from '@components/common/Background';
+import React, { useState } from 'react';
+import Modal from '@components/common/Modal';
 
 export default function Mypage() {
-  const [user, setUser] = useAtom(userAtom); // Access userAtom using useAtom
+  const [user, setUser] = useAtom(userAtom);
   const navigate = useNavigate();
+  const [isNickNameModalOpen, setIsNickNameModalOpen] = useState(false);
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+
   console.log(`닉네임 확인: ${user.nickname}`);
+
+  const OpenNickNameModal = () => {
+    setIsNickNameModalOpen(true);
+  };
+
+  const CloseNickNameModal = () => {
+    setIsNickNameModalOpen(false);
+  };
+
+  const OpenWithdrawModal = () => {
+    setIsWithdrawModalOpen(true);
+  };
+
+  const CloseWithdraweModal = () => {
+    setIsWithdrawModalOpen(false);
+  };
 
   const onChangeNickName = (data: any) => {
     setUser((prevUser) => ({
