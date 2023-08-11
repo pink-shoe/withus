@@ -12,6 +12,8 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,6 +23,7 @@ public class Player {
 
 	@Id
 	@Column(name = "player_id")
+	@JsonProperty("playerId")
 	private Long id;
 
 	@OneToOne(fetch = FetchType.LAZY)
@@ -37,4 +40,6 @@ public class Player {
 
 	@ColumnDefault("false")
 	private boolean ready;
+
+	private int vote;
 }
