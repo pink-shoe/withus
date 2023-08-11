@@ -31,8 +31,6 @@ import java.util.Map;
 public class SocialController {
 
     private final SocialService socialService;
-    private final MemberRepository memberRepository;
-
     private final JwtUtil jwtUtil;
 
     @Autowired

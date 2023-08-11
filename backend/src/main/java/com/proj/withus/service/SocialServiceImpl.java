@@ -59,56 +59,32 @@ public class SocialServiceImpl implements SocialService {
     @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
     private String redirectUri;
 
-//    private final MemberServiceImpl memberService;
     private final AlbumService albumService;
     private final MemberRepository memberRepository;
     private JwtUtil jwtUtil;
 
     @Override
     public String getKakaoAccessToken(String code) {
-        String accessToken = KAKAO_TOKEN_URL;
-        String reqURL = "https://kauth.kakao.com/oauth/token";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
-        try {
-            URL url = new URL(reqURL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "authorization_code");
+        params.add("client_id", kakaoApiKey);
+        params.add("redirect_uri", kakaoRedirectUri);
+        params.add("code", code);
 
-            // POST 요청을 위해 기본값이 false인 setDoOutput을 true로 설정
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
+        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
 
-            // POST 요청에 필요로 요구하는 파라미터를 스트림을 통해 전송
-            BufferedWriter bw = new BufferedWriter((new OutputStreamWriter(conn.getOutputStream())));
-            StringBuilder sb = new StringBuilder();
-            sb.append("grant_type=authorization_code");
-            sb.append("&client_id=" + kakaoApiKey);
-            sb.append("&redirect_uri=" + kakaoRedirectUri);
-            sb.append("&code=" + code);
-            bw.write(sb.toString());
-            bw.flush();
+        ResponseEntity<Map> response = restTemplate.exchange(
+                KAKAO_TOKEN_URL,
+                HttpMethod.POST,
+                kakaoTokenRequest,
+                Map.class
+        );
 
-            // 결과 코드가 200이라면 성공
-            int responseCode = conn.getResponseCode();
-            log.info("responseCode : " + responseCode);
-
-            // 요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
-//            String result = getRequestResult(conn);
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String line = "";
-            String result = "";
-            while ((line = br.readLine()) != null) {
-                result += line;
-            }
-
-            // Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
-            JsonParser parser = new JsonParser();
-            JsonElement element = parser.parse(result);
-
-            accessToken = element.getAsJsonObject().get("access_token").getAsString();
-            bw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String accessToken = (String) response.getBody().get("access_token");
         return accessToken;
     }
 
