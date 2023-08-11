@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.google.gson.JsonElement;
@@ -90,65 +91,37 @@ public class SocialServiceImpl implements SocialService {
 
     @Override
     public Long getKakaoMemberInfo(String token) {
-        String reqURL = KAKAO_USERINFO_URL;
+
+        WebClient webClient = WebClient.create(KAKAO_USERINFO_URL);
+        String response = webClient.get()
+                .uri(KAKAO_USERINFO_URL)
+                .header("Authorization", "Bearer " + token)
+                .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8")
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        JsonParser parser = new JsonParser();
+        JsonElement element = parser.parse(response);
+
         SocialMemberInfo kakaoMemberInfo = new SocialMemberInfo();
         Long memberId = -1L;
 
-        //access_token을 이용하여 사용자 정보 조회
-        try {
-            URL url = new URL(reqURL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        JsonElement kakaoAccount = element.getAsJsonObject().get("kakao_account");
+        JsonElement profile = kakaoAccount.getAsJsonObject().get("profile");
 
-            conn.setRequestMethod("GET");
-            conn.setDoOutput(true);
-            conn.setRequestProperty("Authorization", "Bearer " + token); //전송할 header 작성, access_token 전송
+        Member kakaoMember = new Member();
+        kakaoMember.setEmail(kakaoAccount.getAsJsonObject().get("email").getAsString());
+        kakaoMember.setNickname(profile.getAsJsonObject().get("nickname").getAsString());
+        kakaoMember.setLoginType("kakao");
 
-            //결과 코드가 200이라면 성공
-            int responseCode = conn.getResponseCode();
-            log.info("responseCode : " + responseCode);
+        Member existingMember = memberRepository.findByEmail(kakaoMember.getEmail());
 
-            //요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
-            String line = "";
-            String result = "";
-
-            while ((line = br.readLine()) != null) {
-                result += line;
-            }
-
-            //Gson 라이브러리로 JSON파싱
-            JsonParser parser = new JsonParser();
-            JsonElement element = parser.parse(result);
-            JsonElement kakaoAccount = element.getAsJsonObject().get("kakao_account");
-            JsonElement profile = kakaoAccount.getAsJsonObject().get("profile");
-
-            //dto에 저장하기
-            Long kakaoId = element.getAsJsonObject().get("id").getAsLong(); // @Id 태그 때문에 직접 id값을 넣을 수 없음
-//            kakaoMemberInfo.setId(element.getAsJsonObject().get("id").getAsLong());
-            kakaoMemberInfo.setEmail(kakaoAccount.getAsJsonObject().get("email").getAsString());
-            kakaoMemberInfo.setNickname(profile.getAsJsonObject().get("nickname").getAsString());
-            kakaoMemberInfo.setLoginType("kakao");
-
-            Member kakaoMember = new Member();
-//            kakaoMember.setId(kakaoMemberInfo.getId());
-            kakaoMember.setEmail(kakaoMemberInfo.getEmail());
-            kakaoMember.setNickname(kakaoMemberInfo.getNickname());
-            kakaoMember.setLoginType(kakaoMemberInfo.getLoginType());
-
-            Member existingMember = memberRepository.findByEmail(kakaoMember.getEmail());
-
-            if (existingMember == null) {
-                memberRepository.save(kakaoMember);
-                memberId = memberRepository.findByEmail(kakaoMember.getEmail()).getId();
-                albumService.createAlbum(kakaoMember);
-            } else {
-                memberId = memberRepository.findByEmail(kakaoMember.getEmail()).getId();
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (existingMember == null) {
+            memberRepository.save(kakaoMember);
+            albumService.createAlbum(kakaoMember);
         }
+        memberId = existingMember.getId();
 
         return memberId;
     }
