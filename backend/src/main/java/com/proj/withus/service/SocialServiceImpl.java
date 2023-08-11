@@ -233,8 +233,13 @@ public class SocialServiceImpl implements SocialService {
         //        userInfo.setProfile(response.getBody().get("picture").toString());
 
 //        memberService.saveGoogle(userInfo, token);
-        memberRepository.save(googleMember);
-        albumService.createAlbum(googleMember);
+
+         Member existingMember = memberRepository.findByEmail(googleMember.getEmail());
+
+            if (existingMember == null) {
+                memberRepository.save(googleMember);
+                albumService.createAlbum(googleMember);
+            }
 
         Long memberId = memberRepository.findByEmail(googleUserInfo.getEmail()).getId();
 
