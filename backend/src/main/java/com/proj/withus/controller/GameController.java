@@ -37,8 +37,6 @@ import com.proj.withus.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.servlet.http.HttpServletRequest;
-
 @Api(tags = "게임 진행 API", description = "게임 진행 관련 기능을 처리하는 API (GameController)")
 @RestController
 @Slf4j
@@ -251,5 +249,36 @@ public class GameController {
         File upload = awsS3ServiceImpl.saveLocal(image, "C:/upload/" + fileName);
 
         return new ResponseEntity<String>("사진 테스트 성공", HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "MVP 선정", notes = "플레이어는 MVP를 투표해 선정한다.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "MVP 선정 성공", response = GetTotalGameResultRes.class, responseContainer = "List"),
+        @ApiResponse(code = 400, message = "MVP 선정 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}"))),
+        @ApiResponse(code = 403, message = "권한 없음", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 403, \n message: auth \n}")))
+    })
+    @ApiImplicitParams(value = {
+        @ApiImplicitParam(name = "room_id", value = "방 id", required = true, dataType = "Long", paramType = "path"),
+        @ApiImplicitParam(name = "votedId", value = "투표받은 플레이어 id", required = true, dataType = "Long", paramType = "body")
+    })
+    @PostMapping("/vote/{room_id}")
+    public ResponseEntity<?> chooseMvpPlayer(
+        @PathVariable(value = "room_id", required = true) Long roomId,
+        @RequestBody Long votedId,
+        HttpServletRequest request) {
+
+        Long memberId = (Long) request.getAttribute("memberId");
+        if (memberId == null) {
+            return new ResponseEntity<>("인증되지 않은 사용자", HttpStatus.FORBIDDEN);
+        }
+
+        int update = gameService.chooseMvp(roomId, votedId);
+        // 투표한 사람 리스트 필요한가?
+
+        if (update == 0) {
+            return new ResponseEntity<>("투표가 반영되지 않음", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<String>("mvp 선정 성공", HttpStatus.OK);
     }
 }

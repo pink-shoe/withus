@@ -117,6 +117,11 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    public int chooseMvp(Long roomId, Long votedPlayerId) {
+        return playerRepository.updateVote(roomId, votedPlayerId);
+    }
+
+    @Override
     public List<GetTotalGameResultRes> getTotalGameResult(Long roomId) {
         List<GetTotalGameResultRes> totalGameResult = new ArrayList<>();
         List<GameResult> gameResult = gameResultRepository.findGameResultsByRoomId(roomId);

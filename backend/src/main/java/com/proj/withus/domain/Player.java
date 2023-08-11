@@ -37,4 +37,6 @@ public class Player {
 
 	@ColumnDefault("false")
 	private boolean ready;
+
+	private int vote;
 }
