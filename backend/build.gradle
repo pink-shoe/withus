@@ -23,22 +23,14 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-//	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-//	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
-//	implementation 'io.jsonwebtoken:jjwt:0.11.2'
-//	implementation 'io.jsonwebtoken:jjwt-api:0.11.2' // 최신 버전으로 업데이트하세요
-//	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2' // 최신 버전으로 업데이트하세요
-//	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2' // 최신 버전으로 업데이트하세요
-//	implementation 'org.springframework.boot:spring-boot-starter-web:3.0.0'
-//	implementation 'io.springfox:springfox-boot-starter:3.0.0'
-//	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.5.12'
 	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	implementation 'com.google.code.gson:gson:2.8.7'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	compileOnly 'org.projectlombok:lombok'
 //	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'com.mysql:mysql-connector-j'

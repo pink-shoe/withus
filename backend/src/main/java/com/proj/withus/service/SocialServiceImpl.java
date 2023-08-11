@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.google.gson.JsonElement;
@@ -59,120 +60,67 @@ public class SocialServiceImpl implements SocialService {
     @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
     private String redirectUri;
 
-//    private final MemberServiceImpl memberService;
     private final AlbumService albumService;
     private final MemberRepository memberRepository;
     private JwtUtil jwtUtil;
 
     @Override
     public String getKakaoAccessToken(String code) {
-        String accessToken = KAKAO_TOKEN_URL;
-        String reqURL = "https://kauth.kakao.com/oauth/token";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
-        try {
-            URL url = new URL(reqURL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "authorization_code");
+        params.add("client_id", kakaoApiKey);
+        params.add("redirect_uri", kakaoRedirectUri);
+        params.add("code", code);
 
-            // POST 요청을 위해 기본값이 false인 setDoOutput을 true로 설정
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
+        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
 
-            // POST 요청에 필요로 요구하는 파라미터를 스트림을 통해 전송
-            BufferedWriter bw = new BufferedWriter((new OutputStreamWriter(conn.getOutputStream())));
-            StringBuilder sb = new StringBuilder();
-            sb.append("grant_type=authorization_code");
-            sb.append("&client_id=" + kakaoApiKey);
-            sb.append("&redirect_uri=" + kakaoRedirectUri);
-            sb.append("&code=" + code);
-            bw.write(sb.toString());
-            bw.flush();
+        ResponseEntity<Map> response = restTemplate.exchange(
+                KAKAO_TOKEN_URL,
+                HttpMethod.POST,
+                kakaoTokenRequest,
+                Map.class
+        );
 
-            // 결과 코드가 200이라면 성공
-            int responseCode = conn.getResponseCode();
-            log.info("responseCode : " + responseCode);
-
-            // 요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
-//            String result = getRequestResult(conn);
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String line = "";
-            String result = "";
-            while ((line = br.readLine()) != null) {
-                result += line;
-            }
-
-            // Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
-            JsonParser parser = new JsonParser();
-            JsonElement element = parser.parse(result);
-
-            accessToken = element.getAsJsonObject().get("access_token").getAsString();
-            bw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String accessToken = (String) response.getBody().get("access_token");
         return accessToken;
     }
 
     @Override
     public Long getKakaoMemberInfo(String token) {
-        String reqURL = KAKAO_USERINFO_URL;
-        SocialMemberInfo kakaoMemberInfo = new SocialMemberInfo();
+
+        WebClient webClient = WebClient.create(KAKAO_USERINFO_URL);
+        String response = webClient.get()
+                .uri(KAKAO_USERINFO_URL)
+                .header("Authorization", "Bearer " + token)
+                .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8")
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        JsonParser parser = new JsonParser();
+        JsonElement element = parser.parse(response);
+
         Long memberId = -1L;
 
-        //access_token을 이용하여 사용자 정보 조회
-        try {
-            URL url = new URL(reqURL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        JsonElement kakaoAccount = element.getAsJsonObject().get("kakao_account");
+        JsonElement profile = kakaoAccount.getAsJsonObject().get("profile");
 
-            conn.setRequestMethod("GET");
-            conn.setDoOutput(true);
-            conn.setRequestProperty("Authorization", "Bearer " + token); //전송할 header 작성, access_token 전송
+        Member kakaoMember = new Member();
+        kakaoMember.setEmail(kakaoAccount.getAsJsonObject().get("email").getAsString());
+        kakaoMember.setNickname(profile.getAsJsonObject().get("nickname").getAsString());
+        kakaoMember.setLoginType("kakao");
+        
+        Member existingMember = memberRepository.findByEmail(kakaoMember.getEmail());
 
-            //결과 코드가 200이라면 성공
-            int responseCode = conn.getResponseCode();
-            log.info("responseCode : " + responseCode);
-
-            //요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
-            String line = "";
-            String result = "";
-
-            while ((line = br.readLine()) != null) {
-                result += line;
-            }
-
-            //Gson 라이브러리로 JSON파싱
-            JsonParser parser = new JsonParser();
-            JsonElement element = parser.parse(result);
-            JsonElement kakaoAccount = element.getAsJsonObject().get("kakao_account");
-            JsonElement profile = kakaoAccount.getAsJsonObject().get("profile");
-
-            //dto에 저장하기
-            Long kakaoId = element.getAsJsonObject().get("id").getAsLong(); // @Id 태그 때문에 직접 id값을 넣을 수 없음
-//            kakaoMemberInfo.setId(element.getAsJsonObject().get("id").getAsLong());
-            kakaoMemberInfo.setEmail(kakaoAccount.getAsJsonObject().get("email").getAsString());
-            kakaoMemberInfo.setNickname(profile.getAsJsonObject().get("nickname").getAsString());
-            kakaoMemberInfo.setLoginType("kakao");
-
-            Member kakaoMember = new Member();
-//            kakaoMember.setId(kakaoMemberInfo.getId());
-            kakaoMember.setEmail(kakaoMemberInfo.getEmail());
-            kakaoMember.setNickname(kakaoMemberInfo.getNickname());
-            kakaoMember.setLoginType(kakaoMemberInfo.getLoginType());
-
-            Member existingMember = memberRepository.findByEmail(kakaoMember.getEmail());
-
-            if (existingMember == null) {
-                memberRepository.save(kakaoMember);
-                memberId = memberRepository.findByEmail(kakaoMember.getEmail()).getId();
-                albumService.createAlbum(kakaoMember);
-            } else {
-                memberId = memberRepository.findByEmail(kakaoMember.getEmail()).getId();
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (existingMember == null) {
+            memberRepository.save(kakaoMember);
+            albumService.createAlbum(kakaoMember);
         }
+        memberId = memberRepository.findByEmail(kakaoMember.getEmail()).getId();
 
         return memberId;
     }
