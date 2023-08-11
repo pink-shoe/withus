@@ -104,7 +104,6 @@ public class SocialServiceImpl implements SocialService {
         JsonParser parser = new JsonParser();
         JsonElement element = parser.parse(response);
 
-        SocialMemberInfo kakaoMemberInfo = new SocialMemberInfo();
         Long memberId = -1L;
 
         JsonElement kakaoAccount = element.getAsJsonObject().get("kakao_account");
@@ -114,14 +113,14 @@ public class SocialServiceImpl implements SocialService {
         kakaoMember.setEmail(kakaoAccount.getAsJsonObject().get("email").getAsString());
         kakaoMember.setNickname(profile.getAsJsonObject().get("nickname").getAsString());
         kakaoMember.setLoginType("kakao");
-
+        
         Member existingMember = memberRepository.findByEmail(kakaoMember.getEmail());
 
         if (existingMember == null) {
             memberRepository.save(kakaoMember);
             albumService.createAlbum(kakaoMember);
         }
-        memberId = existingMember.getId();
+        memberId = memberRepository.findByEmail(kakaoMember.getEmail()).getId();
 
         return memberId;
     }
