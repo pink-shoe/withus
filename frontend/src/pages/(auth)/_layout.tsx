@@ -19,11 +19,13 @@ export default function Layout() {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    const token = localStorage.getItem('token');
-    console.log(`jwt토큰 확인: ${token}`);
-    if (token) {
-      // 토큰이 있으면, "/lobby" 페이지로 이동
+    const accesstoken = localStorage.getItem('accessToken');
+    console.log(`accessToken토큰 확인: ${accesstoken}`);
+    if (accesstoken) {
+      // accessToken 토큰이 있으면, "/lobby" 페이지로 이동
       navigate('/lobby');
+    } else {
+      localStorage.removeItem('token');
     }
   }, []);
 
