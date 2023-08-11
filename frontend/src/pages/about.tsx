@@ -23,6 +23,7 @@ export default function About() {
     <div>
       <Settings onClick={openUpdateModal} className='text-red hover:rotate-45' />
       <SettingModalContainer
+        boardType='WAIT'
         isUpdateModal={true}
         openModal={updateModalStatus}
         closeModal={closeUpdateModal}

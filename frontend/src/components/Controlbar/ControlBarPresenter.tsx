@@ -101,6 +101,7 @@ export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
               )}
             </button>
             <SettingModalContainer
+              boardType='WAIT'
               isUpdateModal={true}
               openModal={gameSettingModal}
               closeModal={onChangeGameSettingModal}

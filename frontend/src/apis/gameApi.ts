@@ -23,7 +23,8 @@ export interface IShape {
 }
 export interface IGameInfo {
   currentRound: number;
-  players: IPlayerInfo;
+  hostId: number;
+  playerInfos: IPlayerInfo[];
   room: IRoom;
   shapes: IShape;
 }
@@ -48,7 +49,7 @@ export const getGameInfoApi = async (roomId: number) => {
   try {
     const response = await axios.get<IGameInfo>(apiUrl + `/${roomId}`);
     console.log('성공:', response.data);
-    return response;
+    return response.data;
   } catch (error) {
     // 요청이 실패하면 에러를 출력합니다.
     console.log('실패:', (error as AxiosError).message);

@@ -89,6 +89,7 @@ export default function Lobby() {
                 방 만들기
               </button>
               <SettingModalContainer
+                boardType='LOBBY'
                 isUpdateModal={false}
                 openModal={makeRoomModal}
                 closeModal={closeMakeModal}
