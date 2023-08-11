@@ -87,6 +87,7 @@ public class GameController {
                 .nickname(memberService.getMemberInfo(player.getId()).getNickname())
                 .teamType(player.getTeamType())
                 .ready(player.isReady())
+                .vote(player.getVote())
                 .build();
             playerInfos.add(playerInfo);
         }

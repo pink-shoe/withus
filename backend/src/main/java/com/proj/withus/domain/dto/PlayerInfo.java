@@ -25,4 +25,7 @@ public class PlayerInfo {
 
 	@ApiModelProperty(value = "참가자 준비 상태", required = true, example = "false")
 	private boolean ready;
+
+	@ApiModelProperty(value = "투표 수", required = true, example = "1")
+	private int vote;
 }
