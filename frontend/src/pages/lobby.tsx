@@ -48,7 +48,7 @@ export default function Lobby() {
 
   const openWarningModal = () => {
     setWarningModal(true);
-  }
+  };
 
   const closeWarningModal = () => {
     setWarningModal(false);
@@ -130,8 +130,12 @@ export default function Lobby() {
                         참여코드를 입력해주세요😳
                       </div>
                       <div className='flex justify-center'>
-                      <button onClick={closeWarningModal} className='bg-[#FA8D8D] w-1/2 h-12 font-kdisplay text-2xl text-white rounded-lg hover:bg-red-500'>확인</button>
-
+                        <button
+                          onClick={closeWarningModal}
+                          className='bg-[#FA8D8D] w-1/2 h-12 font-kdisplay text-2xl text-white rounded-lg hover:bg-red-500'
+                        >
+                          확인
+                        </button>
                       </div>
                     </Modal>
                   </div>

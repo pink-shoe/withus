@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { X } from 'react-feather';
+import { emitKeypressEvents } from 'readline';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
@@ -13,6 +14,12 @@ interface IModalProps {
 }
 
 export default function Modal({ openModal, closeModal, isSettingModal, children }: IModalProps) {
+  // Enter 버튼으로 모달창 닫기 시도해봄
+  // const activeEnter = (e: any) => {
+  //   if (e.key === 'Enter') {
+  //     closeModal
+  //   }
+  // }
   return (
     <div>
       {openModal ? (

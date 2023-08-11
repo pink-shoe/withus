@@ -15,6 +15,8 @@ import Board from '@components/common/Board';
 import { getRoomInfoApi } from 'apis/roomApi';
 import { useQuery } from '@tanstack/react-query';
 import { IGameInfo, getGameInfoApi, sendCaptureImageApi } from 'apis/gameApi';
+import EndGameModal from '@components/common/EndGameModal';
+import Modal from '@components/common/Modal';
 
 export default function GameRoom() {
   const location = useLocation();
@@ -110,8 +112,28 @@ export default function GameRoom() {
     console.log('streamlist', streamList);
   }, [streamList]);
 
+  const [ruleModal, setRuleModal] = useState(true);
+
+  const closeRuleModal = () => {
+    setRuleModal(false);
+  };
+
+  setTimeout(closeRuleModal, 7000)
+
   return (
     <Background isLobbyPage={false}>
+      {ruleModal ? (
+      <Modal openModal={ruleModal} isSettingModal={false}>
+      <div className='font-kdisplay p-2 ms-1 me-4'>
+        <div className='w-full text-center mb-11 text-5xl animate-bounce'>📢주의사항📢</div>
+        <div className='text-3xl ms-1 me-2'>
+          <div className='mb-5'>1. 머리카락이 몸을 가리면 정확도가 떨어져요ㅜㅜ</div>
+          <div className='mb-5'>2. 오른쪽 손목 - 가슴 - 왼쪽 손목이 하나의 선으로 이어져있다 생각해주세요!!</div>
+          <div className='mb-5'>3. 네트워크 환경에 따라 조금씩 느릴 수 있어요😥</div>
+        </div>
+      </div>
+    </Modal>
+      ) : null}
       <div className='flex w-full h-full'>
         {/* 참가자 목록 */}
         <div className='justify-start bg-white z-40'>
@@ -155,6 +177,10 @@ export default function GameRoom() {
               )}
             </div>
           </Board>
+          {/* 인원이 4명 미만이 되면 게임 종료 */}
+          {roomInfo.playerInfos.length < 0 ? (
+            <EndGameModal endReason='NOPLAYER' openModal={true}></EndGameModal>
+          ) : <></>}
           <div className='p-2 mt-2 align-bottom'>
             <ControlBarContainer
               type={'GAME'}

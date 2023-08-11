@@ -96,9 +96,8 @@ export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
               {gameSettingModal ? (
                 <Settings className='transition-transform' color='white' size='35' />
               ) : (
-                // <Settings className='transition-transform' color='white' size='35' rotate={90} />
+                <Settings className='transition-transform' color='white' size='35' rotate={90} />
                 // 게임 페이지에서는 게임 세팅 버튼 보이지 않음
-                null
               )}
             </button>
             <SettingModalContainer

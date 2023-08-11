@@ -28,22 +28,22 @@ export default function Logo({ logoType }: ILogoProps) {
               size={85}
               isPlaying={isPlaying}
               duration={count}
-              initialRemainingTime={5}
+              initialRemainingTime={7}
               isSmoothColorTransition={true}
               // updateInterval={1}
               // colors='#aabbcc'
               // colors="url(#test-it)"
               colors={['#FA8D8D', '#FA8D8D', '#F84C4C', '#F84C4C']}
-              colorsTime={[4, 2.66, 1.33, 0]}
+              colorsTime={[7, 4.66, 1.33, 0]}
               onUpdate={(remainingTime) => {
                 // console.log('Counter is ', count);
                 // console.log('Remaining time is ', remainingTime);
               }}
-              onComplete={() => ({ shouldRepeat: true })}
+              onComplete={() => ({ shouldRepeat: false })}
               strokeWidth={20}
             >
               {({ remainingTime }) => (
-                <div className='text-black text-4xl font-semibold bg-white w-11 h-11 p-[2px] rounded-full text-center align-middle'>{remainingTime}</div>
+                <div className='text-black text-4xl font-semibold bg-white w-12 h-12 p-[5px] rounded-full text-center align-middle'>{remainingTime}</div>
               )}
             </CountdownCircleTimer>
 
