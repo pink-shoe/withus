@@ -85,7 +85,7 @@ public class RoomServiceImpl implements RoomService {
 
         if (hostId == memberId) {
             System.out.println("방장임!!!!!!!!!!!!!!!!!");
-            playerRepository.deleteByRoomId(roomId);
+            playerRepository.deleteAllByRoom_Id(roomId);
             roomRepository.deleteById(roomId);
             return;
         }
@@ -131,7 +131,7 @@ public class RoomServiceImpl implements RoomService {
     where room_id = roomId
      */
     public List<Player> getPlayerList(Long roomId) {
-        return playerRepository.findAllByRoomId(roomId);
+        return playerRepository.findAllByRoom_Id(roomId);
     }
 
     public int createCode() {
@@ -149,7 +149,7 @@ public class RoomServiceImpl implements RoomService {
     and member_id = memberId
      */
     public Player getPlayerInRoom(Long memberId, Long roomId) {
-        return playerRepository.findPlayerByMemberIdAndRoomId(memberId, roomId);
+        return playerRepository.findPlayerByMember_IdAndRoom_Id(memberId, roomId).orElse(null);
     }
 
     /*
@@ -177,7 +177,7 @@ public class RoomServiceImpl implements RoomService {
      */
     public List<Player> getReadyPlayers(Long roomId) {
         List<Long> readyMember = playerRepository.findReadyPlayersByRoomIdWithoutHost(roomId, roomRepository.findHostIdByRoomId(roomId));
-        List<Player> totalMember = playerRepository.findAllByRoomId(roomId);
+        List<Player> totalMember = playerRepository.findAllByRoom_Id(roomId);
         if (readyMember.size() == totalMember.size() - 1) { // host 제외
             roomRepository.updateStart(roomId, true);
         } else {

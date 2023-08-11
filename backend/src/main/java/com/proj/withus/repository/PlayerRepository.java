@@ -16,22 +16,28 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
 
     List<Player> findPlayersByRoomId(Long roomId);
 
-    @Query("select p from Player p where p.member.id = :memberId and p.room.id = :roomId")
-    Player findPlayerByMemberIdAndRoomId(@Param("memberId") Long memberId, @Param("roomId") Long roomId);
+    Optional<Player> findPlayerByMember_IdAndRoom_Id(Long memberId, Long roomId);
 
-    @Query("select p from Player p where p.room.id = :roomId")
-    List<Player> findAllByRoomId(@Param("roomId") Long roomId);
+//    @Query("select p from Player p where p.room.id = :roomId")
+//    List<Player> findAllByRoomId(@Param("roomId") Long roomId);
 
-    @Modifying
-    @Query("delete from Player p where p.room.id = :roomId")
-    int deleteByRoomId(@Param("roomId") Long roomId); // 명명 규칙 있나? deletePlayersByRoomId()을 추천 받음.
+    List<Player> findAllByRoom_Id(Long roomId);
 
-    @Modifying
-    @Query("delete from Player p where p.member.id = :memberId ")
-    int deletePlayerByMemberId(@Param("memberId") Long memberId);
+//    @Modifying
+//    @Query("delete from Player p where p.room.id = :roomId")
+//    int deleteByRoomId(@Param("roomId") Long roomId); // 명명 규칙 있나? deletePlayersByRoomId()을 추천 받음.
 
     @Modifying
-    // @Query("update Player p set p.ready = :readyStatus where p.id = :playerId")
+    int deleteAllByRoom_Id(Long roomId);
+
+//    @Modifying
+//    @Query("delete from Player p where p.member.id = :memberId ")
+//    int deletePlayerByMemberId(@Param("memberId") Long memberId);
+
+    @Modifying
+    int deletePlayerByMemberId(Long memberId);
+
+    @Modifying
     @Query(value = "update player set ready = 1 where player_id = :playerId", nativeQuery = true)
     int setReady(@Param("playerId") Long playerId);
 
@@ -47,4 +53,5 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
 
     @Query("select p.room from Player p where p.id = :playerId")
     Room findRoomIdByPlayerId(Long playerId);
+
 }
