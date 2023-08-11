@@ -113,6 +113,7 @@ export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
               )}
             </button>
             <SettingModalContainer
+              boardType='WAIT'
               isUpdateModal={true}
               openModal={gameSettingModal}
               closeModal={onChangeGameSettingModal}
@@ -124,9 +125,7 @@ export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
           (isHost ? (
             <button
               className={` whitespace-nowrap w-fit h-15 rounded-lg p-3 bg-[#FF8DA3] text-white font-medium text-lg`}
-              onClick={() => {
-                onClickReadyBtn(), onClickStartBtn();
-              }}
+              onClick={onClickStartBtn}
             >
               시작하기
             </button>

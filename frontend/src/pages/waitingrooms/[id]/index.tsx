@@ -25,7 +25,7 @@ export default function WaitingRoom() {
   const [chatStatus, setChatStatus] = useState<boolean>(true);
   const [playerList, setPlayerList] = useState<IPlayerInfo[]>([]);
 
-  const { data } = useQuery(['rooms/info'], () => getRoomInfoApi(currentPath), {});
+  const { data } = useQuery(['rooms/info'], () => getRoomInfoApi(currentPath));
   const [isReady, setIsReady] = useState<boolean>(false);
   const getRoomData = async () => {
     const result = (await getRoomInfoApi(currentPath)) as IRoomAtom;
@@ -38,9 +38,8 @@ export default function WaitingRoom() {
 
   useEffect(() => {
     if (data) {
-      setRoomInfo(data as IRoomAtom);
       const roomInfo = data as IRoomAtom;
-      console.log('roominfo', roomInfo);
+      setRoomInfo(roomInfo);
       roomInfo.playerInfos && setPlayerList(roomInfo.playerInfos);
       roomInfo.hostId && setIsHost(roomInfo.hostId === user.memberId);
 
@@ -69,7 +68,11 @@ export default function WaitingRoom() {
     onChangeCameraStatus,
     onChangeMicStatus,
     sendSignal,
-  } = useOpenvidu(user.memberId, user.nickname, currentPath);
+  } = useOpenvidu(
+    user.memberId,
+    // user.nickname,
+    currentPath
+  );
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
@@ -91,7 +94,7 @@ export default function WaitingRoom() {
       publisher.stream.session.on('signal:' + type, (e: any) => {
         const result = JSON.parse(e.data);
         if (type === 'START') navigate(`/gamerooms/${currentPath}`);
-        if (result) getRoomData();
+        if (result && currentPath) getRoomData();
       });
     }
   };
@@ -99,7 +102,10 @@ export default function WaitingRoom() {
   useEffect(() => {
     session &&
       publisher &&
-      (receiveSignal('READY'), receiveSignal('CANCEL_READY'), receiveSignal('START'));
+      (receiveSignal('READY'),
+      receiveSignal('CANCEL_READY'),
+      receiveSignal('START'),
+      receiveSignal('UPDATE'));
   }, [session, publisher]);
 
   useEffect(() => {
@@ -112,7 +118,7 @@ export default function WaitingRoom() {
       <div className='flex w-full h-full'>
         {/* 참가자 목록 */}
         <div className='justify-start bg-white z-40'>
-          {playerList && (
+          {(data as IRoomAtom) && playerList && roomInfo && roomInfo.room && (
             <ParticipantsContainer
               type={'WAIT'}
               user={user}
@@ -120,8 +126,10 @@ export default function WaitingRoom() {
               // userName={userName}
               // onChangeUserName={onChangeUserName}
               playerList={playerList}
-              isHost={isHost}
-              // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
+              hostId={roomInfo.hostId}
+              roomRound={roomInfo.room.roomRound}
+              roomType={roomInfo.room.roomType} // onChangeIsUpdateUserName={onChangeIsUpdateUserName}
+              sendSignal={sendSignal}
             />
           )}
         </div>
