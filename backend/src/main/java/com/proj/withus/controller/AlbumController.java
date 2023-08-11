@@ -1,6 +1,7 @@
 package com.proj.withus.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
@@ -80,10 +81,12 @@ public class AlbumController {
     })
     @ApiImplicitParam(name = "img_id", value = "이미지 id", required = true, dataType = "Long", paramType = "path")
     @DeleteMapping("/{img_id}")
-    public ResponseEntity<?> deleteImage(@PathVariable("img_id") Long imgId, HttpServletRequest request) {
+    public ResponseEntity<?> deleteImage(
+            @PathVariable("img_id") Long imgId,
+            HttpServletRequest request) {
 //        Long memberId = jwtUtil.extractMemberId(jwtToken);
 
-        Image deleted = albumService.deleteImage((Long) imgId);
+        Image deleted = albumService.deleteImage(imgId);
 
         if (deleted == null) {
             return new ResponseEntity(HttpStatus.OK);

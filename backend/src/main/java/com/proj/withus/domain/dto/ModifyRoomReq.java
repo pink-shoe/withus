@@ -15,12 +15,6 @@ public class ModifyRoomReq {
     @ApiModelProperty(value = "방 타입(팀전, 협동전)", required = true, example = "coop")
     private final String roomType;
 
-    @ApiModelProperty(value = "방 입장 코드", required = true)
-    private final int roomCode;
-
-    @ApiModelProperty(value = "방 입장 링크", required = true)
-    private final String roomLink;
-
     @ApiModelProperty(value = "게임 총 라운드", required = true, example = "5")
     private final int roomRound;
 }
