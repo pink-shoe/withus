@@ -14,6 +14,7 @@ export default {
       sm: "640px",
       md: "768px",
       lg: "1024px",
+      "2lg": "1130px",
       xl: "1240px",
       "2xl": "1335px",
       'tall': { 'raw': '(min-height: 738.4px)' },

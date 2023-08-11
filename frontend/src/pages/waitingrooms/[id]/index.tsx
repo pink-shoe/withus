@@ -115,7 +115,7 @@ export default function WaitingRoom() {
   }, [streamList]);
 
   return (
-    <Background isLobbyPage={false}>
+    <Background backgroundType='NOLOBBY'>
       <div className='flex w-full h-full'>
         {/* 참가자 목록 */}
         <div className='justify-start bg-white z-40'>

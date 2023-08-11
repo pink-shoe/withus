@@ -116,7 +116,7 @@ export default function GameRoom() {
   setTimeout(closeRuleModal, 7000)
 
   return (
-    <Background isLobbyPage={false}>
+    <Background backgroundType='NOLOBBY'>
       {ruleModal ? (
       <Modal openModal={ruleModal} isSettingModal={false}>
       <div className='font-kdisplay p-2 ms-1 me-4'>

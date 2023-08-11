@@ -55,7 +55,7 @@ export default function Mypage() {
 
   return (
     <div>
-      <Background isLobbyPage={true} isLobbyDropdown={false}>
+      <Background backgroundType='LOBBY' isLobbyDropdown={false}>
         <Board boardType='LOBBY'>
           <Container type='isBig'>
             <div className='flex justify-center text-3xl pt-10 font-kdisplay'>회원 정보 관리</div>
