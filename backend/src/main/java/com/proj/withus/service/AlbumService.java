@@ -5,6 +5,7 @@ import com.proj.withus.domain.Image;
 import com.proj.withus.domain.Member;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AlbumService {
 

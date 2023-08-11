@@ -1,18 +1,16 @@
 package com.proj.withus.repository;
 
-import java.util.Optional;
-
 import com.proj.withus.domain.Album;
+import com.proj.withus.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public interface AlbumRepository extends JpaRepository<Album, Long> {
 
-    @Query("select a from Album a join fetch a.member m where m.id = :memberId")
-    Optional<Album> findAlbumByMemberId(@Param("memberId") Long memberId);
-
-    void deleteByMemberId(Long memberId);
+    Optional<Album> findAlbumByMemberId(Long memberId);
+    Optional<Album> findAlbumByMember(Member member);
+    void deleteAlbumByMemberId(Long memberId);
 }
