@@ -36,14 +36,14 @@ public class AlbumController {
             @ApiResponse(code = 400, message = "앨범 정보가 존재하지 않음", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
     })
     @ApiImplicitParams(value = {
-            @ApiImplicitParam(name = "page", value = "페이지 번호(ex: 0)", required = true, dataType = "int", paramType = "path"),
-            @ApiImplicitParam(name = "size", value = "게시물 개수", required = true, dataType = "int", paramType = "path")
+            @ApiImplicitParam(name = "page", value = "페이지 번호(ex: 0)", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "size", value = "게시물 개수", required = true, dataType = "int", paramType = "query")
     })
     @GetMapping
     public ResponseEntity<?> showAlbums(
             HttpServletRequest request,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "4") int size) {
+            @RequestParam(name = "page") int page,
+            @RequestParam(name = "size") int size) {
 
         Long memberId = (Long) request.getAttribute("memberId");
         Long albumId = albumService.getAlbum(memberId);
