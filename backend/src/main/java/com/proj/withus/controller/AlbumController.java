@@ -1,25 +1,18 @@
 package com.proj.withus.controller;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.proj.withus.domain.Image;
+import com.proj.withus.service.AlbumService;
+import com.proj.withus.util.JwtUtil;
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.proj.withus.domain.Image;
-import com.proj.withus.domain.dto.SocialMemberInfo;
-import com.proj.withus.service.AlbumService;
-import com.proj.withus.util.JwtUtil;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -39,17 +32,28 @@ public class AlbumController {
 
     @ApiOperation(value = "앨범 사진 조회", notes = "앨범에 있는 사진들을 조회한다.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "조회 성공", response = Image.class, responseContainer = "List"),
+            @ApiResponse(code = 200, message = "조회 성공", response = Page.class),
             @ApiResponse(code = 400, message = "앨범 정보가 존재하지 않음", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
+    })
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(name = "page", value = "페이지 번호(ex: 0)", required = true, dataType = "int", paramType = "path"),
+            @ApiImplicitParam(name = "size", value = "게시물 개수", required = true, dataType = "int", paramType = "path")
     })
     @GetMapping
     public ResponseEntity<?> showAlbums(
-            HttpServletRequest request) {
+            HttpServletRequest request,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "4") int size) {
 
         Long memberId = (Long) request.getAttribute("memberId");
         Long albumId = albumService.getAlbum(memberId);
         if (albumId != null) {
-            List<Image> albums = albumService.getImages(albumId);
+            Page<Image> albums = albumService.getImages(albumId,
+                    PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "savedAt"))
+            );
+            for (Image image: albums) {
+                System.out.println(image.getImgUrl());
+            }
             return ResponseEntity.ok(albums);
         }
         return new ResponseEntity<>("앨범이 존재하지 않음", HttpStatus.BAD_REQUEST);
