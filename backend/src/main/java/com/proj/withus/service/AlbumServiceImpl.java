@@ -7,6 +7,8 @@ import com.proj.withus.repository.AlbumRepository;
 import com.proj.withus.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,8 +46,8 @@ public class AlbumServiceImpl implements AlbumService {
         return albumRepository.findAlbumByMemberId(memberId).orElse(null);
     }
 
-    public List<Image> getImages(Long albumId) {
-        return imageRepository.findImagesByAlbumId(albumId);
+    public Page<Image> getImages(Long albumId, Pageable pageable) {
+        return imageRepository.findImagesByAlbumIdOrderBySavedAtDesc(albumId, pageable);
     }
 
     public Image saveImage(Long memberId, String imgUrl) {
