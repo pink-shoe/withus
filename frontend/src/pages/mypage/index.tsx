@@ -59,7 +59,7 @@ export default function Mypage() {
         <Board boardType='LOBBY'>
           <Container type='isBig'>
             <div className='flex justify-center text-3xl pt-10 font-kdisplay'>회원 정보 관리</div>
-            <div className='flex justify-center'>
+            <div className='lg:flex justify-center'>
               <InputComponent
                 type='nickname'
                 label='변경할 닉네임'

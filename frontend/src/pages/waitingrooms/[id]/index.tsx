@@ -13,6 +13,7 @@ import Board from '@components/common/Board';
 import { getRoomInfoApi } from 'apis/roomApi';
 import { useQuery } from '@tanstack/react-query';
 import EndGameModal from '@components/common/EndGameModal';
+
 export default function WaitingRoom() {
   const location = useLocation();
   const currentPath = Number(

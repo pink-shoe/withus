@@ -12,7 +12,9 @@ interface ILogoProps {
 
 export default function Logo({ logoType }: ILogoProps) {
   const [isPlaying, setIsPlaying] = useState(true);
+  // 게임 진행 시간은 7초
   const [count, setCount] = useState(7);
+
   return (
     <Fragment>
       {logoType === 'GAMELOGO' ? (
