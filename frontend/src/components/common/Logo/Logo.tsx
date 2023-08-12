@@ -12,7 +12,7 @@ interface ILogoProps {
 
 export default function Logo({ logoType }: ILogoProps) {
   const [isPlaying, setIsPlaying] = useState(true);
-  const [count, setCount] = useState(5);
+  const [count, setCount] = useState(7);
   return (
     <Fragment>
       {logoType === 'GAMELOGO' ? (
@@ -24,7 +24,7 @@ export default function Logo({ logoType }: ILogoProps) {
           </span>
           <div className='ms-6 inline-block'>
             <div className='h-[70px]'>
-            <CountdownCircleTimer
+              <CountdownCircleTimer
               size={85}
               isPlaying={isPlaying}
               duration={count}
@@ -34,12 +34,12 @@ export default function Logo({ logoType }: ILogoProps) {
               // colors='#aabbcc'
               // colors="url(#test-it)"
               colors={['#FA8D8D', '#FA8D8D', '#F84C4C', '#F84C4C']}
-              colorsTime={[7, 4.66, 1.33, 0]}
+              colorsTime={[7, 5, 2, 0]}
               onUpdate={(remainingTime) => {
                 // console.log('Counter is ', count);
                 // console.log('Remaining time is ', remainingTime);
               }}
-              onComplete={() => ({ shouldRepeat: false })}
+              onComplete={() => ({ shouldRepeat: true, delay: 3 })}
               strokeWidth={20}
             >
               {({ remainingTime }) => (

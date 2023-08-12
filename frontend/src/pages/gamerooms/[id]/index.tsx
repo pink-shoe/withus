@@ -108,27 +108,39 @@ export default function GameRoom() {
   }, [streamList]);
 
   const [ruleModal, setRuleModal] = useState(true);
+  const [roundModal, setRoundModal] = useState(true);
 
   const closeRuleModal = () => {
     setRuleModal(false);
   };
-
   setTimeout(closeRuleModal, 7000)
+
+  const closeRoundModal = () => {
+    setRoundModal(false);
+  }
+  setTimeout(closeRoundModal, 10000);
 
   return (
     <Background backgroundType='NOLOBBY'>
-      {ruleModal ? (
-      <Modal openModal={ruleModal} isSettingModal={false}>
-      <div className='font-kdisplay p-2 ms-1 me-4'>
-        <div className='w-full text-center mb-11 text-5xl animate-bounce'>📢주의사항📢</div>
-        <div className='text-3xl ms-1 me-2'>
-          <div className='mb-5'>1. 머리카락이 몸을 가리면 정확도가 떨어져요ㅜㅜ</div>
-          <div className='mb-5'>2. 오른쪽 손목 - 가슴 - 왼쪽 손목이 하나의 선으로 이어져있다 생각해주세요!!</div>
+      {/* 라운드가 변할 때마다 roundModal의 상태가 true가 되도록 해야 함 */}
+      {/* 라운드 모달(예시 : Round 1) */}
+      <Modal openModal={roundModal} closeModal={closeRoundModal} isSettingModal={false}>
+        <div className='flex justify-center me-2 mt-11 pb-2 font-edisplay text-6xl'>
+        <span className='text-2xl'>✨</span>Round {gameRoomInfo?.currentRound}<span className='text-3xl'>✨</span>
+        </div>
+      </Modal>
+      {/* 주의 사항 모달창 */}
+      <Modal openModal={ruleModal} closeModal={closeRuleModal} isSettingModal={false}>
+      <div className='font-kdisplay pt-2 px-2 ms-1 me-4'>
+        <div className='w-full text-center mt-3 mb-11 text-5xl animate-bounce'>📢주의사항📢</div>
+        <div className='text-3xl ms-1 me-2 mb-2'>
+          <div className='mb-5'>1. 오른쪽 손목 - 가슴 - 왼쪽 손목이 하나의 선으로 이어져있다 생각해주세요!!</div>
+          <div className='mb-5'>2. 머리카락이 몸을 가리면 정확도가 떨어져요ㅜㅜ</div>
           <div className='mb-5'>3. 네트워크 환경에 따라 조금씩 느릴 수 있어요😥</div>
         </div>
+          <div className='mt-3 mb-5 text-2xl text-[#FA8D8D] text-center'>(게임은 7초 뒤 자동적으로 시작해요)</div>
       </div>
     </Modal>
-      ) : null}
       <div className='flex w-full h-full'>
         {/* 참가자 목록 */}
         <div className='justify-start bg-white z-40'>
