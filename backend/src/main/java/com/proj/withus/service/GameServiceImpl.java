@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.transaction.Transactional;
 
+import com.proj.withus.exception.CustomException;
+import com.proj.withus.exception.ErrorCode;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -42,18 +44,27 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Room getRoomInfo(Long memberId) {
-         return playerRepository.findRoomIdByPlayerId(memberId);
+         return playerRepository.findRoomIdByPlayerId(memberId)
+                 .orElseThrow(() -> new CustomException(ErrorCode.PLAYERS_ROOM_IS_NOT_EXIST));
     }
 
 
     @Override
     public List<Player> getPlayersInfo(Long roomId) {
-        return playerRepository.findPlayersByRoomId(roomId);
+        List<Player> players = playerRepository.findPlayersByRoomId(roomId);
+        if (players.isEmpty()) {
+            throw new CustomException(ErrorCode.PLAYER_NOT_FOUND);
+        }
+        return players;
     }
 
     @Override
     public List<Shape> getShapeInfo(int round) {
-        return shapeRepository.findRandomShapes(round);
+        List<Shape> shapes = shapeRepository.findRandomShapes(round);
+        if (shapes.size() != round) {
+            throw new CustomException(ErrorCode.SHAPE_NOT_LOAD);
+        }
+        return shapes;
     }
 
     @Override
@@ -96,12 +107,14 @@ public class GameServiceImpl implements GameService {
 
         GameResult gameResult = new GameResult();
 
-        gameResult.setRoom(roomRepository.findRoomById((Long) response.getBody().get("roomId")).orElse(null));
+        gameResult.setRoom(roomRepository.findRoomById((Long) response.getBody().get("roomId"))
+                .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND)));
         gameResult.setRound((int) response.getBody().get("currentRound"));
         gameResult.setCaptureUrl(response.getBody().get("captureUrl").toString());
         gameResult.setCorrect((Boolean) response.getBody().get("isCorrect"));
         gameResult.setCorrectRate((int) response.getBody().get("correctRate"));
-        gameResult.setShape(shapeRepository.findShapeById((Long) response.getBody().get("shapeId")).orElse(null));
+        gameResult.setShape(shapeRepository.findShapeById((Long) response.getBody().get("shapeId"))
+                .orElseThrow(() -> new CustomException(ErrorCode.SHAPE_NOT_FOUND)));
         Long gameResultId = gameResultRepository.save(gameResult).getId();
 
         if (gameResultId == null) {
@@ -117,8 +130,11 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public int chooseMvp(Long roomId, Long votedPlayerId) {
-        return playerRepository.updateVote(roomId, votedPlayerId);
+    public void chooseMvp(Long roomId, Long votedPlayerId) {
+        int update = playerRepository.updateVote(roomId, votedPlayerId);
+        if (update == 0) {
+            throw new CustomException(ErrorCode.VOTE_FAIL);
+        }
     }
 
     @Override
@@ -126,9 +142,10 @@ public class GameServiceImpl implements GameService {
         List<GetTotalGameResultRes> totalGameResult = new ArrayList<>();
         List<GameResult> gameResult = gameResultRepository.findGameResultsByRoomId(roomId);
 
-        Room room = roomRepository.findRoomById(roomId).orElse(null);
+        Room room = roomRepository.findRoomById(roomId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND));
         if (gameResult.size() != room.getRound()) {
-            return null;
+            throw new CustomException(ErrorCode.TOTAL_GAME_RESULT_NOT_LOAD);
         }
 
         for (GameResult result : gameResult) {
@@ -140,6 +157,9 @@ public class GameServiceImpl implements GameService {
             );
         }
 
+        if (totalGameResult.size() < room.getRound()) {
+            throw new CustomException(ErrorCode.TOTAL_GAME_RESULT_NOT_LOAD);
+        }
         return totalGameResult;
     }
 }
