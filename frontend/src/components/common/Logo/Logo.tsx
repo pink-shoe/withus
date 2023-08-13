@@ -15,6 +15,12 @@ export default function Logo({ logoType }: ILogoProps) {
   // 게임 진행 시간은 7초
   const [count, setCount] = useState(7);
 
+  // 게임이 끝난 후 타이머 멈추기
+  const stopTimePlaying = () => {
+    setIsPlaying(false);
+  }
+  setTimeout(stopTimePlaying, 57000)
+
   return (
     <Fragment>
       {logoType === 'GAMELOGO' ? (

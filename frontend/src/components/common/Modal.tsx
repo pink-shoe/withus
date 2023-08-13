@@ -5,8 +5,8 @@ import { emitKeypressEvents } from 'readline';
 // import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 interface IModalProps {
-  openModal: boolean;
-  closeModal?: React.MouseEventHandler<SVGSVGElement>;
+  openModal: any;
+  closeModal?: any;
   mode?: string;
   round?: number;
   isSettingModal: boolean;

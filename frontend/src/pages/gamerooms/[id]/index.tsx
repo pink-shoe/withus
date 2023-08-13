@@ -16,6 +16,7 @@ import { useQuery } from '@tanstack/react-query';
 import { IGameInfo, getGameInfoApi, getGameResultApi } from 'apis/gameApi';
 import EndGameModal from '@components/common/EndGameModal';
 import Modal from '@components/common/Modal';
+import MvpModal from '@components/MvpModal/MvpModal';
 
 export default function GameRoom() {
   const location = useLocation();
@@ -122,6 +123,11 @@ export default function GameRoom() {
 
   return (
     <Background backgroundType='NOLOBBY'>
+      {/* 최종 라운드가 마무리되면 MVP 모달이 나옴 */}
+      {gameRoomInfo?.currentRound === roomInfo.room.roomRound ? (<MvpModal></MvpModal>) : (null)}
+
+      <MvpModal></MvpModal>
+
       {/* 라운드가 변할 때마다 roundModal의 상태가 true가 되도록 해야 함 */}
       {/* 라운드 모달(예시 : Round 1) */}
       <Modal openModal={roundModal} closeModal={closeRoundModal} isSettingModal={false}>
@@ -203,7 +209,7 @@ export default function GameRoom() {
             </div>
           </Board>
           {/* 인원이 4명 미만이 되면 게임 종료 */}
-          {roomInfo.playerInfos.length < 4 ? (
+          {roomInfo.playerInfos.length < 0 ? (
             <EndGameModal endReason='NOPLAYER' openModal={true}></EndGameModal>
           ) : (
             <></>

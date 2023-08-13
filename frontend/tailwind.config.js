@@ -10,7 +10,7 @@ export default {
       edisplay: ['Baloo Thambi', 'sans-serif'],
     },
     screens: {
-      "2sm": "490px",
+      "2sm": "500px",
       sm: "640px",
       md: "768px",
       lg: "1024px",
