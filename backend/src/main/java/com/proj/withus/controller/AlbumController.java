@@ -47,16 +47,10 @@ public class AlbumController {
 
         Long memberId = (Long) request.getAttribute("memberId");
         Long albumId = albumService.getAlbum(memberId);
-        if (albumId != null) {
-            Page<Image> albums = albumService.getImages(albumId,
-                    PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "savedAt"))
-            );
-            for (Image image: albums) {
-                System.out.println(image.getImgUrl());
-            }
-            return ResponseEntity.ok(albums);
-        }
-        return new ResponseEntity<>("앨범이 존재하지 않음", HttpStatus.BAD_REQUEST);
+        Page<Image> albums = albumService.getImages(albumId,
+                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "savedAt"))
+        );
+        return ResponseEntity.ok(albums);
     }
 
     // @PostMapping("/image/save")
@@ -88,13 +82,9 @@ public class AlbumController {
     public ResponseEntity<?> deleteImage(
             @PathVariable("img_id") Long imgId,
             HttpServletRequest request) {
-//        Long memberId = jwtUtil.extractMemberId(jwtToken);
 
-        Image deleted = albumService.deleteImage(imgId);
+        albumService.deleteImage(imgId);
 
-        if (deleted == null) {
-            return new ResponseEntity(HttpStatus.OK);
-        }
-        return new ResponseEntity<>("이미지 삭제 안됨", HttpStatus.NO_CONTENT);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
