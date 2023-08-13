@@ -16,6 +16,6 @@ public interface GameService {
     public boolean sendCaptureInfo(GetCaptureImageReq captureDto);
     public boolean getGameResult();
     public String getCaptureUrl(Long resultId);
-    public int chooseMvp(Long roomId, Long votedPlayerId);
+    public void chooseMvp(Long roomId, Long votedPlayerId);
     public List<GetTotalGameResultRes> getTotalGameResult(Long roomId);
 }

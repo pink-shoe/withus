@@ -16,6 +16,6 @@ public interface AlbumService {
     public Album deleteAlbum(Long memberId);
     public Page<Image> getImages(Long albumId, Pageable pageable);
     public Image saveImage(Long memberId, String imgUrl);
-    public Image deleteImage(Long imgId);
+    public void deleteImage(Long imgId);
 
 }
