@@ -87,10 +87,7 @@ public class MemberController {
     private ResponseEntity deleteMemberInfo(HttpServletRequest request) {
         Long memberId = (Long) request.getAttribute("memberId");
 
-        Album deletedAlbum = albumService.deleteAlbum(memberId);
-        if (deletedAlbum != null) {
-            return new ResponseEntity("앨범 삭제 안됨", HttpStatus.BAD_REQUEST);
-        }
+        albumService.deleteAlbum(memberId);
 
         Member deleted = memberService.deleteMember(memberId);
         if (deleted != null) {

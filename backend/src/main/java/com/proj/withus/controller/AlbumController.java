@@ -36,27 +36,21 @@ public class AlbumController {
             @ApiResponse(code = 400, message = "앨범 정보가 존재하지 않음", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
     })
     @ApiImplicitParams(value = {
-            @ApiImplicitParam(name = "page", value = "페이지 번호(ex: 0)", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "size", value = "게시물 개수", required = true, dataType = "int", paramType = "query")
+            @ApiImplicitParam(name = "page", value = "페이지 번호(ex: 0)", dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "size", value = "게시물 개수", dataType = "int", paramType = "query")
     })
     @GetMapping
     public ResponseEntity<?> showAlbums(
             HttpServletRequest request,
-            @RequestParam(name = "page") int page,
-            @RequestParam(name = "size") int size) {
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "4") int size) {
 
         Long memberId = (Long) request.getAttribute("memberId");
         Long albumId = albumService.getAlbum(memberId);
-        if (albumId != null) {
-            Page<Image> albums = albumService.getImages(albumId,
-                    PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "savedAt"))
-            );
-            for (Image image: albums) {
-                System.out.println(image.getImgUrl());
-            }
-            return ResponseEntity.ok(albums);
-        }
-        return new ResponseEntity<>("앨범이 존재하지 않음", HttpStatus.BAD_REQUEST);
+        Page<Image> albums = albumService.getImages(albumId,
+                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "savedAt"))
+        );
+        return ResponseEntity.ok(albums);
     }
 
     // @PostMapping("/image/save")
@@ -88,13 +82,9 @@ public class AlbumController {
     public ResponseEntity<?> deleteImage(
             @PathVariable("img_id") Long imgId,
             HttpServletRequest request) {
-//        Long memberId = jwtUtil.extractMemberId(jwtToken);
 
-        Image deleted = albumService.deleteImage(imgId);
+        albumService.deleteImage(imgId);
 
-        if (deleted == null) {
-            return new ResponseEntity(HttpStatus.OK);
-        }
-        return new ResponseEntity<>("이미지 삭제 안됨", HttpStatus.NO_CONTENT);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
