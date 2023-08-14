@@ -52,7 +52,10 @@ export const ControlBarContainer: FC<IControlBarProps> = ({
 
   const onClickExit = async () => {
     const result: any = await exitRoomApi(roomId);
-    if (result.status === 200) navigate('/lobby');
+    if (result.status === 200) {
+      sendSignal(`${roomCode}`, 'EXIT');
+      navigate('/lobby');
+    }
   };
 
   useEffect(() => {
