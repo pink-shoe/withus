@@ -94,22 +94,10 @@ export const ControlBarPresenter: FC<IControlBarPresenterProps> = ({
               onClick={onChangeGameSettingModal}
             >
               {gameSettingModal ? (
-                // <FontAwesomeIcon
-                //   icon={Settings}
-                //   color={'white'}
-                //   fontSize={`2rem`}
-                //   rotation={90}
-                //   className=' transition-transform'
-                // />
                 <Settings className='transition-transform' color='white' size='35' />
               ) : (
-                // <FontAwesomeIcon
-                //   icon={Settings}
-                //   color={'black'}
-                //   fontSize={`2rem`}
-                //   className=' transition-transform'
-                // />
                 <Settings className='transition-transform' color='white' size='35' rotate={90} />
+                // 게임 페이지에서는 게임 세팅 버튼 보이지 않음
               )}
             </button>
             <SettingModalContainer

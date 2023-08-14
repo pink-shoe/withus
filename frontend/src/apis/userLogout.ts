@@ -4,8 +4,8 @@ const memberapiUrl = `${import.meta.env.VITE_API}/api/members`;
 
 export async function userLogoutApi(navigate: any) {
   try {
-    const token = localStorage.getItem('token');
-    const accessToken = localStorage.getItem('accessToken');
+    const token = sessionStorage.getItem('token');
+    const accessToken = sessionStorage.getItem('accessToken');
     console.log(`JWTtoken: ${token}`);
     console.log(`accessToken : ${accessToken}`);
     // 두개 확인하고 일단 지금 유저가 어떤 타입인지 부터 확인
@@ -27,15 +27,15 @@ export async function userLogoutApi(navigate: any) {
       // 중복되는 부분
       if (response.data.id !== null && response.data.id !== undefined) {
         console.log('로그아웃 됨');
-        localStorage.removeItem('token');
-        localStorage.removeItem('accessToken');
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('accessToken');
         navigate('/login');
       } else {
         console.log('로그아웃 안됨');
       }
     } else if (response.data.loginType === 'google') {
-      localStorage.removeItem('token');
-      localStorage.removeItem('accessToken');
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('accessToken');
       const googleLogoutUrl = 'https://accounts.google.com/logout';
       const redirectUri = `http://localhost:5173/login`;
 

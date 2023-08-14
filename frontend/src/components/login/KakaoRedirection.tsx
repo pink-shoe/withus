@@ -29,11 +29,11 @@ export default function KakaoRedirection() {
           console.log(`accesstoken확인: ${accessToken}`);
 
           if (jwtToken) {
-            localStorage.setItem('token', jwtToken);
+            sessionStorage.setItem('token', jwtToken);
           }
 
           if (accessToken) {
-            localStorage.setItem('accessToken', accessToken);
+            sessionStorage.setItem('accessToken', accessToken);
           }
 
           navigate('/lobby'); // login이 성공했다면 해당 페이지로 이동

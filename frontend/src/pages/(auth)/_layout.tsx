@@ -19,13 +19,13 @@ export default function Layout() {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    const accesstoken = localStorage.getItem('accessToken');
+    const accesstoken = sessionStorage.getItem('accessToken');
     console.log(`accessToken토큰 확인: ${accesstoken}`);
     if (accesstoken) {
       // accessToken 토큰이 있으면, "/lobby" 페이지로 이동
       navigate('/lobby');
     } else {
-      localStorage.removeItem('token');
+      sessionStorage.removeItem('token');
     }
   }, []);
 
@@ -41,10 +41,10 @@ export default function Layout() {
   }
 
   return (
-    <Background isLobbyPage={false}>
-      <Board boardType={'LOBBY'}>
+    <Background backgroundType='LOGIN'>
+      <Board boardType={'LOGIN'}>
         <div className='flex flex-col justify-center'>
-          <div className='grid grid-cols-1 lg:grid-cols-2 gap-12 items-center'>
+          <div className='grid grid-cols-1 2lg:grid-cols-2 gap-12 items-center'>
             {showLoginForm ? (
               <Container>
                 <div className='flex justify-around'>

@@ -12,6 +12,8 @@ import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer'
 import Board from '@components/common/Board';
 import { getRoomInfoApi } from 'apis/roomApi';
 import { useQuery } from '@tanstack/react-query';
+import EndGameModal from '@components/common/EndGameModal';
+
 export default function WaitingRoom() {
   const location = useLocation();
   const currentPath = Number(
@@ -114,7 +116,7 @@ export default function WaitingRoom() {
   }, [streamList]);
 
   return (
-    <Background isLobbyPage={false}>
+    <Background backgroundType='NOLOBBY'>
       <div className='flex w-full h-full'>
         {/* 참가자 목록 */}
         <div className='justify-start bg-white z-40'>
@@ -170,6 +172,15 @@ export default function WaitingRoom() {
           sendSignal={sendSignal}
         />
       </div>
+      {/* 방장이 방을 나가면 게임 종료 */}
+      {roomInfo.playerInfos &&
+      roomInfo.playerInfos[0] &&
+      roomInfo.playerInfos[0].playerId &&
+      roomInfo.hostId !== roomInfo.playerInfos[0].playerId ? (
+        <EndGameModal endReason='NOHOST' openModal={true}></EndGameModal>
+      ) : (
+        <></>
+      )}
     </Background>
   );
 }
