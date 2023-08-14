@@ -51,8 +51,8 @@ export async function deleteMemberApi(nickname: string) {
 
   try {
     const response = await axios.delete(apiUrl, config);
-    localStorage.removeItem('token');
-    localStorage.removeItem('accessToken');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('accessToken');
     return response; // 성공한 경우 response 반환
   } catch (error) {
     console.log('실패:', (error as AxiosError).message);

@@ -8,7 +8,7 @@ const axios = Axios.create({
 
 axios.interceptors.request.use(
   (config) => {
-    const jwtToken = localStorage.getItem('token');
+    const jwtToken = sessionStorage.getItem('token');
     console.log(jwtToken);
     config.headers['Authorization'] = jwtToken ? `Bearer ${jwtToken}` : '';
     return config;
