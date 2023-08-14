@@ -12,6 +12,9 @@ from keras.layers import Dense, Activation
 import numpy as np
 from numpy import argmax
 
+import torch
+from torch import nn
+
 import pymysql
 import configparser
 import base64
@@ -45,11 +48,16 @@ def receive_capture():
 
         shapeInfo = getShapeInfo(data.get('shapeId')[0])
 
-        imgdata = base64.b64decode(str(data['image']))
+        img_data = data['image']
+        base64_encoded = img_data.split('base64,')[1]
+        imgdata = base64.b64decode(base64_encoded)
+        # base64_encoded += '=' * (4 - len(base64_encoded) % 4)
+
         dataBytesIO = io.BytesIO(imgdata)
         image = Image.open(dataBytesIO)
 
         # image_cv2 = np.array(image)
+
         image_cv2 = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
 
         # 이미지 표시
@@ -61,8 +69,10 @@ def receive_capture():
         correctRate = 80
 
         skeleton_image = imageService.getPreProcess(image_cv2)
-        cv2.imshow(skeleton_image)
-        cv2.waitKey(0)  # 키 입력을 기다림
+        # cv2.imshow(skeleton_image)
+        # cv2.waitKey(0)  # 키 입력을 기다림
+
+        run_model(skeleton_image)
 
         res = jsonify({
             "isCorrect": isCorrect,
@@ -91,26 +101,30 @@ def getShapeInfo(shapeId):
         shape = cursor.fetchone()
     except Exception as e:
         print('DB ERROR', e)
-    finally:
-        db.close()
+    # finally:
+    #     db.close()
 
     return shape
 
 # 추후에 AI 모델 교체할 것
-def run_model():
-    model = tf.keras.models.load_model('venv/Include/model/mnist_mlp_model.h5')
+def run_model(skeleton_image):
+    # model = tf.keras.models.load_model('venv/Include/model/mnist_mlp_model.h5')
+    # cpu로 바꾸기
+    model = torch.load('./Include/model/model.pt')
 
     # input data
-    (x_train, y_train), (x_test, y_test) = mnist.load_data()
-    x_test = x_test.reshape(10000, 784).astype('float32') / 255.0
-    y_test = np_utils.to_categorical(y_test)
-    xhat_idx = np.random.choice(x_test.shape[0], 5)
-    xhat = x_test[xhat_idx]
+    # (x_train, y_train), (x_test, y_test) = mnist.load_data()
+    # x_test = x_test.reshape(10000, 784).astype('float32') / 255.0
+    # y_test = np_utils.to_categorical(y_test)
+    # xhat_idx = np.random.choice(x_test.shape[0], 5)
+    # xhat = x_test[xhat_idx]
 
-    prediction = model.predict(xhat)
+    prediction = model.predict(skeleton_image)
 
-    for i in range(5):
-        print('True : ' + str(argmax(y_test[xhat_idx[i]])) + ', Predict : ' + str(prediction[i]))
+    print("-----------------------")
+    print(prediction)
+    # for i in range(5):
+    #     print('True : ' + str(argmax(y_test[xhat_idx[i]])) + ', Predict : ' + str(prediction[i]))
 
     return prediction
 
