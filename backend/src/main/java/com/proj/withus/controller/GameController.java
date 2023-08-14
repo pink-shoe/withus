@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.proj.withus.exception.CustomException;
 import com.proj.withus.exception.ErrorCode;
+import com.proj.withus.repository.RoomRepository;
+import com.proj.withus.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +30,6 @@ import com.proj.withus.domain.dto.GetGameInfoRes;
 import com.proj.withus.domain.dto.GetSelectedImagesReq;
 import com.proj.withus.domain.dto.GetTotalGameResultRes;
 import com.proj.withus.domain.dto.PlayerInfo;
-import com.proj.withus.service.AlbumService;
-import com.proj.withus.service.AwsS3Service;
-import com.proj.withus.service.GameService;
-import com.proj.withus.service.MemberService;
 import com.proj.withus.util.ImageUtil;
 import com.proj.withus.util.JwtUtil;
 
@@ -60,6 +58,7 @@ public class GameController {
     private final AlbumService albumService;
     private final AwsS3Service awsS3Service;
     private final MemberService memberService;
+    private final RoomRepository roomRepository;
     private final JwtUtil jwtUtil;
 
     //test용
@@ -160,6 +159,12 @@ public class GameController {
         if (memberId == null) {
             throw new CustomException(ErrorCode.MEMBER_NO_PERMISSION);
         }
+
+        // 게임 참여 player 모두 ready 상태 false로 만들어주기
+        roomRepository.resetReadyState(roomId); // repository로 직접 접근
+
+        // 방의 start 상태 변경
+        roomRepository.updateStart(roomId, false); // repository로 직접 접근
 
         List<GetTotalGameResultRes> getTotalGameResultRes = gameService.getTotalGameResult(roomId);
         return ResponseEntity.ok(getTotalGameResultRes);

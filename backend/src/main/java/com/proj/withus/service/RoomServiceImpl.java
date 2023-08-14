@@ -56,6 +56,11 @@ public class RoomServiceImpl implements RoomService {
             }
         }
 
+        roomRepository.findByMemberId(createRoomReq.getId())
+                .ifPresent(room -> {
+                    throw new CustomException(ErrorCode.DUPLICATE_HOST);
+                });
+
         // Room에 접근
         Room room = new Room();
         room.setMember(member);
@@ -142,6 +147,21 @@ public class RoomServiceImpl implements RoomService {
      */
     @Transactional(propagation = Propagation.REQUIRED)
     public int modifyRoom(ModifyRoomReq req, Long roomId) {
+
+        if (req.getRoomRound() == 0) {
+            throw new CustomException(ErrorCode.ROOM_NOT_ROUND);
+        }
+        if (req.getRoomType().equals("none")) {
+            throw new CustomException(ErrorCode.ROOM_NOT_TYPE);
+        }
+        if (req.getRoomRound() != 3 && req.getRoomRound() != 5) {
+            throw new CustomException(ErrorCode.ROOM_DISABLE_ROUND);
+        }
+        if (!req.getRoomType().trim().equals("coop") && !req.getRoomType().trim().equals("team")) {
+            throw new CustomException(ErrorCode.ROOM_DISABLE_TYPE);
+        }
+
+
         int resultVal = roomRepository.updateRoom(req, roomId);
         return resultVal;
     }
