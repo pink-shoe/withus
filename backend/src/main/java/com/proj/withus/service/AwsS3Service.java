@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface AwsS3Service {
 
-    public List<String> uploadFiles(List<MultipartFile> images);
+//    public List<String> uploadFiles(List<MultipartFile> images);
+
+    public String uploadFile(MultipartFile image);
 }

@@ -13,9 +13,10 @@ public interface GameService {
     public Room getRoomInfo(Long hostId);
     public List<Player> getPlayersInfo(Long roomId);
     public List<Shape> getShapeInfo(int round);
-    public boolean sendCaptureInfo(GetCaptureImageReq captureDto);
-    public boolean getGameResult();
+//    public boolean sendCaptureInfo(GetCaptureImageReq captureDto);
+//    public boolean getGameResult();
     public String getCaptureUrl(Long resultId);
     public void chooseMvp(Long roomId, Long votedPlayerId);
     public List<GetTotalGameResultRes> getTotalGameResult(Long roomId);
+    public void saveCaptureUrl(Long roomId, int round, String imageUrl);
 }

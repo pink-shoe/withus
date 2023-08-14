@@ -22,9 +22,4 @@ public class Shape {
 	private String shapeUrl;
 
 	private String shapeLabel;
-
-	@OneToMany(mappedBy = "shape")
-	@JsonIgnore
-	private List<GameResult> gameResults = new ArrayList<>();
-
 }

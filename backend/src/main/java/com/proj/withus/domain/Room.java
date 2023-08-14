@@ -59,4 +59,8 @@ public class Room {
     @JsonIgnore
     private GameLog gameLog;
 
+    @OneToMany(mappedBy = "room")
+    @JsonIgnore
+    private List<Capture> urls = new ArrayList<>();
+
 }

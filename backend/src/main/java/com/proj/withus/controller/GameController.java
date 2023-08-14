@@ -105,35 +105,44 @@ public class GameController {
                 .build());
     }
 
-    @ApiOperation(value = "사진 캡처 요청", notes = "라운드 종료 후 캡처한 사진을 불러와 AI 서버에 전송한다.")
+    @ApiOperation(value = "사진 캡처 요청", notes = "라운드 종료 후 캡처한 사진을 불러와 S3 서버, DB에 전송한다.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "AI 서버에 사진 전송 성공", response = String.class),
-            @ApiResponse(code = 400, message = "AI 서버에 사진 전송 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
+            @ApiResponse(code = 200, message = "캡처 사진 저장 성공(다음 라운드 반환)", response = String.class),
+            @ApiResponse(code = 400, message = "캡처 사진 저장 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
     })
-    @ApiImplicitParam(name = "getCaptureImageReq", value = "GetCaptureImageReq object", dataTypeClass = GetCaptureImageReq.class, paramType = "body")
-    @PostMapping("/image")
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(name = "room_id", value = "방 id", required = true, paramType = "path"),
+            @ApiImplicitParam(name = "round", value = "라운드 수", required = true, paramType = "path"),
+            @ApiImplicitParam(name = "captureImage", value = "form data capture image", dataTypeClass = MultipartFile.class, paramType = "body")
+    })
+    @PostMapping(value = "/image/{room_id}/{round}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> getCaptureImage(
             HttpServletRequest request,
-            @RequestBody GetCaptureImageReq getCaptureImageReq) {
+            @PathVariable("room_id") Long roomId,
+            @PathVariable("round") int round,
+            @RequestPart MultipartFile captureImage) {
 
-        if (!gameService.sendCaptureInfo(getCaptureImageReq)) {
-            throw new CustomException(ErrorCode.FLASK_SEND_FAIL);
-        }
-        return ResponseEntity.ok(getCaptureImageReq.getCurrentRound() + 1);
+        // s3 사진 저장 후 url 받기
+        String imageUrl = awsS3Service.uploadFile(captureImage);
+
+        // 받은 url, roomId, round 정보 DB 저장하기
+        gameService.saveCaptureUrl(roomId, round, imageUrl);
+
+        return ResponseEntity.ok(round + 1);
     }
 
-    @ApiOperation(value = "게임 결과 요청", notes = "AI 서버에서 게임 결과를 전달받는다.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "AI 서버로부터 결과 수신 성공", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "ok"))),
-            @ApiResponse(code = 400, message = "AI 서버로부터 결과 수신 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
-    })
-    @GetMapping
-    public ResponseEntity<?> getGameResult() {
-        if (!gameService.getGameResult()) {
-            throw new CustomException(ErrorCode.FLASK_RECEIVE_FAIL);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+//    @ApiOperation(value = "게임 결과 요청", notes = "AI 서버에서 게임 결과를 전달받는다.")
+//    @ApiResponses(value = {
+//            @ApiResponse(code = 200, message = "AI 서버로부터 결과 수신 성공", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "ok"))),
+//            @ApiResponse(code = 400, message = "AI 서버로부터 결과 수신 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
+//    })
+//    @GetMapping
+//    public ResponseEntity<?> getGameResult() {
+//        if (!gameService.getGameResult()) {
+//            throw new CustomException(ErrorCode.FLASK_RECEIVE_FAIL);
+//        }
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 
     @ApiOperation(value = "총 게임 결과 요청", notes = "모든 라운드 종료 후 전체 게임 결과를 전달한다.")
     @ApiResponses(value = {
@@ -206,12 +215,17 @@ public class GameController {
 
         Long albumId = albumService.getAlbum(memberId);
 
-        List<String> imgUrls = new ArrayList<>();
-        imgUrls = awsS3Service.uploadFiles(images);
+//        List<String> imgUrls = new ArrayList<>();
+//        imgUrls = awsS3Service.uploadFiles(images);
 
-        for (String imgUrl : imgUrls) {
+        for (MultipartFile image : images) {
+            String imgUrl = awsS3Service.uploadFile(image);
             albumService.saveImage(memberId, imgUrl);
         }
+
+//        for (String imgUrl : imgUrls) {
+//            albumService.saveImage(memberId, imgUrl);
+//        }
 
         return new ResponseEntity<String>("S3에 이미지 업로드 성공", HttpStatus.OK);
     }
