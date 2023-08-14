@@ -50,7 +50,7 @@ public enum ErrorCode {
     DUPLICATE_ALBUM(HttpStatus.BAD_REQUEST, "이미 존재하는 앨범입니다."),
 
     // player 관련
-    PLAYER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 플레이어입니다."),
+//    PLAYER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 플레이어입니다."),
 
     ;
     private final HttpStatus status;
