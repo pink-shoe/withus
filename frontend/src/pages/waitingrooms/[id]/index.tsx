@@ -12,8 +12,7 @@ import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer'
 import Board from '@components/common/Board';
 import { getRoomInfoApi } from 'apis/roomApi';
 import { useQuery } from '@tanstack/react-query';
-import EndGameModal from '@components/common/EndGameModal';
-// import EndGameModal from '@components/common/ExceptionModal';
+import ExceptionModal from '@components/common/ExceptionModal';
 
 export default function WaitingRoom() {
   const location = useLocation();
@@ -144,14 +143,14 @@ export default function WaitingRoom() {
         />
       </div>
       {/* 방장이 방을 나가면 게임 종료 */}
-      {roomInfo.playerInfos &&
+      {/* {roomInfo.playerInfos &&
       roomInfo.playerInfos[0] &&
       roomInfo.playerInfos[0].playerId &&
       roomInfo.hostId !== roomInfo.playerInfos[0].playerId ? (
-        <EndGameModal endReason='NOHOST' openModal={true}></EndGameModal>
+        <ExceptionModal message='' />
       ) : (
         <></>
-      )}
+      )} */}
     </Background>
   );
 }

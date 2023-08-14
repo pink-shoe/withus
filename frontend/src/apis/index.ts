@@ -1,5 +1,4 @@
 import Axios from 'axios';
-import { debouncedAlert } from '../utils/debounce';
 // axios 기본 세팅
 const axios = Axios.create({
   baseURL: `${import.meta.env.VITE_API}/api`,
@@ -12,19 +11,6 @@ axios.interceptors.request.use(
     console.log(jwtToken);
     config.headers['Authorization'] = jwtToken ? `Bearer ${jwtToken}` : '';
     return config;
-  },
-  (err) => err
-);
-// 에러 발생시 debouncedAlert 띄우기
-axios.interceptors.response.use(
-  (res) => {
-    if (res?.data?.error) {
-      const { error, message } = res.data;
-      debouncedAlert(`${message} (${error})`);
-      if (error.status === 401) return res;
-      throw Error;
-    }
-    return res;
   },
   (err) => err
 );

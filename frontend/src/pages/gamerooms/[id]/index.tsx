@@ -16,7 +16,7 @@ import Board from '@components/common/Board';
 import { useQuery } from '@tanstack/react-query';
 import { IGameInfo, getGameInfoApi, getGameResultApi } from 'apis/gameApi';
 import Modal from '@components/common/Modal';
-import EndGameModal from '@components/common/EndGameModal';
+// import EndGameModal from '@components/common/EndGameModal';
 import MvpModal from '@components/MvpModal/MvpModal';
 // import ExceptionModal from '@components/common/ExceptionModal';
 
