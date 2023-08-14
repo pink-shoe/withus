@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +23,7 @@ public class Image {
 
 	@Id @GeneratedValue
 	@Column(name = "img_id")
+	@JsonProperty("imgId")
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
