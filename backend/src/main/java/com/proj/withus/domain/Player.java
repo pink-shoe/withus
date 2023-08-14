@@ -36,10 +36,12 @@ public class Player {
 	@JsonIgnore
 	private Room room;
 
+	@ColumnDefault("0")
 	private int teamType;
 
 	@ColumnDefault("false")
 	private boolean ready;
 
+	@ColumnDefault("0")
 	private int vote;
 }
