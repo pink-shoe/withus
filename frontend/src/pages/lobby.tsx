@@ -22,6 +22,7 @@ export default function Lobby() {
 
     if (!accessToken) {
       navigate('/login');
+      // accessToken이 없으면 게스트 or 게스트조차 아닌 로그아웃 상태이니 login 이동
     } else {
       getMemberApi(setUser).catch((error) => {
         console.log('Error fetching data:', error);

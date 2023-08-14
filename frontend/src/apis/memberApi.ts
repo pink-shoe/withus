@@ -11,6 +11,9 @@ export async function getMemberApi(setUser: any) {
     const response = await axios.get(apiUrl);
 
     console.log('성공:', response.data);
+    console.log(`memberId: ${response.data.memberId}`);
+    console.log(`email: ${response.data.email}`);
+    console.log(`nickname: ${response.data.nickname}`);
 
     setUser((prevUser: any) => ({
       ...prevUser,
