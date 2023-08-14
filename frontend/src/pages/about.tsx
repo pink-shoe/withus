@@ -7,7 +7,6 @@ import ResultModal from '../components/common/ResultModal';
 import EndGameModal from '../components/common/EndGameModal';
 import Spinner from '@components/common/Spinner';
 
-
 export default function About() {
   const [updateModalStatus, setUpdateModalStatus] = useState(false);
 
@@ -29,7 +28,7 @@ export default function About() {
         closeModal={closeUpdateModal}
       ></SettingModalContainer>
       <div>==============구분선=================</div>
-      <ResultModal></ResultModal>
+      {/* <ResultModal></ResultModal> */}
       <div>==============구분선=================</div>
       <EndGameModal endReason='NOHOST' openModal={true}></EndGameModal>
       <div>==============구분선=================</div>
