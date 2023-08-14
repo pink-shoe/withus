@@ -91,7 +91,7 @@ export default function SettingModalPresenter({
                       <div className='inline-block p-1 bg-[#FF8DA3] border-2 border-[#FF8DA3] font-medium text-2xl text-center text-white font-kdisplay rounded-l-lg'>
                         Code
                       </div>
-                      <div className='inline-block p-1 w-[12.7rem] border-y-2 border-e-2 border-[#FF8DA3] rounded-r-lg font-medium text-2xl text-center text-white font-kdisplay'>
+                      <div className='inline-block p-1 w-[12.7rem] border-y-2 border-e-2 border-[#FF8DA3] rounded-r-lg font-medium text-2xl text-center text-[#514148] font-kdisplay'>
                         {roomCode}
                       </div>
                       
@@ -103,7 +103,7 @@ export default function SettingModalPresenter({
                 </div>
                 <div className='mb-10'>
                   <div className='flex'>
-                    <div className='inline-block px-2 pt-7 bg-[#FF8DA3] border-2 border-[#FF8DA3] font-medium text-2xl text-center text-[#514148] font-kdisplay rounded-l-lg'>
+                    <div className='inline-block px-2 pt-7 bg-[#FF8DA3] border-2 border-[#FF8DA3] font-medium text-2xl text-center text-white font-kdisplay rounded-l-lg'>
                       <span>Url</span>
                     </div>
                     

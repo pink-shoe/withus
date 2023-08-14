@@ -116,7 +116,7 @@ export default function WaitingRoom() {
   }, [streamList]);
 
   return (
-    <Background backgroundType='NOLOBBY'>
+    <Background backgroundType='NOLOBBY' isLobbyDropdown={false}>
       <div className='flex w-full h-full'>
         {/* 참가자 목록 */}
         <div className='justify-start bg-white z-40'>
@@ -172,12 +172,17 @@ export default function WaitingRoom() {
           sendSignal={sendSignal}
         />
       </div>
-      {/* 방장이 방을 나가면 게임 종료 */}
-      {roomInfo.hostId !== roomInfo.playerInfos[0].playerId ? (
-        <EndGameModal endReason='NOHOST' openModal={true}></EndGameModal>
-      ): (
-        <></>  
-      )}
+      {/* {roomInfo.playerInfos &&
+      roomInfo.playerInfos[0] &&
+      roomInfo.playerInfos[0].playerId &&
+      roomInfo.hostId !== roomInfo.playerInfos[0].playerId ? (
+        <EndGameModal
+          message={'방장이 방을 나가 게임이 종료됩니다.'}
+          // openModal={true}
+        ></EndGameModal>
+      ) : (
+        <></>
+      )} */}
     </Background>
   );
 }

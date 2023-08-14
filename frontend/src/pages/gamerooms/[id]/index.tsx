@@ -122,9 +122,9 @@ export default function GameRoom() {
   setTimeout(closeRoundModal, 10000);
 
   return (
-    <Background backgroundType='NOLOBBY'>
+    <Background backgroundType='NOLOBBY' isLobbyDropdown={false}>
       {/* 최종 라운드가 마무리되면 MVP 모달이 나옴 */}
-      {gameRoomInfo?.currentRound === roomInfo.room.roomRound ? (<MvpModal></MvpModal>) : (null)}
+      {/* {gameRoomInfo?.currentRound === roomInfo.room.roomRound ? (<MvpModal></MvpModal>) : (null)} */}
 
       <MvpModal></MvpModal>
 

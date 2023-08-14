@@ -6,11 +6,13 @@ export type backgroundType = 'LOBBY' | 'NOLOBBY' | 'LOGIN'
 interface IBackgroundProps {
   backgroundType: backgroundType;
   // isLobbyDropdown true는 로비 항목이 없고, false는 로비 항목이 있음
-  isLobbyDropdown?: any;
+  isLobbyDropdown: boolean;
   children: React.ReactNode;
 }
 
 export default function Background({backgroundType, isLobbyDropdown, children}: IBackgroundProps) {
+  const token = localStorage.getItem('token');
+  
   return (
     <Fragment>
       {backgroundType === 'LOBBY' ? (

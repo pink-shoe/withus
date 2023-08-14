@@ -29,7 +29,7 @@ export default function About() {
         closeModal={closeUpdateModal}
       ></SettingModalContainer>
       <div>==============구분선=================</div>
-      <ResultModal></ResultModal>
+      {/* <ResultModal></ResultModal> */}
       <div>==============구분선=================</div>
       <EndGameModal endReason='NOHOST' openModal={true}></EndGameModal>
       <div>==============구분선=================</div>
