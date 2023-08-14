@@ -9,6 +9,8 @@ import com.proj.withus.domain.Player;
 import com.proj.withus.domain.dto.GetRoomInfoRes;
 import com.proj.withus.domain.dto.PlayerInfo;
 import com.proj.withus.domain.dto.PlayerInfoDto;
+import com.proj.withus.exception.CustomException;
+import com.proj.withus.exception.ErrorCode;
 import com.proj.withus.repository.RoomRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -83,12 +85,8 @@ public class RoomController {
             return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
         }
 
-        Optional<Room> room = roomService.getRoomByCode(roomCode);
-        if (!room.isPresent()) {
-            return new ResponseEntity<String>("존재하지 않는 방입니다.", HttpStatus.BAD_REQUEST);
-        }
-
-        Long roomId = room.get().getId();
+        Room room = roomService.getRoomByCode(roomCode);
+        Long roomId = room.getId();
 
         List<Player> players = roomService.getPlayerList(roomId);
         List<PlayerInfo> playerInfos = new ArrayList<>();
@@ -103,7 +101,7 @@ public class RoomController {
         }
 
         GetRoomInfoRes getRoomInfoRes = GetRoomInfoRes.builder()
-            .room(room)
+            .room(Optional.of(room))
             .playerInfos(playerInfos)
             .hostId(getHostId(roomId))
             .build();
@@ -121,19 +119,8 @@ public class RoomController {
         HttpServletRequest request,
         @RequestBody CreateRoomReq createRoomReq) { // dto 새로 만들어야 함
 
-        // 유효성 검사(임시)
-        if (createRoomReq.getRoomRound() <= 5) {
-            createRoomReq.setRoomRound(5);
-        }
-        if (!createRoomReq.getRoomType().trim().equals("coop") || !createRoomReq.getRoomType().trim().equals("team")) {
-            createRoomReq.setRoomType("coop");
-        }
-        System.out.println("createRoomReq.getId()" + createRoomReq.getId());
-        System.out.println("createRoomReq.getRoomType()" + createRoomReq.getRoomType());
-
         Room newRoom = roomService.createRoom(createRoomReq);
         return new ResponseEntity<Integer>(newRoom.getCode(), HttpStatus.CREATED);
-        // return new ResponseEntity<Room>(newRoom, HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "방 입장", notes = "참가자는 방에 참여한다.")
@@ -163,32 +150,6 @@ public class RoomController {
         }
 
         Optional<Room> room = roomService.enterRoom(roomCode, memberId);
-        // Optional<>은 isPresent()로 확인!
-        if (!room.isPresent()) {
-            return new ResponseEntity<String>("존재하지 않는 방입니다.", HttpStatus.BAD_REQUEST);
-        }
-        // else {
-            // EnterRoomRes enterRoomRes = new EnterRoomRes();
-            // enterRoomRes.setRoomId(room.get().getId());
-            // enterRoomRes.setRoomType(room.get().getType());
-            // enterRoomRes.setCode(String.valueOf(room.get().getCode()));
-            // enterRoomRes.setHostId(getHostId(room.get().getId()));
-            //
-            // List<Player> playerList = roomService.getPlayerList(room.get().getId());
-            // List<PlayerInfoDto> playerInfos = new ArrayList<>();
-            // for (Player player : playerList) {
-            //     PlayerInfoDto playerInfo = new PlayerInfoDto();
-            //     playerInfo.setMemberId(player.getId());
-            //     playerInfo.setNickname(memberService.getMemberInfo(player.getId()).getNickname());
-            //     playerInfo.setReady(roomService.getReadyStatus(player.getId()));
-            //
-            //     playerInfos.add(playerInfo);
-            // }
-            // enterRoomRes.setPlayers(playerInfos);
-            // return new ResponseEntity<EnterRoomRes>(enterRoomRes, HttpStatus.OK);
-            // return new ResponseEntity<Integer>(roomCode, HttpStatus.OK);
-
-        // }
         return new ResponseEntity<String>("방 입장이 완료되었습니다.", HttpStatus.OK);
     }
 
@@ -211,11 +172,8 @@ public class RoomController {
         String token = (String) request.getAttribute("token");
         SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
         Long memberId = socialMemberInfo.getId();
-        try {
-            roomService.leaveRoom(roomId, memberId);
-        } catch (Exception e) {
-            return new ResponseEntity<String>("오류가 발생했습니다.", HttpStatus.BAD_REQUEST);
-        }
+
+        roomService.leaveRoom(roomId, memberId);
         return new ResponseEntity<String>("방 나가기 성공", HttpStatus.OK); // 웹소켓에서 처리 가능한지에 따라 변경할 예정 (일단 String으로 성공 결과만 처리)
     }
 
@@ -241,13 +199,10 @@ public class RoomController {
         @RequestBody ModifyRoomReq modifyRoomReq) {
 
         String token = ((String) request.getAttribute("token"));
-        System.out.println("token:~~~~" + token);
         try {
             SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
-            System.out.println("-------------------------------");
             Long id = socialMemberInfo.getId();
             Long hostId = getHostId(roomId);
-
             if (hostId != id) {
                 return new ResponseEntity<String>("방장이 아닙니다.", HttpStatus.FORBIDDEN);
             }
@@ -256,14 +211,12 @@ public class RoomController {
         }
 
         boolean isValid = jwtUtil.validateJwtToken(token);
-        System.out.println("request.getAttribute(\"token\") 찍어보기 " + token);
-        System.out.println("isValid 찍어보기 " + isValid);
+
         if (!isValid) {
             return new ResponseEntity<String>("토큰이 만료되었습니다.", HttpStatus.UNAUTHORIZED);
         }
         roomService.modifyRoom(modifyRoomReq, roomId); // 반환 받아도 됨
         return new ResponseEntity<Integer>(roomService.getRoomInfo(roomId).get().getCode(), HttpStatus.OK);
-        // return new ResponseEntity<String>("성공", HttpStatus.OK);
     }
 
     @ApiOperation(value = "유저 닉네임 수정", notes = "방에서 유저는 닉네임을 변경한다.")
@@ -296,7 +249,6 @@ public class RoomController {
         try {
             int isSuccess = roomService.modifyNickname(id, nickname);
             if (isSuccess != 1) {
-                System.out.println("ididididi: " + id); //
                 return new ResponseEntity<String>("권한이 없습니다.", HttpStatus.UNAUTHORIZED);
             }
             return new ResponseEntity<String>("닉네임이 수정되었습니다.", HttpStatus.OK);
@@ -411,8 +363,6 @@ public class RoomController {
     // 트랜잭션 전파 문제 생겨서 일단 Service -> Controller에서 처리
     private Long getHostId(Long roomId) {
         Long hostId = roomRepository.findHostIdByRoomId(roomId);
-        System.out.println("hostId~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        System.out.println(hostId);
         return hostId;
     }
 

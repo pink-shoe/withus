@@ -58,4 +58,8 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
     @Query("select p.room from Player p where p.id = :playerId")
     Room findRoomIdByPlayerId(Long playerId);
 
+    @Query("select count(p) from Player p " +
+            "join p.room r where r.id = (select r2.id from Room r2 where r2.code = :roomCode)")
+    int countPlayersByRoomCode(@Param("roomCode") int roomCode);
+
 }
