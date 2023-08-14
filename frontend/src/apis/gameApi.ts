@@ -81,7 +81,7 @@ export const sendCaptureImageApi = async (
   }
 };
 
-export const electMvpApi = async (roomId: number, playerId: number | any, votedId: number) => {
+export const electMvpApi = async (roomId: number, playerId: number, votedId: number) => {
   try {
     const response = await axios.post(apiUrl + `/vote/${roomId}`, { playerId, votedId });
     console.log('MVP 선택 완료!!', playerId, votedId);
@@ -92,6 +92,6 @@ export const electMvpApi = async (roomId: number, playerId: number | any, votedI
   }
 };
 
-export const getMvpResultApi = async (votedId: number) => {
+// export const getMvpResultApi = async (votedId: number) => {
   
-}
+// }

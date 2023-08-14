@@ -147,7 +147,8 @@ export default function GameRoom() {
               1. 오른쪽 손목 - 가슴 - 왼쪽 손목이 하나의 선으로 이어져있다 생각해주세요!!
             </div>
             <div className='mb-5'>2. 머리카락이 몸을 가리면 정확도가 떨어져요ㅜㅜ</div>
-            <div className='mb-5'>3. 네트워크 환경에 따라 진행 상황이 조금씩 다를 수 있어요😥</div>
+            <div className='mb-5'>3. 머리카락이 몸을 가리면 정확도가 떨어져요ㅜㅜ</div>
+            <div className='mb-5'>4. 네트워크 환경에 따라 진행 상황이 조금씩 다를 수 있어요😥</div>
           </div>
           <div className='mt-6 mb-5 text-2xl text-[#FA8D8D] text-center'>
             (게임은 7초 뒤 자동적으로 시작해요)

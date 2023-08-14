@@ -19,7 +19,7 @@ export default function MvpModal({playerList}: IMvpModalProps) {
   const roomInfo = useAtomValue<IRoomAtom>(roomAtom);
   const [mvpModal, setMvpModal] = useState(false);
   const [gameResultModal, setGameResultModal] = useState(false);
-  const [votedId, setVotedId] = useState(5);
+  const [vote, setVotedId] = useState(5);
   const [user, setUser] = useAtom<IUserAtom>(userAtom);
   const player = playerList.find((player: IPlayerInfo) => {
     return player.playerId === user.memberId;
@@ -41,7 +41,7 @@ export default function MvpModal({playerList}: IMvpModalProps) {
 
 
   // const onClickNominee = async () => {
-  //   const result: any = await electMvpApi(roomId, playerId, votedId)
+  //   const result: any = await electMvpApi(roomId, playerId, vote)
   //   // playerId와 voteId 보내야 함
   //   console.log('전달 완료', roomInfo.room.roomId, );
   // };
@@ -55,8 +55,10 @@ export default function MvpModal({playerList}: IMvpModalProps) {
 
   async function loadToMvpResult(a: string): Promise<void> {
     setContentType(a);
-    const result: any = await electMvpApi(roomInfo.room.roomId, player?.playerId, votedId)
-    console.log('전달 완료', result);
+    if (player) {
+      const result: any = await electMvpApi(roomInfo.room.roomId, player.playerId, vote)
+      console.log('전달 완료', result);
+    }
     console.log('MVP 결과 확인');
   }
 
@@ -76,7 +78,7 @@ export default function MvpModal({playerList}: IMvpModalProps) {
   useEffect(() => {
     openAndCloseModal()
       .then(() => {
-        console.log('MVP 결과 확인을 위한 순차적 과정 진행 완료');
+        console.log('순차적 과정 진행 완료');
       })
       .catch((error) => {
         console.error('오류 발생:', error);
@@ -132,7 +134,7 @@ export default function MvpModal({playerList}: IMvpModalProps) {
         ) : (
           <Fragment>
             <div className='text-5xl flex justify-center my-10 text-[#FA8D8D]'>오늘의 MVP</div>
-            <div className='text-4xl flex justify-center pt-5 animate-bounce'>🎊{votedId}🎊</div>
+            <div className='text-4xl flex justify-center pt-5 animate-bounce'>🎊{vote}🎊</div>
             <div className='flex justify-end mt-14 text-xl'>
               <Fragment>
                 <button onClick={openGameResultModal}>게임 결과 확인 ➤</button>
