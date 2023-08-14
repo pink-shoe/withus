@@ -32,11 +32,11 @@ export default function Modal({ openModal, closeModal, isSettingModal, children 
               {/* 세팅 모달에서만 닫기 버튼 존재 */}
               {isSettingModal ? (
                 <div className='flex justify-end'>
-                <X onClick={closeModal} className='cursor-pointer hover:text-red-500' />
-              </div>
+                  <X onClick={closeModal} className='cursor-pointer hover:text-red-500' />
+                </div>
               ) : null}
-              <div className='ms-5 my-3 '>{children}</div>
-              <div className='flex justify-center mt-10'></div>
+              <div className='mx-5 my-3 '>{children}</div>
+              <div className='mt-10' />
             </div>
           </div>
         </Fragment>

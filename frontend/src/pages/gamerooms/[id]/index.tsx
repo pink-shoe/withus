@@ -14,9 +14,9 @@ import Background from '@components/common/Background';
 import Board from '@components/common/Board';
 import { useQuery } from '@tanstack/react-query';
 import { IGameInfo, getGameInfoApi, getGameResultApi } from 'apis/gameApi';
-import EndGameModal from '@components/common/EndGameModal';
 import Modal from '@components/common/Modal';
 import MvpModal from '@components/MvpModal/MvpModal';
+import ExceptionModal from '@components/common/ExceptionModal';
 
 export default function GameRoom() {
   const location = useLocation();
@@ -124,7 +124,7 @@ export default function GameRoom() {
   return (
     <Background backgroundType='NOLOBBY'>
       {/* 최종 라운드가 마무리되면 MVP 모달이 나옴 */}
-      {gameRoomInfo?.currentRound === roomInfo.room.roomRound ? (<MvpModal></MvpModal>) : (null)}
+      {gameRoomInfo?.currentRound === roomInfo.room.roomRound ? <MvpModal></MvpModal> : null}
 
       <MvpModal></MvpModal>
 
@@ -210,7 +210,10 @@ export default function GameRoom() {
           </Board>
           {/* 인원이 4명 미만이 되면 게임 종료 */}
           {roomInfo.playerInfos.length < 0 ? (
-            <EndGameModal endReason='NOPLAYER' openModal={true}></EndGameModal>
+            <ExceptionModal
+              message={'인원이 4명 미만으로 게임이 종료됩니다.'}
+              // openModal={true}
+            ></ExceptionModal>
           ) : (
             <></>
           )}

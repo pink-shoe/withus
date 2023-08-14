@@ -107,6 +107,7 @@ export const ControlBarContainer: FC<IControlBarProps> = ({
       onClickReadyBtn={onClickReadyBtn}
       onClickCancelBtn={onClickCancelBtn}
       onClickStartBtn={onClickStartBtn}
+      sendSignal={sendSignal}
     />
   );
 };
