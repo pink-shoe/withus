@@ -173,10 +173,13 @@ export default function WaitingRoom() {
         />
       </div>
       {/* 방장이 방을 나가면 게임 종료 */}
-      {roomInfo.hostId !== roomInfo.playerInfos[0].playerId ? (
+      {roomInfo.playerInfos &&
+      roomInfo.playerInfos[0] &&
+      roomInfo.playerInfos[0].playerId &&
+      roomInfo.hostId !== roomInfo.playerInfos[0].playerId ? (
         <EndGameModal endReason='NOHOST' openModal={true}></EndGameModal>
-      ): (
-        <></>  
+      ) : (
+        <></>
       )}
     </Background>
   );
