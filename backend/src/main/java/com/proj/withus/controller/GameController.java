@@ -58,6 +58,7 @@ public class GameController {
     private final AlbumService albumService;
     private final AwsS3Service awsS3Service;
     private final MemberService memberService;
+    private final RoomService roomService;
     private final RoomRepository roomRepository;
     private final JwtUtil jwtUtil;
 
@@ -127,7 +128,7 @@ public class GameController {
         // 받은 url, roomId, round 정보 DB 저장하기
         gameService.saveCaptureUrl(roomId, round, imageUrl);
 
-        return ResponseEntity.ok(round + 1);
+        return ResponseEntity.ok(roomService.updateCurrentRound(roomId, round + 1));
     }
 
 //    @ApiOperation(value = "게임 결과 요청", notes = "AI 서버에서 게임 결과를 전달받는다.")

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
@@ -27,6 +28,7 @@ public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final MemberRepository memberRepository;
     private final PlayerRepository playerRepository;
+    private final EntityManager entityManager;
 
     public Room getRoomByCode(int roomCode) {
         return roomRepository.findRoomByCode(roomCode)
@@ -254,5 +256,12 @@ public class RoomServiceImpl implements RoomService {
 
     public boolean getStartStatus(Long roomId) {
         return roomRepository.findStartStatusByRoomId(roomId);
+    }
+
+    public int updateCurrentRound(Long roomId, int currentRound) {
+        roomRepository.updateCurrentRound(roomId, currentRound);
+        entityManager.clear();
+        return roomRepository.findRoomById(roomId).map(Room::getCurrentRound)
+                .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND));
     }
 }
