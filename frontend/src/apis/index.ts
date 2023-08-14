@@ -1,5 +1,7 @@
 import Axios from 'axios';
 import { debouncedAlert } from '../utils/debounce';
+import { useAtom } from 'jotai';
+import { errorAtom } from 'stores/error';
 // axios 기본 세팅
 const axios = Axios.create({
   baseURL: `${import.meta.env.VITE_API}/api`,
@@ -18,15 +20,37 @@ axios.interceptors.request.use(
 // 에러 발생시 debouncedAlert 띄우기
 axios.interceptors.response.use(
   (res) => {
-    if (res?.data?.error) {
-      const { error, message } = res.data;
-      debouncedAlert(`${message} (${error})`);
-      if (error.status === 401) return res;
+    if (res.status === 401) {
+      return res;
+    } else if (res.status >= 400) {
+      const error = res.data as string;
+      const { errorCode, message } = res.data;
+      console.log('aaaaaaaaaaaaaaaaaaaaa', res.data, error);
+      const [globalError, setGlobalError] = useAtom(errorAtom);
+      console.log('aaaaaaaaaaaaaaaaaaaaa', 'aaaaaaaaaaaaaaaaa');
+      // setGlobalError({ errorCode, message });
+      // debouncedAlert(errorCode, message);
+      setGlobalError(error);
+      debouncedAlert(error);
+      throw Error;
+    } else if (res?.data?.errorCode) {
+      const { errorCode, message } = res.data;
+      console.log('aaaaaaaaaaaaaaaaaaaaa', errorCode, message);
+      const [globalError, setGlobalError] = useAtom(errorAtom);
+      setGlobalError(message);
+      debouncedAlert(message);
       throw Error;
     }
     return res;
   },
-  (err) => err
+  (err) => {
+    console.log('error interceptor', err);
+    const { errorCode, message } = err;
+    const [globalError, setGlobalError] = useAtom(errorAtom);
+    setGlobalError(message);
+    debouncedAlert(message);
+    return err;
+  }
 );
 
 // query 인터페이스 정의
