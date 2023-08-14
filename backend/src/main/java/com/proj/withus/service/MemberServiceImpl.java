@@ -27,6 +27,10 @@ public class MemberServiceImpl implements MemberService {
     }
 
     public Member createMember(Member member) {
+        if (member.getLoginType().equals("guest")) {
+            return memberRepository.save(member);
+        }
+        
         memberRepository.findByEmail(member.getEmail())
                 .ifPresent(m -> {
                     throw new CustomException(ErrorCode.DUPLICATE_MEMBER);
