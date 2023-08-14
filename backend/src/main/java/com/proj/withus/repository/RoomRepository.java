@@ -36,4 +36,8 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
     @Query("update Player p set p.ready = false where p.room.id = :roomId")
     void resetReadyState(@Param("roomId") Long roomId);
+
+    @Modifying
+    @Query("update Room r set r.currentRound = :currentRound where r.id = :roomId")
+    int updateCurrentRound(@Param("roomId") Long roomId, @Param("currentRound") int currentRound);
 }

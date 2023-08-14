@@ -38,6 +38,10 @@ public class Room {
     @ColumnDefault("5")
     private int round;
 
+    @JsonProperty("currentRound")
+    @ColumnDefault("1")
+    private int currentRound;
+
     @JsonProperty("roomTime")
 //    @ColumnDefault("5")
     @Builder.Default
