@@ -21,7 +21,7 @@ export default function Mypage() {
 
   // 비정상적인 접근 차단 & 새로고침마다 유저 정보 재확인
   useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = sessionStorage.getItem('accessToken');
 
     if (!accessToken) {
       navigate('/login');
@@ -72,7 +72,7 @@ export default function Mypage() {
   const WithdrawAccount = async () => {
     try {
       await deleteMemberApi(user.nickname);
-      localStorage.removeItem('token');
+      sessionStorage.removeItem('token');
       navigate('/login');
       console.log('성공');
       CloseWithdrawModal();

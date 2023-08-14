@@ -19,7 +19,7 @@ export async function guestLoginApi(
     const response = await axios.post(apiUrl + `/room/${entercode}`, nickname, config);
     console.log('1차로 게스트 정보 받아오기 성공:', response.data);
     // 토큰 저장
-    localStorage.setItem('token', response.data.jwtToken);
+    sessionStorage.setItem('token', response.data.jwtToken);
     await getMemberApi(setUser);
     navigate(`/waitingrooms/${entercode}`);
   } catch (error) {

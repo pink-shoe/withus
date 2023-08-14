@@ -15,7 +15,7 @@ export default function MypageAlbum() {
 
   // 비정상적인 접근 차단 & 새로고침마다 유저 정보 재확인
   useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = sessionStorage.getItem('accessToken');
 
     if (!accessToken) {
       navigate('/login');

@@ -14,7 +14,7 @@ interface IEndGameModalProps {
 
 export default function EndGameModal({ endReason, openModal }: IEndGameModalProps) {
   // const [modalStatus, setModalStatus] = useState(false);
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   const navigate = useNavigate();
 
   // // 모달창 여는 기능
@@ -53,8 +53,10 @@ export default function EndGameModal({ endReason, openModal }: IEndGameModalProp
           </div>
         ) : (
           <div className='text-[#514148] font-medium text-4xl my-16 text-center me-3 font-kdisplay'>
-              😈방장이 방을 폭파시켜😈
-              <div ><span className='text-red-500'>게임이 종료</span>되었습니다</div>
+            😈방장이 방을 폭파시켜😈
+            <div>
+              <span className='text-red-500'>게임이 종료</span>되었습니다
+            </div>
           </div>
         )}
         {/* 로그인이 되어있는 유저라면 로비, 게스트라면 로그인 페이지로 이동 */}
