@@ -38,10 +38,10 @@ public class RoomServiceImpl implements RoomService {
         Member member = memberRepository.findById(createRoomReq.getId())
             .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        if (createRoomReq.getRoomRound() != 3 || createRoomReq.getRoomRound() != 5) {
+        if (createRoomReq.getRoomRound() != 3 && createRoomReq.getRoomRound() != 5) {
             throw new CustomException(ErrorCode.ROOM_DISABLE_ROUND);
         }
-        if (!createRoomReq.getRoomType().trim().equals("coop") || !createRoomReq.getRoomType().trim().equals("team")) {
+        if (!createRoomReq.getRoomType().trim().equals("coop") && !createRoomReq.getRoomType().trim().equals("team")) {
             throw new CustomException(ErrorCode.ROOM_DISABLE_TYPE);
         }
 
