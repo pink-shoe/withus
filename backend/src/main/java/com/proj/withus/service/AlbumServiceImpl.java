@@ -42,10 +42,12 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
     @Transactional
-    public Album deleteAlbum(Long memberId) {
-        albumRepository.deleteAlbumByMemberId(memberId);
-
-        return albumRepository.findAlbumByMemberId(memberId).orElse(null);
+    public void deleteAlbum(Long memberId) {
+        try {
+            albumRepository.deleteAlbumByMemberId(memberId);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.ALBUM_NOT_DELETED);
+        }
     }
 
     public Page<Image> getImages(Long albumId, Pageable pageable) {
@@ -53,7 +55,6 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
     public Image saveImage(Long memberId, String imgUrl) {
-        Long albumId = getAlbum(memberId);
         Image image = new Image();
         image.setImgUrl(imgUrl);
         image.setAlbum(albumRepository.findAlbumByMemberId(memberId)
