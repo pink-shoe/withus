@@ -41,14 +41,18 @@ public class AlbumServiceImpl implements AlbumService {
     public Long getAlbum(Long memberId) {
         return albumRepository.findAlbumByMemberId(memberId)
             .map(Album::getId)
-            .orElse(null);
+            .orElseThrow(() -> new CustomException(ErrorCode.ALBUM_IS_NOT_EXIST));
     }
 
     @Transactional
     public void deleteAlbum(Long memberId) {
         albumRepository.findAlbumByMemberId(memberId)
                         .orElseThrow(() -> new CustomException(ErrorCode.ALBUM_NOT_FOUND));
-        albumRepository.deleteAlbumByMemberId(memberId);
+        try {
+            albumRepository.deleteAlbumByMemberId(memberId);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.ALBUM_NOT_DELETED);
+        }
     }
 
     public Page<Image> getImages(Long albumId, Pageable pageable) {
@@ -56,22 +60,22 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
     public Image saveImage(Long memberId, String imgUrl) {
-        Long albumId = getAlbum(memberId);
-        if (albumId == null) {
-            return null;
-        }
         Image image = new Image();
         image.setImgUrl(imgUrl);
-        image.setAlbum(albumRepository.findAlbumByMemberId(memberId).orElse(null));
+        image.setAlbum(albumRepository.findAlbumByMemberId(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ALBUM_IS_NOT_EXIST)));
         image.setSavedAt(LocalDateTime.now().toString());
         Long imgId = imageRepository.save(image).getId();
-        return imageRepository.findImageById(imgId).orElse(null);
+        return imageRepository.findImageById(imgId)
+                .orElseThrow(() -> new CustomException(ErrorCode.IMAGE_NOT_SAVED));
     }
 
     @Transactional
-    public Image deleteImage(Long imgId) {
-        imageRepository.deleteImageById(imgId);
-
-        return imageRepository.findImageById(imgId).orElse(null);
+    public void deleteImage(Long imgId) {
+        try {
+            imageRepository.deleteImageById(imgId);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.IMAGE_NOT_DELETED);
+        }
     }
 }

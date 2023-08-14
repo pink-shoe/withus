@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.proj.withus.exception.CustomException;
+import com.proj.withus.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -80,13 +82,7 @@ public class GameController {
 
         Room room = gameService.getRoomInfo(memberId);
 
-        if (room == null) {
-            return new ResponseEntity<>("방 정보가 없음", HttpStatus.BAD_REQUEST);
-        }
         List<Player> players = gameService.getPlayersInfo(roomId);
-        if (players == null) {
-            return new ResponseEntity<>("플레이어 정보가 없음", HttpStatus.BAD_REQUEST);
-        }
         List<PlayerInfo> playerInfos = new ArrayList<>();
         for (Player player : players) {
             PlayerInfo playerInfo = PlayerInfo.builder()
@@ -100,9 +96,6 @@ public class GameController {
         }
 
         List<Shape> shapes = gameService.getShapeInfo(room.getRound());
-        if (shapes == null) {
-            return new ResponseEntity<>("모양 데이터셋이 부족함", HttpStatus.BAD_REQUEST);
-        }
 
         return ResponseEntity.ok(GetGameInfoRes.builder()
                 .room(room)
@@ -124,7 +117,7 @@ public class GameController {
             @RequestBody GetCaptureImageReq getCaptureImageReq) {
 
         if (!gameService.sendCaptureInfo(getCaptureImageReq)) {
-            return new ResponseEntity<>("AI 서버로 요청이 전달되지 않음", HttpStatus.BAD_REQUEST);
+            throw new CustomException(ErrorCode.FLASK_SEND_FAIL);
         }
         return ResponseEntity.ok(getCaptureImageReq.getCurrentRound() + 1);
     }
@@ -137,7 +130,7 @@ public class GameController {
     @GetMapping
     public ResponseEntity<?> getGameResult() {
         if (!gameService.getGameResult()) {
-            return new ResponseEntity<>("AI 서버로부터 결과 전달 안됨", HttpStatus.BAD_REQUEST);
+            throw new CustomException(ErrorCode.FLASK_RECEIVE_FAIL);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -156,13 +149,10 @@ public class GameController {
 
         Long memberId = (Long) request.getAttribute("memberId");
         if (memberId == null) {
-            return new ResponseEntity<>("인증되지 않은 사용자", HttpStatus.FORBIDDEN);
+            throw new CustomException(ErrorCode.MEMBER_NO_PERMISSION);
         }
 
         List<GetTotalGameResultRes> getTotalGameResultRes = gameService.getTotalGameResult(roomId);
-        if (getTotalGameResultRes == null) {
-            return new ResponseEntity<>("전체 게임 결과를 가져오지 못함", HttpStatus.BAD_REQUEST);
-        }
         return ResponseEntity.ok(getTotalGameResultRes);
     }
 
@@ -215,24 +205,12 @@ public class GameController {
         Long memberId = (Long) request.getAttribute("memberId");
 
         Long albumId = albumService.getAlbum(memberId);
-        if (albumId == null) {
-            return new ResponseEntity<>("앨범이 존재하지 않음", HttpStatus.BAD_REQUEST);
-        }
 
         List<String> imgUrls = new ArrayList<>();
-        try {
-            imgUrls = awsS3Service.uploadFiles(images);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<String>("S3에 이미지 업로드 실패", HttpStatus.BAD_REQUEST);
-        }
+        imgUrls = awsS3Service.uploadFiles(images);
 
-        try {
-            for (String imgUrl : imgUrls) {
-                albumService.saveImage(memberId, imgUrl);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<String>("DB에 이미지 저장 실패", HttpStatus.BAD_REQUEST);
+        for (String imgUrl : imgUrls) {
+            albumService.saveImage(memberId, imgUrl);
         }
 
         return new ResponseEntity<String>("S3에 이미지 업로드 성공", HttpStatus.OK);
@@ -275,15 +253,11 @@ public class GameController {
 
         Long memberId = (Long) request.getAttribute("memberId");
         if (memberId == null) {
-            return new ResponseEntity<>("인증되지 않은 사용자", HttpStatus.FORBIDDEN);
+            throw new CustomException(ErrorCode.MEMBER_NO_PERMISSION);
         }
 
-        int update = gameService.chooseMvp(roomId, votedId);
+        gameService.chooseMvp(roomId, votedId);
         // 투표한 사람 리스트 필요한가?
-
-        if (update == 0) {
-            return new ResponseEntity<>("투표가 반영되지 않음", HttpStatus.BAD_REQUEST);
-        }
 
         return new ResponseEntity<String>("mvp 선정 성공", HttpStatus.OK);
     }
@@ -304,7 +278,7 @@ public class GameController {
 
         Long memberId = (Long) request.getAttribute("memberId");
         if (memberId == null) {
-            return new ResponseEntity<>("인증되지 않은 사용자", HttpStatus.FORBIDDEN);
+            throw new CustomException(ErrorCode.MEMBER_NO_PERMISSION);
         }
 
         List<Player> players = gameService.getPlayersInfo(roomId);
