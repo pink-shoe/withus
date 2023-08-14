@@ -14,7 +14,7 @@ export default function Lobby() {
   const navigate = useNavigate();
   const [makeRoomModal, setMakeRoomModal] = useState(false);
   const [enterRoomModal, setEnterRoomModal] = useState(false);
-  // inviteCode는 초대 코드를 의미함
+  const [warningModal, setWarningModal] = useState(false);
   const [enterCode, setEnterCode] = useState('');
 
   useEffect(() => {
@@ -46,6 +46,14 @@ export default function Lobby() {
     setEnterCode('');
   };
 
+  const openWarningModal = () => {
+    setWarningModal(true);
+  };
+
+  const closeWarningModal = () => {
+    setWarningModal(false);
+  };
+
   const writeCode = (event: any) => {
     setEnterCode(event.target.value);
   };
@@ -56,7 +64,7 @@ export default function Lobby() {
   const onClickParticipantBtn = async () => {
     if (enterCode === '') {
       // 공백이면 참여코드를 입력해달라는 창이 뜸
-      alert('참여코드를 입력해주세요😳');
+      setWarningModal(true);
     } else {
       const result: any = await participateRoomApi(Number(enterCode));
       if (result.status === 200) {
@@ -69,7 +77,7 @@ export default function Lobby() {
   return (
     <Fragment>
       {/* 드롭다운 true는 로비 항목이 없고, false는 로비 항목이 있음*/}
-      <Background isLobbyDropdown={true} isLobbyPage={true}>
+      <Background isLobbyDropdown={true} backgroundType='LOBBY'>
         <Board boardType={'LOBBY'}>
           <div className='flex justify-center content-center'>
             <div>
@@ -98,26 +106,41 @@ export default function Lobby() {
                 <p className='text-[#514148] font-kdisplay font-medium text-4xl mb-10 text-center'>
                   참여 코드
                 </p>
-                <div className='flex mb-7'>
-                  <span className='me-5 font-kdisplay font-medium text-2xl flex items-center'>
+                <div className='flex justify-center mb-8'>
+                  {/* <span className='me-5 font-kdisplay font-medium text-2xl flex items-center'>
                     참여코드
-                  </span>
+                  </span> */}
                   <input
-                    className='p-2 border-2 w-[19rem] border-[#8D98FF] focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 rounded-md font-medium text-2xl text-center text-[#514148] font-kdisplay'
+                    className='p-2 border-2 w-[22rem] border-[#8D98FF] focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 rounded-md font-medium text-2xl text-center text-[#514148] font-kdisplay'
                     placeholder='참여코드 입력'
-                    type='text'
+                    type='number'
                     value={enterCode}
                     onChange={writeCode}
                   />
                 </div>
-                <div className='flex justify-center'>
-                  <button
-                    onClick={onClickParticipantBtn}
-                    className='bg-[#8D98FF] hover:bg-violet-700 w-72 h-12 rounded-md font-medium font-kdisplay text-2xl text-white'
-                  >
-                    참여
-                  </button>
-                </div>
+                <Fragment>
+                  <div className='flex justify-center'>
+                    <button
+                      onClick={onClickParticipantBtn}
+                      className='bg-[#8D98FF] hover:bg-violet-700 w-[22rem] h-12 rounded-md font-medium font-kdisplay text-2xl text-white'
+                    >
+                      참여
+                    </button>
+                    <Modal openModal={warningModal} isSettingModal={false}>
+                      <div className='font-kdisplay text-4xl mt-12 pb-10 flex justify-center'>
+                        참여코드를 입력해주세요😳
+                      </div>
+                      <div className='flex justify-center'>
+                        <button
+                          onClick={closeWarningModal}
+                          className='bg-[#FA8D8D] w-1/2 h-12 font-kdisplay text-2xl text-white rounded-lg hover:bg-red-500'
+                        >
+                          확인
+                        </button>
+                      </div>
+                    </Modal>
+                  </div>
+                </Fragment>
               </Modal>
             </div>
           </div>

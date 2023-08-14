@@ -75,7 +75,7 @@ export const exitRoomApi = async (roomId: number) => {
     // 헤더에 토큰을 포함하여 요청을 보냅니다.
     // const response = await axios.delete(apiUrl + `/${roomId}`);
     const response = await axios.delete(apiUrl + `/${roomId}`);
-    console.log('성공:', response.data);
+    console.log('성공!!:', response.data);
     return response;
   } catch (error) {
     // 요청이 실패하면 에러를 출력합니다.
