@@ -9,11 +9,11 @@ import javax.persistence.*;
 
 @Entity
 @Getter @Setter
-public class GameResult {
+public class Capture {
 
     @Id @GeneratedValue
-    @Column(name = "game_result_id")
-    @JsonProperty("gameResultId")
+    @Column(name = "capture_id")
+    @JsonProperty("captureId")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -23,9 +23,5 @@ public class GameResult {
 
     private int round;
 
-    private boolean isCorrect;
-
-    private int prediction;
-
-    private int answer;
+    private String captureUrl;
 }

@@ -33,32 +33,61 @@ public class AwsS3ServiceImpl implements AwsS3Service{
 	private final AmazonS3Client amazonS3Client;
 	private final ImageUtil imageUtil;
 
-	public List<String> uploadFiles(List<MultipartFile> images) {
-		List<String> fileNameList = new ArrayList<>();
+//	public List<String> uploadFiles(List<MultipartFile> images) {
+//		List<String> fileNameList = new ArrayList<>();
+//
+//		images.forEach(file -> {
+//			String fileName = imageUtil.createFileName(file.getOriginalFilename());
+//
+//			File upload = imageUtil.saveLocal(file, fileName);
+//
+//			ObjectMetadata objectMetadata = new ObjectMetadata();
+//			objectMetadata.setContentLength(upload.length());
+//			objectMetadata.setContentType(file.getContentType());
+//
+//			try(InputStream inputStream = new FileInputStream(upload)) {
+//				amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
+//					.withCannedAcl(CannedAccessControlList.PublicRead));
+//			} catch(IOException e) {
+//				throw new CustomException(ErrorCode.S3_IMAGE_LOAD_FAIl);
+//			}
+//
+//			fileNameList.add(upload.getName());
+//
+//			if (!imageUtil.removeFile(fileName)) {
+//				throw new CustomException(ErrorCode.LOCAL_IMAGE_NOT_DELETED);
+//			}
+//		});
+//
+//		return fileNameList;
+//	}
 
-		images.forEach(file -> {
-			String fileName = imageUtil.createFileName(file.getOriginalFilename());
+	public String uploadFile(MultipartFile image) {
+//		List<String> fileNameList = new ArrayList<>();
 
-			File upload = imageUtil.saveLocal(file, fileName);
+//		images.forEach(file -> {
+			String fileName = imageUtil.createFileName(image.getOriginalFilename());
+
+			File upload = imageUtil.saveLocal(image, fileName);
 
 			ObjectMetadata objectMetadata = new ObjectMetadata();
 			objectMetadata.setContentLength(upload.length());
-			objectMetadata.setContentType(file.getContentType());
+			objectMetadata.setContentType(image.getContentType());
 
 			try(InputStream inputStream = new FileInputStream(upload)) {
 				amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
-					.withCannedAcl(CannedAccessControlList.PublicRead));
+						.withCannedAcl(CannedAccessControlList.PublicRead));
 			} catch(IOException e) {
 				throw new CustomException(ErrorCode.S3_IMAGE_LOAD_FAIl);
 			}
 
-			fileNameList.add(upload.getName());
+//			fileNameList.add(upload.getName());
 
 			if (!imageUtil.removeFile(fileName)) {
 				throw new CustomException(ErrorCode.LOCAL_IMAGE_NOT_DELETED);
 			}
-		});
+//		});
 
-		return fileNameList;
+		return upload.getName();
 	}
 }
