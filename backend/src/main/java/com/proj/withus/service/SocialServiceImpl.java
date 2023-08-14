@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 
 import com.proj.withus.exception.CustomException;
@@ -117,13 +118,11 @@ public class SocialServiceImpl implements SocialService {
         kakaoMember.setNickname(profile.getAsJsonObject().get("nickname").getAsString());
         kakaoMember.setLoginType("kakao");
         
-        memberRepository.findByEmail(kakaoMember.getEmail())
-                .ifPresent(m -> {
-            throw new CustomException(ErrorCode.DUPLICATE_MEMBER);
-        });
-        memberRepository.save(kakaoMember);
-        albumService.createAlbum(kakaoMember);
-
+        Optional<Member> member = memberRepository.findByEmail(kakaoMember.getEmail());
+        if (!member.isPresent()) {
+            memberRepository.save(kakaoMember);
+            albumService.createAlbum(kakaoMember);
+        }
         memberId = memberRepository.findByEmail(kakaoMember.getEmail()).get().getId();
 
         return memberId;
@@ -183,12 +182,11 @@ public class SocialServiceImpl implements SocialService {
         googleMember.setEmail(googleUserInfo.getEmail());
         googleMember.setLoginType(googleUserInfo.getLoginType());
 
-        memberRepository.findByEmail(googleMember.getEmail())
-                .ifPresent(member -> {
-                    throw new CustomException(ErrorCode.DUPLICATE_MEMBER);
-                });
-        memberRepository.save(googleMember);
-        albumService.createAlbum(googleMember);
+        Optional<Member> member = memberRepository.findByEmail(googleMember.getEmail());
+        if (!member.isPresent()) {
+            memberRepository.save(googleMember);
+            albumService.createAlbum(googleMember);
+        }
 
         Long memberId = memberRepository.findByEmail(googleUserInfo.getEmail()).get().getId();
 
