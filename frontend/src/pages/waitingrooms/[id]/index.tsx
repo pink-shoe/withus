@@ -13,6 +13,7 @@ import Board from '@components/common/Board';
 import { getRoomInfoApi } from 'apis/roomApi';
 import { useQuery } from '@tanstack/react-query';
 import EndGameModal from '@components/common/EndGameModal';
+// import EndGameModal from '@components/common/ExceptionModal';
 
 export default function WaitingRoom() {
   const location = useLocation();
@@ -54,42 +55,12 @@ export default function WaitingRoom() {
     }
   }, [data]);
 
-  // const [isUpdateUserName, setIsUpdateUserName] = useState<boolean>(false);
-  // const player: IPlayerAtom = {
-  //   memberId: user.memberId,
-  //   nickname: user.nickname,
-  //   ready: readyStatus,
-  // };
-  const {
-    session,
-    publisher,
-    streamList,
-    // subscribers,
-    // setSubscribers,
-    // updateUserStatus,
-    onChangeCameraStatus,
-    onChangeMicStatus,
-    sendSignal,
-  } = useOpenvidu(
-    user.memberId,
-    // user.nickname,
-    currentPath
-  );
+  const { session, publisher, streamList, onChangeCameraStatus, onChangeMicStatus, sendSignal } =
+    useOpenvidu(user.memberId, currentPath);
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
   };
-
-  // const onChangeUserName = (userName: string) => {
-  //   setUserName(userName);
-  // };
-
-  // const onChangeIsUpdateUserName = (isUpdateteteUserName: boolean) => {
-  //   setIsUpdateUserName(!isUpdateUserName);
-  // };
-  // const onChangeUpdateUserNameStatus = (updateUserNameStatus: boolean) => {
-  //   setUpdateUserNameStatus(!updateUserNameStatus);
-  // };
 
   const receiveSignal = (type: signalType) => {
     if (session && publisher) {

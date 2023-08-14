@@ -18,6 +18,7 @@ import { IGameInfo, getGameInfoApi, getGameResultApi } from 'apis/gameApi';
 import Modal from '@components/common/Modal';
 import EndGameModal from '@components/common/EndGameModal';
 import MvpModal from '@components/MvpModal/MvpModal';
+// import ExceptionModal from '@components/common/ExceptionModal';
 
 export default function GameRoom() {
   const location = useLocation();
@@ -163,6 +164,7 @@ export default function GameRoom() {
     <Background backgroundType='NOLOBBY'>
       {/* 최종 라운드가 마무리되면 MVP 모달이 나옴 */}
       {gameRoomInfo?.currentRound === roomInfo.room.roomRound ? <MvpModal></MvpModal> : null}
+
       <MvpModal></MvpModal>
       {/* 라운드가 변할 때마다 roundModal의 상태가 true가 되도록 해야 함 */}
       {/* 라운드 모달(예시 : Round 1) */}
@@ -262,11 +264,14 @@ export default function GameRoom() {
             </div>
           </Board>
           {/* 인원이 4명 미만이 되면 게임 종료 */}
-          {roomInfo.playerInfos.length < 0 ? (
-            <EndGameModal endReason='NOPLAYER' openModal={true}></EndGameModal>
+          {/* {roomInfo.playerInfos.length < 0 ? (
+            <ExceptionModal
+              message={'인원이 4명 미만으로 게임이 종료됩니다.'}
+              // openModal={true}
+            ></ExceptionModal>
           ) : (
             <></>
-          )}
+          )} */}
           <div className='p-2 mt-2 align-bottom'>
             {(data as IGameInfo) &&
               gameRoomInfo &&
