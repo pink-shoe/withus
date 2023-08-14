@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Settings } from 'react-feather';
 import SettingModalContainer from '../components/common/SettingModal/SettingModalContainer';
 import ResultModal from '../components/common/ResultModal';
-import EndGameModal from '../components/common/ExceptionModal';
+// import EndGameModal from '../components/common/ExceptionModal';
 import Spinner from '@components/common/Spinner';
 
 export default function About() {
