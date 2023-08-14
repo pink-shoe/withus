@@ -56,6 +56,11 @@ public class RoomServiceImpl implements RoomService {
             }
         }
 
+        roomRepository.findByMemberId(createRoomReq.getId())
+                .ifPresent(room -> {
+                    throw new CustomException(ErrorCode.DUPLICATE_HOST);
+                });
+
         // Room에 접근
         Room room = new Room();
         room.setMember(member);
