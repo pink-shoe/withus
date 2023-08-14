@@ -29,12 +29,12 @@ export default function GameRoom() {
   const [user, setUser] = useAtom<IUserAtom>(userAtom);
   const roomInfo = useAtomValue<IRoomAtom>(roomAtom);
 
-  // 모달 만들면서 추가한 부분
+  // 모달 만들면서 추가한 부분 겹치는거 확인점
   const currentRound = roomInfo.room.roomRound;
   const [remainingTime, setRemainingTime] = useState(3);
   const [shapeURL, setShapeURL] = useState('');
   const [isProblemModal, setIsProblemModal] = useState(false);
-  // 겹치는 부분 있는지 확인점
+  //
   const [gameRoomInfo, setGameRoomInfo] = useState<IGameInfo>();
   const [isHost, setIsHost] = useState<boolean>(false);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
@@ -202,8 +202,8 @@ export default function GameRoom() {
                 <img src={shapeURL} />
               </div>
               <p className='text-[#514148] font-kdisplay font-medium text-2xl mb-10 text-center'>
-                게임 시작{' '}
-                <span className='text-blue-500 font-medium text-4xl'>{remainingTime}초</span>초 전
+                게임 시작
+                <span className='text-blue-500 font-medium text-4xl'>{remainingTime}</span>초 전
               </p>
             </div>
           </Modal>
