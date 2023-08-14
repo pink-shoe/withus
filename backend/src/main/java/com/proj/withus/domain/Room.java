@@ -39,8 +39,8 @@ public class Room {
     private int round;
 
     @JsonProperty("currentRound")
-    @ColumnDefault("1")
-    private int currentRound;
+    @Builder.Default
+    private int currentRound = 1;
 
     @JsonProperty("roomTime")
 //    @ColumnDefault("5")
