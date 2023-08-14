@@ -12,7 +12,15 @@ interface ILogoProps {
 
 export default function Logo({ logoType }: ILogoProps) {
   const [isPlaying, setIsPlaying] = useState(true);
-  const [count, setCount] = useState(5);
+  // 게임 진행 시간은 7초
+  const [count, setCount] = useState(7);
+
+  // 게임이 끝난 후 타이머 멈추기
+  const stopTimePlaying = () => {
+    setIsPlaying(false);
+  }
+  setTimeout(stopTimePlaying, 57000)
+
   return (
     <Fragment>
       {logoType === 'GAMELOGO' ? (
@@ -24,26 +32,26 @@ export default function Logo({ logoType }: ILogoProps) {
           </span>
           <div className='ms-6 inline-block'>
             <div className='h-[70px]'>
-            <CountdownCircleTimer
+              <CountdownCircleTimer
               size={85}
               isPlaying={isPlaying}
               duration={count}
-              initialRemainingTime={5}
+              initialRemainingTime={7}
               isSmoothColorTransition={true}
               // updateInterval={1}
               // colors='#aabbcc'
               // colors="url(#test-it)"
               colors={['#FA8D8D', '#FA8D8D', '#F84C4C', '#F84C4C']}
-              colorsTime={[4, 2.66, 1.33, 0]}
+              colorsTime={[7, 5, 2, 0]}
               onUpdate={(remainingTime) => {
                 // console.log('Counter is ', count);
                 // console.log('Remaining time is ', remainingTime);
               }}
-              onComplete={() => ({ shouldRepeat: true })}
+              onComplete={() => ({ shouldRepeat: true, delay: 3 })}
               strokeWidth={20}
             >
               {({ remainingTime }) => (
-                <div className='text-black text-4xl font-semibold bg-white w-11 h-11 p-[2px] rounded-full text-center align-middle'>{remainingTime}</div>
+                <div className='text-black text-4xl font-semibold bg-white w-12 h-12 p-[5px] rounded-full text-center align-middle'>{remainingTime}</div>
               )}
             </CountdownCircleTimer>
 
