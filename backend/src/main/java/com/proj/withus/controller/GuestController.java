@@ -117,23 +117,13 @@ public class GuestController {
             @RequestParam String nickname) {
 
         Long memberId = (Long) request.getAttribute("memberId");
-        Member updatedInfo = memberService.updateMember(memberId, nickname);
-
-        if (updatedInfo == null) {
-            return new ResponseEntity<>("회원 정보 찾을 수 없음", HttpStatus.BAD_REQUEST);
-        }
-        if (!updatedInfo.getNickname().equals(nickname)) {
-            return new ResponseEntity<>("닉네임을 수정하지 못함", HttpStatus.BAD_REQUEST);
-        }
+        Optional<Member> updatedInfo = memberService.updateMember(memberId, nickname);
         return ResponseEntity.ok().body(updatedInfo);
-
     }
 
     // 트랜잭션 전파 문제 생겨서 일단 Service -> Controller에서 처리
     private Long getHostId(Long roomId) {
         Long hostId = roomRepository.findHostIdByRoomId(roomId);
-        System.out.println("hostId~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        System.out.println(hostId);
         return hostId;
     }
 }

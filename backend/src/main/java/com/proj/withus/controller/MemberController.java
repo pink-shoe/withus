@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 @Api(tags = "회원 API", description = "회원 관리 기능을 처리하는 API (MemberController)")
 @RestController
@@ -43,10 +44,6 @@ public class MemberController {
     private ResponseEntity<?> getMemberInfo(HttpServletRequest request) {
         Long memberId = (Long) request.getAttribute("memberId");
         Member memberInfo = memberService.getMemberInfo(memberId);
-
-        if (memberInfo == null) {
-            return new ResponseEntity<>("회원 정보 찾지 못함", HttpStatus.BAD_REQUEST);
-        }
         return ResponseEntity.ok().body(memberInfo);
     }
 
@@ -67,14 +64,11 @@ public class MemberController {
             @RequestParam String nickname) {
 
         Long memberId = (Long) request.getAttribute("memberId");
-        Member updatedInfo = memberService.updateMember(memberId, nickname);
+        Optional<Member> updatedInfo = memberService.updateMember(memberId, nickname);
 
-        if (updatedInfo == null) {
-            return new ResponseEntity<>("회원 정보 찾을 수 없음", HttpStatus.BAD_REQUEST);
-        }
-        if (!updatedInfo.getNickname().equals(nickname)) {
-            return new ResponseEntity<>("닉네임을 수정하지 못함", HttpStatus.BAD_REQUEST);
-        }
+//        if (!updatedInfo.getNickname().equals(nickname)) {
+//            return new ResponseEntity<>("닉네임을 수정하지 못함", HttpStatus.BAD_REQUEST);
+//        }
         return ResponseEntity.ok().body(updatedInfo);
     }
 
@@ -86,17 +80,8 @@ public class MemberController {
     @DeleteMapping
     private ResponseEntity deleteMemberInfo(HttpServletRequest request) {
         Long memberId = (Long) request.getAttribute("memberId");
-
-        Album deletedAlbum = albumService.deleteAlbum(memberId);
-        if (deletedAlbum != null) {
-            return new ResponseEntity("앨범 삭제 안됨", HttpStatus.BAD_REQUEST);
-        }
-
-        Member deleted = memberService.deleteMember(memberId);
-        if (deleted != null) {
-            return new ResponseEntity<>("회원 탈퇴 안됨", HttpStatus.BAD_REQUEST);
-        }
-
+        albumService.deleteAlbum(memberId); // 앨범이 정상 삭제 되었는지 여부까지는 체크하지 않았음
+        memberService.deleteMember(memberId);
         return new ResponseEntity(HttpStatus.OK);
     }
 }

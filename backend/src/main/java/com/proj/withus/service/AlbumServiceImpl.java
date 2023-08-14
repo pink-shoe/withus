@@ -3,6 +3,8 @@ package com.proj.withus.service;
 import com.proj.withus.domain.Album;
 import com.proj.withus.domain.Image;
 import com.proj.withus.domain.Member;
+import com.proj.withus.exception.CustomException;
+import com.proj.withus.exception.ErrorCode;
 import com.proj.withus.repository.AlbumRepository;
 import com.proj.withus.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,10 +42,10 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
     @Transactional
-    public Album deleteAlbum(Long memberId) {
+    public void deleteAlbum(Long memberId) {
+        albumRepository.findAlbumByMemberId(memberId)
+                        .orElseThrow(() -> new CustomException(ErrorCode.ALBUM_NOT_FOUND));
         albumRepository.deleteAlbumByMemberId(memberId);
-
-        return albumRepository.findAlbumByMemberId(memberId).orElse(null);
     }
 
     public Page<Image> getImages(Long albumId, Pageable pageable) {

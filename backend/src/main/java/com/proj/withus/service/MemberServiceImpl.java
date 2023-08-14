@@ -1,13 +1,15 @@
 package com.proj.withus.service;
 
 import com.proj.withus.domain.Member;
+import com.proj.withus.exception.CustomException;
+import com.proj.withus.exception.ErrorCode;
 import com.proj.withus.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,29 +20,29 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
 
     public Member getMemberInfo(Long id) {
-        return memberRepository.findById(id).orElse(null);
+        return memberRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
     public Member createMember(Member member) {
+        memberRepository.findByEmail(member.getEmail())
+                .ifPresent(m -> {
+                    throw new CustomException(ErrorCode.DUPLICATE_MEMBER);
+                });
         return memberRepository.save(member);
     }
 
-    public Member updateMember(Long id, String nickname) {
-        // nickname 유효성 검사
+    public Optional<Member> updateMember(Long id, String nickname) {
+        memberRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        memberRepository.updateNickname(id, nickname);
 
-        Member find = getMemberInfo(id);
-        if (find == null) {
-            return null;
-        }
-
-        find.setNickname(nickname);
-        return memberRepository.save(find);
+        return memberRepository.findById(id);
     }
 
-    public Member deleteMember(Long id) {
+    public void deleteMember(Long id) {
+        memberRepository.findById(id)
+                        .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         memberRepository.deleteById(id);
-        return memberRepository.findById(id).orElse(null);
     }
-
-
 }
