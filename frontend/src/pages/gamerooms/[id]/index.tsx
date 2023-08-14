@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
 import saveAs from 'file-saver';
+import './GameRoom.css';
 import { VideoStream } from '@components/VideoStream';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { signalType, useOpenvidu } from 'hooks/useOpenvidu';
@@ -14,6 +15,7 @@ import Background from '@components/common/Background';
 import Board from '@components/common/Board';
 import { useQuery } from '@tanstack/react-query';
 import { IGameInfo, getGameInfoApi, getGameResultApi } from 'apis/gameApi';
+import Modal from '@components/common/Modal';
 
 export default function GameRoom() {
   const location = useLocation();
@@ -24,6 +26,13 @@ export default function GameRoom() {
 
   const [user, setUser] = useAtom<IUserAtom>(userAtom);
   const roomInfo = useAtomValue<IRoomAtom>(roomAtom);
+
+  // 모달 만들면서 추가한 부분
+  const currentRound = roomInfo.room.roomRound;
+  const [remainingTime, setRemainingTime] = useState(3);
+  const [shapeURL, setShapeURL] = useState('');
+  const [isProblemModal, setIsProblemModal] = useState(false);
+  // 겹치는 부분 있는지 확인점
   const [gameRoomInfo, setGameRoomInfo] = useState<IGameInfo>();
   const [isHost, setIsHost] = useState<boolean>(false);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
@@ -40,12 +49,42 @@ export default function GameRoom() {
     }
   };
 
+  const closeProblemModal = () => {
+    setIsProblemModal(false);
+  };
+
+  // 라운드 변경시 모달창 띄우기
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    if (isProblemModal) {
+      setRemainingTime(3); // 모달이 열릴 때 남은 시간 초기화
+
+      // 모달 열기와 함께 타이머 시작
+      timeoutId = setTimeout(() => {
+        const updatedTime = remainingTime - 1;
+        setRemainingTime(updatedTime);
+
+        if (updatedTime > 0) {
+          // 남은 시간이 있을 경우 타이머 재실행
+          timeoutId = setTimeout(() => {
+            setRemainingTime(updatedTime - 1);
+          }, 1000);
+        } else {
+          // 시간이 다 되면 모달 닫기
+          setIsProblemModal(false);
+        }
+      }, 1000);
+    }
+  }, [currentRound]);
+
   useEffect(() => {
     if (data) {
       const gameData = data as IGameInfo;
       setGameRoomInfo(gameData);
       gameData.playerInfos && setPlayerList(gameData.playerInfos);
       gameData.hostId && setIsHost(gameData.hostId === user.memberId);
+      gameData.shapes.shapeUrl && setShapeURL(gameData.shapes.shapeUrl);
     }
     console.log(data);
   }, [data]);
@@ -108,6 +147,22 @@ export default function GameRoom() {
   return (
     <Background isLobbyPage={false}>
       <div className='flex w-full h-full'>
+        {/* 라운드마다 문제 나오는 모달창 */}
+        {isProblemModal && (
+          <Modal openModal={isProblemModal} isSettingModal={false}>
+            <div className='animate-shake'>
+              <p className='text-[#514148] font-kdisplay font-medium text-4xl mb-10 text-center'>
+                {roomInfo.room.roomRound}라운드 문제
+              </p>
+              <div className='flex mb-7 w-48 h-48 border-2 border-[#8D98FF]'>
+                <img src={shapeURL} />
+              </div>
+              <p className='text-[#514148] font-kdisplay font-medium text-4xl mb-10 text-center'>
+                게임 시작 {remainingTime}초 전
+              </p>
+            </div>
+          </Modal>
+        )}
         {/* 참가자 목록 */}
         <div className='justify-start bg-white z-40'>
           {(data as IGameInfo) && playerList && gameRoomInfo && gameRoomInfo.room && (
