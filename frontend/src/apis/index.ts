@@ -10,7 +10,7 @@ const axios = Axios.create({
 
 axios.interceptors.request.use(
   (config) => {
-    const jwtToken = localStorage.getItem('token');
+    const jwtToken = sessionStorage.getItem('token');
     console.log(jwtToken);
     config.headers['Authorization'] = jwtToken ? `Bearer ${jwtToken}` : '';
     return config;
@@ -30,7 +30,7 @@ axios.interceptors.response.use(
       console.log('aaaaaaaaaaaaaaaaaaaaa', 'aaaaaaaaaaaaaaaaa');
       // setGlobalError({ errorCode, message });
       // debouncedAlert(errorCode, message);
-      setGlobalError(error);
+      setGlobalError({ errorCode, message });
       debouncedAlert(error);
       throw Error;
     } else if (res?.data?.errorCode) {

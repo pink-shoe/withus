@@ -11,6 +11,9 @@ export async function getMemberApi(setUser: any) {
     const response = await axios.get(apiUrl);
 
     console.log('성공:', response.data);
+    console.log(`memberId: ${response.data.memberId}`);
+    console.log(`email: ${response.data.email}`);
+    console.log(`nickname: ${response.data.nickname}`);
 
     setUser((prevUser: any) => ({
       ...prevUser,
@@ -40,16 +43,19 @@ export async function updateMemberApi(nickname: string) {
 
 //회원탈퇴
 export async function deleteMemberApi(nickname: string) {
-  const navigate = useNavigate();
-  try {
-    const response = await axios.delete(apiUrl);
-    localStorage.removeItem('token');
-    navigate('/login');
-    console.log('성공:', response);
+  const config = {
+    headers: {
+      'Content-Type': 'text/plain', // 이 부분을 text/plain으로 설정
+    },
+  };
 
-    return response;
+  try {
+    const response = await axios.delete(apiUrl, config);
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('accessToken');
+    return response; // 성공한 경우 response 반환
   } catch (error) {
     console.log('실패:', (error as AxiosError).message);
-    return error;
+    throw error; // 실패한 경우 error 다시 던지기
   }
 }

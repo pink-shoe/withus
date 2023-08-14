@@ -46,18 +46,10 @@ export const participateRoomApi = async (roomCode: number) => {
   }
 };
 
-export const updateRoomApi = async (
-  roomId: number,
-  roomCode: number,
-  roomLink: string,
-  roomRound: number,
-  roomType: roomType
-) => {
+export const updateRoomApi = async (roomId: number, roomRound: number, roomType: string) => {
   try {
     // 헤더에 토큰을 포함하여 요청을 보냅니다.
     const response = await axios.put(apiUrl + `/${roomId}`, {
-      roomCode,
-      roomLink,
       roomRound,
       roomType,
     });

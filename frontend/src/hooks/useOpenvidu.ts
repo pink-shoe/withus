@@ -6,7 +6,15 @@ export interface IUser {
   userId: number;
   streamManager?: any;
 }
-export type signalType = 'CHAT' | 'READY' | 'CANCEL_READY' | 'UPDATE' | 'START' | 'ROUND';
+export type signalType =
+  | 'ENTER'
+  | 'EXIT'
+  | 'CHAT'
+  | 'READY'
+  | 'CANCEL_READY'
+  | 'UPDATE'
+  | 'START'
+  | 'ROUND';
 
 export interface IStreamList {
   streamManager: any;

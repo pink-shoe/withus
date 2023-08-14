@@ -96,7 +96,7 @@ export const ParticipantsPresenter: FC<IParticipantsPresenterProps> = ({
                   )
                 ) : (
                   <input
-                    className='w-full bg-transparent'
+                    className='w-full bg-transparent truncate'
                     type='text'
                     value={player.nickname}
                     onChange={onChangeUserName}
