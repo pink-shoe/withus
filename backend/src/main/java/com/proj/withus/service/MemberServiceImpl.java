@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
@@ -18,6 +19,7 @@ import java.util.Optional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final EntityManager entityManager;
 
     public Member getMemberInfo(Long id) {
         return memberRepository.findById(id)
@@ -35,6 +37,7 @@ public class MemberServiceImpl implements MemberService {
     public Optional<Member> updateMember(Long id, String nickname) {
         memberRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        entityManager.clear(); // 1차 캐시 지우기
         memberRepository.updateNickname(id, nickname);
 
         return memberRepository.findById(id);
