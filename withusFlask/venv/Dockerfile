@@ -1,11 +1,11 @@
-FROM python:3.8.1
-WORKDIR /usr/src/app
+FROM python:3.8
+WORKDIR /app
 
-RUN rm -rf /var/liv/apt/list * && apt-get update && apt-get install python3
+RUN rm -rf /var/liv/apt/list/* && apt-get update && apt-get -y install libgl1-mesa-glx
 COPY . .
 RUN pip install --upgrade pip
-RUN pip install -r ./requirements.txt
+RUN pip install -r requirements.txt
 
-# EXPOSE 5000
+EXPOSE 5000
 
-CMD ["gunicorn","-w","4","--bind","0.0.0.0:5000","app"]
+CMD ["gunicorn", "app:app", "-w","4","--bind","0.0.0.0:5000"]
