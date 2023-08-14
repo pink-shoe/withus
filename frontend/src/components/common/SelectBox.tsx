@@ -12,7 +12,7 @@ interface ISelectBoxProps {
 }
 
 export default function SelectBox({ selectSetting, defaultValue, options }: ISelectBoxProps) {
-  const [setting, setSetting] = useState('');
+  const [setting, setSetting] = useState(defaultValue ? defaultValue : '');
 
   // 선택한 옵션으로 세팅이 변경되는 기능
   const onChangeSetting = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -33,7 +33,12 @@ export default function SelectBox({ selectSetting, defaultValue, options }: ISel
       className='p-2 border-2 w-[16.7rem] border-[#FF8DA3] focus:outline-none focus:border-[#fa6d6d] focus:ring-1 focus:ring-[#fa6d6d] rounded-md font-medium text-2xl text-center text-[#514148] font-kdisplay'
     >
       {options.map((option: any) => (
-        <option className='font-medium text-xl' key={option.value} value={option.value} defaultValue={option.value}>
+        <option
+          className='font-medium text-xl'
+          key={option.value}
+          value={option.value}
+          defaultValue={option.value}
+        >
           {option.name}
         </option>
       ))}

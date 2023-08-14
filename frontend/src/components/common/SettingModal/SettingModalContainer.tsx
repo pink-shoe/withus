@@ -1,7 +1,7 @@
 // 방 설정과 초대하기를 포함한 모달창
 // true일 때는 초대하기가 나타나고
 // false일 때는 초대하기가 제외된 방 설정만 나타남
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import SettingModalPresenter from './SettingModalPresenter';
 import { createRoomApi, updateRoomApi } from 'apis/roomApi';
 import { IUserAtom, userAtom } from 'stores/user';
@@ -35,8 +35,8 @@ export default function SettingModalContainer({
 
   const [roomInfo, setRoomInfo] = useAtom(roomAtom);
 
-  const [mode, setMode] = useState('');
-  const [round, setRound] = useState(0);
+  const [mode, setMode] = useState(roomInfo.room.roomType!);
+  const [round, setRound] = useState(roomInfo.room.roomRound!);
 
   const navigate = useNavigate();
   // 옵션 창을 누르면 선택한 옵션이 mode와 round에 각각 넣어짐
@@ -59,6 +59,7 @@ export default function SettingModalContainer({
         navigate(`/waitingrooms/${result.data}`);
       }
     } else if (boardType === 'WAIT') {
+      console.log(round, mode, roomInfo.room);
       const result: any = await updateRoomApi(roomInfo.room.roomId, round, mode);
       if (result.status === 200) {
         sendSignal && sendSignal('Room Setting', 'UPDATE');
@@ -81,6 +82,20 @@ export default function SettingModalContainer({
     { value: 5, name: '5' },
   ];
 
+  useEffect(() => {
+    console.log(roomInfo, boardType);
+    if (boardType === 'WAIT') {
+      if (roomInfo.room) {
+        setMode(roomInfo.room.roomType);
+        setRound(roomInfo.room.roomRound);
+      }
+    }
+  }, [roomInfo]);
+
+  useEffect(() => {
+    console.log(roomInfo, boardType);
+    console.log(mode, round);
+  }, [roomInfo, mode, round]);
   return (
     <Fragment>
       {boardType === 'LOBBY' ? (
