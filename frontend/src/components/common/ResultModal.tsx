@@ -20,7 +20,7 @@ interface IResultModalProps {
   openModal: any;
 }
 
-export default function ResultModal({openModal}: IResultModalProps) {
+export default function ResultModal({ openModal }: IResultModalProps) {
   let pictures = [picture1, picture2, picture3, picture4, picture5];
   let answers = [answer1, answer2, answer3, answer4, answer5];
   let results = [100, 0, 100, 0, 100];
