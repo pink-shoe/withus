@@ -157,8 +157,9 @@ export default function GameRoom() {
               <div className='flex mb-7 w-48 h-48 border-2 border-[#8D98FF]'>
                 <img src={shapeURL} />
               </div>
-              <p className='text-[#514148] font-kdisplay font-medium text-4xl mb-10 text-center'>
-                게임 시작 {remainingTime}초 전
+              <p className='text-[#514148] font-kdisplay font-medium text-2xl mb-10 text-center'>
+                게임 시작{' '}
+                <span className='text-blue-500 font-medium text-4xl'>{remainingTime}초</span>초 전
               </p>
             </div>
           </Modal>
