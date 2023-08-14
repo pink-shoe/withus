@@ -28,11 +28,14 @@ public class AlbumServiceImpl implements AlbumService {
     private final ImageRepository imageRepository;
 
     public void createAlbum(Member member) {
-        if (!albumRepository.findAlbumByMember(member).isPresent()) {
-            Album album = new Album();
-            album.setMember(member);
-            albumRepository.save(album);
-        }
+        albumRepository.findAlbumByMember(member)
+                .ifPresent(album -> {
+                   throw new CustomException(ErrorCode.DUPLICATE_ALBUM);
+                });
+        Album album = new Album();
+        album.setMember(member);
+        albumRepository.save(album);
+
     }
 
     public Long getAlbum(Long memberId) {
@@ -43,6 +46,8 @@ public class AlbumServiceImpl implements AlbumService {
 
     @Transactional
     public void deleteAlbum(Long memberId) {
+        albumRepository.findAlbumByMemberId(memberId)
+                        .orElseThrow(() -> new CustomException(ErrorCode.ALBUM_NOT_FOUND));
         try {
             albumRepository.deleteAlbumByMemberId(memberId);
         } catch (Exception e) {

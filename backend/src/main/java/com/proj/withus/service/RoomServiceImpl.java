@@ -5,6 +5,8 @@ import com.proj.withus.domain.Player;
 import com.proj.withus.domain.Room;
 import com.proj.withus.domain.dto.CreateRoomReq;
 import com.proj.withus.domain.dto.ModifyRoomReq;
+import com.proj.withus.exception.CustomException;
+import com.proj.withus.exception.ErrorCode;
 import com.proj.withus.repository.MemberRepository;
 import com.proj.withus.repository.PlayerRepository;
 import com.proj.withus.repository.RoomRepository;
@@ -26,20 +28,38 @@ public class RoomServiceImpl implements RoomService {
     private final MemberRepository memberRepository;
     private final PlayerRepository playerRepository;
 
-    public Optional<Room> getRoomByCode(int roomCode) {
-        return roomRepository.findRoomByCode(roomCode);
+    public Room getRoomByCode(int roomCode) {
+        return roomRepository.findRoomByCode(roomCode)
+                .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND));
     }
 
     public Room createRoom(CreateRoomReq createRoomReq) {
-        System.out.println(createRoomReq.getId());
 
         Member member = memberRepository.findById(createRoomReq.getId())
-            .orElseThrow(() -> new IllegalArgumentException("invalid" + createRoomReq.getId()));
+            .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        if (createRoomReq.getRoomRound() != 3 && createRoomReq.getRoomRound() != 5) {
+            throw new CustomException(ErrorCode.ROOM_DISABLE_ROUND);
+        }
+        if (!createRoomReq.getRoomType().trim().equals("coop") && !createRoomReq.getRoomType().trim().equals("team")) {
+            throw new CustomException(ErrorCode.ROOM_DISABLE_TYPE);
+        }
+
+        createRoomReq.setRoomRound(5);
+        createRoomReq.setRoomType("coop");
+
+        int roomCode = -1;
+        while (true) {
+            roomCode = createCode();
+            if (!roomRepository.findRoomByCode(roomCode).isPresent()) {
+                break;
+            }
+        }
 
         // Room에 접근
         Room room = new Room();
         room.setMember(member);
-        room.setCode(createCode());
+        room.setCode(roomCode);
         room.setType(createRoomReq.getRoomType());
         room.setRound(createRoomReq.getRoomRound());
         Room savedRoom = roomRepository.save(room); // 영속성 전이 문제로, 일단 저장 후 Player에서 set Room
@@ -47,7 +67,8 @@ public class RoomServiceImpl implements RoomService {
         // Player에 접근
         Player player = new Player();
         player.setId(createRoomReq.getId());
-        player.setMember(memberRepository.findById(createRoomReq.getId()).orElseThrow(() -> new IllegalArgumentException("Member not found")));
+        player.setMember(memberRepository.findById(createRoomReq.getId())
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND)));
         player.setRoom(savedRoom);
         playerRepository.save(player);
 
@@ -55,11 +76,23 @@ public class RoomServiceImpl implements RoomService {
     }
 
     public Optional<Room> enterRoom(int roomCode, Long memberId) {
-        // 해당 방에 참가자 등록하기 (Player 테이블) // team type 일단 패스
+        // 해당 멤버가 들어간 방이 있는 경우
+        roomRepository.findByMemberId(memberId)
+                        .ifPresent(room -> {
+                            throw new CustomException(ErrorCode.DUPLICATE_MEMBER_IN_ROOM);
+                        });
+
+        int count = playerRepository.countPlayersByRoomCode(roomCode);
+        if (count == 4) {
+            throw new CustomException(ErrorCode.ROOM_FULL);
+        }
+
         Player player = new Player();
         player.setId(memberId);
-        player.setRoom(roomRepository.findRoomByCode(roomCode).orElseThrow(() -> new IllegalArgumentException("Room not found")));
-        player.setMember(memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Member not found")));
+        player.setRoom(roomRepository.findRoomByCode(roomCode)
+                .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND)));
+        player.setMember(memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND)));
         Player savedPlayer = playerRepository.save(player); // 반환을 지정해줘도, 주지 않아도 됨 // 예외 처리를 위해서는 받는게 좋지 않을까
 
         return roomRepository.findRoomByCode(roomCode);
@@ -81,19 +114,27 @@ public class RoomServiceImpl implements RoomService {
     해당 방에 대한 정보?
      */
     public void leaveRoom(Long roomId, Long memberId) {
+        /*
+        1. room에서 해당 멤버 빼고,
+        2. player에서 해당 멤버 빼고,
+        3. 방장이면 아예 room도 빼고
+         */
+
+        // member id 없는 경우, room id 없는 경우
+        memberRepository.findById(memberId)
+                        .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        playerRepository.findById(memberId)
+                        .orElseThrow(() -> new CustomException(ErrorCode.PLAYER_NOT_FOUND));
+
+        playerRepository.deletePlayerByMemberId(memberId);
         Long hostId = roomRepository.findHostIdByRoomId(roomId);
 
         if (hostId == memberId) {
-            System.out.println("방장임!!!!!!!!!!!!!!!!!");
             playerRepository.deleteAllByRoom_Id(roomId);
             roomRepository.deleteById(roomId);
-            return;
+            throw new CustomException(ErrorCode.HOST_LEAVE);
         }
-
-        System.out.println("방장 아님!!!!!!!!!!!!!!");
-        playerRepository.deletePlayerByMemberId(memberId);
     }
-
     /*
     update room
     set type = roomType, code = roomCode, round = roomRound // roomCode는 없음

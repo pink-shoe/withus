@@ -8,9 +8,12 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.proj.withus.exception.CustomException;
+import com.proj.withus.exception.ErrorCode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -114,13 +117,14 @@ public class SocialServiceImpl implements SocialService {
         kakaoMember.setNickname(profile.getAsJsonObject().get("nickname").getAsString());
         kakaoMember.setLoginType("kakao");
         
-        Member existingMember = memberRepository.findByEmail(kakaoMember.getEmail());
+        memberRepository.findByEmail(kakaoMember.getEmail())
+                .ifPresent(m -> {
+            throw new CustomException(ErrorCode.DUPLICATE_MEMBER);
+        });
+        memberRepository.save(kakaoMember);
+        albumService.createAlbum(kakaoMember);
 
-        if (existingMember == null) {
-            memberRepository.save(kakaoMember);
-            albumService.createAlbum(kakaoMember);
-        }
-        memberId = memberRepository.findByEmail(kakaoMember.getEmail()).getId();
+        memberId = memberRepository.findByEmail(kakaoMember.getEmail()).get().getId();
 
         return memberId;
     }
@@ -178,18 +182,15 @@ public class SocialServiceImpl implements SocialService {
         googleMember.setNickname(googleUserInfo.getNickname());
         googleMember.setEmail(googleUserInfo.getEmail());
         googleMember.setLoginType(googleUserInfo.getLoginType());
-        //        userInfo.setProfile(response.getBody().get("picture").toString());
 
-//        memberService.saveGoogle(userInfo, token);
+        memberRepository.findByEmail(googleMember.getEmail())
+                .ifPresent(member -> {
+                    throw new CustomException(ErrorCode.DUPLICATE_MEMBER);
+                });
+        memberRepository.save(googleMember);
+        albumService.createAlbum(googleMember);
 
-         Member existingMember = memberRepository.findByEmail(googleMember.getEmail());
-
-            if (existingMember == null) {
-                memberRepository.save(googleMember);
-                albumService.createAlbum(googleMember);
-            }
-
-        Long memberId = memberRepository.findByEmail(googleUserInfo.getEmail()).getId();
+        Long memberId = memberRepository.findByEmail(googleUserInfo.getEmail()).get().getId();
 
         return memberId;
     }
@@ -202,7 +203,7 @@ public class SocialServiceImpl implements SocialService {
     // email에 해당하는 memberId(pk)를 반환
     @Override
     public Long getMemberIdForJwt(String email) {
-        return memberRepository.findByEmail(email).getId();
+        return memberRepository.findByEmail(email).get().getId();
     }
 
 }
