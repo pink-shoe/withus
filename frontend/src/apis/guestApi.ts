@@ -11,7 +11,12 @@ export async function guestLoginApi(
   navigate: any
 ) {
   try {
-    const response = await axios.post(apiUrl + `/room/${entercode}`, nickname);
+    const config = {
+      headers: {
+        'Content-Type': 'text/plain', // 이 부분을 text/plain으로 설정
+      },
+    };
+    const response = await axios.post(apiUrl + `/room/${entercode}`, nickname, config);
     console.log('1차로 게스트 정보 받아오기 성공:', response.data);
     // 토큰 저장
     localStorage.setItem('token', response.data.jwtToken);

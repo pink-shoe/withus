@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
 import saveAs from 'file-saver';
+import './GameRoom.css';
 import { VideoStream } from '@components/VideoStream';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { signalType, useOpenvidu } from 'hooks/useOpenvidu';
@@ -14,6 +15,9 @@ import Background from '@components/common/Background';
 import Board from '@components/common/Board';
 import { useQuery } from '@tanstack/react-query';
 import { IGameInfo, getGameInfoApi, getGameResultApi } from 'apis/gameApi';
+import Modal from '@components/common/Modal';
+import EndGameModal from '@components/common/EndGameModal';
+import MvpModal from '@components/MvpModal/MvpModal';
 
 export default function GameRoom() {
   const location = useLocation();
@@ -24,6 +28,13 @@ export default function GameRoom() {
 
   const [user, setUser] = useAtom<IUserAtom>(userAtom);
   const roomInfo = useAtomValue<IRoomAtom>(roomAtom);
+
+  // 모달 만들면서 추가한 부분
+  const currentRound = roomInfo.room.roomRound;
+  const [remainingTime, setRemainingTime] = useState(3);
+  const [shapeURL, setShapeURL] = useState('');
+  const [isProblemModal, setIsProblemModal] = useState(false);
+  // 겹치는 부분 있는지 확인점
   const [gameRoomInfo, setGameRoomInfo] = useState<IGameInfo>();
   const [isHost, setIsHost] = useState<boolean>(false);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
@@ -40,12 +51,42 @@ export default function GameRoom() {
     }
   };
 
+  const closeProblemModal = () => {
+    setIsProblemModal(false);
+  };
+
+  // 라운드 변경시 모달창 띄우기
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    if (isProblemModal) {
+      setRemainingTime(3); // 모달이 열릴 때 남은 시간 초기화
+
+      // 모달 열기와 함께 타이머 시작
+      timeoutId = setTimeout(() => {
+        const updatedTime = remainingTime - 1;
+        setRemainingTime(updatedTime);
+
+        if (updatedTime > 0) {
+          // 남은 시간이 있을 경우 타이머 재실행
+          timeoutId = setTimeout(() => {
+            setRemainingTime(updatedTime - 1);
+          }, 1000);
+        } else {
+          // 시간이 다 되면 모달 닫기
+          setIsProblemModal(false);
+        }
+      }, 1000);
+    }
+  }, [currentRound]);
+
   useEffect(() => {
     if (data) {
       const gameData = data as IGameInfo;
       setGameRoomInfo(gameData);
       gameData.playerInfos && setPlayerList(gameData.playerInfos);
       gameData.hostId && setIsHost(gameData.hostId === user.memberId);
+      gameData.shapes.shapeUrl && setShapeURL(gameData.shapes.shapeUrl);
     }
     console.log(data);
   }, [data]);
@@ -105,9 +146,68 @@ export default function GameRoom() {
     console.log('streamlist', streamList);
   }, [streamList]);
 
+  const [ruleModal, setRuleModal] = useState(true);
+  const [roundModal, setRoundModal] = useState(true);
+
+  const closeRuleModal = () => {
+    setRuleModal(false);
+  };
+  setTimeout(closeRuleModal, 7000);
+
+  const closeRoundModal = () => {
+    setRoundModal(false);
+  };
+  setTimeout(closeRoundModal, 10000);
+
   return (
-    <Background isLobbyPage={false}>
+    <Background backgroundType='NOLOBBY'>
+      {/* 최종 라운드가 마무리되면 MVP 모달이 나옴 */}
+      {gameRoomInfo?.currentRound === roomInfo.room.roomRound ? <MvpModal></MvpModal> : null}
+      <MvpModal></MvpModal>
+      {/* 라운드가 변할 때마다 roundModal의 상태가 true가 되도록 해야 함 */}
+      {/* 라운드 모달(예시 : Round 1) */}
+      <Modal openModal={roundModal} closeModal={closeRoundModal} isSettingModal={false}>
+        <div className='flex justify-center me-2 mt-11 pb-2 font-edisplay text-6xl'>
+          <span className='text-2xl'>✨</span>
+          Round {gameRoomInfo?.currentRound}
+          <span className='text-3xl'>✨</span>
+        </div>
+      </Modal>
+      {/* 주의 사항 모달창 */}
+      {/* 게임 페이지로 이동한 후 가장 먼저 나오고 7초 후 자동적으로 사라짐 */}
+      <Modal openModal={ruleModal} closeModal={closeRuleModal} isSettingModal={false}>
+        <div className='font-kdisplay pt-2 px-2 ms-1 me-4'>
+          <div className='w-full text-center mt-3 mb-11 text-5xl animate-bounce'>📢주의사항📢</div>
+          <div className='text-3xl ms-1 me-2 mb-2'>
+            <div className='mb-5'>
+              1. 오른쪽 손목 - 가슴 - 왼쪽 손목이 하나의 선으로 이어져있다 생각해주세요!!
+            </div>
+            <div className='mb-5'>2. 머리카락이 몸을 가리면 정확도가 떨어져요ㅜㅜ</div>
+            <div className='mb-5'>3. 네트워크 환경에 따라 진행 상황이 조금씩 다를 수 있어요😥</div>
+          </div>
+          <div className='mt-3 mb-5 text-2xl text-[#FA8D8D] text-center'>
+            (게임은 7초 뒤 자동적으로 시작해요)
+          </div>
+        </div>
+      </Modal>
       <div className='flex w-full h-full'>
+        {/* 라운드마다 문제 나오는 모달창 */}
+        {isProblemModal && (
+          <Modal openModal={isProblemModal} isSettingModal={false}>
+            <div className='animate-shake'>
+              <p className='text-[#514148] font-kdisplay font-medium text-4xl mb-10 text-center'>
+                {roomInfo.room.roomRound}라운드 문제
+              </p>
+              <div className='flex mb-7 w-48 h-48 border-2 border-[#8D98FF]'>
+                <img src={shapeURL} />
+              </div>
+              <p className='text-[#514148] font-kdisplay font-medium text-2xl mb-10 text-center'>
+                게임 시작{' '}
+                <span className='text-blue-500 font-medium text-4xl'>{remainingTime}초</span>초 전
+              </p>
+            </div>
+          </Modal>
+        )}
         {/* 참가자 목록 */}
         <div className='justify-start bg-white z-40'>
           {(data as IGameInfo) && playerList && gameRoomInfo && gameRoomInfo.room && (
@@ -125,7 +225,7 @@ export default function GameRoom() {
         {/* openvidu 화면 */}
         <div className='w-full'>
           <Board boardType='GAME'>
-            <header className=' h-fit flex items-center gap-2 '></header>
+            <header className=' h-fit flex items-center'></header>
             <div className='aspect-[4/3]'>
               {publisher && (
                 <div
@@ -143,7 +243,10 @@ export default function GameRoom() {
                           return player.playerId === stream.userId;
                         });
                         return (
-                          <div className='w-full h-full' key={idx}>
+                          // 화면 크기가 커졌을 때,
+                          // 카메라 화면들이 Board 밖으로 나가는 것을 방지하기 위해
+                          // xl: h-[17rem] 추가
+                          <div className='w-full h-full xl:h-[17rem]' key={idx}>
                             {player && (
                               <VideoStream
                                 streamManager={stream.streamManager}
@@ -158,6 +261,12 @@ export default function GameRoom() {
               )}
             </div>
           </Board>
+          {/* 인원이 4명 미만이 되면 게임 종료 */}
+          {roomInfo.playerInfos.length < 0 ? (
+            <EndGameModal endReason='NOPLAYER' openModal={true}></EndGameModal>
+          ) : (
+            <></>
+          )}
           <div className='p-2 mt-2 align-bottom'>
             {(data as IGameInfo) &&
               gameRoomInfo &&
