@@ -65,30 +65,29 @@ public class AwsS3ServiceImpl implements AwsS3Service{
 	public String uploadFile(MultipartFile image) {
 //		List<String> fileNameList = new ArrayList<>();
 
-//		images.forEach(file -> {
-//			String fileName = imageUtil.createFileName(image.getOriginalFilename());
-			String fileName = image.getOriginalFilename();
+//		String fileName = imageUtil.createFileName(image.getOriginalFilename());
+		String fileName = image.getOriginalFilename();
 
-			File upload = imageUtil.saveLocal(image, fileName);
+//			File upload = imageUtil.saveLocal(image, fileName);
 
-			ObjectMetadata objectMetadata = new ObjectMetadata();
-			objectMetadata.setContentLength(upload.length());
-			objectMetadata.setContentType(image.getContentType());
+		ObjectMetadata objectMetadata = new ObjectMetadata();
+//		objectMetadata.setContentLength(upload.length());
+		objectMetadata.setContentLength(image.getSize());
+		objectMetadata.setContentType(image.getContentType());
 
-			try(InputStream inputStream = new FileInputStream(upload)) {
-				amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
-						.withCannedAcl(CannedAccessControlList.PublicRead));
-			} catch(IOException e) {
-				throw new CustomException(ErrorCode.S3_IMAGE_LOAD_FAIl);
-			}
+		try(InputStream inputStream = image.getInputStream()) {
+			amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
+					.withCannedAcl(CannedAccessControlList.PublicRead));
+		} catch(IOException e) {
+			throw new CustomException(ErrorCode.S3_IMAGE_LOAD_FAIl);
+		}
 
-//			fileNameList.add(upload.getName());
+//		fileNameList.add(upload.getName());
 
-//			if (!imageUtil.removeFile(fileName)) {
-//				throw new CustomException(ErrorCode.LOCAL_IMAGE_NOT_DELETED);
-//			}
-//		});
+//		if (!imageUtil.removeFile(fileName)) {
+//			throw new CustomException(ErrorCode.LOCAL_IMAGE_NOT_DELETED);
+//		}
 
-		return upload.getName();
+		return fileName;
 	}
 }
