@@ -18,7 +18,7 @@ interface ISettingModalContainerProps {
   isUpdateModal: boolean;
   openModal: boolean;
   closeModal: () => void;
-  sendSignal: (message: string, type: signalType) => void;
+  sendSignal?: (message: string, type: signalType) => void;
   children?: React.ReactNode;
 }
 
@@ -61,7 +61,7 @@ export default function SettingModalContainer({
     } else if (boardType === 'WAIT') {
       const result: any = await updateRoomApi(roomInfo.room.roomId, round, mode);
       if (result.status === 200) {
-        sendSignal('Room Setting', 'UPDATE');
+        sendSignal && sendSignal('Room Setting', 'UPDATE');
         closeModal();
       }
       console.log(result);
@@ -83,23 +83,40 @@ export default function SettingModalContainer({
 
   return (
     <Fragment>
-      <SettingModalPresenter
-        roomCode={roomInfo.room.roomCode}
-        roomType={roomInfo.room.roomType}
-        roomRound={roomInfo.room.roomRound}
-        boardType={boardType}
-        mode={mode}
-        round={round}
-        openModal={openModal}
-        closeModal={closeModal}
-        selectMode={selectMode}
-        MOPTIONS={MOPTIONS}
-        selectRound={selectRound}
-        ROPTIONS={ROPTIONS}
-        children={children}
-        isUpdateModal={isUpdateModal}
-        handleSaveSetting={handleSaveSetting}
-      ></SettingModalPresenter>
+      {boardType === 'LOBBY' ? (
+        <SettingModalPresenter
+          boardType={boardType}
+          mode={mode}
+          round={round}
+          openModal={openModal}
+          closeModal={closeModal}
+          selectMode={selectMode}
+          MOPTIONS={MOPTIONS}
+          selectRound={selectRound}
+          ROPTIONS={ROPTIONS}
+          children={children}
+          isUpdateModal={isUpdateModal}
+          handleSaveSetting={handleSaveSetting}
+        />
+      ) : (
+        <SettingModalPresenter
+          boardType={boardType}
+          mode={mode}
+          round={round}
+          openModal={openModal}
+          closeModal={closeModal}
+          selectMode={selectMode}
+          MOPTIONS={MOPTIONS}
+          selectRound={selectRound}
+          ROPTIONS={ROPTIONS}
+          children={children}
+          isUpdateModal={isUpdateModal}
+          handleSaveSetting={handleSaveSetting}
+          roomCode={roomInfo.room.roomCode!}
+          roomType={roomInfo.room.roomType!}
+          roomRound={roomInfo.room.roomRound!}
+        />
+      )}
     </Fragment>
   );
 }

@@ -5,9 +5,9 @@ import TextCopy from '../TextCopy';
 import GameStartButton from '../GameStartButton';
 
 interface ISettingModalPresenterProps {
-  roomCode: number;
-  roomType: string;
-  roomRound: number;
+  roomCode?: number;
+  roomType?: string;
+  roomRound?: number;
   boardType?: string;
   mode: string;
   round: number;
