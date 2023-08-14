@@ -22,7 +22,7 @@ export const getRoomInfoApi = async (roomCode: number) => {
 export const createRoomApi = async (memberId: number, roomRound: number, roomType: string) => {
   try {
     // 헤더에 토큰을 포함하여 요청을 보냅니다.
-    console.log(memberId, roomRound, roomType);
+    console.log('방 생성 완료!!', memberId, roomRound, roomType);
     const response = await axios.post(apiUrl, { memberId, roomRound, roomType });
     console.log('성공:', response.data);
     return response;
