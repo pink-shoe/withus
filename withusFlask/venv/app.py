@@ -14,6 +14,8 @@ from numpy import argmax
 
 import torch
 from torch import nn
+import torch.optim as optim
+from torch.utils.data import TensorDataset, DataLoader
 
 import pymysql
 import configparser
@@ -21,6 +23,7 @@ import base64
 
 import io
 import cv2
+import time as t
 
 from service import ImagePreProcessService
 
@@ -46,8 +49,9 @@ def receive_capture():
     if request.method == 'POST':
         data = request.json
 
-        shapeInfo = getShapeInfo(data.get('shapeId')[0])
-
+        # shapeInfo = getShapeInfo(data.get('shapeId')[0])
+        # shapeInfo = data.get('shapeId')[0]
+        shapeInfo = int(data['shapeId'])
         img_data = data['image']
         base64_encoded = img_data.split('base64,')[1]
         imgdata = base64.b64decode(base64_encoded)
@@ -65,18 +69,23 @@ def receive_capture():
         # cv2.waitKey(0)  # 키 입력을 기다림
 
         # ai model에서 처리 -> isCorrect, correctRate
-        isCorrect = True
-        correctRate = 80
 
         skeleton_image = imageService.getPreProcess(image_cv2)
-        # cv2.imshow(skeleton_image)
+        print(type(skeleton_image))
+        # cv2.imshow(cv2.cvtColor(skeleton_image, cv2.COLOR_BGR2GRAY))
         # cv2.waitKey(0)  # 키 입력을 기다림
-
-        run_model(skeleton_image)
-
+        
+        result = run_model(skeleton_image)
+        
+        isCorrect = result == shapeInfo
+        # correctRate = 80
+        shape_list = ["4star", "circle", "pacman", "square", "triangle"]
+        
+        print(shape_list[shapeInfo])
+        print(shape_list[result])
         res = jsonify({
             "isCorrect": isCorrect,
-            "correctRate": correctRate
+            "result": shape_list[result]
         })
         return res, 200
     return "Invalid request method.", 405
@@ -106,27 +115,59 @@ def getShapeInfo(shapeId):
 
     return shape
 
+class Flatten(torch.nn.Module):
+    def __init__(self):
+        super(Flatten, self).__init__()
+
+    def forward(self, x):
+        return x.view(-1, 512)
+
+
 # 추후에 AI 모델 교체할 것
 def run_model(skeleton_image):
+    model_path = './Include/model/model.pt'
+    device=torch.device("cpu")
     # model = tf.keras.models.load_model('venv/Include/model/mnist_mlp_model.h5')
+    model = torch.nn.Sequential(
+        torch.nn.Conv2d(1, 16, (5, 5)),
+        torch.nn.MaxPool2d(2),
+        torch.nn.ReLU(),
+        torch.nn.Dropout(),
+        torch.nn.Conv2d(16, 32, (5, 5)),
+        torch.nn.MaxPool2d(2),
+        torch.nn.ReLU(),
+        torch.nn.Dropout(),
+        Flatten(),
+        torch.nn.Linear(512, 256),
+        torch.nn.ReLU(),
+        torch.nn.Dropout(),
+        torch.nn.Linear(256, 5),
+    )
+    
+    model.to(device)
     # cpu로 바꾸기
-    model = torch.load('./Include/model/model.pt')
+    model.load_state_dict(torch.load(model_path, map_location=device))
+    
+    # 모델 학습을 다시 하지 않는다
+    model.eval()
+    
+    # pred = model(skeleton_image)
+    # _, pred_label = torch.max(pred.data, 1)
+    # answer = pred_label[0].item ()
 
-    # input data
-    # (x_train, y_train), (x_test, y_test) = mnist.load_data()
-    # x_test = x_test.reshape(10000, 784).astype('float32') / 255.0
-    # y_test = np_utils.to_categorical(y_test)
-    # xhat_idx = np.random.choice(x_test.shape[0], 5)
-    # xhat = x_test[xhat_idx]
-
-    prediction = model.predict(skeleton_image)
-
-    print("-----------------------")
-    print(prediction)
-    # for i in range(5):
-    #     print('True : ' + str(argmax(y_test[xhat_idx[i]])) + ', Predict : ' + str(prediction[i]))
-
-    return prediction
+    # Convert numpy array to torch.Tensor
+    # skeleton_image = cv2.cvtColor(skeleton_image, cv2.COLOR_BGR2GRAY)
+    skeleton_image_tensor = torch.tensor(cv2.cvtColor(skeleton_image, cv2.COLOR_BGR2GRAY), dtype=torch.float32)
+    skeleton_image_tensor = skeleton_image_tensor.unsqueeze(0)  # Add batch dimension
+    
+    skeleton_image_tensor = skeleton_image_tensor.to(device)
+    
+    with torch.no_grad():
+        pred = model(skeleton_image_tensor)
+        _, pred_label = torch.max(pred.data, 1)
+        answer = pred_label[0].item()
+    
+    return answer
 
 if __name__ == '__main__':
     app.debug = True

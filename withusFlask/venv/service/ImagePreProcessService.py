@@ -14,7 +14,7 @@ class ImagePreProcessService:
         self.POSE_PAIRS = [[1,2], [1,5], [2,3], [3,4], [5,6], [6,7], [1,0]]
         self.mapIdx = [[31,32], [39,40], [33,34], [35,36], [41,42], [43,44], [47,48]]
         self.black_color = [0, 0, 0]
-        self.image_size = (32, 32)
+        self.image_size = (28, 28)
         # DNN을 위해 사용할 net
         self.net = cv2.dnn.readNetFromCaffe(self.protoFile, self.weightFile)
         self.net.setPreferableBackend(cv2.dnn.DNN_TARGET_CPU)
