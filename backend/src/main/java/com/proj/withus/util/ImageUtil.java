@@ -44,7 +44,8 @@ public class ImageUtil {
 		createDir();
 		File upload;
 		try {
-			upload = new File(localStorageDir + localFile);
+//			upload = new File(localStorageDir + localFile);
+			upload = new File(localFile);
 			file.transferTo(upload);
 		} catch (IOException e) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "로컬 파일 업로드 실패했습니다.");

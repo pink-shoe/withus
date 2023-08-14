@@ -66,7 +66,8 @@ public class AwsS3ServiceImpl implements AwsS3Service{
 //		List<String> fileNameList = new ArrayList<>();
 
 //		images.forEach(file -> {
-			String fileName = imageUtil.createFileName(image.getOriginalFilename());
+//			String fileName = imageUtil.createFileName(image.getOriginalFilename());
+			String fileName = image.getOriginalFilename();
 
 			File upload = imageUtil.saveLocal(image, fileName);
 
@@ -83,9 +84,9 @@ public class AwsS3ServiceImpl implements AwsS3Service{
 
 //			fileNameList.add(upload.getName());
 
-			if (!imageUtil.removeFile(fileName)) {
-				throw new CustomException(ErrorCode.LOCAL_IMAGE_NOT_DELETED);
-			}
+//			if (!imageUtil.removeFile(fileName)) {
+//				throw new CustomException(ErrorCode.LOCAL_IMAGE_NOT_DELETED);
+//			}
 //		});
 
 		return upload.getName();
