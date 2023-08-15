@@ -3,19 +3,15 @@ import PaginationPresenter from './PaginationPresenter';
 interface IPaginationContainerProps {
   currentPage: number;
   onClickPage: (page: number) => void;
-  images: any;
+  totalPages: number;
 }
 
 export default function PaginationContainer({
   currentPage,
   onClickPage,
-  images,
+  totalPages,
 }: IPaginationContainerProps) {
   const imagesPerPage = 4; // 한 페이지에 보여줄 이미지 개수
-  const totalPages = Math.ceil(images.length / imagesPerPage);
-
-  console.log(`length: ${images.length}`);
-  console.log(`totalPages: ${totalPages}`);
 
   const generatePageNumbers = () => {
     const pageNumbers = [];

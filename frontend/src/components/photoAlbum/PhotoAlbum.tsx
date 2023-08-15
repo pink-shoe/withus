@@ -1,55 +1,56 @@
 import { useState, useEffect } from 'react';
 import AlbumFrame from './AlbumFrame';
 import PaginationContainer from '@components/Pagination/PaginationContainer';
-// import { getAlbumListApi } from 'apis/albumApi';
+import { getAlbumListApi, deleteAlbumApi } from 'apis/albumApi';
 
 interface IPhotoAlbumProps {
   photoFrameNumber: number;
   backgroundNumber: number;
 }
 
+interface Image {
+  imgId: string;
+  imgUrl: string;
+  savedAt: string;
+}
+
 export default function PhotoAlbum({ photoFrameNumber, backgroundNumber }: IPhotoAlbumProps) {
-  const images = [
-    { imgId: 1, imgUrl: '/src/assets/albumbackground1.jpg', savedAt: 'test1' },
-    { imgId: 2, imgUrl: '/src/assets/albumbackground2.jpg', savedAt: 'test2' },
-    { imgId: 3, imgUrl: '/src/assets/albumbackground3.jpg', savedAt: 'test3' },
-    { imgId: 3, imgUrl: '/src/assets/albumbackground4.jpg', savedAt: 'test4' },
-  ];
   const BackGroundURLs = [
-    '/src/assets/albumbackground1.jpg',
-    '/src/assets/albumbackground1.jpg',
-    '/src/assets/albumbackground2.jpg',
-    '/src/assets/albumbackground3.jpg',
-    '/src/assets/albumbackground4.jpg',
-    '/src/assets/albumbackground4.jpg',
+    '/src/assets/배경1.jpg',
+    '/src/assets/배경2.jpg',
+    '/src/assets/배경3.jpeg',
+    '/src/assets/배경4.jpg',
+    '/src/assets/배경5.jpg',
+    '/src/assets/배경7.jpeg',
   ];
   const [BackGroundURL, setBackGroundURL] = useState(BackGroundURLs[backgroundNumber]);
-  const imagesPerPage = 4; // 한 페이지에 보여줄 이미지 개수
+  const size = 4; // 한 페이지에 보여줄 이미지 개수
   const [currentPage, setCurrentPage] = useState(1);
+  const [displayedImages, setDisplayedImages] = useState<Array<Image>>([]);
+  const [totalPages, setTotalPages] = useState(0); // 총 페이지 수
+
+  async function AlbumList(page: number, size: number) {
+    try {
+      const response = await getAlbumListApi(page, size);
+      setDisplayedImages(response.content);
+      setTotalPages(response.totalElements);
+    } catch (error) {
+      console.error('앨범 목록 조회 실패:');
+    }
+  }
+
+  const onclickX = async (img_id: string) => {
+    await deleteAlbumApi(img_id);
+    AlbumList(currentPage, size);
+  };
+
+  useEffect(() => {
+    AlbumList(currentPage, size);
+  }, [currentPage]);
 
   useEffect(() => {
     setBackGroundURL(BackGroundURLs[backgroundNumber]);
   }, [backgroundNumber]);
-
-  // useEffect(() => {
-  //   const fetchImages = async () => {
-  //     try {
-  //       const response = await getAlbumListApi();
-  //       setImages(response); // 가져온 이미지 객체(아이디, 주소, 저장날짜)를 images 배열에 저장
-  //     } catch (error) {
-  //       console.error('이미지 저장 실패');
-  //     }
-  //   };
-  //   fetchImages();
-  // }, []);
-
-  // 현재 페이지에 보여줄 이미지들을 계산하는 함수
-  const getDisplayedImages = () => {
-    const startIndex = (currentPage - 1) * imagesPerPage;
-    const endIndex = startIndex + imagesPerPage;
-    const displayedImages = images.slice(startIndex, endIndex).map((image) => image.imgUrl);
-    return displayedImages;
-  };
 
   const onClickPage = (page: number) => {
     setCurrentPage(page);
@@ -59,12 +60,17 @@ export default function PhotoAlbum({ photoFrameNumber, backgroundNumber }: IPhot
   return (
     <div className='w-full h-full'>
       <AlbumFrame
-        DisplayedImages={getDisplayedImages()}
         BackgroundURL={BackGroundURL}
         photoFrameNumber={photoFrameNumber}
+        DisplayedImages={displayedImages}
+        onClickX={onclickX}
       />
       <div className='relative z-50'>
-        <PaginationContainer currentPage={currentPage} onClickPage={onClickPage} images={images} />
+        <PaginationContainer
+          currentPage={currentPage}
+          onClickPage={onClickPage}
+          totalPages={totalPages}
+        />
       </div>
     </div>
   );
