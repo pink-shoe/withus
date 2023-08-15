@@ -46,8 +46,6 @@ export default function MvpModal({playerList}: IMvpModalProps) {
   //   console.log('전달 완료', roomInfo.room.roomId, );
   // };
 
-  // 7초가 지난 후에도 MVP를 뽑지 않으면 voteId를 5로 지정
-  // voteId의 개수가 4명이 되면 로딩창을 띄움  100
   async function electToLoad(a: string): Promise<void> {
     setContentType(a);
     console.log('로딩중');
