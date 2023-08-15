@@ -21,7 +21,7 @@ export default function PhotoAlbum({ photoFrameNumber, backgroundNumber }: IPhot
     '/src/assets/배경3.jpeg',
     '/src/assets/배경4.jpg',
     '/src/assets/배경5.jpg',
-    '/src/assets/배경7.jpeg',
+    '',
   ];
   const [BackGroundURL, setBackGroundURL] = useState(BackGroundURLs[backgroundNumber]);
   const size = 4; // 한 페이지에 보여줄 이미지 개수
