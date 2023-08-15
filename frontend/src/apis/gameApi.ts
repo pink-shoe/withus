@@ -4,12 +4,6 @@ import { IPlayerInfo, IRoom } from 'stores/room';
 
 const apiUrl = `/games`;
 
-export interface IMvpResult {
-  roomId: IRoom['roomId'];
-  playerId: IPlayerInfo['playerId']
-  vote: number;
-}
-
 export interface ITotalGameResult {
   gameResult: IGameResult;
   shape: IShape;
@@ -87,10 +81,10 @@ export const sendCaptureImageApi = async (
   }
 };
 
-export const electMvpApi = async (roomId: number, playerId: number, vote: number) => {
+export const electMvpApi = async (roomId: number, playerId: number, votedId: number) => {
   try {
-    const response = await axios.post(apiUrl + `/vote/${roomId}`, { playerId, vote });
-    console.log('MVP 선택 완료!!', playerId, vote);
+    const response = await axios.post(apiUrl + `/vote/${roomId}`, { playerId, votedId });
+    console.log('MVP 선택 완료!!', playerId, votedId);
     return response;
   } catch (error) {
     console.log('MVP 선택 실패 :', (error as AxiosError).message);
@@ -98,6 +92,17 @@ export const electMvpApi = async (roomId: number, playerId: number, vote: number
   }
 };
 
-// export const getMvpResultApi = async (vote: number) => {
-  
-// }
+export const getMvpResultApi = async (roomId: number) => {
+  try {
+    const response = await axios.get<IPlayerInfo>(apiUrl + `/vote/${roomId}`);
+    if (response.status === 201) {
+      console.log('MVP 출력 성공:', response.data);
+      return response.data;
+    } else {
+      console.error(response)
+    }
+  } catch (error) {
+    console.log('출력 실패:', (error as AxiosError).message);
+    return error;
+  }
+}

@@ -41,7 +41,7 @@ export default function Layout() {
   }
 
   return (
-    <Background backgroundType='LOGIN'>
+    <Background backgroundType='LOGIN' isLobbyDropdown={false}>
       <Board boardType={'LOGIN'}>
         <div className='flex flex-col justify-center'>
           <div className='grid grid-cols-1 2lg:grid-cols-2 gap-12 items-center'>
