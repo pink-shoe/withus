@@ -58,9 +58,6 @@ export default function Board({ boardType, children }: IBoardProps) {
           <div className='flex justify-center'>
             <div className='drop-shadow-xl rounded-md bg-yellow-100 h-[2.5rem] w-11/12'></div>
           </div>
-          <div className='w-full flex justify-center'>
-            <Logo logoType='ALBUMLOGO' />
-          </div>
           <div className='flex justify-center align-middle'>
             <div className='flex justify-center place-items-center h-[600px] w-10/12 bg-white'>
               {children}

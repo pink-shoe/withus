@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import UserHeader from './UserHeader';
 
-export type backgroundType = 'LOBBY' | 'NOLOBBY' | 'LOGIN';
+export type backgroundType = 'LOBBY' | 'NOLOBBY' | 'LOGIN' | 'ALBUM';
 
 interface IBackgroundProps {
   backgroundType: backgroundType;
@@ -34,6 +34,15 @@ export default function Background({
         <div className='min-w-[865px] white'>
           <Fragment>
             <div className='flex justify-center place-items-center h-[740px] tall:h-screen bg-[#F9C7C8]'>
+              {children}
+            </div>
+          </Fragment>
+        </div>
+      ) : backgroundType === 'ALBUM' ? (
+        // 드롭다운이 필요 없는 경우
+        <div className='min-w-[865px] white'>
+          <Fragment>
+            <div className='flex justify-center place-items-center h-[740px] tall:h-screen bg-white'>
               {children}
             </div>
           </Fragment>
