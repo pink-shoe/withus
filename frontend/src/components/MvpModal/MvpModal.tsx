@@ -113,7 +113,7 @@ export default function MvpModal({playerList}: IMvpModalProps) {
     return arr;
   }
 
-  function showMvp() {
+  function showMvp(roomInfo:any) {
     let arr = [0]
     const max = 0;
     for (let i = 0; i < 2; i++) {
@@ -152,7 +152,7 @@ export default function MvpModal({playerList}: IMvpModalProps) {
         ) : (
           <Fragment>
             <div className='text-5xl flex justify-center my-10 text-[#FA8D8D]'>오늘의 MVP</div>
-            <div className='text-4xl flex justify-center pt-5 animate-bounce'>🎊{votedId}🎊</div>
+                <div className='text-4xl flex justify-center pt-5 animate-bounce'>🎊{showMvp(roomInfo)}🎊</div>
             <div className='flex justify-end mt-14 text-xl'>
               <Fragment>
                 <button onClick={openGameResultModal}>게임 결과 확인 ➤</button>
