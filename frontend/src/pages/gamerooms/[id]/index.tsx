@@ -14,10 +14,12 @@ import { IPlayerInfo, IRoomAtom, roomAtom } from 'stores/room';
 import Background from '@components/common/Background';
 import Board from '@components/common/Board';
 import { useQuery } from '@tanstack/react-query';
-import { IGameInfo, getGameInfoApi, getGameResultApi } from 'apis/gameApi';
+import { IGameInfo, getGameInfoApi, getGameResultApi, sendCaptureImageApi } from 'apis/gameApi';
 import Modal from '@components/common/Modal';
-import EndGameModal from '@components/common/EndGameModal';
+// import EndGameModal from '@components/common/EndGameModal';
 import MvpModal from '@components/MvpModal/MvpModal';
+import { sendRoundInfoApi } from 'apis/ai';
+// import ExceptionModal from '@components/common/ExceptionModal';
 
 export default function GameRoom() {
   const location = useLocation();
@@ -32,7 +34,7 @@ export default function GameRoom() {
   // 모달 만들면서 추가한 부분 겹치는거 확인점
   const currentRound = roomInfo.room.roomRound;
   const [remainingTime, setRemainingTime] = useState(3);
-  const [shapeURL, setShapeURL] = useState('');
+  // const [shapeURL, setShapeURL] = useState('');
   const [isProblemModal, setIsProblemModal] = useState(false);
   //
   const [gameRoomInfo, setGameRoomInfo] = useState<IGameInfo>();
@@ -86,7 +88,7 @@ export default function GameRoom() {
       setGameRoomInfo(gameData);
       gameData.playerInfos && setPlayerList(gameData.playerInfos);
       gameData.hostId && setIsHost(gameData.hostId === user.memberId);
-      gameData.shapes.shapeUrl && setShapeURL(gameData.shapes.shapeUrl);
+      // gameData.shapes.shapeUrl && setShapeURL(gameData.shapes.shapeUrl);
     }
     console.log(data);
   }, [data]);
@@ -111,24 +113,84 @@ export default function GameRoom() {
       const canvas = await html2canvas(div, { scale: 1 });
       console.log(canvas.toDataURL());
       const gameroom = data as IGameInfo;
+
+      // formData.append('captureImage',)
+
       // flask 쪽 rest api 연결 완료 시 해당 주석 제거 후 api 연결.
-      // const result = await sendCaptureImageApi(
-      //   canvas.toDataURL(),
-      //   gameroom.currentRound,
-      //   gameroom.room.roomId,
-      //   gameroom.shapes.shapeId
-      // );
-      // console.log(result);
-      canvas.toBlob((blob) => {
-        if (blob !== null) {
-          saveAs(blob, 'result.png');
-        }
+      const result = await sendRoundInfoApi(
+        gameroom.room.roomId,
+        canvas.toDataURL(),
+        gameroom.currentRound,
+        gameroom.shapes.shapeId
+      );
+      console.log(result);
+      const byteString = atob(canvas.toDataURL().split(',')[1]);
+      // Blob를 구성하기 위한 준비, 이 내용은 저도 잘 이해가 안가서 기술하지 않았습니다.
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      const blob = new Blob([ia], {
+        type: 'image/png',
       });
+      const padded = String(gameroom.room.roomId);
+      const file = new File([blob], `${padded.padStart(6, '0')}${currentRound}.png`);
+
+      const formData = new FormData();
+      formData.append('captureImage', file);
+      console.log(formData);
+      const imageResult = await sendCaptureImageApi(
+        gameroom.room.roomId,
+        gameroom.currentRound,
+        formData
+        // gameroom.shapes.shapeId
+      );
+      console.log(imageResult);
+      // fetch(canvas.toDataURL())
+      //   .then((res) => res.blob())
+      //   .then(async (blob) => {
+      //     formData.append('captureImage', blob);
+      //     const imageResult = await sendCaptureImageApi(
+      //       gameroom.room.roomId,
+      //       gameroom.currentRound,
+      //       formData
+      //       // gameroom.shapes.shapeId
+      //     );
+      //     console.log(imageResult);
+      //   });
+      // formData.append('captureImage', canvas.toDataURL());
+
+      // canvas.toBlob(async (blob) => {
+      //   if (blob !== null) {
+      //     console.log(blob);
+      //     const formData = new FormData();
+      //     formData.append('captureImage', blob);
+      //     console.log(formData);
+      //     const result = await sendCaptureImageApi(
+      //       gameroom.room.roomId,
+      //       gameroom.currentRound,
+      //       formData
+      //       // gameroom.shapes.shapeId
+      //     );
+      //     console.log(result);
+      //   }
+      // });
     } catch (error) {
       console.error('Error converting div to image:', error);
     }
   };
+  function DataURIToBlob(dataURI: string) {
+    const splitDataURI = dataURI.split(',');
+    const byteString =
+      splitDataURI[0].indexOf('base64') >= 0 ? atob(splitDataURI[1]) : decodeURI(splitDataURI[1]);
+    const mimeString = splitDataURI[0].split(':')[1].split(';')[0];
 
+    const ia = new Uint8Array(byteString.length);
+    for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
+
+    return new Blob([ia], { type: mimeString });
+  }
   const receiveSignal = (type: signalType) => {
     if (session && publisher) {
       publisher.stream.session.on('signal:' + type, (e: any) => {
@@ -162,8 +224,9 @@ export default function GameRoom() {
   return (
     <Background backgroundType='NOLOBBY'>
       {/* 최종 라운드가 마무리되면 MVP 모달이 나옴 */}
-      {gameRoomInfo?.currentRound === roomInfo.room.roomRound ? <MvpModal></MvpModal> : null}
-      <MvpModal></MvpModal>
+      {/* {gameRoomInfo?.currentRound === roomInfo.room.roomRound ? <MvpModal></MvpModal> : null} */}
+
+      {/* <MvpModal></MvpModal> */}
       {/* 라운드가 변할 때마다 roundModal의 상태가 true가 되도록 해야 함 */}
       {/* 라운드 모달(예시 : Round 1) */}
       <Modal openModal={roundModal} closeModal={closeRoundModal} isSettingModal={false}>
@@ -199,7 +262,7 @@ export default function GameRoom() {
                 {roomInfo.room.roomRound}라운드 문제
               </p>
               <div className='flex mb-7 w-48 h-48 border-2 border-[#8D98FF]'>
-                <img src={shapeURL} />
+                {/* <img src={shapeURL} /> */}
               </div>
               <p className='text-[#514148] font-kdisplay font-medium text-2xl mb-10 text-center'>
                 게임 시작
@@ -262,11 +325,14 @@ export default function GameRoom() {
             </div>
           </Board>
           {/* 인원이 4명 미만이 되면 게임 종료 */}
-          {roomInfo.playerInfos.length < 0 ? (
-            <EndGameModal endReason='NOPLAYER' openModal={true}></EndGameModal>
+          {/* {roomInfo.playerInfos.length < 0 ? (
+            <ExceptionModal
+              message={'인원이 4명 미만으로 게임이 종료됩니다.'}
+              // openModal={true}
+            ></ExceptionModal>
           ) : (
             <></>
-          )}
+          )} */}
           <div className='p-2 mt-2 align-bottom'>
             {(data as IGameInfo) &&
               gameRoomInfo &&

@@ -16,7 +16,7 @@ export default function TextCopy({ text }: any) {
       setInformModal(true);
       console.log('복사 성공');
     } catch (error) {
-      console.log('복사 실패😥')
+      console.log('복사 실패😥');
     }
   };
 

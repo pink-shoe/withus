@@ -35,8 +35,8 @@ export default function Modal({ openModal, closeModal, isSettingModal, children 
                   <X onClick={closeModal} className='cursor-pointer hover:text-red-500' />
                 </div>
               ) : null}
-              <div className='ms-5 my-3 '>{children}</div>
-              <div className='flex justify-center mt-10'></div>
+              <div className='mx-5 my-3 '>{children}</div>
+              <div className='mt-10' />
             </div>
           </div>
         </Fragment>
