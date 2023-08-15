@@ -112,7 +112,27 @@ export default function MvpModal({playerList}: IMvpModalProps) {
     }
     return arr;
   }
-  // playerId와 voteId 보내는 API 작성
+
+  function showMvp() {
+    let arr = [0]
+    const max = 0;
+    for (let i = 0; i < 2; i++) {
+      if (roomInfo.playerInfos[i].vote >= arr[-1]) {
+        arr.push(roomInfo.playerInfos[i].vote)
+      }
+    }
+    const mvpArr = []
+    for (let i = 0; i < 2; i++) {
+      if (arr[-1] === roomInfo.playerInfos[i].vote) {
+        mvpArr.push(
+          <div key={i}>
+            {roomInfo.playerInfos[i].nickname}
+          </div>
+        )
+      }
+    }
+    return mvpArr
+  }
   return (
     <div className='font-kdisplay'>
       <Modal openModal={mvpModal} closeModal={mvpModal} isSettingModal={false}>
