@@ -16,7 +16,11 @@ import answer5 from '@src/assets/answer5.jpg';
 import { useNavigate } from 'react-router-dom';
 import { X, Circle } from 'react-feather';
 
-export default function ResultModal() {
+interface IResultModalProps {
+  openModal: any;
+}
+
+export default function ResultModal({openModal}: IResultModalProps) {
   let pictures = [picture1, picture2, picture3, picture4, picture5];
   let answers = [answer1, answer2, answer3, answer4, answer5];
   let results = [100, 0, 100, 0, 100];
@@ -26,13 +30,13 @@ export default function ResultModal() {
   const navigate = useNavigate();
 
   // 모달창 여는 기능
-  const openModal = () => {
-    setModalStatus(true);
-  };
-  // 모달창 닫는 기능
-  const closeModal = () => {
-    setModalStatus(false);
-  };
+  // const openModal = () => {
+  //   setModalStatus(true);
+  // };
+  // // 모달창 닫는 기능
+  // const closeModal = () => {
+  //   setModalStatus(false);
+  // };
 
   const backToWaiting = () => {
     navigate('/waitingrooms/:id');
@@ -128,25 +132,11 @@ export default function ResultModal() {
 
   return (
     <Fragment>
-      <button
-        onClick={openModal}
-        className='bg-[#FF8DA3] hover:bg-red-500 w-[22rem] h-24 rounded-lg border-4 border-white font-medium font-kdisplay text-3xl text-white'
-      >
-        게임 결과 확인
-      </button>
-      <Modal openModal={modalStatus} closeModal={closeModal} isSettingModal={false}>
-        <div className='text-center text-[#514148] font-medium font-kdisplay text-4xl mt-5 mb-10'>
+      <Modal openModal={openModal} isSettingModal={false}>
+        <div className='text-center text-[#514148] font-medium font-kdisplay text-5xl mt-5 mb-10'>
           🏆게임결과🏆
         </div>
         <div className='overflow-y-auto h-96'>{repeatResult(pictures, answers, results)}</div>
-        {/* <div className='flex justify-center mt-8'>
-          <button onClick={backToWaiting} className='bg-[#8D98FF] hover:bg-violet-700 rounded-lg w-1/3 h-11 me-2 p-1 font-kdisplay text-2xl text-white'>
-            대기실 이동
-          </button>
-          <button onClick={onClickFinish} className='bg-[#FF8D8D] hover:bg-red-500 rounded-lg w-1/4 h-11 ms-2 p-1 font-kdisplay text-2xl text-white'>
-            종료
-          </button>
-        </div> */}
         <div>{resultButton()}</div>
       </Modal>
     </Fragment>

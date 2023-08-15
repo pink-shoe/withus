@@ -1,5 +1,5 @@
-import GoogleSocialLogin from '@components/login/GoogleSocialLogin';
+import GoogleRedirection from '@components/login/GoogleRedirection';
 
 export default function Index() {
-  return <GoogleSocialLogin />;
+  return <GoogleRedirection />;
 }

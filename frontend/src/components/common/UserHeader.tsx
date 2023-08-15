@@ -3,6 +3,7 @@
 
 import { Link, useNavigate } from 'react-router-dom';
 import UserDropdown from './UserDropdown';
+import { userLogoutApi } from 'apis/userLogout';
 
 interface IUserHeaderProps {
   isLobbyDropdown?: boolean;
@@ -12,11 +13,7 @@ export default function UserHeader({ isLobbyDropdown }: IUserHeaderProps) {
   const navigate = useNavigate();
 
   const onClickLogout = (): void => {
-    // Remove token from localStorage
-    localStorage.removeItem('token');
-
-    // Navigate to '/login' page
-    navigate('/login');
+    userLogoutApi(navigate);
   };
 
   return (

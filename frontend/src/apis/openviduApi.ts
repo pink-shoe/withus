@@ -3,7 +3,7 @@ import { OPENVIDU_SERVER_SECRET, OPENVIDU_SERVER_URL } from './url';
 
 export async function getToken(roomId: string) {
   const sessionId = await createSession(roomId);
-  return await createToken(roomId);
+  return await createToken(sessionId);
 }
 
 function createSession(roomId: string): Promise<any> {
@@ -21,7 +21,7 @@ function createSession(roomId: string): Promise<any> {
       })
       .then((response) => {
         console.log('CREATE SESSION', response);
-        resolve(response.data);
+        resolve(response.data.sessionId);
       })
       .catch((response) => {
         var error = Object.assign({}, response);

@@ -1,29 +1,18 @@
-import { useGoogleLogin } from '@react-oauth/google';
 import googleSymbol from '../../assets/googleSymbol.png';
-import axios from 'axios';
 
 export default function GoogleSocialLogin() {
-  const googleSocialLogin = useGoogleLogin({
-    scope: 'email profile',
-    onSuccess: async ({ code }) => {
-      console.log(code);
-      const googlebackURL = `${import.meta.env.VITE_API}/api/oauth/google`;
+  const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLECLIENT_ID;
+  const GOOGLE_REDIRECT_URL = import.meta.env.VITE_GOOGLE_URL;
 
-      axios.get(googlebackURL, { params: { code } }).then((data: any) => {
-        console.log(`구글 로그인 토큰 받기 성공 ${data}`);
-        localStorage.setItem('token', data);
-      });
-    },
-    onError: (errorResponse) => {
-      console.error(errorResponse);
-    },
-    flow: 'auth-code',
-  });
+  const link = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URL}&response_type=code&scope=openid email profile`;
 
+  const loginHandler = () => {
+    window.location.href = link;
+  };
   return (
     <button
-      className='bg-white hover:bg-[#4285F4] text-[rgba(0,0,0,0.85)] text-30 font-bold px-4 w-64 h-8 mx-auto rounded-[12px] border-black border hover:text-white flex items-center'
-      onClick={googleSocialLogin}
+      className='bg-white text-[rgba(0,0,0,0.85)] text-30 font-bold px-4 w-64 h-8 mx-auto rounded-[12px] border-2 border-black hover:text-[#4285F4] flex items-center'
+      onClick={loginHandler}
     >
       <img src={googleSymbol} className='h-4 w-auto inline-block' />
       <span className='mx-auto'>구글 로그인</span>
