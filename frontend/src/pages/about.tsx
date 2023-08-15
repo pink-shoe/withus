@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { Settings } from 'react-feather';
 import SettingModalContainer from '../components/common/SettingModal/SettingModalContainer';
 import ResultModal from '../components/common/ResultModal';
-// import EndGameModal from '../components/common/ExceptionModal';
 import Spinner from '@components/common/Spinner';
 
 export default function About() {
@@ -30,7 +29,6 @@ export default function About() {
       <div>==============구분선=================</div>
       {/* <ResultModal></ResultModal> */}
       <div>==============구분선=================</div>
-      {/* <EndGameModal endReason='NOHOST' openModal={true}></EndGameModal> */}
       <div>==============구분선=================</div>
       <div>==============구분선=================</div>
       {/* <FontAwesomeIcon icon={faCircleUser} size="2xl" style={{color: "#ffffff"}} className='cursor-pointer me-1 text-[42px] z-50' /> */}
