@@ -33,7 +33,6 @@ export default function GameRoom() {
   // 모달 만들면서 추가한 부분 겹치는거 확인점
   const currentRound = roomInfo.room.roomRound;
   const [remainingTime, setRemainingTime] = useState(3);
-  // const [shapeURL, setShapeURL] = useState('');
   const [isProblemModal, setIsProblemModal] = useState(false);
   //
   const [gameRoomInfo, setGameRoomInfo] = useState<IGameInfo>();
@@ -53,15 +52,11 @@ export default function GameRoom() {
     }
   };
 
-  const closeProblemModal = () => {
-    setIsProblemModal(false);
-  };
-
   // 라운드 변경시 모달창 띄우기
   useEffect(() => {
-    if (currentRound !== -1) {
+    if (currentRound > 0) {
       async function fetchData() {
-        if (currentRound === 0) {
+        if (currentRound === 1) {
           await new Promise((resolve) => setTimeout(resolve, 7000));
         }
 
@@ -267,10 +262,14 @@ export default function GameRoom() {
           <Modal openModal={isProblemModal} isSettingModal={false}>
             <div className='animate-shake'>
               <p className='text-[#514148] font-kdisplay font-medium text-4xl mb-10 text-center'>
-                {roomInfo.room.roomRound}라운드 문제
+                {gameRoomInfo?.room.roomRound} 라운드 문제
               </p>
               <div className='flex mb-7 w-48 h-48 border-2 border-[#8D98FF]'>
+<<<<<<< HEAD
+                <img src={gameRoomInfo?.shapes.shapeUrl} />
+=======
                 <img src={shapeURL} />
+>>>>>>> 55f382e52e421066e5e9485ea88a12e58f2e5f2f
               </div>
               <p className='text-[#514148] font-kdisplay font-medium text-2xl mb-10 text-center'>
                 게임 시작
