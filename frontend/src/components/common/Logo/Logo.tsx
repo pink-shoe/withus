@@ -18,8 +18,8 @@ export default function Logo({ logoType }: ILogoProps) {
   // 게임이 끝난 후 타이머 멈추기
   const stopTimePlaying = () => {
     setIsPlaying(false);
-  };
-  setTimeout(stopTimePlaying, 57000);
+  }
+  setTimeout(stopTimePlaying, 57000)
 
   return (
     <Fragment>
@@ -33,29 +33,28 @@ export default function Logo({ logoType }: ILogoProps) {
           <div className='ms-6 inline-block'>
             <div className='h-[70px]'>
               <CountdownCircleTimer
-                size={85}
-                isPlaying={isPlaying}
-                duration={count}
-                initialRemainingTime={7}
-                isSmoothColorTransition={true}
-                // updateInterval={1}
-                // colors='#aabbcc'
-                // colors="url(#test-it)"
-                colors={['#FA8D8D', '#FA8D8D', '#F84C4C', '#F84C4C']}
-                colorsTime={[7, 5, 2, 0]}
-                onUpdate={(remainingTime) => {
-                  // console.log('Counter is ', count);
-                  // console.log('Remaining time is ', remainingTime);
-                }}
-                onComplete={() => ({ shouldRepeat: true, delay: 3 })}
-                strokeWidth={20}
-              >
-                {({ remainingTime }) => (
-                  <div className='text-black text-4xl font-semibold bg-white w-12 h-12 p-[5px] rounded-full text-center align-middle'>
-                    {remainingTime}
-                  </div>
-                )}
-              </CountdownCircleTimer>
+              size={85}
+              isPlaying={isPlaying}
+              duration={count}
+              initialRemainingTime={7}
+              isSmoothColorTransition={true}
+              // updateInterval={1}
+              // colors='#aabbcc'
+              // colors="url(#test-it)"
+              colors={['#FA8D8D', '#FA8D8D', '#F84C4C', '#F84C4C']}
+              colorsTime={[7, 5, 2, 0]}
+              onUpdate={(remainingTime) => {
+                // console.log('Counter is ', count);
+                // console.log('Remaining time is ', remainingTime);
+              }}
+              onComplete={() => ({ shouldRepeat: true, delay: 3 })}
+              strokeWidth={20}
+            >
+              {({ remainingTime }) => (
+                <div className='text-black text-4xl font-semibold bg-white w-12 h-12 p-[5px] rounded-full text-center align-middle'>{remainingTime}</div>
+              )}
+            </CountdownCircleTimer>
+
             </div>
           </div>
         </div>
