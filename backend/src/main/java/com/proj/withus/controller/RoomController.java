@@ -357,7 +357,7 @@ public class RoomController {
         if (startState.equals("no")) {
             return new ResponseEntity<String>("준비되지 않은 플레이어가 있습니다.", HttpStatus.BAD_REQUEST);
         } else if (startState.equals("playing")) {
-            return new ResponseEntity<String>("이미 게임 진행 중입니다.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("이미 진행 중인 게임입니다.", HttpStatus.BAD_REQUEST);
         }
 
         List<Player> players = roomService.getPlayerList(roomId);

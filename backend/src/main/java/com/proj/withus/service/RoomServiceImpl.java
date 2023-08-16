@@ -83,15 +83,27 @@ public class RoomServiceImpl implements RoomService {
     }
 
     public Optional<Room> enterRoom(int roomCode, Long memberId) {
-        // 해당 멤버가 들어간 방이 있는 경우
-        roomRepository.findByMemberId(memberId)
-                        .ifPresent(room -> {
-                            throw new CustomException(ErrorCode.DUPLICATE_MEMBER_IN_ROOM);
-                        });
+        // 해당 멤버가 들어간 방이 있는 경우(튕긴 멤버일 경우 허용)
+        Optional<Room> room = playerRepository.findRoomIdByPlayerId(memberId);
+        if (room.isPresent()) {
+            if (room.get().getCode() == roomCode) {
+                return room;
+            }
+            throw new CustomException(ErrorCode.DUPLICATE_MEMBER_IN_ROOM);
+        }
+//        roomRepository.findByMemberId(memberId)
+//                        .ifPresent(room -> {
+//                            throw new CustomException(ErrorCode.DUPLICATE_MEMBER_IN_ROOM);
+//                        });
 
         int count = playerRepository.countPlayersByRoomCode(roomCode);
         if (count == 4) {
             throw new CustomException(ErrorCode.ROOM_FULL);
+        }
+
+        String startStatus = roomRepository.findStartStatusByRoomId(roomRepository.findRoomByCode(roomCode).get().getId());
+        if (startStatus.equals("playing")) {
+            throw new CustomException(ErrorCode.ALREADY_PLAYING);
         }
 
         Player player = new Player();

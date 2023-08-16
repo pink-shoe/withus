@@ -53,6 +53,7 @@ public enum ErrorCode {
     HOST_LEAVE(HttpStatus.NO_CONTENT, "방장이 떠나, 해당 방은 종료됩니다."), // error 아님:: 추후에 분리 필요
     ROOM_NOT_ROUND(HttpStatus.BAD_REQUEST, "판 수를 선택해야 합니다."),
     ROOM_NOT_TYPE(HttpStatus.BAD_REQUEST, "게임 타입을 선택해야 합니다."),
+    ALREADY_PLAYING(HttpStatus.BAD_REQUEST, "이미 진행 중인 게임입니다."),
 
     // album 관련
     ALBUM_NOT_FOUND(HttpStatus.NOT_FOUND, "앨범이 존재하지 않습니다."),
