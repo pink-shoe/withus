@@ -26,7 +26,8 @@
     "react-feather": "^2.0.10",
     "react-google-login": "^5.2.2",
     "react-hook-form": "^7.45.2",
-    "react-router-dom": "^6.14.2"
+    "react-router-dom": "^6.14.2",
+    "vite-project": "link:"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^4.32.5",

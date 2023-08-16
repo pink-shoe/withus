@@ -265,11 +265,7 @@ export default function GameRoom() {
                 {gameRoomInfo?.room.roomRound} 라운드 문제
               </p>
               <div className='flex mb-7 w-48 h-48 border-2 border-[#8D98FF]'>
-<<<<<<< HEAD
                 <img src={gameRoomInfo?.shapes.shapeUrl} />
-=======
-                <img src={shapeURL} />
->>>>>>> 55f382e52e421066e5e9485ea88a12e58f2e5f2f
               </div>
               <p className='text-[#514148] font-kdisplay font-medium text-2xl mb-10 text-center'>
                 게임 시작
