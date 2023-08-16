@@ -6,6 +6,8 @@ import { getAlbumListApi, deleteAlbumApi } from 'apis/albumApi';
 interface IPhotoAlbumProps {
   photoFrameNumber: number;
   backgroundNumber: number;
+  fourCut: boolean;
+  setFourCut: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface Image {
@@ -14,7 +16,12 @@ interface Image {
   savedAt: string;
 }
 
-export default function PhotoAlbum({ photoFrameNumber, backgroundNumber }: IPhotoAlbumProps) {
+export default function PhotoAlbum({
+  photoFrameNumber,
+  backgroundNumber,
+  fourCut,
+  setFourCut,
+}: IPhotoAlbumProps) {
   const BackGroundURLs = [
     '/public/BG1.jpg',
     '/public/BG2.jpg',
@@ -65,6 +72,8 @@ export default function PhotoAlbum({ photoFrameNumber, backgroundNumber }: IPhot
         photoFrameNumber={photoFrameNumber}
         DisplayedImages={displayedImages}
         onClickX={onclickX}
+        fourCut={fourCut}
+        setFourCut={setFourCut}
       />
       <div className='relative z-50'>
         <PaginationContainer
