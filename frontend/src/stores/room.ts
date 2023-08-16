@@ -4,8 +4,10 @@ export interface IPlayerInfo {
   playerId: number;
   ready: boolean;
   teamType: number;
+  vote: number;
 }
 export interface IRoom {
+  currentRound: number;
   roomCode: number;
   roomId: number;
   roomLink: string;
@@ -25,6 +27,7 @@ export const roomAtom = atom<IRoomAtom>({
   hostId: -1,
   playerInfos: [],
   room: {
+    currentRound: -1,
     roomCode: -1,
     roomId: -1,
     roomLink: '',

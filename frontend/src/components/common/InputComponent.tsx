@@ -4,11 +4,12 @@ interface IInputProps {
   placeholder?: string;
   value?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 export default function InputComponent({ type, label, placeholder, value, onChange }: IInputProps) {
   let inputCss =
-    'block w-80 h-8 mx-auto rounded-md py-1 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-[#FF8D8D] placeholder:text-[#FF8D8D] focus:ring-1 focus:ring-inset focus:ring-[#FF8D8D] sm:text-sm sm:leading-6 font-kdisplay';
+    'block w-80 h-8 mx-auto rounded-md py-1 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-[#FF8D8D] placeholder:text-[#FF8D8D] focus:ring-1 focus:ring-inset focus:ring-[#FF8D8D] sm:leading-6 font-kdisplay text-lg';
   let inputType = 'text';
 
   const inputId = label ? label : 'input';
@@ -17,7 +18,7 @@ export default function InputComponent({ type, label, placeholder, value, onChan
     inputType = 'email';
   } else if (type === 'nickname') {
     inputCss =
-      'block w-full lg:w-[384px] h-8 mx-auto rounded-md py-1 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-[#FF8D8D] placeholder:text-[#FF8D8D] focus:ring-1 focus:ring-inset focus:ring-[#FF8D8D] sm:text-sm sm:leading-6 font-kdisplay';
+      'block w-full lg:w-[384px] h-8 mx-auto rounded-md py-1 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-[#FF8D8D] placeholder:text-[#FF8D8D] focus:ring-1 focus:ring-inset focus:ring-[#FF8D8D] sm:leading-6 font-kdisplay text-lg';
   } else if (type === 'password') {
     inputType = 'password';
   }
