@@ -4,7 +4,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import SettingModalPresenter from './SettingModalPresenter';
 import { createRoomApi, updateRoomApi } from 'apis/roomApi';
-import { IUserAtom, userAtom } from 'stores/user';
+import { userAtom } from 'stores/user';
 import { useAtom, useAtomValue } from 'jotai';
 import { useNavigate } from 'react-router-dom';
 import { roomAtom } from 'stores/room';
@@ -13,7 +13,6 @@ import { signalType } from 'hooks/useOpenvidu';
 export type boardType = 'WAIT' | 'LOBBY';
 
 interface ISettingModalContainerProps {
-  // user: IUserAtom;
   boardType: boardType;
   isUpdateModal: boolean;
   openModal: boolean;
@@ -23,7 +22,6 @@ interface ISettingModalContainerProps {
 }
 
 export default function SettingModalContainer({
-  // user,
   boardType,
   isUpdateModal,
   openModal,
