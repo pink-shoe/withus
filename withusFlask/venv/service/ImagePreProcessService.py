@@ -5,8 +5,8 @@ from random import randint
 class ImagePreProcessService:
     def __init__(self):
         self.device = "cpu"
-        self.protoFile = "./Include/model/pose/pose_deploy_linevec.prototxt"
-        self.weightFile = "./Include/model/pose/pose_iter_440000.caffemodel"
+        self.protoFile = "Include/model/pose/pose_deploy_linevec.prototxt"
+        self.weightFile = "Include/model/pose/pose_iter_440000.caffemodel"
         self.nPoint = 18
         self.keypointsMapping = ['Nose', 'Neck', 'R-Sho', 'R-Elb', 'R-Wr', 'L-Sho',
          'L-Elb', 'L-Wr', 'R-Hip', 'R-Knee', 'R-Ank', 'L-Hip',

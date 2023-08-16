@@ -25,7 +25,7 @@ predictService = ImageMatchService.Model()
 # database connection service
 DataBaseConnection = DataBaseService.MySqlConnection()
 
-@app.route('/ai/predict', methods=['POST'])
+@app.route('/ai/predict/', methods=['POST'], strict_slashes=False)
 def receive_capture():
     if request.method == 'POST':
         try:
