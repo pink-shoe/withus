@@ -47,7 +47,7 @@ export default function GameRoom() {
       setPlayerList(result.playerInfos);
       setIsHost(result.hostId === user.memberId);
       // 해당 부분은 api 연결 후 추가 확인 필요.
-      if (result.room.currentRound === result.room.roomRound)
+      if (result.room.currentRound - 1 === result.room.roomRound)
         await getGameResultApi(result.room.roomId);
     }
   };
@@ -114,10 +114,7 @@ export default function GameRoom() {
     try {
       const div = divRef.current;
       const canvas = await html2canvas(div, { scale: 1 });
-      console.log(canvas.toDataURL());
       const gameroom = gameRoomInfo as IGameInfo;
-
-      // formData.append('captureImage',)
 
       // flask 쪽 rest api 연결 완료 시 해당 주석 제거 후 api 연결.
       const result = await sendRoundInfoApi(
@@ -128,7 +125,7 @@ export default function GameRoom() {
       );
       console.log(result);
       const byteString = atob(canvas.toDataURL().split(',')[1]);
-      // Blob를 구성하기 위한 준비, 이 내용은 저도 잘 이해가 안가서 기술하지 않았습니다.
+
       const ab = new ArrayBuffer(byteString.length);
       const ia = new Uint8Array(ab);
       for (let i = 0; i < byteString.length; i++) {
@@ -147,58 +144,35 @@ export default function GameRoom() {
         gameroom.room.roomId,
         gameroom.room.currentRound,
         formData
-        // gameroom.shapes.shapeId
       );
+      if (imageResult) {
+        sendSignal(`${gameRoomInfo?.room.roomId}`, 'ROUND');
+      }
       console.log(imageResult);
-      // fetch(canvas.toDataURL())
-      //   .then((res) => res.blob())
-      //   .then(async (blob) => {
-      //     formData.append('captureImage', blob);
-      //     const imageResult = await sendCaptureImageApi(
-      //       gameroom.room.roomId,
-      //       gameroom.currentRound,
-      //       formData
-      //       // gameroom.shapes.shapeId
-      //     );
-      //     console.log(imageResult);
-      //   });
-      // formData.append('captureImage', canvas.toDataURL());
-
-      // canvas.toBlob(async (blob) => {
-      //   if (blob !== null) {
-      //     console.log(blob);
-      //     const formData = new FormData();
-      //     formData.append('captureImage', blob);
-      //     console.log(formData);
-      //     const result = await sendCaptureImageApi(
-      //       gameroom.room.roomId,
-      //       gameroom.currentRound,
-      //       formData
-      //       // gameroom.shapes.shapeId
-      //     );
-      //     console.log(result);
-      //   }
-      // });
     } catch (error) {
       console.error('Error converting div to image:', error);
     }
   };
-  function DataURIToBlob(dataURI: string) {
-    const splitDataURI = dataURI.split(',');
-    const byteString =
-      splitDataURI[0].indexOf('base64') >= 0 ? atob(splitDataURI[1]) : decodeURI(splitDataURI[1]);
-    const mimeString = splitDataURI[0].split(':')[1].split(';')[0];
+  // function DataURIToBlob(dataURI: string) {
+  //   const splitDataURI = dataURI.split(',');
+  //   const byteString =
+  //     splitDataURI[0].indexOf('base64') >= 0 ? atob(splitDataURI[1]) : decodeURI(splitDataURI[1]);
+  //   const mimeString = splitDataURI[0].split(':')[1].split(';')[0];
 
-    const ia = new Uint8Array(byteString.length);
-    for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
+  //   const ia = new Uint8Array(byteString.length);
+  //   for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
 
-    return new Blob([ia], { type: mimeString });
-  }
+  //   return new Blob([ia], { type: mimeString });
+  // }
   const receiveSignal = (type: signalType) => {
     if (session && publisher) {
       publisher.stream.session.on('signal:' + type, (e: any) => {
         const result = JSON.parse(e.data);
-        if (result) getGameData();
+        console.log(result);
+        if (result) {
+          getGameData();
+          setRoundModal(true);
+        }
       });
     }
   };
@@ -227,9 +201,11 @@ export default function GameRoom() {
   return (
     <Background backgroundType='NOLOBBY' isLobbyDropdown={false}>
       {/* 최종 라운드가 마무리되면 MVP 모달이 나옴 */}
-      {/* {gameRoomInfo?.currentRound === roomInfo.room.roomRound ? <MvpModal></MvpModal> : null} */}
+      {gameRoomInfo?.playerInfos &&
+        gameRoomInfo?.room.currentRound === gameRoomInfo.room.roomRound && (
+          <MvpModal playerList={gameRoomInfo?.playerInfos}></MvpModal>
+        )}
 
-      {/* <MvpModal></MvpModal> */}
       {/* 라운드가 변할 때마다 roundModal의 상태가 true가 되도록 해야 함 */}
       {/* 라운드 모달(예시 : Round 1) */}
       <Modal openModal={roundModal} closeModal={closeRoundModal} isSettingModal={false}>
@@ -265,7 +241,7 @@ export default function GameRoom() {
                 {gameRoomInfo?.room.roomRound} 라운드 문제
               </p>
               <div className='flex mb-7 w-48 h-48 border-2 border-[#8D98FF]'>
-                <img src={gameRoomInfo?.shapes.shapeUrl} />
+                <img src={gameRoomInfo?.shapes[gameRoomInfo.room.currentRound - 1].shapeUrl} />
               </div>
               <p className='text-[#514148] font-kdisplay font-medium text-2xl mb-10 text-center'>
                 게임 시작
