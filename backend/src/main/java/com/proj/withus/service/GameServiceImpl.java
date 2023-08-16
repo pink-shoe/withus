@@ -3,6 +3,7 @@ package com.proj.withus.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -121,9 +122,14 @@ public class GameServiceImpl implements GameService {
 
     // game_result & url join
     @Override
-    public String getCaptureUrl(Long id) {
-//        return gameResultRepository.findById(id).get().getCaptureUrl();
-        return "";
+    public String getCaptureUrl(Long resultId) {
+        Optional<GameResult> gameResult = gameResultRepository.findById(resultId);
+        return captureRepository.findCaptureByRoomIdAndRound(gameResult.get().getRoom().getId(), gameResult.get().getRound())
+            .map(Capture::getCaptureUrl)
+            .orElseThrow(() -> new CustomException(ErrorCode.CAPTURE_IMAGE_NOT_FOUND));
+        // return captureRepository.findCaptureByResultId(resultId)
+        //     .map(Capture::getCaptureUrl)
+        //     .orElseThrow(() -> new CustomException(ErrorCode.CAPTURE_IMAGE_NOT_FOUND));
     }
 
     @Override
