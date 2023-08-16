@@ -28,6 +28,11 @@ export interface IGameInfo {
   shapes: IShape;
 }
 
+export interface IMvpResult {
+  playerId: number;
+  vote: number;
+}
+
 // Axios 요청 함수 정의
 export const getGameResultApi = async (roomId: number) => {
   try {
@@ -81,10 +86,14 @@ export const sendCaptureImageApi = async (
   }
 };
 
-export const electMvpApi = async (roomId: number, playerId: number, votedId: number) => {
+export const electMvpApi = async (roomId: number, votedId: number) => {
   try {
-    const response = await axios.post(apiUrl + `/vote/${roomId}`, { playerId, votedId });
-    console.log('MVP 선택 완료!!', playerId, votedId);
+    const response = await axios.post(apiUrl + `/vote/${roomId}`, null, {
+      params: {
+        votedId: votedId,
+      },
+    });
+    console.log('MVP 선택 완료!!', votedId);
     return response;
   } catch (error) {
     console.log('MVP 선택 실패 :', (error as AxiosError).message);
@@ -94,8 +103,8 @@ export const electMvpApi = async (roomId: number, playerId: number, votedId: num
 
 export const getMvpResultApi = async (roomId: number) => {
   try {
-    const response = await axios.get<IPlayerInfo>(apiUrl + `/vote/${roomId}`);
-    if (response.status === 201) {
+    const response = await axios.get<IMvpResult[]>(apiUrl + `/vote/${roomId}`);
+    if (response.status === 200) {
       console.log('MVP 출력 성공:', response.data);
       return response.data;
     } else {

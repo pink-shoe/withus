@@ -4,7 +4,6 @@ export interface IPlayerInfo {
   playerId: number;
   ready: boolean;
   teamType: number;
-  vote: number;
 }
 export interface IRoom {
   roomCode: number;

@@ -223,7 +223,7 @@ export default function GameRoom() {
   return (
     <Background backgroundType='NOLOBBY' isLobbyDropdown={false}>
       {/* 최종 라운드가 마무리되면 MVP 모달이 나옴 */}
-      {/* {gameRoomInfo?.currentRound === roomInfo.room.roomRound ? <MvpModal></MvpModal> : null} */}
+      {/* {gameRoomInfo?.currentRound === roomInfo.room.roomRound + 1 ? <MvpModal></MvpModal> : null} */}
 
       <MvpModal playerList={playerList}></MvpModal>
       {/* 라운드가 변할 때마다 roundModal의 상태가 true가 되도록 해야 함 */}
