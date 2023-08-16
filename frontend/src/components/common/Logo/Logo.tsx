@@ -60,8 +60,8 @@ export default function Logo({ logoType }: ILogoProps) {
         </div>
       ) : logoType === 'LOBBYLOGO' ? (
         <div className='logo'>[ ] with us</div>
-        ) : (
-        <div className='logo-album'>[ ] with us</div>
+      ) : (
+        <div className='logo'>[ ] with us</div>
       )}
     </Fragment>
   );

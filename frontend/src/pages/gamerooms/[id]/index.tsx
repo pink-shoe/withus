@@ -16,7 +16,6 @@ import Board from '@components/common/Board';
 import { useQuery } from '@tanstack/react-query';
 import { IGameInfo, getGameInfoApi, getGameResultApi, sendCaptureImageApi } from 'apis/gameApi';
 import Modal from '@components/common/Modal';
-// import EndGameModal from '@components/common/EndGameModal';
 import MvpModal from '@components/MvpModal/MvpModal';
 import { sendRoundInfoApi } from 'apis/ai';
 // import ExceptionModal from '@components/common/ExceptionModal';
@@ -222,7 +221,7 @@ export default function GameRoom() {
   setTimeout(closeRoundModal, 10000);
 
   return (
-    <Background backgroundType='NOLOBBY'>
+    <Background backgroundType='NOLOBBY' isLobbyDropdown={false}>
       {/* 최종 라운드가 마무리되면 MVP 모달이 나옴 */}
       {/* {gameRoomInfo?.currentRound === roomInfo.room.roomRound ? <MvpModal></MvpModal> : null} */}
 
