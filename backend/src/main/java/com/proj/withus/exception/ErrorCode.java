@@ -59,6 +59,8 @@ public enum ErrorCode {
     // player 관련
 //    PLAYER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 플레이어입니다."),
 
+    // capture 관련
+    CAPTURE_IMAGE_NOT_FOUND(HttpStatus.BAD_REQUEST, "캡처한 이미지가 존재하지 않습니다.")
     ;
     private final HttpStatus status;
     private final String message;
