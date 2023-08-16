@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.proj.withus.domain.dto.ChooseMvpPlayerReq;
 import com.proj.withus.exception.CustomException;
 import com.proj.withus.exception.ErrorCode;
 import com.proj.withus.repository.RoomRepository;
@@ -209,8 +210,8 @@ public class GameController {
 
     @ApiOperation(value = "선택된 사진 저장", notes = "모든 라운드 종료 후 유저는 저장하고 싶은 사진을 선택해 저장한다.(S3)")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "선택한 사진 저장 성공", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "ok"))),
-            @ApiResponse(code = 400, message = "선택한 사진 저장 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
+        @ApiResponse(code = 200, message = "선택한 사진 저장 성공", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "ok"))),
+        @ApiResponse(code = 400, message = "선택한 사진 저장 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
     })
     @ApiImplicitParam(name = "getSelectedImagesReq", value = "GetSelectedImages object", dataTypeClass = GetSelectedImagesReq.class, paramType = "body")
     @PostMapping("/image/upload")
@@ -221,17 +222,17 @@ public class GameController {
 
         Long albumId = albumService.getAlbum(memberId);
 
-//        List<String> imgUrls = new ArrayList<>();
-//        imgUrls = awsS3Service.uploadFiles(images);
+        //        List<String> imgUrls = new ArrayList<>();
+        //        imgUrls = awsS3Service.uploadFiles(images);
 
         for (MultipartFile image : images) {
             String imgUrl = awsS3Service.uploadFile(image);
             albumService.saveImage(memberId, imgUrl);
         }
 
-//        for (String imgUrl : imgUrls) {
-//            albumService.saveImage(memberId, imgUrl);
-//        }
+        //        for (String imgUrl : imgUrls) {
+        //            albumService.saveImage(memberId, imgUrl);
+        //        }
 
         return new ResponseEntity<String>("S3에 이미지 업로드 성공", HttpStatus.OK);
     }
@@ -273,12 +274,12 @@ public class GameController {
     })
     @ApiImplicitParams(value = {
         @ApiImplicitParam(name = "room_id", value = "방 id", required = true, dataType = "Long", paramType = "path"),
-        @ApiImplicitParam(name = "votedId", value = "투표받은 플레이어 id", required = true, dataType = "Long", paramType = "body")
+        @ApiImplicitParam(name = "ChooseMvpPlayerReq", value = "ChooseMvpPlayerReq object", dataTypeClass = GetSelectedImagesReq.class, paramType = "body"),
     })
     @PostMapping("/vote/{room_id}")
     public ResponseEntity<?> chooseMvpPlayer(
         @PathVariable(value = "room_id", required = true) Long roomId,
-        @RequestBody Long votedId,
+        @RequestBody ChooseMvpPlayerReq chooseMvpPlayerReq,
         HttpServletRequest request) {
 
         Long memberId = (Long) request.getAttribute("memberId");
@@ -286,7 +287,7 @@ public class GameController {
             throw new CustomException(ErrorCode.MEMBER_NO_PERMISSION);
         }
 
-        gameService.chooseMvp(roomId, votedId);
+        gameService.chooseMvp(roomId, chooseMvpPlayerReq.getVotedId());
         // 투표한 사람 리스트 필요한가?
 
         return new ResponseEntity<String>("mvp 선정 성공", HttpStatus.OK);
