@@ -21,11 +21,11 @@ export interface IShape {
   // shapeUrl: string;
 }
 export interface IGameInfo {
-  currentRound: number;
+  // currentRound: number;
   hostId: number;
   playerInfos: IPlayerInfo[];
   room: IRoom;
-  shapes: IShape;
+  shapes: IShape[];
 }
 // Axios 요청 함수 정의
 export const getGameResultApi = async (roomId: number) => {

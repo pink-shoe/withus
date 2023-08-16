@@ -122,7 +122,7 @@ export default function GameRoom() {
         gameroom.room.roomId,
         canvas.toDataURL(),
         gameroom.room.currentRound,
-        gameroom.shapes.shapeId
+        gameroom.shapes[currentRound].shapeId
       );
       console.log(result);
       const byteString = atob(canvas.toDataURL().split(',')[1]);
