@@ -37,6 +37,7 @@ export const useOpenvidu = (userId: number, gameRoomId: number) => {
   const leaveSession = useCallback(() => {
     if (session) {
       session.disconnect();
+      sendSignal(`${gameRoomId}`, 'EXIT');
     }
     setSession(null);
     setPublisher(null);

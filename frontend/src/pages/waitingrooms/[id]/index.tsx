@@ -82,7 +82,6 @@ export default function WaitingRoom() {
 
   useEffect(() => {
     getRoomData();
-    console.log('streamlist', streamList);
   }, [streamList]);
 
   return (

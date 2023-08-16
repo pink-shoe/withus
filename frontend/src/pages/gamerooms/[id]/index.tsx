@@ -26,27 +26,27 @@ export default function GameRoom() {
     location.pathname.slice(location.pathname.lastIndexOf('/') + 1, location.pathname.length)
   );
   const navigate = useNavigate();
-
-  const readySet = new Set();
-
-  const [user, setUser] = useAtom<IUserAtom>(userAtom);
-  const roomInfo = useAtomValue<IRoomAtom>(roomAtom);
-
-  // 모달 만들면서 추가한 부분 겹치는거 확인점
+  const [roundTimer, setRoundTimer] = useState<number>(0);
+  const [canStart, setCanStart] = useState<boolean>(false);
   const [gameRoomInfo, setGameRoomInfo] = useState<IGameInfo>();
   const [currentRound, setCurrentRound] = useState(gameRoomInfo?.room.currentRound);
-  const [remainingTime, setRemainingTime] = useState(3);
-  const [isProblemModal, setIsProblemModal] = useState(false);
-  //
+  // const [remainingTime, setRemainingTime] = useState(3);
+  // const [isProblemModal, setIsProblemModal] = useState(false);
   const [isHost, setIsHost] = useState<boolean>(false);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
   const [playerList, setPlayerList] = useState<IPlayerInfo[]>([]);
   const { data } = useQuery(['games/info'], () => getGameInfoApi(roomInfo.room.roomId));
+  const [user, setUser] = useAtom<IUserAtom>(userAtom);
+  const roomInfo = useAtomValue<IRoomAtom>(roomAtom);
+  const readySet = new Set();
+
+  // 모달 만들면서 추가한 부분 겹치는거 확인점
   const getGameData = async () => {
     const result = (await getGameInfoApi(roomInfo.room.roomId)) as IGameInfo;
     if (result) {
       readySet.clear();
       setGameRoomInfo(result);
+      setCurrentRound(result.room.currentRound);
       setPlayerList(result.playerInfos);
       setIsHost(result.hostId === user.memberId);
       // 해당 부분은 api 연결 후 추가 확인 필요.
@@ -57,48 +57,54 @@ export default function GameRoom() {
 
   // 라운드 변경시 모달창 띄우기
   useEffect(() => {
-    if (currentRound) {
-      async function fetchData() {
-        if (currentRound === 1) {
-          await new Promise((resolve) => setTimeout(resolve, 7000));
-        }
-
-        let timeoutId: NodeJS.Timeout;
-        setIsProblemModal(true);
-
-        if (isProblemModal) {
-          setRemainingTime(3);
-          // sendSignal(`${gameRoomInfo?.room.currentRound}`, 'ROUND');
-
-          timeoutId = setTimeout(() => {
-            const updatedTime = remainingTime - 1;
-            setRemainingTime(updatedTime);
-
-            if (updatedTime > 0) {
-              timeoutId = setTimeout(() => {
-                setRemainingTime(updatedTime - 1);
-              }, 1000);
-            } else {
-              // 시간이 다 되면 모달 닫기
-              setIsProblemModal(false);
-            }
-          }, 1000);
-        }
-      }
-
-      fetchData();
-    }
+    console.log('aaaaa,', currentRound);
+    currentRound && session && publisher && sendSignal(`${currentRound}`, 'ROUND');
   }, [currentRound]);
+  // useEffect(() => {
+  //   if (gameRoomInfo?.room.currentRound) {
+  //     function fetchData() {
+  //       // if (gameRoomInfo?.room.currentRound === 1) {
+  //       setRoundModal(true);
+  //       sendSignal(`${gameRoomInfo?.room.currentRound}`, 'ROUND');
+  //       // await new Promise((resolve) => setTimeout(resolve, 7000));
+  //       // }
+
+  //       // let timeoutId: NodeJS.Timeout;
+  //       // setIsProblemModal(true);
+
+  //       // if (isProblemModal) {
+  //       //   setRemainingTime(3);
+  //       //   // sendSignal(`${gameRoomInfo?.room.currentRound}`, 'ROUND');
+
+  //       //   timeoutId = setTimeout(() => {
+  //       //     const updatedTime = remainingTime - 1;
+  //       //     setRemainingTime(updatedTime);
+
+  //       //     if (updatedTime > 0) {
+  //       //       timeoutId = setTimeout(() => {
+  //       //         setRemainingTime(updatedTime - 1);
+  //       //       }, 1000);
+  //       //     } else {
+  //       //       // 시간이 다 되면 모달 닫기
+  //       //       setIsProblemModal(false);
+  //       //     }
+  //       //   }, 1000);
+  //       // }
+  //     }
+
+  //     fetchData();
+  //   }
+  // }, [gameRoomInfo?.room.currentRound]);
 
   useEffect(() => {
     if (data) {
       const gameData = data as IGameInfo;
       setGameRoomInfo(gameData);
+      gameData.room.currentRound && setCurrentRound(gameData.room.currentRound);
       gameData.playerInfos && setPlayerList(gameData.playerInfos);
       gameData.hostId && setIsHost(gameData.hostId === user.memberId);
       // gameData.shapes.shapeUrl && setShapeURL(gameData.shapes.shapeUrl);
     }
-    console.log(data);
   }, [data]);
 
   const { session, publisher, streamList, onChangeCameraStatus, onChangeMicStatus, sendSignal } =
@@ -118,15 +124,17 @@ export default function GameRoom() {
       const gameroom = gameRoomInfo as IGameInfo;
 
       // flask 쪽 rest api 연결 완료 시 해당 주석 제거 후 api 연결.
-
       if (currentRound) {
         const result = await sendRoundInfoApi(
           gameroom.room.roomId,
           canvas.toDataURL(),
-          gameroom.room.currentRound,
+          currentRound,
           gameroom.shapes[currentRound - 1].shapeId
         );
-        console.log(result);
+        if (result) {
+          getGameData();
+          console.log(result);
+        }
       }
       const byteString = atob(canvas.toDataURL().split(',')[1]);
 
@@ -143,13 +151,12 @@ export default function GameRoom() {
 
       const formData = new FormData();
       formData.append('captureImage', file);
-      const imageResult = await sendCaptureImageApi(
-        gameroom.room.roomId,
-        gameroom.room.currentRound,
-        formData
-      );
-      if (imageResult) {
-        console.log(imageResult);
+      if (currentRound) {
+        const imageResult = await sendCaptureImageApi(gameroom.room.roomId, currentRound, formData);
+        if (imageResult) {
+          console.log(imageResult);
+          getGameData();
+        }
       }
     } catch (error) {
       console.error('Error converting div to image:', error);
@@ -165,10 +172,8 @@ export default function GameRoom() {
           getGameData();
         }
         if (type === 'ROUND') {
-          readySet.add(result.message);
-          if (readySet.size === gameRoomInfo?.playerInfos.length) {
-            setRoundModal(true);
-          }
+          readySet.add(result.userId);
+          console.log('readySet', readySet);
         }
       });
     }
@@ -179,24 +184,40 @@ export default function GameRoom() {
 
   useEffect(() => {
     getGameData();
-    console.log('streamlist', streamList);
   }, [streamList]);
 
+  useEffect(() => {
+    if (readySet.size === gameRoomInfo?.playerInfos.length) {
+      closeRoundModal();
+    }
+  }, [readySet]);
+
   const [ruleModal, setRuleModal] = useState(true);
-  const [roundModal, setRoundModal] = useState(true);
+  const [roundModal, setRoundModal] = useState(false);
 
   const closeRuleModal = () => {
     setRuleModal(false);
-    sendSignal(`${gameRoomInfo?.room.currentRound}`, 'ROUND');
+    console.log('rule modal 닫기');
+    setRoundModal(true);
+    console.log('roundmodal 열기');
   };
+  // setTimeout(closeRuleModal, 7000);
   useEffect(() => {
-    setTimeout(closeRuleModal, 7000);
+    let timer = setTimeout(closeRuleModal, 7000);
+    return () => clearTimeout(timer);
   }, []);
 
   const closeRoundModal = () => {
     setRoundModal(false);
+    console.log('round modal 닫기', '7초 세팅');
+    setRoundTimer(7);
   };
-  setTimeout(closeRoundModal, 10000);
+  useEffect(() => {
+    let timer = setTimeout(closeRoundModal, 7000);
+    return () => clearTimeout(timer);
+  }, [roundModal]);
+
+  // setTimeout(closeRoundModal, 10000);
 
   return (
     <Background backgroundType='NOLOBBY' isLobbyDropdown={false}>
@@ -211,7 +232,7 @@ export default function GameRoom() {
       <Modal openModal={roundModal} closeModal={closeRoundModal} isSettingModal={false}>
         <div className='flex justify-center me-2 mt-11 pb-2 font-edisplay text-6xl'>
           <span className='text-2xl'>✨</span>
-          Round {gameRoomInfo?.room.currentRound}
+          Round {currentRound}
           <span className='text-3xl'>✨</span>
         </div>
       </Modal>
@@ -266,7 +287,7 @@ export default function GameRoom() {
         </div>
         {/* openvidu 화면 */}
         <div className='w-full'>
-          <Board boardType='GAME'>
+          <Board boardType='GAME' roundTimer={roundTimer} handleSendImage={handleSendImage}>
             <header className=' h-fit flex items-center'></header>
             <div className='aspect-[4/3]'>
               {publisher && (
@@ -284,7 +305,6 @@ export default function GameRoom() {
                         const player = playerList.find((player: IPlayerInfo) => {
                           return player.playerId === stream.userId;
                         });
-                        console.log('streamList', streamList, player);
                         return (
                           // 화면 크기가 커졌을 때,
                           // 카메라 화면들이 Board 밖으로 나가는 것을 방지하기 위해
