@@ -75,7 +75,7 @@ export default function AlbumFrame({
                 />
                 <div
                   className='absolute top-1.5 right-2.5 cursor-pointer font-edisplay text-2xl'
-                  onClick={onClickX(image.imgId)}
+                  onClick={() => onClickX(image.imgId)}
                 >
                   X
                 </div>
