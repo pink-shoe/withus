@@ -49,6 +49,10 @@ export default function PhotoAlbum({ photoFrameNumber, backgroundNumber }: IPhot
   }, [currentPage]);
 
   useEffect(() => {
+    AlbumList(currentPage, size);
+  }, []);
+
+  useEffect(() => {
     setBackGroundURL(BackGroundURLs[backgroundNumber]);
   }, [backgroundNumber]);
 

@@ -24,7 +24,7 @@ export async function getAlbumListApi(
 
     return {
       content: response.data.content,
-      totalElements: response.data.totalElements || 0,
+      totalElements: response.data.totalElements,
     };
   } catch (error) {
     console.error('실패:', (error as AxiosError).message);
@@ -39,7 +39,7 @@ export async function deleteAlbumApi(imgId: string) {
   try {
     // 특정 주소와 토큰을 변수로 설정합니다.
     const response = await axios.delete(apiUrl + `/${imgId}`);
-    console.log(`앨범 사진 삭제 성공: ${imgId}`, response.data);
+    console.log(`사진 삭제 성공: ${imgId}`, response.data);
   } catch (error) {
     console.error('실패:', (error as AxiosError).message);
   }
