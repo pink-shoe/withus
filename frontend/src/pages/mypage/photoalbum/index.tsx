@@ -12,6 +12,7 @@ export default function MypageAlbum() {
   const [backgroundNumber, setBackgroundNumber] = useState(1);
   const [user, setUser] = useAtom(userAtom);
   const navigate = useNavigate();
+  const [fourCut, setFourCut] = useState(false);
 
   // 비정상적인 접근 차단 & 새로고침마다 유저 정보 재확인
   useEffect(() => {
@@ -28,9 +29,18 @@ export default function MypageAlbum() {
 
   return (
     <div>
-      <AlbumBG onChangePhotoFrame={setPhotoFrameNumber} onChangeBackground={setBackgroundNumber}>
+      <AlbumBG
+        onChangePhotoFrame={setPhotoFrameNumber}
+        onChangeBackground={setBackgroundNumber}
+        setFourCut={setFourCut}
+      >
         <Board boardType='ALBUM'>
-          <PhotoAlbum photoFrameNumber={photoFrameNumber} backgroundNumber={backgroundNumber} />
+          <PhotoAlbum
+            photoFrameNumber={photoFrameNumber}
+            backgroundNumber={backgroundNumber}
+            fourCut={fourCut}
+            setFourCut={setFourCut}
+          />
         </Board>
       </AlbumBG>
     </div>
