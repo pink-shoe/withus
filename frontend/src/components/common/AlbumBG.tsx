@@ -6,12 +6,14 @@ interface IBackgroundProps {
   children: React.ReactNode;
   onChangePhotoFrame: (Number: number) => void;
   onChangeBackground: (Number: number) => void;
+  setFourCut: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function AlbumBG({
   children,
   onChangePhotoFrame,
   onChangeBackground,
+  setFourCut,
 }: IBackgroundProps) {
   const [photoFrameNumber, setPhotoFrameNumber] = useState(1);
   const [backgroundNumber, setBackgroundNumber] = useState(1);
@@ -44,7 +46,7 @@ export default function AlbumBG({
         <div className='flex flex-col items-end'>
           <p className='rounded w-28 h-8 bg-yellow-100 font-kdisplay flex justify-center items-center'>
             {' '}
-            배경선택{' '}
+            배치 선택{' '}
           </p>
           {BGIMG.map((number) => (
             <ButtonComponent
@@ -52,13 +54,13 @@ export default function AlbumBG({
               type={photoFrameNumber === number ? 'tinyPointed' : 'tiny'}
               onClick={() => ChangePhotoFrame(number)}
             >
-              사진틀{number}
+              사진배치{number}
             </ButtonComponent>
           ))}
           <div className='pt-4' />
           <p className='rounded w-28 h-8 bg-yellow-100 font-kdisplay flex justify-center items-center'>
             {' '}
-            배치선택{' '}
+            배경 선택{' '}
           </p>
           {[1, 2, 3, 4, 5].map((number) => (
             <ButtonComponent
@@ -69,6 +71,12 @@ export default function AlbumBG({
               배경{number}
             </ButtonComponent>
           ))}
+          <p
+            className='rounded w-28 h-8 bg-yellow-100 font-kdisplay flex justify-center items-center'
+            onClick={() => setFourCut(true)}
+          >
+            네컷저장
+          </p>
         </div>
       </div>
     </div>
