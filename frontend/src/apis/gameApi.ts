@@ -18,7 +18,7 @@ export interface IGameResult {
 export interface IShape {
   shapeId: number;
   shapeLabel: string;
-  // shapeUrl: string;
+  shapeUrl: string;
 }
 export interface IGameInfo {
   // currentRound: number;

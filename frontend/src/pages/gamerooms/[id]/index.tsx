@@ -113,7 +113,7 @@ export default function GameRoom() {
       const div = divRef.current;
       const canvas = await html2canvas(div, { scale: 1 });
       console.log(canvas.toDataURL());
-      const gameroom = data as IGameInfo;
+      const gameroom = gameRoomInfo as IGameInfo;
 
       // formData.append('captureImage',)
 
@@ -122,7 +122,7 @@ export default function GameRoom() {
         gameroom.room.roomId,
         canvas.toDataURL(),
         gameroom.room.currentRound,
-        gameroom.shapes[currentRound].shapeId
+        gameroom.shapes[currentRound - 1].shapeId
       );
       console.log(result);
       const byteString = atob(canvas.toDataURL().split(',')[1]);

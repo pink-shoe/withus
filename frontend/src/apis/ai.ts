@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-const apiUrl = `/ai/predict`;
+const apiUrl = `${import.meta.env.VITE_API}/ai/predict`;
 
 export const sendRoundInfoApi = async (
   roomId: number,
