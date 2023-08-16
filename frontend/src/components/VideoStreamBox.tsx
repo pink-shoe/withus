@@ -27,22 +27,24 @@ export const VideoStreamBox: FC<IVideoStreamBoxProps> = ({
           {isMe && ' (나)'}
         </div>
         <div className='flex'>
-          {!micStatus ? (
-            // <FontAwesomeIcon
-            //   icon={faMicrophoneSlashIconDefinition}
-            //   color={'red'}
-            //   fontSize={'16px'}
-            // />
-            <MicOff className='text-red text-2xl' />
-          ) : (
-            <></>
-          )}
-          {!videoStatus ? (
-            // <FontAwesomeIcon icon={faVideoSlashIconDefinition} color={'red'} fontSize={'16px'} />
-            <VideoOff className='text-red text-2xl' />
-          ) : (
-            <></>
-          )}
+          {isMe &&
+            (!micStatus ? (
+              // <FontAwesomeIcon
+              //   icon={faMicrophoneSlashIconDefinition}
+              //   color={'red'}
+              //   fontSize={'16px'}
+              // />
+              <MicOff className='text-red text-2xl' />
+            ) : (
+              <></>
+            ))}
+          {isMe &&
+            (!videoStatus ? (
+              // <FontAwesomeIcon icon={faVideoSlashIconDefinition} color={'red'} fontSize={'16px'} />
+              <VideoOff className='text-red text-2xl' />
+            ) : (
+              <></>
+            ))}
         </div>
       </div>
     </div>

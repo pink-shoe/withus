@@ -19,7 +19,6 @@ export type signalType =
 export interface IStreamList {
   streamManager: any;
   userId: number;
-  // nickname: s/tring;
 }
 const getConnectionId = (user: IUser) => {
   return user.connectionId;
@@ -30,11 +29,7 @@ const setConnectionId = (user: IUser, conecctionId: string) => {
   return user;
 };
 
-export const useOpenvidu = (
-  userId: number,
-  // nickname: string,
-  gameRoomId: number
-) => {
+export const useOpenvidu = (userId: number, gameRoomId: number) => {
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [publisher, setPublisher] = useState<any>();
   const [session, setSession] = useState<any>();
@@ -138,15 +133,6 @@ export const useOpenvidu = (
     [publisher]
   );
 
-  // const onChangeUserName = useCallback(
-  //   (nickname: string) => {
-  //     setUserName(nickname!);
-  //     console.log(publisher);
-  //     // sendSignalUserChanged({ nickname: nickname! });
-  //   },
-  //   [userName]
-  // );
-
   const sendSignal = (message: string, type: signalType) => {
     if (session && publisher && message) {
       let msg = message.replace(/ +(?= )/g, '');
@@ -156,7 +142,6 @@ export const useOpenvidu = (
             .signal({
               data: JSON.stringify({
                 message: message,
-                // nickname,
                 userId,
                 streamId: publisher.stream.streamId,
               }),
@@ -178,7 +163,6 @@ export const useOpenvidu = (
       {
         streamManager: publisher,
         userId,
-        // nickname,
       },
       ...subscribers.filter((it) => it.userId !== userId),
     ],
@@ -191,8 +175,6 @@ export const useOpenvidu = (
     streamList,
     onChangeCameraStatus,
     onChangeMicStatus,
-    // onChangeUserName,
-    // updateUserStatus,
     sendSignal,
   };
 };

@@ -12,7 +12,6 @@ interface IVideoStreamProps {
 
 export const VideoStream: FC<IVideoStreamProps> = ({ streamManager, name, isMe }) => {
   const { videoRef, speaking, micStatus, videoStatus } = useStream(streamManager);
-
   return (
     <VideoStreamBox
       name={name}
