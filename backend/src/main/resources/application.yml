@@ -37,6 +37,7 @@ spring:
             client-secret: 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
             redirect-uri: https://connectwithus.site/api/oauth/google
             scope:
+              - openid
               - email
               - profile
 
