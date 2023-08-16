@@ -58,26 +58,34 @@ export default function GameRoom() {
 
   // 라운드 변경시 모달창 띄우기
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-
-    if (isProblemModal) {
-      setRemainingTime(3); // 모달이 열릴 때 남은 시간 초기화
-
-      // 모달 열기와 함께 타이머 시작
-      timeoutId = setTimeout(() => {
-        const updatedTime = remainingTime - 1;
-        setRemainingTime(updatedTime);
-
-        if (updatedTime > 0) {
-          // 남은 시간이 있을 경우 타이머 재실행
-          timeoutId = setTimeout(() => {
-            setRemainingTime(updatedTime - 1);
-          }, 1000);
-        } else {
-          // 시간이 다 되면 모달 닫기
-          setIsProblemModal(false);
+    if (currentRound !== -1) {
+      async function fetchData() {
+        if (currentRound === 0) {
+          await new Promise((resolve) => setTimeout(resolve, 7000));
         }
-      }, 1000);
+
+        let timeoutId: NodeJS.Timeout;
+        setIsProblemModal(true);
+
+        if (isProblemModal) {
+          setRemainingTime(3);
+          timeoutId = setTimeout(() => {
+            const updatedTime = remainingTime - 1;
+            setRemainingTime(updatedTime);
+
+            if (updatedTime > 0) {
+              timeoutId = setTimeout(() => {
+                setRemainingTime(updatedTime - 1);
+              }, 1000);
+            } else {
+              // 시간이 다 되면 모달 닫기
+              setIsProblemModal(false);
+            }
+          }, 1000);
+        }
+      }
+
+      fetchData();
     }
   }, [currentRound]);
 
