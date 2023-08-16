@@ -18,7 +18,7 @@ export interface IGameResult {
 export interface IShape {
   shapeId: number;
   shapeLabel: string;
-  // shapeUrl: string;
+  shapeUrl: string;
 }
 export interface IGameInfo {
   // currentRound: number;
@@ -99,10 +99,10 @@ export const getMvpResultApi = async (roomId: number) => {
       console.log('MVP 출력 성공:', response.data);
       return response.data;
     } else {
-      console.error(response)
+      console.error(response);
     }
   } catch (error) {
     console.log('출력 실패:', (error as AxiosError).message);
     return error;
   }
-}
+};
