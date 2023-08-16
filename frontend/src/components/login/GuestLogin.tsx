@@ -23,6 +23,12 @@ const GuestLogin: React.FC<IGuestLoginProps> = ({
     setNickname((prev) => ({ ...prev, nickname: event.target.value }));
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      onClickGuestLogin();
+    }
+  };
+
   return (
     <div>
       <InputComponent
@@ -30,6 +36,7 @@ const GuestLogin: React.FC<IGuestLoginProps> = ({
         type='text'
         placeholder='닉네임'
         onChange={onChangeNickname}
+        onKeyDown={handleKeyDown}
       />
       <InputComponent
         label='입장 코드'
@@ -37,6 +44,7 @@ const GuestLogin: React.FC<IGuestLoginProps> = ({
         value={enterCode}
         placeholder='입장 코드'
         onChange={onChangeEnterCode}
+        onKeyDown={handleKeyDown}
       />
       <div className='flex justify-center'>
         <p className='font-kdisplay text-lg hover:text-[#FF8D8D] p-3'>

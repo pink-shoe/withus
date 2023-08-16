@@ -1,22 +1,21 @@
+import { getAlbumListApi } from 'apis/albumApi';
+
 interface IAlbumProps {
   photoFrameNumber: number;
-  DisplayedImages: string[];
+  DisplayedImages: { imgId: number; imgUrl: string; savedAt: string }[];
   BackgroundURL: string;
+  onClickX: any;
 }
 
 export default function AlbumFrame({
   photoFrameNumber,
   DisplayedImages,
   BackgroundURL,
+  onClickX,
 }: IAlbumProps) {
   let lefts: string[];
   let tops: string[];
   let rotations: string[];
-
-  const onClickX = () => {
-    // X 표시 누르면 api 실행해서 사진 삭제 로직 구성해야함
-    console.log('X 표시 클릭됨');
-  };
 
   switch (photoFrameNumber) {
     case 1:
@@ -57,31 +56,33 @@ export default function AlbumFrame({
         className='w-full h-full bg-cover relative'
         style={{ backgroundImage: `url(${BackgroundURL})` }}
       >
-        {DisplayedImages.slice(0, 4).map((image, index) => (
-          <div
-            key={index}
-            style={{
-              left: lefts[index],
-              top: tops[index],
-              transform: `rotate(${rotations[index]})`, // Apply rotation to each image
-            }}
-            className='absolute'
-          >
-            <div className='relative w-80 h-72'>
-              <img
-                src={image}
-                alt={`Image-${index + 1}`}
-                className='w-full h-full object-cover border-8 border-red-300 rounded-xl'
-              />
-              <div
-                className='absolute top-1.5 right-2.5 cursor-pointer font-edisplay text-2xl'
-                onClick={onClickX}
-              >
-                X
+        {DisplayedImages.slice(0, 4).map((image, index) =>
+          image ? (
+            <div
+              key={index}
+              style={{
+                left: lefts[index],
+                top: tops[index],
+                transform: `rotate(${rotations[index]})`,
+              }}
+              className='absolute'
+            >
+              <div className='relative w-80 h-72'>
+                <img
+                  src={image.imgUrl}
+                  alt={`Image-${index + 1}`}
+                  className='w-full h-full object-cover border-8 border-red-300 rounded-xl'
+                />
+                <div
+                  className='absolute top-1.5 right-2.5 cursor-pointer font-edisplay text-2xl'
+                  onClick={onClickX(image.imgId)}
+                >
+                  X
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ) : null
+        )}
       </div>
     </div>
   );
