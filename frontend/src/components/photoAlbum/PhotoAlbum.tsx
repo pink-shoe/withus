@@ -16,11 +16,11 @@ interface Image {
 
 export default function PhotoAlbum({ photoFrameNumber, backgroundNumber }: IPhotoAlbumProps) {
   const BackGroundURLs = [
-    '/src/assets/배경1.jpg',
-    '/src/assets/배경2.jpg',
-    '/src/assets/배경3.jpeg',
-    '/src/assets/배경4.jpg',
-    '/src/assets/배경5.jpg',
+    '/src/assets/BG1.jpg',
+    '/src/assets/BG2.jpg',
+    '/src/assets/BG3.jpeg',
+    '/src/assets/BG4.jpg',
+    '/src/assets/BG5.jpg',
     '',
   ];
   const [BackGroundURL, setBackGroundURL] = useState(BackGroundURLs[backgroundNumber]);
