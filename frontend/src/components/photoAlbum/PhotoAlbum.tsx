@@ -31,7 +31,7 @@ export default function PhotoAlbum({ photoFrameNumber, backgroundNumber }: IPhot
 
   async function AlbumList(page: number, size: number) {
     try {
-      const response = await getAlbumListApi(page, size);
+      const response = await getAlbumListApi(page - 1, size);
       setDisplayedImages(response.content);
       setTotalPages(response.totalPages);
     } catch (error) {
