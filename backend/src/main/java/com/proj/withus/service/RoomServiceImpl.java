@@ -242,9 +242,9 @@ public class RoomServiceImpl implements RoomService {
         List<Long> readyMember = playerRepository.findReadyPlayersByRoomIdWithoutHost(roomId, roomRepository.findHostIdByRoomId(roomId));
         List<Player> totalMember = playerRepository.findAllByRoom_Id(roomId);
         if (readyMember.size() == totalMember.size() - 1) { // host 제외
-            roomRepository.updateStart(roomId, true);
+            roomRepository.updateStart(roomId, "yes");
         } else {
-            roomRepository.updateStart(roomId, false);
+            roomRepository.updateStart(roomId, "no");
         }
         // return readyMember;
         return totalMember;
@@ -254,7 +254,7 @@ public class RoomServiceImpl implements RoomService {
         return playerRepository.findPlayerById(playerId);
     }
 
-    public boolean getStartStatus(Long roomId) {
+    public String getStartStatus(Long roomId) {
         return roomRepository.findStartStatusByRoomId(roomId);
     }
 

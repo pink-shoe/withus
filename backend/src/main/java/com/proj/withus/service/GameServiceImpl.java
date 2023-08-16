@@ -39,8 +39,12 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Room getRoomInfo(Long memberId) {
-         return playerRepository.findRoomIdByPlayerId(memberId)
+         Room room = playerRepository.findRoomIdByPlayerId(memberId)
                  .orElseThrow(() -> new CustomException(ErrorCode.PLAYERS_ROOM_IS_NOT_EXIST));
+
+         roomRepository.updateStart(room.getId(), "playing");
+
+         return room;
     }
 
 

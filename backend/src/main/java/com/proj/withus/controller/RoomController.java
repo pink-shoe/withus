@@ -352,9 +352,14 @@ public class RoomController {
         if (host == null) {
             return new ResponseEntity<String>("방이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
-        if (!roomService.getStartStatus(roomId)) {
+
+        String startState = roomService.getStartStatus(roomId);
+        if (startState.equals("no")) {
             return new ResponseEntity<String>("준비되지 않은 플레이어가 있습니다.", HttpStatus.BAD_REQUEST);
+        } else if (startState.equals("playing")) {
+            return new ResponseEntity<String>("이미 게임 진행 중입니다.", HttpStatus.BAD_REQUEST);
         }
+
         List<Player> players = roomService.getPlayerList(roomId);
         // return new ResponseEntity<List<Player>>(players, HttpStatus.OK);
         return new ResponseEntity<Boolean>(true, HttpStatus.OK);

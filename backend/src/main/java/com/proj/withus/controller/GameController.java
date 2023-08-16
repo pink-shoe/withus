@@ -170,7 +170,7 @@ public class GameController {
         roomRepository.resetReadyState(roomId); // repository로 직접 접근
 
         // 방의 start 상태 변경
-        roomRepository.updateStart(roomId, false); // repository로 직접 접근
+        roomRepository.updateStart(roomId, "no"); // repository로 직접 접근
 
         List<GetTotalGameResultRes> getTotalGameResultRes = gameService.getTotalGameResult(roomId);
         return ResponseEntity.ok(getTotalGameResultRes);
