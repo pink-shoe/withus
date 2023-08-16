@@ -113,7 +113,6 @@ export default function MvpModal({playerList}: IMvpModalProps) {
 
   function showMvp(roomInfo:any) {
     let arr = [0]
-    const max = 0;
     for (let i = 0; i < 2; i++) {
       if (roomInfo.playerInfos[i].vote >= arr[-1]) {
         arr.push(roomInfo.playerInfos[i].vote)
