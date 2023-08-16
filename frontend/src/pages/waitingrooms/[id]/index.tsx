@@ -12,7 +12,6 @@ import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer'
 import Board from '@components/common/Board';
 import { getRoomInfoApi } from 'apis/roomApi';
 import { useQuery } from '@tanstack/react-query';
-import ExceptionModal from '@components/common/ExceptionModal';
 
 export default function WaitingRoom() {
   const location = useLocation();
@@ -65,6 +64,7 @@ export default function WaitingRoom() {
     if (session && publisher) {
       publisher.stream.session.on('signal:' + type, (e: any) => {
         const result = JSON.parse(e.data);
+        console.log(result);
         if (type === 'START') navigate(`/gamerooms/${currentPath}`);
         if (result && currentPath) getRoomData();
       });

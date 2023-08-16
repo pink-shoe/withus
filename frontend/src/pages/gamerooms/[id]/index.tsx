@@ -49,7 +49,8 @@ export default function GameRoom() {
       setPlayerList(result.playerInfos);
       setIsHost(result.hostId === user.memberId);
       // 해당 부분은 api 연결 후 추가 확인 필요.
-      if (result.currentRound === result.room.roomRound) await getGameResultApi(result.room.roomId);
+      if (result.room.currentRound === result.room.roomRound)
+        await getGameResultApi(result.room.roomId);
     }
   };
 
@@ -120,7 +121,7 @@ export default function GameRoom() {
       const result = await sendRoundInfoApi(
         gameroom.room.roomId,
         canvas.toDataURL(),
-        gameroom.currentRound,
+        gameroom.room.currentRound,
         gameroom.shapes.shapeId
       );
       console.log(result);
@@ -142,7 +143,7 @@ export default function GameRoom() {
       console.log(formData);
       const imageResult = await sendCaptureImageApi(
         gameroom.room.roomId,
-        gameroom.currentRound,
+        gameroom.room.currentRound,
         formData
         // gameroom.shapes.shapeId
       );
@@ -232,7 +233,7 @@ export default function GameRoom() {
       <Modal openModal={roundModal} closeModal={closeRoundModal} isSettingModal={false}>
         <div className='flex justify-center me-2 mt-11 pb-2 font-edisplay text-6xl'>
           <span className='text-2xl'>✨</span>
-          Round {gameRoomInfo?.currentRound}
+          Round {gameRoomInfo?.room.currentRound}
           <span className='text-3xl'>✨</span>
         </div>
       </Modal>
@@ -279,7 +280,7 @@ export default function GameRoom() {
               user={user}
               playerList={playerList}
               hostId={gameRoomInfo.hostId}
-              currentRound={gameRoomInfo.currentRound}
+              currentRound={gameRoomInfo.room.currentRound}
               roomRound={gameRoomInfo.room.roomRound}
               roomType={gameRoomInfo.room.roomType}
             />
