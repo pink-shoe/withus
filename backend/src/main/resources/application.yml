@@ -35,7 +35,7 @@ spring:
           google:
             client-id: 160086760593-ocfit5qtj8vainl0afo329ikgq5n1j2f.apps.googleusercontent.com
             client-secret: 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
-            redirect-uri: https://connectwithus.site/api/oauth/google
+            redirect-uri: https://connectwithus.site/google
             scope:
               - openid
               - email
