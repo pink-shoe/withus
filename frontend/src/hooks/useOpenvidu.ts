@@ -19,7 +19,7 @@ export type signalType =
 export interface IStreamList {
   streamManager: any;
   userId: number;
-  // nickname: string;
+  // nickname: s/tring;
 }
 const getConnectionId = (user: IUser) => {
   return user.connectionId;

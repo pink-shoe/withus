@@ -94,9 +94,6 @@ export default function WaitingRoom() {
             <ParticipantsContainer
               type={'WAIT'}
               user={user}
-              // userId={userId}
-              // userName={userName}
-              // onChangeUserName={onChangeUserName}
               playerList={playerList}
               hostId={roomInfo.hostId}
               roomRound={roomInfo.room.roomRound}
@@ -135,12 +132,15 @@ export default function WaitingRoom() {
             )}
           </div>
         </div>
-        <ChatContainer
-          chatStatus={chatStatus}
-          session={session}
-          publisher={publisher}
-          sendSignal={sendSignal}
-        />
+        {(data as IRoomAtom) && playerList && roomInfo && roomInfo.room && (
+          <ChatContainer
+            chatStatus={chatStatus}
+            session={session}
+            publisher={publisher}
+            sendSignal={sendSignal}
+            playerList={playerList}
+          />
+        )}
       </div>
       {/* 방장이 방을 나가면 게임 종료 */}
       {/* {roomInfo.playerInfos &&

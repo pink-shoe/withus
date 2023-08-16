@@ -331,12 +331,15 @@ export default function GameRoom() {
           </div>
           <button onClick={handleDownload}>다운로드</button>
         </div>
-        <ChatContainer
-          chatStatus={chatStatus}
-          session={session}
-          publisher={publisher}
-          sendSignal={sendSignal}
-        />
+        {(data as IRoomAtom) && playerList && roomInfo && roomInfo.room && (
+          <ChatContainer
+            chatStatus={chatStatus}
+            session={session}
+            publisher={publisher}
+            sendSignal={sendSignal}
+            playerList={playerList}
+          />
+        )}
       </div>
     </Background>
   );
