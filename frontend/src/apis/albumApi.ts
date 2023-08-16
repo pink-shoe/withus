@@ -9,7 +9,7 @@ export async function getAlbumListApi(
   page: number,
   size: number
 ): Promise<{
-  content: { imgId: string; imgUrl: string; savedAt: string }[];
+  content: { imgId: number; imgUrl: string; savedAt: string }[];
   totalElements: number;
 }> {
   try {

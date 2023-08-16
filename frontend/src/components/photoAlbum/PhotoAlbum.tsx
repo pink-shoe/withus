@@ -9,7 +9,7 @@ interface IPhotoAlbumProps {
 }
 
 interface Image {
-  imgId: string;
+  imgId: number;
   imgUrl: string;
   savedAt: string;
 }
@@ -40,6 +40,7 @@ export default function PhotoAlbum({ photoFrameNumber, backgroundNumber }: IPhot
   }
 
   const onclickX = async (img_id: string) => {
+    console.log(`이미지 아이디: ${img_id}`);
     await deleteAlbumApi(img_id);
     AlbumList(currentPage, size);
   };
