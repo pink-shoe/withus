@@ -47,7 +47,8 @@ export default function GameRoom() {
       setPlayerList(result.playerInfos);
       setIsHost(result.hostId === user.memberId);
       // 해당 부분은 api 연결 후 추가 확인 필요.
-      if (result.currentRound === result.room.roomRound) await getGameResultApi(result.room.roomId);
+      if (result.room.currentRound === result.room.roomRound)
+        await getGameResultApi(result.room.roomId);
     }
   };
 
@@ -114,7 +115,7 @@ export default function GameRoom() {
       const div = divRef.current;
       const canvas = await html2canvas(div, { scale: 1 });
       console.log(canvas.toDataURL());
-      const gameroom = data as IGameInfo;
+      const gameroom = gameRoomInfo as IGameInfo;
 
       // formData.append('captureImage',)
 
@@ -122,8 +123,8 @@ export default function GameRoom() {
       const result = await sendRoundInfoApi(
         gameroom.room.roomId,
         canvas.toDataURL(),
-        gameroom.currentRound,
-        gameroom.shapes.shapeId
+        gameroom.room.currentRound,
+        gameroom.shapes[currentRound - 1].shapeId
       );
       console.log(result);
       const byteString = atob(canvas.toDataURL().split(',')[1]);
@@ -144,7 +145,7 @@ export default function GameRoom() {
       console.log(formData);
       const imageResult = await sendCaptureImageApi(
         gameroom.room.roomId,
-        gameroom.currentRound,
+        gameroom.room.currentRound,
         formData
         // gameroom.shapes.shapeId
       );
@@ -234,7 +235,7 @@ export default function GameRoom() {
       <Modal openModal={roundModal} closeModal={closeRoundModal} isSettingModal={false}>
         <div className='flex justify-center me-2 mt-11 pb-2 font-edisplay text-6xl'>
           <span className='text-2xl'>✨</span>
-          Round {gameRoomInfo?.currentRound}
+          Round {gameRoomInfo?.room.currentRound}
           <span className='text-3xl'>✨</span>
         </div>
       </Modal>
@@ -257,14 +258,18 @@ export default function GameRoom() {
       </Modal>
       <div className='flex w-full h-full'>
         {/* 라운드마다 문제 나오는 모달창 */}
-        {isProblemModal && (
+        {/* {isProblemModal && (
           <Modal openModal={isProblemModal} isSettingModal={false}>
             <div className='animate-shake'>
               <p className='text-[#514148] font-kdisplay font-medium text-4xl mb-10 text-center'>
                 {gameRoomInfo?.room.roomRound} 라운드 문제
               </p>
               <div className='flex mb-7 w-48 h-48 border-2 border-[#8D98FF]'>
+<<<<<<< HEAD
                 <img src={gameRoomInfo?.shapes.shapeUrl} />
+=======
+                <img src={shapeURL} />
+>>>>>>> 55f382e52e421066e5e9485ea88a12e58f2e5f2f
               </div>
               <p className='text-[#514148] font-kdisplay font-medium text-2xl mb-10 text-center'>
                 게임 시작
@@ -272,7 +277,7 @@ export default function GameRoom() {
               </p>
             </div>
           </Modal>
-        )}
+        )} */}
         {/* 참가자 목록 */}
         <div className='justify-start bg-white z-40'>
           {(data as IGameInfo) && playerList && gameRoomInfo && gameRoomInfo.room && (
@@ -281,7 +286,7 @@ export default function GameRoom() {
               user={user}
               playerList={playerList}
               hostId={gameRoomInfo.hostId}
-              currentRound={gameRoomInfo.currentRound}
+              currentRound={gameRoomInfo.room.currentRound}
               roomRound={gameRoomInfo.room.roomRound}
               roomType={gameRoomInfo.room.roomType}
             />
