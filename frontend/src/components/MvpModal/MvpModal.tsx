@@ -15,7 +15,7 @@ interface IMvpModalProps {
   playerList: IPlayerInfo[];
 }
 
-export default function MvpModal({playerList}: IMvpModalProps) {
+export default function MvpModal({ playerList }: IMvpModalProps) {
   const roomInfo = useAtomValue<IRoomAtom>(roomAtom);
   const [mvpModal, setMvpModal] = useState(false);
   const [gameResultModal, setGameResultModal] = useState(false);
@@ -23,7 +23,7 @@ export default function MvpModal({playerList}: IMvpModalProps) {
   const [user, setUser] = useAtom<IUserAtom>(userAtom);
   const player = playerList.find((player: IPlayerInfo) => {
     return player.playerId === user.memberId;
-  })
+  });
 
   let [contentType, setContentType] = useState('ELECT');
 
@@ -52,7 +52,7 @@ export default function MvpModal({playerList}: IMvpModalProps) {
   async function loadToMvpResult(a: string): Promise<void> {
     setContentType(a);
     if (player) {
-      const result: any = await electMvpApi(roomInfo.room.roomId, player.playerId, votedId)
+      const result: any = await electMvpApi(roomInfo.room.roomId, player.playerId, votedId);
       console.log('전달 완료', result);
     }
     console.log('MVP 결과 확인');
@@ -90,45 +90,50 @@ export default function MvpModal({playerList}: IMvpModalProps) {
   };
 
   function repeatChoice(roomInfo: any) {
-    let arr = []
+    let arr = [];
 
     for (let i = 0; i < 2; i++) {
       const onClickChoice = async () => {
-        setVotedId(i)
+        setVotedId(i);
       };
 
       arr.push(
         <div key={i}>
           <div className='mb-3'>
             <div className='inline-block'>
-            <Heart onClick={onClickChoice} size='35' className='text-[#FA8DA3] hover:animate-bounce cursor-pointer' />
+              <Heart
+                onClick={onClickChoice}
+                size='35'
+                className='text-[#FA8DA3] hover:animate-bounce cursor-pointer'
+              />
             </div>
-            <span onClick={onClickChoice} className='text-[#514148] hover:text-[#FA8DA3] text-3xl font-kdisplay ms-3 cursor-pointer'>{roomInfo.playerInfos[i].nickname}</span>
+            <span
+              onClick={onClickChoice}
+              className='text-[#514148] hover:text-[#FA8DA3] text-3xl font-kdisplay ms-3 cursor-pointer'
+            >
+              {roomInfo.playerInfos[i].nickname}
+            </span>
           </div>
         </div>
-      )
+      );
     }
     return arr;
   }
 
-  function showMvp(roomInfo:any) {
-    let arr = [0]
+  function showMvp(roomInfo: any) {
+    let arr = [0];
     for (let i = 0; i < 2; i++) {
       if (roomInfo.playerInfos[i].vote >= arr[-1]) {
-        arr.push(roomInfo.playerInfos[i].vote)
+        arr.push(roomInfo.playerInfos[i].vote);
       }
     }
-    const mvpArr = []
+    const mvpArr = [];
     for (let i = 0; i < 2; i++) {
       if (arr[-1] === roomInfo.playerInfos[i].vote) {
-        mvpArr.push(
-          <div key={i}>
-            {roomInfo.playerInfos[i].nickname}
-          </div>
-        )
+        mvpArr.push(<div key={i}>{roomInfo.playerInfos[i].nickname}</div>);
       }
     }
-    return mvpArr
+    return mvpArr;
   }
   return (
     <div className='font-kdisplay'>
@@ -136,7 +141,9 @@ export default function MvpModal({playerList}: IMvpModalProps) {
         {contentType === 'ELECT' ? (
           <Fragment>
             <div className='flex justify-center text-5xl mt-9 text-[#514148]'>당신의 MVP에게</div>
-            <div className='flex justify-center text-5xl mb-12 text-[#FA8D8D]'><span className='text-[#FA8D8D]'>투표</span>하세요</div>
+            <div className='flex justify-center text-5xl mb-12 text-[#FA8D8D]'>
+              <span className='text-[#FA8D8D]'>투표</span>하세요
+            </div>
             {repeatChoice(roomInfo)}
             <div className='flex justify-center text-[#514148] text-2xl mt-12 animate-pulse'>
               🚨7초 후 투료가 마감됩니다🚨
@@ -149,7 +156,9 @@ export default function MvpModal({playerList}: IMvpModalProps) {
         ) : (
           <Fragment>
             <div className='text-5xl flex justify-center my-10 text-[#FA8D8D]'>오늘의 MVP</div>
-                <div className='text-4xl flex justify-center pt-5 animate-bounce'>🎊{showMvp(roomInfo)}🎊</div>
+            <div className='text-4xl flex justify-center pt-5 animate-bounce'>
+              🎊{showMvp(roomInfo)}🎊
+            </div>
             <div className='flex justify-end mt-14 text-xl'>
               <Fragment>
                 <button onClick={openGameResultModal}>게임 결과 확인 ➤</button>
