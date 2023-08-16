@@ -237,22 +237,32 @@ public class GameController {
     }
 
 
-    @ApiOperation(value = "사진 보내기(테스트용)", notes = "사진 전송 여부 확인 테스트")
+    @ApiOperation(value = "shape 정보 등록(테스트용)", notes = "shape 정보 DB에 등록")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "사진 전송 성공", response = String.class),
         @ApiResponse(code = 400, message = "사진 전송 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
     })
-    @ApiImplicitParam(name = "image", value = "form data image", dataTypeClass = MultipartFile.class, paramType = "body")
-    @PostMapping(value = "/image/test", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> getTestImage(
+    @ApiImplicitParams(value = {
+        @ApiImplicitParam(name = "image", value = "form data image", dataTypeClass = MultipartFile.class, paramType = "body"),
+        @ApiImplicitParam(name = "shape_id", value = "shapeId", paramType = "path"),
+        @ApiImplicitParam(name = "shape_label", value = "shapeLabel", paramType = "path")
+    })
+    @PostMapping(value = "/image/shape/{shape_id}/{shape_label}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> saveShapeInfo(
         HttpServletRequest request,
+        @PathVariable(value = "shape_id") Long shapeId,
+        @PathVariable(value = "shape_label") String shapeLabel,
         @RequestPart MultipartFile image) {
 
-        String fileName = imageUtil.createFileName(image.getOriginalFilename());
+        String imgUrl = awsS3Service.uploadFile(image);
 
-        File upload = imageUtil.saveLocal(image, fileName);
+        Shape shape = new Shape();
+        shape.setId(shapeId);
+        shape.setShapeLabel(shapeLabel);
+        shape.setShapeUrl(imgUrl);
+        gameService.saveShape(shape);
 
-        return new ResponseEntity<String>("사진 테스트 성공", HttpStatus.OK);
+        return new ResponseEntity<String>("문제 정보 저장 성공", HttpStatus.OK);
     }
 
     @ApiOperation(value = "MVP 선정", notes = "플레이어는 MVP를 투표해 선정한다.")

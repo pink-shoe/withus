@@ -14,7 +14,7 @@ import java.util.List;
 @Getter @Setter
 public class Shape {
 
-	@Id @GeneratedValue
+	@Id
 	@Column(name = "shape_id")
 	@JsonProperty("shapeId")
 	private Long id;
