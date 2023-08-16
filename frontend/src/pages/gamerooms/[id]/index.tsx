@@ -225,7 +225,7 @@ export default function GameRoom() {
       {/* 최종 라운드가 마무리되면 MVP 모달이 나옴 */}
       {/* {gameRoomInfo?.currentRound === roomInfo.room.roomRound ? <MvpModal></MvpModal> : null} */}
 
-      {/* <MvpModal></MvpModal> */}
+      <MvpModal playerList={playerList}></MvpModal>
       {/* 라운드가 변할 때마다 roundModal의 상태가 true가 되도록 해야 함 */}
       {/* 라운드 모달(예시 : Round 1) */}
       <Modal openModal={roundModal} closeModal={closeRoundModal} isSettingModal={false}>
