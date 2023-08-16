@@ -159,8 +159,8 @@ export default function GameRoom() {
   //     splitDataURI[0].indexOf('base64') >= 0 ? atob(splitDataURI[1]) : decodeURI(splitDataURI[1]);
   //   const mimeString = splitDataURI[0].split(':')[1].split(';')[0];
 
-  //   const ia = new Uint8Array(byteString.length);
-  //   for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
+  // const ia = new Uint8Array(byteString.length);
+  // for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
 
   //   return new Blob([ia], { type: mimeString });
   // }
@@ -206,6 +206,7 @@ export default function GameRoom() {
           <MvpModal playerList={gameRoomInfo?.playerInfos}></MvpModal>
         )}
 
+      {/* <MvpModal></MvpModal> */}
       {/* 라운드가 변할 때마다 roundModal의 상태가 true가 되도록 해야 함 */}
       {/* 라운드 모달(예시 : Round 1) */}
       <Modal openModal={roundModal} closeModal={closeRoundModal} isSettingModal={false}>
@@ -234,14 +235,14 @@ export default function GameRoom() {
       </Modal>
       <div className='flex w-full h-full'>
         {/* 라운드마다 문제 나오는 모달창 */}
-        {/* {isProblemModal && (
+        {isProblemModal && (
           <Modal openModal={isProblemModal} isSettingModal={false}>
             <div className='animate-shake'>
               <p className='text-[#514148] font-kdisplay font-medium text-4xl mb-10 text-center'>
-                {gameRoomInfo?.room.roomRound} 라운드 문제
+                {roomInfo.room.roomRound}라운드 문제
               </p>
               <div className='flex mb-7 w-48 h-48 border-2 border-[#8D98FF]'>
-                <img src={gameRoomInfo?.shapes[gameRoomInfo.room.currentRound - 1].shapeUrl} />
+                {/* <img src={shapeURL} /> */}
               </div>
               <p className='text-[#514148] font-kdisplay font-medium text-2xl mb-10 text-center'>
                 게임 시작
@@ -249,7 +250,7 @@ export default function GameRoom() {
               </p>
             </div>
           </Modal>
-        )} */}
+        )}
         {/* 참가자 목록 */}
         <div className='justify-start bg-white z-40'>
           {(data as IGameInfo) && playerList && gameRoomInfo && gameRoomInfo.room && (
