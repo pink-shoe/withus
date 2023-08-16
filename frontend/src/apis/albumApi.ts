@@ -10,7 +10,7 @@ export async function getAlbumListApi(
   size: number
 ): Promise<{
   content: { imgId: number; imgUrl: string; savedAt: string }[];
-  totalElements: number;
+  totalPages: number;
 }> {
   try {
     const response = await axios.get(apiUrl, {
@@ -24,13 +24,13 @@ export async function getAlbumListApi(
 
     return {
       content: response.data.content,
-      totalElements: response.data.totalElements,
+      totalPages: response.data.totalPages,
     };
   } catch (error) {
     console.error('실패:', (error as AxiosError).message);
     return {
       content: [],
-      totalElements: 0,
+      totalPages: 0,
     };
   }
 }

@@ -33,7 +33,7 @@ export default function PhotoAlbum({ photoFrameNumber, backgroundNumber }: IPhot
     try {
       const response = await getAlbumListApi(page, size);
       setDisplayedImages(response.content);
-      setTotalPages(response.totalElements);
+      setTotalPages(response.totalPages);
     } catch (error) {
       console.error('앨범 목록 조회 실패:');
     }
