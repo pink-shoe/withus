@@ -208,33 +208,26 @@ public class GameController {
     //     return new ResponseEntity<>(HttpStatus.OK);
     // }
 
-    @ApiOperation(value = "선택된 사진 저장", notes = "모든 라운드 종료 후 유저는 저장하고 싶은 사진을 선택해 저장한다.(S3)")
+    @ApiOperation(value = "선택된 사진 저장", notes = "모든 라운드 종료 후 유저는 저장하고 싶은 사진을 선택해 앨범에 저장한다.")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "선택한 사진 저장 성공", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "ok"))),
         @ApiResponse(code = 400, message = "선택한 사진 저장 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
     })
     @ApiImplicitParam(name = "getSelectedImagesReq", value = "GetSelectedImages object", dataTypeClass = GetSelectedImagesReq.class, paramType = "body")
     @PostMapping("/image/upload")
-    public ResponseEntity<?> saveImageToS3(
+    public ResponseEntity<?> saveImageToAlbum(
         HttpServletRequest request,
-        @RequestBody List<MultipartFile> images) {
+        @RequestBody GetSelectedImagesReq getSelectedImagesReq) {
         Long memberId = (Long) request.getAttribute("memberId");
 
         Long albumId = albumService.getAlbum(memberId);
 
-        //        List<String> imgUrls = new ArrayList<>();
-        //        imgUrls = awsS3Service.uploadFiles(images);
-
-        for (MultipartFile image : images) {
-            String imgUrl = awsS3Service.uploadFile(image);
+        for (Long resultId : getSelectedImagesReq.getResults()) {
+            String imgUrl = gameService.getCaptureUrl(resultId);
             albumService.saveImage(memberId, imgUrl);
         }
 
-        //        for (String imgUrl : imgUrls) {
-        //            albumService.saveImage(memberId, imgUrl);
-        //        }
-
-        return new ResponseEntity<String>("S3에 이미지 업로드 성공", HttpStatus.OK);
+        return new ResponseEntity<String>("선택한 이미지 앨범 저장 성공", HttpStatus.OK);
     }
 
 
