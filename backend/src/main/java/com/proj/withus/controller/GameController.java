@@ -123,6 +123,10 @@ public class GameController {
             @PathVariable("round") int round,
             @RequestPart MultipartFile captureImage) {
 
+        if (round == roomService.getRoomInfo(roomId).get().getRound()) {
+            throw new CustomException(ErrorCode.LAST_ROUND);
+        }
+
         // s3 사진 저장 후 url 받기
         String imageUrl = awsS3Service.uploadFile(captureImage);
 
