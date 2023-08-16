@@ -26,6 +26,7 @@ public class S3Config {
 		return (AmazonS3Client)AmazonS3ClientBuilder.standard()
 			.withRegion(Regions.AP_NORTHEAST_2)
 			.withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
+			.enablePathStyleAccess()
 			.build();
 	}
 

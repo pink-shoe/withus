@@ -88,6 +88,6 @@ public class AwsS3ServiceImpl implements AwsS3Service{
 //			throw new CustomException(ErrorCode.LOCAL_IMAGE_NOT_DELETED);
 //		}
 
-		return fileName;
+		return amazonS3Client.getUrl(bucket, fileName).toString();
 	}
 }
