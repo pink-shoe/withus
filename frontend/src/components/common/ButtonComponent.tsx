@@ -14,7 +14,7 @@ export default function ButtonComponent({ type, onClick, children }: IButtonProp
   if (type === 'isBig') {
     buttonCss = 'rounded-xl w-96 h-8 bg-[#FF8D8D]  hover:border-[#FF8D8D]';
     textCss = 'font-kdisplay text-xl';
-    margin = 'm-2';
+    margin = 'm-1';
   } else if (type === 'tiny') {
     buttonCss = 'rounded w-24 h-8 border-2 bg-white hover:border-[#FF8D8D]';
     textCss = 'font-kdisplay';
