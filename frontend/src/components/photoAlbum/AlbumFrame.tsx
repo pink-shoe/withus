@@ -2,7 +2,7 @@ import { getAlbumListApi } from 'apis/albumApi';
 
 interface IAlbumProps {
   photoFrameNumber: number;
-  DisplayedImages: { imgId: string; imgUrl: string; savedAt: string }[];
+  DisplayedImages: { imgId: number; imgUrl: string; savedAt: string }[];
   BackgroundURL: string;
   onClickX: any;
 }
@@ -75,7 +75,7 @@ export default function AlbumFrame({
                 />
                 <div
                   className='absolute top-1.5 right-2.5 cursor-pointer font-edisplay text-2xl'
-                  onClick={onClickX}
+                  onClick={onClickX(image.imgId)}
                 >
                   X
                 </div>
