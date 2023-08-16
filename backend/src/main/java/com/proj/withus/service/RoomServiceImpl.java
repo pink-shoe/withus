@@ -133,13 +133,13 @@ public class RoomServiceImpl implements RoomService {
         playerRepository.findById(memberId)
                         .orElseThrow(() -> new CustomException(ErrorCode.PLAYER_NOT_FOUND));
 
-        playerRepository.deletePlayerByMemberId(memberId);
         Long hostId = roomRepository.findHostIdByRoomId(roomId);
-
         if (hostId == memberId) {
-            playerRepository.deleteAllByRoom_Id(roomId);
+            // playerRepository.deleteAllByRoom_Id(roomId);
             roomRepository.deleteById(roomId);
-            throw new CustomException(ErrorCode.HOST_LEAVE);
+            // throw new CustomException(ErrorCode.HOST_LEAVE);
+        } else {
+            playerRepository.deletePlayerByMemberId(memberId);
         }
     }
     /*

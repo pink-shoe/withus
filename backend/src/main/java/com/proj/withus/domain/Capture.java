@@ -7,6 +7,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Entity
 @Getter @Setter
 public class Capture {
@@ -18,6 +21,7 @@ public class Capture {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Room room;
 
