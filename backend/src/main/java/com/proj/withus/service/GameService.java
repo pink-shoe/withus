@@ -19,4 +19,5 @@ public interface GameService {
     public void chooseMvp(Long roomId, Long votedPlayerId);
     public List<GetTotalGameResultRes> getTotalGameResult(Long roomId);
     public void saveCaptureUrl(Long roomId, int round, String imageUrl);
+    public void saveShape(Shape shape);
 }

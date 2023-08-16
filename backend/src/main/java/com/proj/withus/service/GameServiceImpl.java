@@ -172,4 +172,9 @@ public class GameServiceImpl implements GameService {
         capture.setCaptureUrl(imageUrl);
         captureRepository.save(capture);
     }
+
+    @Override
+    public void saveShape(Shape shape) {
+        shapeRepository.save(shape);
+    }
 }
