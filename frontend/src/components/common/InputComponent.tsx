@@ -4,6 +4,7 @@ interface IInputProps {
   placeholder?: string;
   value?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 export default function InputComponent({ type, label, placeholder, value, onChange }: IInputProps) {

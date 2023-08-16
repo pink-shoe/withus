@@ -26,7 +26,7 @@ export default function ResultModal({openModal}: IResultModalProps) {
   let results = [100, 0, 100, 0, 100];
 
   const [modalStatus, setModalStatus] = useState(false);
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   const navigate = useNavigate();
 
   // 모달창 여는 기능

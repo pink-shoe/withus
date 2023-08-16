@@ -4,9 +4,7 @@ import React, { useState } from 'react';
 import { Settings } from 'react-feather';
 import SettingModalContainer from '../components/common/SettingModal/SettingModalContainer';
 import ResultModal from '../components/common/ResultModal';
-import EndGameModal from '../components/common/EndGameModal';
 import Spinner from '@components/common/Spinner';
-
 
 export default function About() {
   const [updateModalStatus, setUpdateModalStatus] = useState(false);
@@ -22,16 +20,15 @@ export default function About() {
   return (
     <div>
       <Settings onClick={openUpdateModal} className='text-red hover:rotate-45' />
-      <SettingModalContainer
+      {/* <SettingModalContainer
         boardType='WAIT'
         isUpdateModal={true}
         openModal={updateModalStatus}
         closeModal={closeUpdateModal}
-      ></SettingModalContainer>
+      ></SettingModalContainer> */}
       <div>==============구분선=================</div>
       {/* <ResultModal></ResultModal> */}
       <div>==============구분선=================</div>
-      <EndGameModal endReason='NOHOST' openModal={true}></EndGameModal>
       <div>==============구분선=================</div>
       <div>==============구분선=================</div>
       {/* <FontAwesomeIcon icon={faCircleUser} size="2xl" style={{color: "#ffffff"}} className='cursor-pointer me-1 text-[42px] z-50' /> */}

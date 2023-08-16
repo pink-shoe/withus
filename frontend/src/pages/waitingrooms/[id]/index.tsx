@@ -12,7 +12,7 @@ import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer'
 import Board from '@components/common/Board';
 import { getRoomInfoApi } from 'apis/roomApi';
 import { useQuery } from '@tanstack/react-query';
-import EndGameModal from '@components/common/EndGameModal';
+import ExceptionModal from '@components/common/ExceptionModal';
 
 export default function WaitingRoom() {
   const location = useLocation();
@@ -54,42 +54,12 @@ export default function WaitingRoom() {
     }
   }, [data]);
 
-  // const [isUpdateUserName, setIsUpdateUserName] = useState<boolean>(false);
-  // const player: IPlayerAtom = {
-  //   memberId: user.memberId,
-  //   nickname: user.nickname,
-  //   ready: readyStatus,
-  // };
-  const {
-    session,
-    publisher,
-    streamList,
-    // subscribers,
-    // setSubscribers,
-    // updateUserStatus,
-    onChangeCameraStatus,
-    onChangeMicStatus,
-    sendSignal,
-  } = useOpenvidu(
-    user.memberId,
-    // user.nickname,
-    currentPath
-  );
+  const { session, publisher, streamList, onChangeCameraStatus, onChangeMicStatus, sendSignal } =
+    useOpenvidu(user.memberId, currentPath);
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
   };
-
-  // const onChangeUserName = (userName: string) => {
-  //   setUserName(userName);
-  // };
-
-  // const onChangeIsUpdateUserName = (isUpdateteteUserName: boolean) => {
-  //   setIsUpdateUserName(!isUpdateUserName);
-  // };
-  // const onChangeUpdateUserNameStatus = (updateUserNameStatus: boolean) => {
-  //   setUpdateUserNameStatus(!updateUserNameStatus);
-  // };
 
   const receiveSignal = (type: signalType) => {
     if (session && publisher) {
@@ -172,14 +142,12 @@ export default function WaitingRoom() {
           sendSignal={sendSignal}
         />
       </div>
+      {/* 방장이 방을 나가면 게임 종료 */}
       {/* {roomInfo.playerInfos &&
       roomInfo.playerInfos[0] &&
       roomInfo.playerInfos[0].playerId &&
       roomInfo.hostId !== roomInfo.playerInfos[0].playerId ? (
-        <EndGameModal
-          message={'방장이 방을 나가 게임이 종료됩니다.'}
-          // openModal={true}
-        ></EndGameModal>
+        <ExceptionModal message='' />
       ) : (
         <></>
       )} */}

@@ -3,7 +3,6 @@ import axios from '.';
 import { IPlayerInfo, IRoom } from 'stores/room';
 
 const apiUrl = `/games`;
-
 export interface ITotalGameResult {
   gameResult: IGameResult;
   shape: IShape;
@@ -19,7 +18,7 @@ export interface IGameResult {
 export interface IShape {
   shapeId: number;
   shapeLabel: string;
-  shapeUrl: string;
+  // shapeUrl: string;
 }
 export interface IGameInfo {
   currentRound: number;
@@ -59,18 +58,19 @@ export const getGameInfoApi = async (roomId: number) => {
 };
 
 export const sendCaptureImageApi = async (
-  captureUrl: string,
-  currentRound: number,
   roomId: number,
-  shapeId: number
+  currentRound: number,
+  formData: FormData
 ) => {
   try {
+    // const formData = new FormData();
+    // formData.append('captureImage', image);
     // 헤더에 토큰을 포함하여 요청을 보냅니다.
-    const response = await axios.post(apiUrl + `/image`, {
-      captureUrl,
-      currentRound,
-      roomId,
-      shapeId,
+    console.log(formData);
+    const response = await axios.post(apiUrl + `/image/${roomId}/${currentRound}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
     console.log('성공:', response.data);
     return response;

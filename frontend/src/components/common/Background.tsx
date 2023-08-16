@@ -1,19 +1,18 @@
 import { Fragment } from 'react';
 import UserHeader from './UserHeader';
 
-export type backgroundType = 'LOBBY' | 'NOLOBBY' | 'LOGIN'
+export type backgroundType = 'LOBBY' | 'NOLOBBY' | 'LOGIN' | 'ALBUM';
 
 interface IBackgroundProps {
   backgroundType: backgroundType;
   // isLobbyDropdown true는 로비 항목이 없고, false는 로비 항목이 있음
+  // UserHeader를 사용하지 않는 페이지가 있기에 ? 사용
   isLobbyDropdown: boolean;
   children: React.ReactNode;
 }
 
 export default function Background({backgroundType, isLobbyDropdown, children}: IBackgroundProps) {
-  const token = localStorage.getItem('token');
-  
-  return (
+return (
     <Fragment>
       {backgroundType === 'LOBBY' ? (
         // 로비 페이지와 같이 드롭다운이 필요한 경우
@@ -36,6 +35,15 @@ export default function Background({backgroundType, isLobbyDropdown, children}: 
             </div>
           </Fragment>
         </div>
+) : backgroundType === 'ALBUM' ? (
+        // 사진첩 페이지의 배경
+        <div className='min-w-[865px] white'>
+          <Fragment>
+            <div className='flex justify-center place-items-center h-[740px] tall:h-screen bg-[#F9C7C8]'>
+              {children}
+            </div>
+          </Fragment>
+        </div>
       ) : (
         // 로그인 페이지의 배경
         <div className="min-w-[865px] white">
@@ -49,3 +57,4 @@ export default function Background({backgroundType, isLobbyDropdown, children}: 
     </Fragment>
   );
 }
+

@@ -25,7 +25,6 @@ export default function MvpModal({playerList}: IMvpModalProps) {
     return player.playerId === user.memberId;
   })
 
-
   let [contentType, setContentType] = useState('ELECT');
 
   // 시간을 지연시키는 함수
@@ -38,7 +37,6 @@ export default function MvpModal({playerList}: IMvpModalProps) {
     setMvpModal(a);
     console.log('MVP 투표 시작');
   }
-
 
   // const onClickNominee = async () => {
   //   const result: any = await electMvpApi(roomId, playerId, votedId)

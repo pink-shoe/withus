@@ -3,18 +3,16 @@ import Modal from '../Modal';
 import SelectBox from '../SelectBox';
 import TextCopy from '../TextCopy';
 import GameStartButton from '../GameStartButton';
-import { IRoomAtom } from 'stores/room';
-import Lobby from '@pages/lobby';
 
 interface ISettingModalPresenterProps {
-  roomCode: number;
-  roomType: string;
-  roomRound: number;
+  roomCode?: number;
+  roomType?: string;
+  roomRound?: number;
   boardType?: string;
   mode: string;
   round: number;
   openModal: boolean;
-  closeModal: React.MouseEventHandler<SVGSVGElement>;
+  closeModal: () => void;
   selectMode: any;
   MOPTIONS: {
     value: string | number;
@@ -47,7 +45,7 @@ export default function SettingModalPresenter({
   isUpdateModal,
   handleSaveSetting,
 }: ISettingModalPresenterProps) {
-  const roomUrl = `http://connectwithus.site/login?code=${roomCode}`
+  const roomUrl = `http://connectwithus.site/login?code=${roomCode}`;
   return (
     <Fragment>
       <div className='font-kdisplay'>
@@ -61,20 +59,31 @@ export default function SettingModalPresenter({
           <p className='text-[#514148] font-medium text-4xl mb-10 text-center'>방 설정</p>
           <div className='ms-2.5'>
             <div className='flex my-7'>
-              <span className='ms-2 me-5 font-medium text-2xl flex items-center'>게임모드</span>
+              <span className='ms-2 me-5 font-medium text-2xl flex items-center whitespace-nowrap'>
+                게임모드
+              </span>
               {boardType === 'LOBBY' ? (
-              <SelectBox selectSetting={selectMode} options={MOPTIONS}></SelectBox>
+                <SelectBox selectSetting={selectMode} options={MOPTIONS}></SelectBox>
               ) : (
-                <SelectBox selectSetting={selectMode} options={MOPTIONS} defaultValue={roomType}></SelectBox>
+                <SelectBox
+                  selectSetting={selectMode}
+                  options={MOPTIONS}
+                  defaultValue={roomType}
+                ></SelectBox>
               )}
-              
             </div>
             <div className='flex mb-7'>
-              <span className='ms-2 me-5 font-medium text-2xl flex items-center'>게임진행</span>
+              <span className='ms-2 me-5 font-medium text-2xl flex items-center whitespace-nowrap'>
+                게임진행
+              </span>
               {boardType === 'LOBBY' ? (
-              <SelectBox selectSetting={selectRound} options={ROPTIONS}></SelectBox>
+                <SelectBox selectSetting={selectRound} options={ROPTIONS}></SelectBox>
               ) : (
-                <SelectBox selectSetting={selectRound} options={ROPTIONS} defaultValue={roomRound}></SelectBox>
+                <SelectBox
+                  selectSetting={selectRound}
+                  options={ROPTIONS}
+                  defaultValue={roomRound}
+                ></SelectBox>
               )}
               <span className='me-5 font-medium text-2xl flex items-center ms-2'>판</span>
             </div>
@@ -85,16 +94,18 @@ export default function SettingModalPresenter({
             {isUpdateModal ? (
               <Fragment>
                 <div className='flex mb-7'>
-                  <span className='ms-2 me-5 font-medium text-2xl flex items-center'>초대하기</span>
+                  <span className='ms-2 me-5 font-medium text-2xl flex items-center whitespace-nowrap'>
+                    초대하기
+                  </span>
                   <div className='w-[19.5rem] inline-block'>
                     <div>
                       <div className='inline-block p-1 bg-[#FF8DA3] border-2 border-[#FF8DA3] font-medium text-2xl text-center text-white font-kdisplay rounded-l-lg'>
                         Code
                       </div>
-                      <div className='inline-block p-1 w-[12.7rem] border-y-2 border-e-2 border-[#FF8DA3] rounded-r-lg font-medium text-2xl text-center text-[#514148] font-kdisplay'>
+                      <div className='inline-block p-1 w-[12.7rem] border-y-2 border-e-2 border-[#FF8DA3] rounded-r-lg font-medium text-2xl text-[#514148] text-center font-kdisplay'>
                         {roomCode}
                       </div>
-                      
+
                       <div className='inline-block align-middle pb-2 ms-[6px]'>
                         <TextCopy text={roomCode} />
                       </div>
@@ -106,9 +117,9 @@ export default function SettingModalPresenter({
                     <div className='inline-block px-2 pt-7 bg-[#FF8DA3] border-2 border-[#FF8DA3] font-medium text-2xl text-center text-white font-kdisplay rounded-l-lg'>
                       <span>Url</span>
                     </div>
-                    
-                    <div className='inline-block p-1 border-y-2 border-e-2 w-[20.1rem] border-[#FF8DA3] rounded-r-lg font-medium text-2xl text-center text-[#514148] font-kdisplay'>
-                      <div className='overflow-x-auto w-[19rem]'>{roomUrl}</div>
+
+                    <div className='inline-block p-1 border-y-2 border-e-2 w-[20.1rem] border-[#FF8DA3] rounded-r-lg font-medium text-2xl text-justify text-[#514148] font-kdisplay'>
+                      <div className='w-full break-words'>{roomUrl}</div>
                     </div>
                     <div className='inline-block pt-7 ms-[6px]'>
                       <TextCopy text={roomUrl} />

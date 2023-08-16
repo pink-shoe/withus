@@ -54,13 +54,11 @@ export default function Board({ boardType, children }: IBoardProps) {
         </div>
       ) : boardType === 'ALBUM' ? (
         // 사진첩 화면
-        <div className='h-full min-w-[500px] 2sm:w-full pl-12 pt-12 pb-8'>
+        <div className='h-full min-w-[500px] 2sm:w-full pl-20 pt-12 pb-8'>
           <div className='flex justify-center'>
             <div className='drop-shadow-xl rounded-md bg-yellow-100 h-[2.5rem] w-11/12'></div>
           </div>
           <div className='flex justify-center align-middle'>
-            {/* 로고 만들어서 지금 여기 있어!! */}
-            <Logo logoType={'ALBUMLOGO'}></Logo>
             <div className='flex justify-center place-items-center h-[600px] w-10/12 bg-white'>
               {children}
             </div>
