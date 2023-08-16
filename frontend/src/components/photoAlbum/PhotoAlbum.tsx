@@ -16,8 +16,8 @@ interface Image {
 
 export default function PhotoAlbum({ photoFrameNumber, backgroundNumber }: IPhotoAlbumProps) {
   const BackGroundURLs = [
-    '/src/assets/BG1.jpg',
-    '/src/assets/BG2.jpg',
+    '../../assets/BG1.jpg',
+    '../../assets/BG2.jpg',
     '/src/assets/BG3.jpeg',
     '/src/assets/BG4.jpg',
     '/src/assets/BG5.jpg',
