@@ -46,9 +46,7 @@ export default function PhotoAlbum({ photoFrameNumber, backgroundNumber }: IPhot
   };
 
   useEffect(() => {
-    if (currentPage !== 1) {
-      AlbumList(currentPage, size);
-    }
+    AlbumList(currentPage, size);
   }, [currentPage]);
 
   useEffect(() => {
