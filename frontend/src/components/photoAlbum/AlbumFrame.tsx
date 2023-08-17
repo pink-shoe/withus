@@ -1,7 +1,7 @@
 import { getAlbumListApi } from 'apis/albumApi';
 import { Save, X } from 'react-feather';
 import Modal from '@components/common/Modal';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import html2canvas from 'html2canvas';
 
 interface IAlbumProps {
@@ -27,6 +27,7 @@ export default function AlbumFrame({
 
   const [showModal, setShowModal] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState('');
+  const [images, setImages] = useState<HTMLImageElement[]>([]);
 
   const openModal = (imageUrl: string) => {
     setSelectedImageUrl(imageUrl);
@@ -36,6 +37,18 @@ export default function AlbumFrame({
   const closeModal = () => {
     setShowModal(false);
   };
+
+  useEffect(() => {
+    const tempimages: HTMLImageElement[] = [];
+
+    for (let i = 0; i < DisplayedImages.length; i++) {
+      const image = new Image();
+      image.src = DisplayedImages[i]?.imgUrl + '?timestamp=' + new Date().getTime();
+      image.crossOrigin = 'anonymous';
+      tempimages.push(image);
+      setImages(tempimages);
+    }
+  }, [DisplayedImages]);
 
   const handleSaveImage = async () => {
     const modalElement = document.querySelector('.modal') as HTMLElement;
@@ -113,7 +126,7 @@ export default function AlbumFrame({
               className='absolute top-0 left-0 cursor-pointer font-edisplay w-9 h-9  text-black hover:text-white transform -translate-x-full'
               onClick={() => handleSaveImage()}
             />
-            {DisplayedImages.slice(0, 4).map((image, index) =>
+            {images.slice(0, 4).map((image, index) =>
               image ? (
                 <div
                   key={index}
@@ -126,7 +139,7 @@ export default function AlbumFrame({
                 >
                   <div className='relative w-80 h-72'>
                     <img
-                      src={image.imgUrl}
+                      src={image.src}
                       alt={`Image-${index + 1}`}
                       className='w-full h-full object-cover border-8 border-red-300 rounded-xl'
                     />
