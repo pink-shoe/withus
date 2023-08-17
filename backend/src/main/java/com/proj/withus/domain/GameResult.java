@@ -29,7 +29,7 @@ public class GameResult {
 
     private boolean isCorrect;
 
-    private int prediction;
+    private Long prediction;
 
-    private int answer;
+    private Long answer;
 }

@@ -168,10 +168,12 @@ public class GameController {
         }
 
         // 게임 참여 player 모두 ready 상태 false로 만들어주기
-        roomRepository.resetReadyState(roomId); // repository로 직접 접근
+        // 게임 종료 api에서 하기
+//        roomRepository.resetReadyState(roomId); // repository로 직접 접근
 
         // 방의 start 상태 변경
-        roomRepository.updateStart(roomId, "no"); // repository로 직접 접근
+        // 게임 종료 api에서 하기
+//        roomRepository.updateStart(roomId, "no"); // repository로 직접 접근
 
         List<GetTotalGameResultRes> getTotalGameResultRes = gameService.getTotalGameResult(roomId);
         return ResponseEntity.ok(getTotalGameResultRes);
