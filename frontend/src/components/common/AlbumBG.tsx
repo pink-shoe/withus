@@ -39,8 +39,8 @@ export default function AlbumBG({
   const BGIMG = [1, 2, 3, 4, 5];
 
   return (
-    <div className='min-w-[480px]'>
-      <div className='hover:text-red-100'>
+    <div className='min-w-[1200px]'>
+      <div className='flex justify-end hover:text-red-100'>
         <UserHeader />
       </div>
       <div className='flex justify-center place-items-center h-full bg-red-100'>
