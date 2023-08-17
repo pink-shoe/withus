@@ -38,7 +38,7 @@ export default function GameRoom() {
   const [readySet, setReadySet] = useState<number[]>([]);
   const [ruleModal, setRuleModal] = useState(true);
   const [roundModal, setRoundModal] = useState(false);
-
+  const [mvpModal, setMvpModal] = useState(false);
   // 모달 만들면서 추가한 부분 겹치는거 확인점
   const getGameData = async () => {
     const result = (await getGameInfoApi(roomInfo.room.roomId)) as IGameInfo;
@@ -140,6 +140,7 @@ export default function GameRoom() {
               console.log('게임 종료!');
               sendSignal(`GAMEEND`, 'GAMEEND');
               setCanPlay(false);
+              setMvpModal(true);
             }
           }
           console.log(imageResult);
@@ -212,10 +213,9 @@ export default function GameRoom() {
   return (
     <Background backgroundType='NOLOBBY' isLobbyDropdown={false}>
       {/* 최종 라운드가 마무리되면 MVP 모달이 나옴 */}
-      {gameRoomInfo?.room.roomRound &&
-        gameRoomInfo?.room.currentRound === gameRoomInfo.room.roomRound && (
-          <MvpModal playerList={gameRoomInfo?.playerInfos}></MvpModal>
-        )}
+
+      <MvpModal isOpenMvpModal={mvpModal} />
+
       {/* 라운드가 변할 때마다 roundModal의 상태가 true가 되도록 해야 함 */}
       {/* 라운드 모달(예시 : Round 1) */}
       {currentRound &&
