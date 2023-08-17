@@ -17,7 +17,6 @@ export default function MypageAlbum() {
   // 비정상적인 접근 차단 & 새로고침마다 유저 정보 재확인
   useEffect(() => {
     const accessToken = sessionStorage.getItem('accessToken');
-
     if (!accessToken) {
       navigate('/login');
     } else {
@@ -27,12 +26,19 @@ export default function MypageAlbum() {
     }
   }, []);
 
+  useEffect(() => {
+    if (fourCut === undefined) {
+      setFourCut(false);
+    }
+  }, [fourCut]);
+
   return (
     <div>
       <AlbumBG
         onChangePhotoFrame={setPhotoFrameNumber}
         onChangeBackground={setBackgroundNumber}
         setFourCut={setFourCut}
+        fourCut={fourCut}
       >
         <Board boardType='ALBUM'>
           <PhotoAlbum
