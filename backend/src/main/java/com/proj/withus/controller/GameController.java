@@ -124,7 +124,7 @@ public class GameController {
             @PathVariable("round") int round,
             @RequestPart MultipartFile captureImage) {
 
-        if (round == roomService.getRoomInfo(roomId).get().getRound()) {
+        if (round == roomService.getRoomInfo(roomId).get().getRound() + 1) {
             throw new CustomException(ErrorCode.LAST_ROUND);
         }
 
