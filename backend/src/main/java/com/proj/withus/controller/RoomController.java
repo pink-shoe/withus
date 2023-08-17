@@ -375,15 +375,21 @@ public class RoomController {
         @ApiResponse(code = 200, message = "게임 시작 성공", response = Boolean.class, examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "true"))),
         @ApiResponse(code = 400, message = "게임 시작 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
     })
-    @GetMapping("/start")
+    @ApiImplicitParams(
+        value = {
+            @ApiImplicitParam(name = "room_id", value = "참여한 방 번호", required = true, dataType = "Long", paramType = "path")
+        }
+    )
+    @PostMapping("/start/{room_id}")
     public ResponseEntity<?> getStart(
-        HttpServletRequest request) {
+        HttpServletRequest request,
+        @PathVariable("room_id") Long roomId) {
 
         SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
         Long memberId = socialMemberInfo.getId();
 
         // member로 방 찾아서, start playing으로 바꾸기
-        Room room = roomService.setStart(memberId);
+        Room room = roomService.setStart(memberId, roomId);
 
         // 랜덤 문제 선정 -> problem 저장
         roomService.makeProblem(room.getId(), room.getRound());

@@ -297,8 +297,8 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Room setStart(Long memberId) {
-        Room room = roomRepository.findByMemberId(memberId)
+    public Room setStart(Long memberId, Long roomId) {
+        Room room = roomRepository.findByMemberIdAndId(memberId, roomId)
             .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND));
 
         roomRepository.updateStart(room.getId(), "playing");
