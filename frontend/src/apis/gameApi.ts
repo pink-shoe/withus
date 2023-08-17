@@ -81,7 +81,9 @@ export const getMvpResultApi = async (roomId: number) => {
     if (response.status === 200) {
       console.log('MVP 출력 성공:', response.data);
       return response.data;
-    } 
+    } else {
+      console.error(response)
+    }
   } catch (error) {
     console.log('MVP 출력 실패:', (error as AxiosError).message);
     throw error;
