@@ -87,14 +87,15 @@ export default function MvpModal({ isOpenMvpModal }: IMvpModalProps) {
   }
 
   useEffect(() => {
-    openAndCloseModal()
-      .then(() => {
-        console.log('순차적 과정 진행 완료');
-      })
-      .catch((error) => {
-        console.error('오류 발생:', error);
-      });
-  }, []);
+    isOpenMvpModal &&
+      openAndCloseModal()
+        .then(() => {
+          console.log('순차적 과정 진행 완료');
+        })
+        .catch((error) => {
+          console.error('오류 발생:', error);
+        });
+  }, [isOpenMvpModal]);
 
   // MVP 결과창의 '게임 결과 확인' 버튼을 누르면 게임 결과가 뜸
   const openGameResultModal = () => {
