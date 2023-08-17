@@ -57,3 +57,8 @@ export const checkStartApi = async (roomId: number) => {
   const response = await axios.get(apiUrl + `/start/${roomId}`);
   return response;
 };
+
+export const startGameApi = async (roomId: number) => {
+  const response = await axios.post(apiUrl + `/start/${roomId}`);
+  return response;
+};
