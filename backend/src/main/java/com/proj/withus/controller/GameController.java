@@ -6,8 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.proj.withus.domain.dto.ChooseMvpPlayerReq;
-import com.proj.withus.domain.dto.GetMvpPlayerRes;
+import com.proj.withus.domain.dto.*;
 import com.proj.withus.exception.CustomException;
 import com.proj.withus.exception.ErrorCode;
 import com.proj.withus.repository.RoomRepository;
@@ -27,11 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.proj.withus.domain.Player;
 import com.proj.withus.domain.Room;
 import com.proj.withus.domain.Shape;
-import com.proj.withus.domain.dto.GetCaptureImageReq;
-import com.proj.withus.domain.dto.GetGameInfoRes;
-import com.proj.withus.domain.dto.GetSelectedImagesReq;
-import com.proj.withus.domain.dto.GetTotalGameResultRes;
-import com.proj.withus.domain.dto.PlayerInfo;
 import com.proj.withus.util.ImageUtil;
 import com.proj.withus.util.JwtUtil;
 
@@ -162,8 +156,19 @@ public class GameController {
             @PathVariable(value = "room_id", required = true) Long roomId,
             HttpServletRequest request) {
 
-        Long memberId = (Long) request.getAttribute("memberId");
-        if (memberId == null) {
+        Long memberId = -1L;
+        String loginType = "";
+        String token = (String) request.getAttribute("token");
+        try {
+            SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(token);
+            memberId = socialMemberInfo.getId();
+            loginType = socialMemberInfo.getLoginType();
+        } catch (Exception e) {
+            return new ResponseEntity<String>("권한이 없는 유저입니다.", HttpStatus.UNAUTHORIZED);
+        }
+
+//        Long memberId = (Long) request.getAttribute("memberId");
+        if (memberId == -1L) {
             throw new CustomException(ErrorCode.MEMBER_NO_PERMISSION);
         }
 
@@ -178,8 +183,10 @@ public class GameController {
         List<GetTotalGameResultRes> getTotalGameResultRes = gameService.getTotalGameResult(roomId);
 
         // memberId에 해당하는 album에 image 저장하기
-        for (GetTotalGameResultRes gameResultRes : getTotalGameResultRes) {
-            albumService.saveImage(memberId, gameResultRes.getCaptureUrl());
+        if (loginType.equals("kakao") || loginType.equals("google")) {
+            for (GetTotalGameResultRes gameResultRes : getTotalGameResultRes) {
+                albumService.saveImage(memberId, gameResultRes.getCaptureUrl());
+            }
         }
 
         return ResponseEntity.ok(getTotalGameResultRes);
