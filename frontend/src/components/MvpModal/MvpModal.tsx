@@ -9,7 +9,7 @@ import { Fragment, useEffect, useState } from 'react';
 import ResultModal from '@components/common/ResultModal';
 
 interface IMvpModalProps {
-  playerList: IPlayerInfo[];
+  isOpenMvpModal: boolean;
 }
 
 interface IMVP {
@@ -17,9 +17,9 @@ interface IMVP {
   vote: number;
 }
 
-export default function MvpModal({ playerList }: IMvpModalProps) {
+export default function MvpModal({ isOpenMvpModal }: IMvpModalProps) {
   const roomInfo = useAtomValue<IRoomAtom>(roomAtom);
-  const [mvpModal, setMvpModal] = useState(false);
+  const [mvpModal, setMvpModal] = useState(isOpenMvpModal);
   const [gameResultModal, setGameResultModal] = useState(false);
   const [mvpResult, setMvpResult] = useState<IMVP[]>([]);
 
@@ -75,7 +75,7 @@ export default function MvpModal({ playerList }: IMvpModalProps) {
 
   async function openAndCloseModal(): Promise<void> {
     try {
-      await delay(17000); // 마지막 라운드가 되면 실행되도록
+      // await delay(17000); // 마지막 라운드가 되면 실행되도록
       await openMvpModal(true);
       await delay(7000); // 투표창 7초 동안 대기
       await electToLoad('LOAD');
@@ -133,10 +133,10 @@ export default function MvpModal({ playerList }: IMvpModalProps) {
               </div>
             ))}
             <div className='flex justify-center text-[#514148] text-2xl mt-12'>
-              🚨한 번만 눌러주세요🚨
+              🚨중복 투표 가능합니다🚨
             </div>
             <div className='flex justify-center text-[#514148] text-2xl mt-5 animate-pulse'>
-              🚨7초 후 투료가 마감됩니다🚨
+              🚨7초 후 투표가 마감됩니다🚨
             </div>
           </Fragment>
         ) : contentType === 'LOAD' ? (
@@ -150,7 +150,7 @@ export default function MvpModal({ playerList }: IMvpModalProps) {
               const player = roomInfo.playerInfos.find((p) => p.playerId === mvp.playerId);
               return (
                 <div key={idx} className='text-4xl flex justify-center pt-5 animate-bounce'>
-                  🎊{player?.nickname}🎊
+                  🎊{player?.nickname}🎊 {mvp.vote}표
                 </div>
               );
             })}

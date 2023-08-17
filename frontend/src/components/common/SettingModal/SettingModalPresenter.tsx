@@ -45,7 +45,6 @@ export default function SettingModalPresenter({
   isUpdateModal,
   handleSaveSetting,
 }: ISettingModalPresenterProps) {
-  const roomUrl = `http://connectwithus.site/login?code=${roomCode}`;
   return (
     <Fragment>
       <div className='font-kdisplay'>
@@ -93,7 +92,7 @@ export default function SettingModalPresenter({
             {/* false일 때는 초대하기 부분이 나타나지 않음 */}
             {isUpdateModal ? (
               <Fragment>
-                <div className='flex mb-7'>
+                <div className='flex mb-11'>
                   <span className='ms-2 me-5 font-medium text-2xl flex items-center whitespace-nowrap'>
                     초대하기
                   </span>
@@ -109,20 +108,6 @@ export default function SettingModalPresenter({
                       <div className='inline-block align-middle pb-2 ms-[6px]'>
                         <TextCopy text={roomCode} />
                       </div>
-                    </div>
-                  </div>
-                </div>
-                <div className='mb-10'>
-                  <div className='flex'>
-                    <div className='inline-block px-2 pt-7 bg-[#FF8DA3] border-2 border-[#FF8DA3] font-medium text-2xl text-center text-white font-kdisplay rounded-l-lg'>
-                      <span>Url</span>
-                    </div>
-
-                    <div className='inline-block p-1 border-y-2 border-e-2 w-[20.1rem] border-[#FF8DA3] rounded-r-lg font-medium text-2xl text-justify text-[#514148] font-kdisplay'>
-                      <div className='w-full break-words'>{roomUrl}</div>
-                    </div>
-                    <div className='inline-block pt-7 ms-[6px]'>
-                      <TextCopy text={roomUrl} />
                     </div>
                   </div>
                 </div>
