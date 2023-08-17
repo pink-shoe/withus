@@ -42,36 +42,20 @@ export default function AlbumFrame({
 
     if (modalElement) {
       try {
-        // 이미지 로딩 상태를 추적하는 변수
-        let imagesLoaded = 0;
-        const totalImages = modalElement.querySelectorAll('img').length;
-
-        // 이미지 로딩 완료시 호출되는 함수
-        const imageLoaded = () => {
-          imagesLoaded++;
-          if (imagesLoaded === totalImages) {
-            html2canvas(modalElement).then(async (canvas) => {
-              const blob = await new Promise<Blob>((resolve) => {
-                canvas.toBlob((blob) => {
-                  resolve(blob as Blob);
-                });
-              });
-
-              const url = window.URL.createObjectURL(blob);
-              const a = document.createElement('a');
-              a.href = url;
-              a.download = 'album_image.png';
-              a.click();
-
-              window.URL.revokeObjectURL(url);
-            });
-          }
-        };
-
-        // 각 이미지의 로딩 완료 이벤트 등록
-        modalElement.querySelectorAll('img').forEach((img) => {
-          img.onload = imageLoaded;
+        const canvas = await html2canvas(modalElement);
+        const blob = await new Promise<Blob>((resolve) => {
+          canvas.toBlob((blob) => {
+            resolve(blob as Blob);
+          });
         });
+
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'album_image.png';
+        a.click();
+
+        window.URL.revokeObjectURL(url);
       } catch (error) {
         console.error('Error capturing or saving the image:', error);
       }
