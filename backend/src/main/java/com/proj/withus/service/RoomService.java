@@ -28,4 +28,6 @@ public interface RoomService {
     public boolean getReadyStatus(Long playerId);
     public String getStartStatus(Long roomId);
     public int updateCurrentRound(Long roomId, int currentRound);
+    public Room setStart(Long memberId);
+    public void makeProblem(Long roomId, int round);
 }

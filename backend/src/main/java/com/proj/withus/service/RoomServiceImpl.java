@@ -1,24 +1,31 @@
 package com.proj.withus.service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
+
+import javax.persistence.EntityManager;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.proj.withus.domain.Member;
 import com.proj.withus.domain.Player;
+import com.proj.withus.domain.Problem;
 import com.proj.withus.domain.Room;
+import com.proj.withus.domain.Shape;
 import com.proj.withus.domain.dto.CreateRoomReq;
 import com.proj.withus.domain.dto.ModifyRoomReq;
 import com.proj.withus.exception.CustomException;
 import com.proj.withus.exception.ErrorCode;
 import com.proj.withus.repository.MemberRepository;
 import com.proj.withus.repository.PlayerRepository;
+import com.proj.withus.repository.ProblemRepository;
 import com.proj.withus.repository.RoomRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import com.proj.withus.repository.ShapeRepository;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +35,8 @@ public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final MemberRepository memberRepository;
     private final PlayerRepository playerRepository;
+    private final ShapeRepository shapeRepository;
+    private final ProblemRepository problemRepository;
     private final EntityManager entityManager;
 
     public Room getRoomByCode(int roomCode) {
@@ -286,4 +295,31 @@ public class RoomServiceImpl implements RoomService {
         return roomRepository.findRoomById(roomId).map(Room::getCurrentRound)
                 .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND));
     }
+
+    @Override
+    public Room setStart(Long memberId) {
+        Room room = roomRepository.findByMemberId(memberId)
+            .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND));
+
+        roomRepository.updateStart(room.getId(), "playing");
+        return room;
+    }
+
+    @Override
+    public void makeProblem(Long roomId, int round) {
+        List<Shape> shapes = shapeRepository.findRandomShapes(round);
+        if (shapes.size() != round) {
+            throw new CustomException(ErrorCode.SHAPE_NOT_LOAD);
+        }
+
+        int currentRound = 1;
+        for (Shape shape : shapes) {
+            Problem problem = new Problem();
+            problem.setRound(currentRound++);
+            problem.setRoom(roomRepository.findRoomById(roomId).orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND)));
+            problem.setShapeId(shape.getId());
+            problemRepository.save(problem);
+        }
+    }
+
 }

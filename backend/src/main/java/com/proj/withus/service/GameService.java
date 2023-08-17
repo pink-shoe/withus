@@ -12,7 +12,7 @@ public interface GameService {
 
     public Room getRoomInfo(Long hostId);
     public List<Player> getPlayersInfo(Long roomId);
-    public List<Shape> getShapeInfo(int round);
+    public List<Shape> getShapeInfo(Room room);
 //    public boolean sendCaptureInfo(GetCaptureImageReq captureDto);
 //    public boolean getGameResult();
     public String getCaptureUrl(Long resultId);

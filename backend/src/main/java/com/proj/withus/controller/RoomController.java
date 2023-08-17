@@ -347,11 +347,10 @@ public class RoomController {
         SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
         Long memberId = socialMemberInfo.getId();
 
-        Long host = 1L;
         // Long host = roomService.getHostId(roomId);
-        if (host == null) {
-            return new ResponseEntity<String>("방이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
-        }
+        // if (host == null) {
+        //     return new ResponseEntity<String>("방이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        // }
 
         String startState = roomService.getStartStatus(roomId);
         if (startState.equals("no")) {
@@ -360,7 +359,7 @@ public class RoomController {
             return new ResponseEntity<String>("이미 진행 중인 게임입니다.", HttpStatus.BAD_REQUEST);
         }
 
-        List<Player> players = roomService.getPlayerList(roomId);
+        // List<Player> players = roomService.getPlayerList(roomId);
         // return new ResponseEntity<List<Player>>(players, HttpStatus.OK);
         return new ResponseEntity<Boolean>(true, HttpStatus.OK);
     }
@@ -371,4 +370,25 @@ public class RoomController {
         return hostId;
     }
 
+    @ApiOperation(value = "게임 시작", notes = "방장이 게임을 시작한다.(성공 시 true(boolean) 반환)")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "게임 시작 성공", response = Boolean.class, examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "true"))),
+        @ApiResponse(code = 400, message = "게임 시작 실패", examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "{ \n errorCode: 400, \n message: fail \n}")))
+    })
+    @GetMapping("/start")
+    public ResponseEntity<?> getStart(
+        HttpServletRequest request) {
+
+        SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
+        Long memberId = socialMemberInfo.getId();
+
+        // member로 방 찾아서, start playing으로 바꾸기
+        Room room = roomService.setStart(memberId);
+
+        // 랜덤 문제 선정 -> problem 저장
+        roomService.makeProblem(room.getId(), room.getRound());
+
+        // ok
+        return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+    }
 }
