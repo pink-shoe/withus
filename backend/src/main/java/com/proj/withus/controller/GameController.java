@@ -176,6 +176,12 @@ public class GameController {
 //        roomRepository.updateStart(roomId, "no"); // repository로 직접 접근
 
         List<GetTotalGameResultRes> getTotalGameResultRes = gameService.getTotalGameResult(roomId);
+
+        // memberId에 해당하는 album에 image 저장하기
+        for (GetTotalGameResultRes gameResultRes : getTotalGameResultRes) {
+            albumService.saveImage(memberId, gameResultRes.getCaptureUrl());
+        }
+
         return ResponseEntity.ok(getTotalGameResultRes);
     }
 
