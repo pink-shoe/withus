@@ -218,27 +218,32 @@ export default function GameRoom() {
         )}
       {/* 라운드가 변할 때마다 roundModal의 상태가 true가 되도록 해야 함 */}
       {/* 라운드 모달(예시 : Round 1) */}
-      {currentRound && currentRound >= 1 && currentRound <= 5 && gameRoomInfo?.shapes && (
-        <Modal openModal={roundModal} closeModal={closeRoundModal} isSettingModal={false}>
-          <div className='flex w-full flex-col justify-center me-2 mt-11 pb-2 font-edisplay text-6xl'>
-            <div className='flex justify-center w-full'>
-              <span className='text-2xl'>✨</span>
-              Round {currentRound}
-              <span className='text-3xl'>✨</span>
+      {currentRound &&
+        currentRound >= 1 &&
+        currentRound <= 5 &&
+        gameRoomInfo &&
+        gameRoomInfo.shapes[currentRound - 1] &&
+        gameRoomInfo.shapes[currentRound - 1].shapeUrl && (
+          <Modal openModal={roundModal} closeModal={closeRoundModal} isSettingModal={false}>
+            <div className='flex w-full flex-col justify-center me-2 mt-11 pb-2 font-edisplay text-6xl'>
+              <div className='flex justify-center w-full'>
+                <span className='text-2xl'>✨</span>
+                Round {currentRound}
+                <span className='text-3xl'>✨</span>
+              </div>
+              <div className='flex justify-center items-center mb-7 w-48 h-48 border-2 border-[#8D98FF]'>
+                <img
+                  src={gameRoomInfo?.shapes[currentRound - 1].shapeUrl}
+                  className='w-full h-full'
+                />
+              </div>
             </div>
-            <div className='flex justify-center items-center mb-7 w-48 h-48 border-2 border-[#8D98FF]'>
-              <img
-                src={gameRoomInfo?.shapes[currentRound - 1].shapeUrl}
-                className='w-full h-full'
-              />
-            </div>
-          </div>
-          {/* <p className='text-[#514148] font-kdisplay font-medium text-2xl mb-10 text-center'>
+            {/* <p className='text-[#514148] font-kdisplay font-medium text-2xl mb-10 text-center'>
           게임 시작
           <span className='text-blue-500 font-medium text-4xl'>{remainingTime}</span>초 전
         </p> */}
-        </Modal>
-      )}
+          </Modal>
+        )}
       {/* 주의 사항 모달창 */}
       {/* 게임 페이지로 이동한 후 가장 먼저 나오고 7초 후 자동적으로 사라짐 */}
       <Modal openModal={ruleModal} closeModal={closeRuleModal} isSettingModal={false}>
