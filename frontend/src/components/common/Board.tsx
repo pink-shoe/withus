@@ -76,13 +76,13 @@ export default function Board({
         </div>
       ) : boardType === 'ALBUM' ? (
         // 사진첩 화면
-        <div className='h-full min-w-[1240px] 2sm:w-full pl-20 pt-12 pb-8'>
+        <div className='h-full min-w-[480px] 2sm:w-full pl-20 pt-12 pb-8'>
           <div className='static'>
             <div className='flex justify-center'>
               <div className='drop-shadow-xl rounded-md bg-yellow-100 h-[2.5rem] w-11/12'></div>
             </div>
             <div className='flex justify-center'>
-              <Logo logoType={'LOBBYLOGO'} />
+              <Logo logoType={'ALBUMLOGO'} />
             </div>
           </div>
           <div className='flex justify-center align-middle'>

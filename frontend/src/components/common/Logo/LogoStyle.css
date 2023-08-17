@@ -40,13 +40,17 @@
 
   .logo-album {
     border: 0px none;
+    -webkit-text-stroke: 5px #51414b;
+    border-color: var(--collection-1-primary-font);
+    text-shadow: 10px 6px 1px rgba(0,0,0,0.75);
+    color: #ffffff;
     font-family: 'Baloo Thambi', sans-serif;
-    font-size: 90px;
+    font-size: 85px;
     font-weight: 200;
     letter-spacing: -0.77px;
     position: absolute;
     white-space: nowrap;
-    top: -40px;
+    top: -20px;
   }
 }
 
@@ -90,13 +94,17 @@
 
   .logo-album {
     border: 0px none;
+    -webkit-text-stroke: 5px #51414b;
+    border-color: var(--collection-1-primary-font);
+    text-shadow: 10px 6px 1px rgba(0,0,0,0.75);
+    color: #ffffff;
     font-family: 'Baloo Thambi', sans-serif;
-    font-size: 90px;
+    font-size: 85px;
     font-weight: 200;
     letter-spacing: -0.77px;
     position: absolute;
     white-space: nowrap;
-    top: 0;
+    top: -20px;
   }
 }
 
