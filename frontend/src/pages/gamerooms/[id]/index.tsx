@@ -231,11 +231,13 @@ export default function GameRoom() {
                 Round {currentRound}
                 <span className='text-3xl'>✨</span>
               </div>
-              <div className='flex justify-center items-center mb-7 w-48 h-48 border-2 border-[#8D98FF]'>
-                <img
-                  src={gameRoomInfo?.shapes[currentRound - 1].shapeUrl}
-                  className='w-full h-full'
-                />
+              <div className='flex justify-center items-center mt-11 mb-6 w-full h-48'>
+                <div className='flex w-5/12'>
+                  <img
+                    src={gameRoomInfo?.shapes[currentRound - 1].shapeUrl}
+                    className='w-full h-full'
+                  />
+                </div>
               </div>
             </div>
           </Modal>
@@ -250,7 +252,7 @@ export default function GameRoom() {
               1. 오른쪽 손목 - 가슴 - 왼쪽 손목이 하나의 선으로 이어져있다 생각해주세요!!
             </div>
             <div className='mb-5'>2. 머리카락이 몸을 가리면 정확도가 떨어져요ㅜㅜ</div>
-            <div className='mb-5'>3. 네트워크 환경에 따라 진행 상황이 조금씩 다를 수 있어요😥</div>
+            <div className='mb-6'>3. 네트워크 환경에 따라 진행 상황이 조금씩 다를 수 있어요😥</div>
           </div>
           <div className='mt-3 mb-5 text-2xl text-[#FA8D8D] text-center'>
             (게임은 7초 뒤 자동적으로 시작해요)

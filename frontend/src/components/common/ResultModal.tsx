@@ -102,6 +102,24 @@ export default function ResultModal({ openModal }: IResultModalProps) {
   //   }
   // };
 
+  // const getTotalResult = async (roomId: number) => {
+  //   try {
+  //     const totalResult = await getGameResultApi(roomId);
+  //     console.log('결과 출력!!!!!!!:', totalResult);
+  //   } catch (error) {
+  //     console.error('결과 출력 실패ㅜㅜㅜㅜㅜㅜ:', error)
+  //   }
+  // }
+
+  // const [totalResult, setTotalResult] = useState()
+  // const getGameData = async () => {
+  //   const result = (await getGameInfoApi(roomInfo.room.roomId)) as IGameInfo;
+  //   if (result) {
+  //     // 해당 부분은 api 연결 후 추가 확인 필요.
+  //     if (result.currentRound === result.room.roomRound) await getGameResultApi(result.room.roomId);
+  //   }
+  // };
+
   // function repeatResult() {
   //   let arr = [];
   //   for (let i = 0; i < 5; i++) {
