@@ -58,19 +58,17 @@ export default function AlbumFrame({
         const canvas = await html2canvas(modalElement, {
           allowTaint: true,
         });
-        const blob = await new Promise<Blob>((resolve) => {
-          canvas.toBlob((blob) => {
-            resolve(blob as Blob);
-          });
-        });
 
-        const url = window.URL.createObjectURL(blob);
+        // Generate a data URL from the canvas
+        const dataURL = canvas.toDataURL('image/png');
+
+        // Create a link element for downloading
         const a = document.createElement('a');
-        a.href = url;
+        a.href = dataURL;
         a.download = 'album_image.png';
-        a.click();
 
-        window.URL.revokeObjectURL(url);
+        // Simulate a click on the link to trigger the download
+        a.click();
       } catch (error) {
         console.error('Error capturing or saving the image:', error);
       }
@@ -187,10 +185,10 @@ export default function AlbumFrame({
         <Modal openModal={showModal} isSettingModal={false}>
           <div className='h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-90 z-50'>
             <div className='flex flex-col items-center w-96 h-96 bg-white p-2 rounded-lg'>
-              <div className='relative'>
+              <div className='relative flex justify-end'>
                 <X
                   onClick={closeModal}
-                  className='cursor-pointer absolute w-8 h-8 top-0 right-0 text-black hover:text-red-100'
+                  className='cursor-pointer w-8 h-8 text-black hover:text-red-100'
                 />
               </div>
               {/* 중앙 정렬 */}
