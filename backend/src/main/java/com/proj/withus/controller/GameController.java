@@ -331,12 +331,15 @@ public class GameController {
         List<GetMvpPlayerRes> mvpPlayerRes = new ArrayList<>();
 
         for (Player player : players) {
-            if (player.getVote() >= maxVote) {
+            if (player.getVote() > maxVote) {
+                mvpPlayerRes = new ArrayList<>();
                 maxVote = player.getVote();
+            }
+            if (player.getVote() == maxVote) {
                 GetMvpPlayerRes getMvpPlayerRes = GetMvpPlayerRes.builder()
-                    .id(player.getId())
-                    .vote(player.getVote())
-                    .build();
+                        .id(player.getId())
+                        .vote(player.getVote())
+                        .build();
                 mvpPlayerRes.add(getMvpPlayerRes);
             }
         }
