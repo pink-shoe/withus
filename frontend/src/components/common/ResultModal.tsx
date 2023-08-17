@@ -8,13 +8,15 @@ import { useNavigate } from 'react-router-dom';
 import { X, Circle } from 'react-feather';
 import { ITotalGameResult, getGameResultApi } from 'apis/gameApi';
 import { roomAtom } from 'stores/room';
-import { participateRoomApi } from 'apis/roomApi';
+import { exitRoomApi, participateRoomApi } from 'apis/roomApi';
+import { signalType } from 'hooks/useOpenvidu';
 
 interface IResultModalProps {
   openModal: any;
+  sendSignal: (message: string, type: signalType) => void;
 }
 
-export default function ResultModal({ openModal }: IResultModalProps) {
+export default function ResultModal({ openModal, sendSignal }: IResultModalProps) {
   const roomInfo = useAtomValue<IRoomAtom>(roomAtom);
   const [resultData, setResultData] = useState<ITotalGameResult[]>([]);
   const token = sessionStorage.getItem('token');
@@ -34,13 +36,17 @@ export default function ResultModal({ openModal }: IResultModalProps) {
   };
 
   // 종료 버튼 클릭 시
-  const onClickFinish = () => {
-    if (token != null) {
-      // 로그인된 유저면, '/lobby' 페이지로 이동
-      navigate('/lobby');
-    } else {
-      // 게스트면, '/login' 페이지로 이동
-      navigate('/login');
+  const onClickFinish = async () => {
+    const result: any = await exitRoomApi(roomInfo.room.roomId);
+    if (result.status <= 300) {
+      sendSignal(`${roomInfo.room.roomCode}`, 'EXIT');
+      if (token != null) {
+        // 로그인된 유저면, '/lobby' 페이지로 이동
+        navigate('/lobby');
+      } else {
+        // 게스트면, '/login' 페이지로 이동
+        navigate('/login');
+      }
     }
   };
 

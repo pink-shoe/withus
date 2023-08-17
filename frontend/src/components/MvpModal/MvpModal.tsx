@@ -7,9 +7,11 @@ import { Heart } from 'react-feather';
 import Modal from '@components/common/Modal';
 import { Fragment, useEffect, useState } from 'react';
 import ResultModal from '@components/common/ResultModal';
+import { signalType } from 'hooks/useOpenvidu';
 
 interface IMvpModalProps {
   isOpenMvpModal: boolean;
+  sendSignal: (message: string, type: signalType) => void;
 }
 
 interface IMVP {
@@ -17,7 +19,7 @@ interface IMVP {
   vote: number;
 }
 
-export default function MvpModal({ isOpenMvpModal }: IMvpModalProps) {
+export default function MvpModal({ isOpenMvpModal, sendSignal }: IMvpModalProps) {
   const roomInfo = useAtomValue<IRoomAtom>(roomAtom);
   const [mvpModal, setMvpModal] = useState(isOpenMvpModal);
   const [gameResultModal, setGameResultModal] = useState(false);
@@ -158,7 +160,7 @@ export default function MvpModal({ isOpenMvpModal }: IMvpModalProps) {
             <div className='flex justify-end mt-14 text-xl'>
               <Fragment>
                 <button onClick={openGameResultModal}>게임 결과 확인 ➤</button>
-                <ResultModal openModal={gameResultModal}></ResultModal>
+                <ResultModal openModal={gameResultModal} sendSignal={sendSignal}></ResultModal>
               </Fragment>
             </div>
           </Fragment>
