@@ -1,6 +1,9 @@
 // 게임 결과를 나타내는 모달창
 import React, { Fragment, useState } from 'react';
 import Modal from './Modal';
+import { useAtomValue } from 'jotai';
+import { IRoomAtom, roomAtom } from 'stores/room';
+import { IGameInfo, IGameResult, ITotalGameResult, getGameInfoApi, getGameResultApi } from 'apis/gameApi';
 
 import picture1 from '@src/assets/loopy1.jpg';
 import picture2 from '@src/assets/loopy2.jpg';
@@ -20,7 +23,9 @@ interface IResultModalProps {
   openModal: any;
 }
 
-export default function ResultModal({openModal}: IResultModalProps) {
+export default function ResultModal({ openModal }: IResultModalProps) {
+  const roomInfo = useAtomValue<IRoomAtom>(roomAtom);
+
   let pictures = [picture1, picture2, picture3, picture4, picture5];
   let answers = [answer1, answer2, answer3, answer4, answer5];
   let results = [100, 0, 100, 0, 100];
@@ -53,6 +58,24 @@ export default function ResultModal({openModal}: IResultModalProps) {
     }
   };
 
+  // const getTotalResult = async (roomId: number) => {
+  //   try {
+  //     const totalResult = await getGameResultApi(roomId);
+  //     console.log('결과 출력!!!!!!!:', totalResult);
+  //   } catch (error) {
+  //     console.error('결과 출력 실패ㅜㅜㅜㅜㅜㅜ:', error)
+  //   }
+  // }
+
+  const [totalResult, setTotalResult] = useState()
+  const getGameData = async () => {
+    const result = (await getGameInfoApi(roomInfo.room.roomId)) as IGameInfo;
+    if (result) {
+      // 해당 부분은 api 연결 후 추가 확인 필요.
+      if (result.currentRound === result.room.roomRound) await getGameResultApi(result.room.roomId);
+    }
+  };
+
   function repeatResult(pictures: any, answers: any, results: any) {
     let arr = [];
     for (let i = 0; i < 5; i++) {
@@ -60,6 +83,7 @@ export default function ResultModal({openModal}: IResultModalProps) {
       // 유사도가 50% 이상이면 O 표시
       // 해당 퍼센트는 나중에 수정 가능
       if (results[i] >= 50) {
+        // getTotalResult(roomInfo.room.roomId)
         arr.push(
           <div className='flex justify-center mb-8' key={i}>
             <span className='me-5'>

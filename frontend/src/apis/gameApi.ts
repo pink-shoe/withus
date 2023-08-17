@@ -28,6 +28,11 @@ export interface IGameInfo {
   shapes: IShape;
 }
 
+export interface IMvpInfo {
+  playerId: number;
+  vote: number
+}[]
+
 // export interface IMvpResult {
 //   playerId: number;
 //   vote: number;
@@ -91,10 +96,10 @@ export const electMvpApi = async (roomId: number, votedId: number) => {
     const response = await axios.post(apiUrl + `/vote/${roomId}`, {
       votedId: votedId,
     });
-    console.log('MVP 선택 완료!!', votedId);
+    console.log('MVP 선택 성공!!', response.data);
     return response.data;
   } catch (error) {
-    console.log('MVP 선택 실패 :', (error as AxiosError).message);
+    console.error('MVP 선택 실패!! :', (error as AxiosError).message);
     throw error;
   }
 };

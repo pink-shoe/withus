@@ -1,35 +1,30 @@
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { IPlayerInfo, IRoomAtom, roomAtom } from 'stores/room';
-import { IUserAtom, playerAtom } from 'stores/user';
-import { IMvpResult, electMvpApi } from 'apis/gameApi';
+import { electMvpApi } from 'apis/gameApi';
 import { getMvpResultApi } from 'apis/gameApi';
-import { useQuery } from '@tanstack/react-query';
 import { Heart } from 'react-feather';
-import { userAtom } from 'stores/user';
 
 import Modal from '@components/common/Modal';
 import { Fragment, useEffect, useState } from 'react';
 import ResultModal from '@components/common/ResultModal';
-import { resolve } from 'path';
-import { rejects } from 'assert';
 
 interface IMvpModalProps {
   playerList: IPlayerInfo[];
+}
+
+interface IMVP {
+  playerId: number;
+  vote: number;
 }
 
 export default function MvpModal({ playerList }: IMvpModalProps) {
   const roomInfo = useAtomValue<IRoomAtom>(roomAtom);
   const [mvpModal, setMvpModal] = useState(false);
   const [gameResultModal, setGameResultModal] = useState(false);
-  const [votedId, setVotedId] = useState(1234);
-  const [user, setUser] = useAtom<IUserAtom>(userAtom);
-  const player = playerList.find((player: IPlayerInfo) => {
-    return player.playerId === user.memberId;
-  });
+  const [mvpResult, setMvpResult] = useState<IMVP[]>([]);
 
   let [contentType, setContentType] = useState('ELECT');
 
-  const { data } = useQuery(['games/mvp'], () => getMvpResultApi(roomInfo.room.roomId));
   // 시간을 지연시키는 함수
   function delay(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -41,76 +36,41 @@ export default function MvpModal({ playerList }: IMvpModalProps) {
     console.log('MVP 투표 시작');
   }
 
-  function repeatChoice(roomInfo: any) {
-    let arr = [];
-
-    for (let i = 0; i < 2; i++) {
-      const onClickChoice = async (playerId: number) => {
-        try {
-          // roomInfo.playerInfos[i].playerId
-          setVotedId(playerId);
-          console.log('나의 MVP 선정', playerId);
-          // await electToLoad('LOAD');
-          const result: any = await electMvpApi(roomInfo.room.roomId, playerId);
-          if (result instanceof Error) {
-            console.error('MVP 선택 실패 :', result.message);
-          } else {
-            console.log('전달 완료!!!!!!', result);
-          }
-      
-        } catch (error) {
-          console.error('MVP 선택 실패 :', error);
-        }
-        // setVotedId(i)
-      };
-      arr.push(
-        <div key={i}>
-          <div className='mb-3'>
-            <div className='inline-block'>
-              <Heart
-                onClick={() => onClickChoice(roomInfo.playerInfos[i].playerId)}
-                size='35'
-                className='text-[#FA8DA3] hover:animate-bounce cursor-pointer'
-              />
-            </div>
-            <span
-              onClick={() => onClickChoice(roomInfo.playerInfos[i].playerId)}
-              className='text-[#514148] hover:text-[#FA8DA3] text-3xl font-kdisplay ms-3 cursor-pointer'
-            >
-              {roomInfo.playerInfos[i].nickname}
-            </span>
-          </div>
-        </div>
-      );
+  const onClickChoice = async (playerId: number) => {
+    try {
+      const result: any = await electMvpApi(roomInfo.room.roomId, playerId);
+      console.log('API 호출 결과:', result);
+    } catch (error) {
+      console.error('MVP 선택 실패:', error);
     }
-    return arr;
-  }
+  };
+
+  const getMvpData = async (roomId: number) => {
+    try {
+      const mvpResult = await getMvpResultApi(roomId);
+      console.log('결과 출력 성공:', mvpResult);
+      setMvpResult(mvpResult);
+    } catch (error) {
+      console.error('결과 출력 실패:', error);
+    }
+  };
 
   // 투표창에서 로딩창으로 변경
   async function electToLoad(a: string): Promise<void> {
     setContentType(a);
     try {
-      // const result: any = await electMvpApi(roomInfo.room.roomId, votedId);
-      // console.log('전달 완료!!!!!!', result);
+      getMvpData(roomInfo.room.roomId);
       console.log('로딩중');
     } catch (error) {
-      console.error('전달 실패 :', error)
+      console.error('로딩 실패 :', error);
     }
   }
-
-  const [thisTimeMvp, setThisTimeMvp] = useState<IMvpResult>();
-  async function getMvpData(roomId: number): Promise<void> {
-    const result = (await getMvpResultApi(roomId)) as IMvpResult;
-    setThisTimeMvp(result);
-    console.log('MVP 정보 출력 완료오오오오오오오오오오', result);
-  }
-
 
   // 로딩창에서 MVP 결과창으로 변경
   async function loadToMvpResult(a: string): Promise<void> {
     setContentType(a);
-    getMvpData(roomInfo.room.roomId);
-    console.log('MVP 결과 확인');
+    console.log(mvpResult);
+    console.log('MVP 확인');
   }
 
   async function openAndCloseModal(): Promise<void> {
@@ -153,8 +113,29 @@ export default function MvpModal({ playerList }: IMvpModalProps) {
             <div className='flex justify-center text-5xl mb-12 text-[#FA8D8D]'>
               <span className='text-[#FA8D8D]'>투표</span>하세요
             </div>
-            {repeatChoice(roomInfo)}
-            <div className='flex justify-center text-[#514148] text-2xl mt-12 animate-pulse'>
+            {roomInfo.playerInfos.map((player, i) => (
+              <div key={i}>
+                <div className='mb-3'>
+                  <div className='inline-block'>
+                    <Heart
+                      onClick={() => onClickChoice(player.playerId)}
+                      size='35'
+                      className='text-[#FA8DA3] hover:animate-bounce cursor-pointer'
+                    />
+                  </div>
+                  <span
+                    onClick={() => onClickChoice(player.playerId)}
+                    className='text-[#514148] hover:text-[#FA8DA3] text-3xl font-kdisplay ms-3 cursor-pointer'
+                  >
+                    {player.nickname}
+                  </span>
+                </div>
+              </div>
+            ))}
+            <div className='flex justify-center text-[#514148] text-2xl mt-12'>
+              🚨한 번만 눌러주세요🚨
+            </div>
+            <div className='flex justify-center text-[#514148] text-2xl mt-5 animate-pulse'>
               🚨7초 후 투료가 마감됩니다🚨
             </div>
           </Fragment>
@@ -165,9 +146,14 @@ export default function MvpModal({ playerList }: IMvpModalProps) {
         ) : (
           <Fragment>
             <div className='text-5xl flex justify-center my-10 text-[#FA8D8D]'>오늘의 MVP</div>
-            <div className='text-4xl flex justify-center pt-5 animate-bounce'>
-              🎊{thisTimeMvp?.playerId}🎊
-            </div>
+            {mvpResult.map((mvp, idx) => {
+              const player = roomInfo.playerInfos.find((p) => p.playerId === mvp.playerId);
+              return (
+                <div key={idx} className='text-4xl flex justify-center pt-5 animate-bounce'>
+                  🎊{player?.nickname}🎊
+                </div>
+              );
+            })}
             <div className='flex justify-end mt-14 text-xl'>
               <Fragment>
                 <button onClick={openGameResultModal}>게임 결과 확인 ➤</button>
