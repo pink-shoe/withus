@@ -100,10 +100,10 @@ export default function MvpModal({ isOpenMvpModal }: IMvpModalProps) {
   // MVP 결과창의 '게임 결과 확인' 버튼을 누르면 게임 결과가 뜸
   const openGameResultModal = () => {
     setGameResultModal(true);
-    useEffect(() => {
-      setMvpModal(false);
-    });
   };
+  useEffect(() => {
+    gameResultModal && setMvpModal(false);
+  }, [gameResultModal]);
 
   return (
     <div className='font-kdisplay'>
