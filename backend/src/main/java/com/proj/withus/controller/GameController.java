@@ -118,10 +118,6 @@ public class GameController {
 
         Capture captureInfo = gameService.getCaptureInfo(roomId, round);
 
-        System.out.println("-------------------");
-        System.out.println(captureInfo.getCaptureUrl());
-        System.out.println("-----------------------");
-
         if (captureInfo == null) {
             // s3 사진 저장 후 url 받기
             String imageUrl = awsS3Service.uploadFile(captureImage);

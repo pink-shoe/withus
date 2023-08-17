@@ -196,6 +196,6 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Capture getCaptureInfo(Long roomId, int round) {
-        return captureRepository.findCaptureByRoomIdAndRound(roomId, round).get();
+        return captureRepository.findCaptureByRoomIdAndRound(roomId, round).orElse(null);
     }
 }
