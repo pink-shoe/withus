@@ -14,7 +14,7 @@ export interface IRoom {
   roomRound: number;
   roomTime: number;
   roomType: string;
-  start: boolean;
+  start: 'no' | 'yes' | 'playing' | 'end';
 }
 export interface IRoomAtom {
   hostId: number;
@@ -34,6 +34,6 @@ export const roomAtom = atom<IRoomAtom>({
     roomRound: -1,
     roomTime: -1,
     roomType: '',
-    start: false,
+    start: 'no',
   },
 });
