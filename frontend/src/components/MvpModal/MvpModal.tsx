@@ -102,10 +102,10 @@ export default function MvpModal({ isOpenMvpModal, sendSignal }: IMvpModalProps)
   // MVP 결과창의 '게임 결과 확인' 버튼을 누르면 게임 결과가 뜸
   const openGameResultModal = () => {
     setGameResultModal(true);
+    useEffect(() => {
+      setMvpModal(false);
+    });
   };
-  useEffect(() => {
-    gameResultModal && setMvpModal(false);
-  }, [gameResultModal]);
 
   return (
     <div className='font-kdisplay'>
@@ -160,7 +160,7 @@ export default function MvpModal({ isOpenMvpModal, sendSignal }: IMvpModalProps)
             <div className='flex justify-end mt-14 text-xl'>
               <Fragment>
                 <button onClick={openGameResultModal}>게임 결과 확인 ➤</button>
-                <ResultModal openModal={gameResultModal} sendSignal={sendSignal}></ResultModal>
+                <ResultModal openModal={gameResultModal} sendSignal={sendSignal} />
               </Fragment>
             </div>
           </Fragment>

@@ -12,13 +12,14 @@ import { exitRoomApi, participateRoomApi } from 'apis/roomApi';
 import { signalType } from 'hooks/useOpenvidu';
 
 interface IResultModalProps {
-  openModal: any;
+  openModal: boolean;
   sendSignal: (message: string, type: signalType) => void;
 }
 
 export default function ResultModal({ openModal, sendSignal }: IResultModalProps) {
   const roomInfo = useAtomValue<IRoomAtom>(roomAtom);
   const [resultData, setResultData] = useState<ITotalGameResult[]>([]);
+
   const token = sessionStorage.getItem('token');
   const navigate = useNavigate();
 

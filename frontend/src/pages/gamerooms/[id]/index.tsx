@@ -139,7 +139,7 @@ export default function GameRoom() {
             if (imageResult.status === 204) {
               console.log('게임 종료!');
               sendSignal(`GAMEEND`, 'GAMEEND');
-              setCanPlay(false);
+              // setCanPlay(false);
             }
           }
           console.log(imageResult);
@@ -160,7 +160,7 @@ export default function GameRoom() {
         if (type === 'GAMEEND') {
           console.log('게임종료', result);
           setMvpModal(true);
-          setCanPlay(false);
+          // setCanPlay(false);
         } else if (type === 'ROUND') {
           setReadySet((prev) => [...prev.filter((v) => v !== result.userId), result.userId]);
         } else if (type === 'NEXTROUND') {
