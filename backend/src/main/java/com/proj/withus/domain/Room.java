@@ -50,8 +50,9 @@ public class Room {
     @Builder.Default
     private int time = 5;
 
-    @ColumnDefault("false")
-    private boolean start;
+//    @ColumnDefault("no")
+    @Builder.Default
+    private String start = "no";
 
     @OneToMany(mappedBy = "room")
     @JsonIgnore

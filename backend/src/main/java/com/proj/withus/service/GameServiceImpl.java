@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import com.proj.withus.domain.*;
@@ -37,9 +38,15 @@ public class GameServiceImpl implements GameService {
     private final GameResultRepository gameResultRepository;
     private final ShapeRepository shapeRepository;
     private final CaptureRepository captureRepository;
+    private final EntityManager entityManager;
 
     @Override
     public Room getRoomInfo(Long memberId) {
+         Room room = playerRepository.findRoomIdByPlayerId(memberId)
+                 .orElseThrow(() -> new CustomException(ErrorCode.PLAYERS_ROOM_IS_NOT_EXIST));
+
+         roomRepository.updateStart(room.getId(), "playing");
+         entityManager.clear();
          return playerRepository.findRoomIdByPlayerId(memberId)
                  .orElseThrow(() -> new CustomException(ErrorCode.PLAYERS_ROOM_IS_NOT_EXIST));
     }

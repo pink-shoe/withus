@@ -26,6 +26,6 @@ public interface RoomService {
     public int cancelReady(Long playerId);
     public List<Player> getReadyPlayers(Long roomId);
     public boolean getReadyStatus(Long playerId);
-    public boolean getStartStatus(Long roomId);
+    public String getStartStatus(Long roomId);
     public int updateCurrentRound(Long roomId, int currentRound);
 }

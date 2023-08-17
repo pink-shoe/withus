@@ -29,10 +29,10 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
     @Modifying
     @Query("update Room r set r.start = :startStatus where r.id = :roomId")
-    int updateStart(@Param("roomId") Long roomId, @Param("startStatus") boolean startStatus);
+    int updateStart(@Param("roomId") Long roomId, @Param("startStatus") String startStatus);
 
     @Query("select r.start from Room r where r.id = :roomId")
-    boolean findStartStatusByRoomId(@Param("roomId") Long roomId);
+    String findStartStatusByRoomId(@Param("roomId") Long roomId);
 
     @Query("update Player p set p.ready = false where p.room.id = :roomId")
     void resetReadyState(@Param("roomId") Long roomId);
