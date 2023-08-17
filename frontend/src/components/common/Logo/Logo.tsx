@@ -45,7 +45,9 @@ export default function Logo({
           <span className='text'>[</span>
           <span className='text'>
             <div className=' bg-white border-4 border-[#FF8DA3] w-36 h-28 inline-block items-center justify-center align-middle rounded-lg ms-5 me-3'>
-              <img src={currentShapeUrl} className='w-full h-full' />
+              <div className='h-[5.8rem] mt-[0.38rem] flex justify-center'>
+                <img src={currentShapeUrl} />
+              </div>
             </div>
             ] with us
           </span>
