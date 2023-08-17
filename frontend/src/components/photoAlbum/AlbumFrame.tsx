@@ -37,20 +37,43 @@ export default function AlbumFrame({
     setShowModal(false);
   };
 
-  const handleSaveImage = () => {
+  const handleSaveImage = async () => {
     const modalElement = document.querySelector('.modal') as HTMLElement;
 
     if (modalElement) {
-      html2canvas(modalElement, { logging: true }).then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
+      // 이미지 로딩 상태를 추적하는 변수
+      let imagesLoaded = 0;
+      const totalImages = modalElement.querySelectorAll('img').length;
 
-        // 이미지 다운로드 링크 생성
-        const a = document.createElement('a');
-        a.href = imgData;
-        a.download = 'album_image.png'; // 다운로드될 파일 이름 설정
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+      // 이미지 로딩 완료시 호출되는 함수
+      const imageLoaded = () => {
+        imagesLoaded++;
+        if (imagesLoaded === totalImages) {
+          // 모든 이미지가 로딩되었을 때 html2canvas 실행
+          html2canvas(modalElement).then(async (canvas) => {
+            // Blob 객체 생성
+            const blob = await new Promise<Blob>((resolve) => {
+              canvas.toBlob((blob) => {
+                resolve(blob as Blob);
+              });
+            });
+
+            // Blob 객체를 링크로 생성하여 이미지 다운로드 수행
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'album_image.png'; // 다운로드될 파일 이름 설정
+            a.click();
+
+            // Blob 객체 생성 후 해제
+            window.URL.revokeObjectURL(url);
+          });
+        }
+      };
+
+      // 각 이미지의 로딩 완료 이벤트 등록
+      modalElement.querySelectorAll('img').forEach((img) => {
+        img.onload = imageLoaded;
       });
     }
   };
@@ -90,7 +113,7 @@ export default function AlbumFrame({
 
   return (
     <div className='flex justify-center items-center w-full h-full'>
-      <div className='modal w-full h-full '>
+      <div className='modal w-full h-full'>
         {fourCut ? (
           <div
             className='w-full h-full bg-cover relative'
