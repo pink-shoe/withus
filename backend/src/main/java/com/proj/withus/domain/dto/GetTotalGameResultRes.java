@@ -19,11 +19,13 @@ public class GetTotalGameResultRes {
 	@ApiModelProperty(value = "게임 결과(ex: 2라운드 게임 결과)", required = true)
 	private GameResult gameResult;
 
-
 	@ApiModelProperty(value = "캡처한 사진 url", required = true)
 	private String captureUrl;
 
-//	@ApiModelProperty(value = "문제(ex: 2라운드에 출제된 문제)", required = true)
-//	private Shape shape;
+	@ApiModelProperty(value = "AI가 예측한 정답 모양 정보", required = true)
+	private Shape predictionShape;
+
+	@ApiModelProperty(value = "정답 모양 사진 url", required = true)
+	private String answerUrl;
 
 }

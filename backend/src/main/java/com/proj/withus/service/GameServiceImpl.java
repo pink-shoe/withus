@@ -165,7 +165,11 @@ public class GameServiceImpl implements GameService {
                             .captureUrl(captureRepository.findCaptureByRoomIdAndRound(roomId, result.getRound())
                                     .map(Capture::getCaptureUrl)
                                     .orElseThrow(() -> new CustomException(ErrorCode.TOTAL_GAME_RESULT_NOT_LOAD)))
-//                            .shape(shapeRepository.findShapeById(result.getShape().getId()).orElse(null))
+                            .answerUrl(shapeRepository.findShapeById(result.getAnswer())
+                                    .map(Shape::getShapeUrl)
+                                    .orElseThrow(() -> new CustomException(ErrorCode.SHAPE_NOT_FOUND)))
+                            .predictionShape(shapeRepository.findShapeById(result.getPrediction())
+                                    .orElseThrow(() -> new CustomException(ErrorCode.SHAPE_NOT_FOUND)))
                             .build()
             );
         }
