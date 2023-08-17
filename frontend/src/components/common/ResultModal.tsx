@@ -1,7 +1,8 @@
 // 게임 결과를 나타내는 모달창
 import { Fragment, useState, useEffect } from 'react';
 import Modal from './Modal';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
+import { IRoomAtom } from 'stores/room';
 
 import picture1 from '@src/assets/loopy1.jpg';
 import picture2 from '@src/assets/loopy2.jpg';
@@ -24,7 +25,8 @@ interface IResultModalProps {
 }
 
 export default function ResultModal({ openModal }: IResultModalProps) {
-  const [roomInfo, setRoomInfo] = useAtom(roomAtom);
+  const roomInfo = useAtomValue<IRoomAtom>(roomAtom);
+
   let pictures = [picture1, picture2, picture3, picture4, picture5];
   let answers = [answer1, answer2, answer3, answer4, answer5];
   let results = [100, 0, 100, 0, 100];
@@ -64,42 +66,79 @@ export default function ResultModal({ openModal }: IResultModalProps) {
     }
   };
 
-  function repeatResult() {
-    let arr = [];
-    for (let i = 0; i < 5; i++) {
-      // 유사도가 50% 미만이면 X 표시
-      // 유사도가 50% 이상이면 O 표시
-      // 해당 퍼센트는 나중에 수정 가능
-      if (results[i] >= 50) {
-        arr.push(
-          <div className='flex justify-center mb-8' key={i}>
-            <span className='me-5'>
-              <span className='font-medium font-kdisplay text-2xl'>ROUND {i + 1}</span>
-              <div className='text-[#112364] mt-2 flex justify-center'>
-                <Circle size='60' />
-              </div>
-            </span>
-            <img className='w-36 h-28 rounded-lg display: inline me-2' src={pictures[i]} />
-            <img className='w-36 h-28 rounded-lg display: inline' src={answers[i]} />
-          </div>
-        );
-      } else {
-        arr.push(
-          <div className='flex justify-center mb-8' key={i}>
-            <span className='me-5'>
-              <span className='font-medium font-kdisplay text-2xl'>ROUND {i + 1}</span>
-              <div className='text-[#F84C4C] flex justify-center'>
-                <X size='80' />
-              </div>
-            </span>
-            <img className='w-36 h-28 rounded-lg display: inline me-3' src={pictures[i]} />
-            <img className='w-36 h-28 rounded-lg display: inline' src={answers[i]} />
-          </div>
-        );
-      }
-    }
-    return arr;
-  }
+  // const getTotalResult = async (roomId: number) => {
+  //   try {
+  //     const totalResult = await getGameResultApi(roomId);
+  //     console.log('결과 출력!!!!!!!:', totalResult);
+  //   } catch (error) {
+  //     console.error('결과 출력 실패ㅜㅜㅜㅜㅜㅜ:', error)
+  //   }
+  // }
+
+  // const [totalResult, setTotalResult] = useState()
+  // const getGameData = async () => {
+  //   const result = (await getGameInfoApi(roomInfo.room.roomId)) as IGameInfo;
+  //   if (result) {
+  //     // 해당 부분은 api 연결 후 추가 확인 필요.
+  //     if (result.currentRound === result.room.roomRound) await getGameResultApi(result.room.roomId);
+  //   }
+  // };
+
+  // const getTotalResult = async (roomId: number) => {
+  //   try {
+  //     const totalResult = await getGameResultApi(roomId);
+  //     console.log('결과 출력!!!!!!!:', totalResult);
+  //   } catch (error) {
+  //     console.error('결과 출력 실패ㅜㅜㅜㅜㅜㅜ:', error)
+  //   }
+  // }
+
+  // const [totalResult, setTotalResult] = useState()
+  // const getGameData = async () => {
+  //   const result = (await getGameInfoApi(roomInfo.room.roomId)) as IGameInfo;
+  //   if (result) {
+  //     // 해당 부분은 api 연결 후 추가 확인 필요.
+  //     if (result.currentRound === result.room.roomRound) await getGameResultApi(result.room.roomId);
+  //   }
+  // };
+
+  // function repeatResult() {
+  //   let arr = [];
+  //   for (let i = 0; i < 5; i++) {
+  //     // 유사도가 50% 미만이면 X 표시
+  //     // 유사도가 50% 이상이면 O 표시
+  //     // 해당 퍼센트는 나중에 수정 가능
+  //     if (results[i] >= 50) {
+  //       // getTotalResult(roomInfo.room.roomId)
+  //       arr.push(
+  //         <div className='flex justify-center mb-8' key={i}>
+  //           <span className='me-5'>
+  //             <span className='font-medium font-kdisplay text-2xl'>ROUND {i + 1}</span>
+  //             <div className='text-[#112364] mt-2 flex justify-center'>
+  //               <Circle size='60' />
+  //             </div>
+  //           </span>
+  //           <img className='w-36 h-28 rounded-lg display: inline me-2' src={pictures[i]} />
+  //           <img className='w-36 h-28 rounded-lg display: inline' src={answers[i]} />
+  //         </div>
+  //       );
+  //     } else {
+  //       arr.push(
+  //         <div className='flex justify-center mb-8' key={i}>
+  //           <span className='me-5'>
+  //             <span className='font-medium font-kdisplay text-2xl'>ROUND {i + 1}</span>
+  //             <div className='text-[#F84C4C] flex justify-center'>
+  //               <X size='80' />
+  //             </div>
+  //           </span>
+  //           <img className='w-36 h-28 rounded-lg display: inline me-3' src={pictures[i]} />
+  //           <img className='w-36 h-28 rounded-lg display: inline' src={answers[i]} />
+  //         </div>
+  //       );
+  //     }
+  //   }
+  //   return arr;
+  // }
 
   // 토큰이 있냐 없냐(로그인 여부)에 따라 대기실 버튼 유무가 달라짐
   function resultButton() {
