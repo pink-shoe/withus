@@ -22,14 +22,7 @@ export default function PhotoAlbum({
   fourCut,
   setFourCut,
 }: IPhotoAlbumProps) {
-  const BackGroundURLs = [
-    '/public/BG1.jpg',
-    '/public/BG2.jpg',
-    '/public/BG3.jpeg',
-    '/public/BG4.jpg',
-    '/public/BG5.jpg',
-    '',
-  ];
+  const BackGroundURLs = ['/BG1.jpg', '/BG2.jpg', '/BG3.jpeg', '/BG4.jpg', '/BG5.jpg', ''];
   const [BackGroundURL, setBackGroundURL] = useState(BackGroundURLs[backgroundNumber]);
   const size = 4; // 한 페이지에 보여줄 이미지 개수
   const [currentPage, setCurrentPage] = useState(1);
