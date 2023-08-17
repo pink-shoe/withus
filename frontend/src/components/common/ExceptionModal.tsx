@@ -12,11 +12,12 @@ export default function ExceptionModal() {
   const token = sessionStorage.getItem('token');
   const navigate = useNavigate();
   const { code, message, setError } = useContext(ErrorContext);
+
   // 모달창 여는 기능
   const openModal = () => {
     setModalStatus(true);
   };
-  // 모달창 닫는 기능(후에 삭제 예정)
+  // 모달창 닫는 기능
   const closeModal = () => {
     setModalStatus(false);
   };
