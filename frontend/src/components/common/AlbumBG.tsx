@@ -7,6 +7,7 @@ interface IBackgroundProps {
   onChangePhotoFrame: (Number: number) => void;
   onChangeBackground: (Number: number) => void;
   setFourCut: React.Dispatch<React.SetStateAction<boolean>>;
+  fourCut: boolean;
 }
 
 export default function AlbumBG({
@@ -14,6 +15,7 @@ export default function AlbumBG({
   onChangePhotoFrame,
   onChangeBackground,
   setFourCut,
+  fourCut,
 }: IBackgroundProps) {
   const [photoFrameNumber, setPhotoFrameNumber] = useState(1);
   const [backgroundNumber, setBackgroundNumber] = useState(1);
@@ -38,10 +40,10 @@ export default function AlbumBG({
 
   return (
     <div className='min-w-[480px]'>
-      <div className='hover:text-red-300'>
+      <div className='hover:text-red-100'>
         <UserHeader />
       </div>
-      <div className='flex justify-center place-items-center h-full bg-[#F9C7C8]'>
+      <div className='flex justify-center place-items-center h-full bg-red-100'>
         {children}
         <div className='flex flex-col items-end'>
           <p className='rounded w-28 h-8 bg-yellow-100 font-kdisplay flex justify-center items-center'>
@@ -71,12 +73,17 @@ export default function AlbumBG({
               배경{number}
             </ButtonComponent>
           ))}
-          <p
-            className='rounded w-28 h-8 bg-yellow-100 font-kdisplay flex justify-center items-center'
-            onClick={() => setFourCut(true)}
+          <button
+            className={`rounded w-28 h-8 font-kdisplay flex justify-center items-center mt-4 ${
+              fourCut ? 'bg-blue-100 text-black' : 'bg-yellow-100 hover:bg-yellow-200 text-black'
+            }`}
+            onClick={() => {
+              setFourCut((prevValue) => !prevValue);
+              console.log('FourCut 값:', fourCut);
+            }}
           >
-            네컷저장
-          </p>
+            {fourCut ? '앨범 보기' : '네컷 저장'}
+          </button>
         </div>
       </div>
     </div>
