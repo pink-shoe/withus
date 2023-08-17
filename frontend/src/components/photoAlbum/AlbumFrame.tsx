@@ -1,7 +1,7 @@
 import { getAlbumListApi } from 'apis/albumApi';
 import { Save, X } from 'react-feather';
 import Modal from '@components/common/Modal';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import html2canvas from 'html2canvas';
 
 interface IAlbumProps {
@@ -27,6 +27,7 @@ export default function AlbumFrame({
 
   const [showModal, setShowModal] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState('');
+  const [images, setImages] = useState<HTMLImageElement[]>([]);
 
   const openModal = (imageUrl: string) => {
     setSelectedImageUrl(imageUrl);
@@ -37,21 +38,40 @@ export default function AlbumFrame({
     setShowModal(false);
   };
 
-  const handleSaveImage = () => {
+  useEffect(() => {
+    const tempimages: HTMLImageElement[] = [];
+
+    for (let i = 0; i < DisplayedImages.length; i++) {
+      const image = new Image();
+      image.src = DisplayedImages[i]?.imgUrl + '?timestamp=' + new Date().getTime();
+      image.crossOrigin = 'anonymous';
+      tempimages.push(image);
+      setImages(tempimages);
+    }
+  }, [DisplayedImages]);
+
+  const handleSaveImage = async () => {
     const modalElement = document.querySelector('.modal') as HTMLElement;
 
     if (modalElement) {
-      html2canvas(modalElement).then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
+      try {
+        const canvas = await html2canvas(modalElement, {
+          allowTaint: true,
+        });
 
-        // 이미지 다운로드 링크 생성
+        // Generate a data URL from the canvas
+        const dataURL = canvas.toDataURL('image/png');
+
+        // Create a link element for downloading
         const a = document.createElement('a');
-        a.href = imgData;
-        a.download = 'album_image.png'; // 다운로드될 파일 이름 설정
-        document.body.appendChild(a);
+        a.href = dataURL;
+        a.download = 'album_image.png';
+
+        // Simulate a click on the link to trigger the download
         a.click();
-        document.body.removeChild(a);
-      });
+      } catch (error) {
+        console.error('Error capturing or saving the image:', error);
+      }
     }
   };
 
@@ -90,7 +110,7 @@ export default function AlbumFrame({
 
   return (
     <div className='flex justify-center items-center w-full h-full'>
-      <div className='modal w-full h-full '>
+      <div className='modal w-full h-full'>
         {fourCut ? (
           <div
             className='w-full h-full bg-cover relative'
@@ -104,7 +124,7 @@ export default function AlbumFrame({
               className='absolute top-0 left-0 cursor-pointer font-edisplay w-9 h-9  text-black hover:text-white transform -translate-x-full'
               onClick={() => handleSaveImage()}
             />
-            {DisplayedImages.slice(0, 4).map((image, index) =>
+            {images.slice(0, 4).map((image, index) =>
               image ? (
                 <div
                   key={index}
@@ -117,7 +137,7 @@ export default function AlbumFrame({
                 >
                   <div className='relative w-80 h-72'>
                     <img
-                      src={image.imgUrl}
+                      src={image.src}
                       alt={`Image-${index + 1}`}
                       className='w-full h-full object-cover border-8 border-red-300 rounded-xl'
                     />
@@ -148,40 +168,49 @@ export default function AlbumFrame({
                       alt={`Image-${index + 1}`}
                       className='w-full h-full object-cover border-8 border-red-300 rounded-xl'
                     />
-                    <div
-                      className='absolute top-1.5 right-2.5 cursor-pointer font-edisplay text-2xl'
+                    <X
+                      className='absolute top-1.5 right-2.5 cursor-pointer font-edisplay w-6 h-6 text-white hover:text-black'
                       onClick={() => onClickX(image.imgId)}
-                    >
-                      X
-                    </div>
+                    />
                     <Save
-                      className='absolute top-1.5 left-2.5 cursor-pointer font-edisplay text-2xl'
+                      className='absolute top-1.5 left-2.5 cursor-pointer font-edisplay w-6 h-6 text-white hover:text-black'
                       onClick={() => openModal(image.imgUrl)}
                     />
                   </div>
-                  <Modal openModal={showModal} closeModal={closeModal} isSettingModal={true}>
-                    <div className='flex flex-col items-center'>
-                      {/* QR 코드를 표시하는 부분 */}
-                      <img
-                        src={`https://api.qrserver.com/v1/create-qr-code/?data=${selectedImageUrl}`}
-                        alt='QR Code'
-                      />
-
-                      {/* 이미지 다운로드 버튼 */}
-                      <a
-                        href={selectedImageUrl}
-                        download={`WITHUS_IMG`}
-                        className='mt-4 font-kdisplay text-3xl hover:bg-blue-700 text-white font-bold bg-blue-500 py-2 px-4 rounded'
-                      >
-                        내 컴퓨터에 이미지 저장
-                      </a>
-                    </div>
-                  </Modal>
                 </div>
               ) : null
             )}
           </div>
         )}
+        <Modal openModal={showModal} isSettingModal={false}>
+          <div className='h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-90 z-50'>
+            <div className='flex flex-col items-center w-96 h-96 bg-white p-2 rounded-lg'>
+              <div className='relative flex justify-end'>
+                <X
+                  onClick={closeModal}
+                  className='cursor-pointer w-8 h-8 text-black hover:text-red-100'
+                />
+              </div>
+              {/* 중앙 정렬 */}
+              <div className='flex flex-col items-center justify-center h-full'>
+                {/* QR 코드를 표시하는 부분 */}
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?data=${selectedImageUrl}`}
+                  alt='QR Code'
+                />
+
+                {/* 이미지 다운로드 버튼 */}
+                <a
+                  href={selectedImageUrl}
+                  download={`WITHUS_IMG`}
+                  className='mt-4 font-kdisplay text-2xl hover:bg-blue-700 text-white font-bold bg-blue-500 py-2 px-4 rounded'
+                >
+                  내 컴퓨터에 이미지 저장
+                </a>
+              </div>
+            </div>
+          </div>
+        </Modal>
       </div>
     </div>
   );

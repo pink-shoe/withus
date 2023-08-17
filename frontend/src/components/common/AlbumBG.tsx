@@ -70,7 +70,15 @@ export default function AlbumBG({
               type={backgroundNumber === number ? 'tinyPointed' : 'tiny'}
               onClick={() => ChangeBackground(number)}
             >
-              배경{number}
+              {number === 1
+                ? '달빛숲'
+                : number === 2
+                ? '평화로운 초원'
+                : number === 3
+                ? '크리스마스 밤'
+                : number === 4
+                ? '눈 덮힌 마을'
+                : '배경 없음'}
             </ButtonComponent>
           ))}
           <button

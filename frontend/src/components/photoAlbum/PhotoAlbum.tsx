@@ -68,7 +68,7 @@ export default function PhotoAlbum({
         fourCut={fourCut}
         setFourCut={setFourCut}
       />
-      <div className='relative z-50'>
+      <div className='relative z-10'>
         <PaginationContainer
           currentPage={currentPage}
           onClickPage={onClickPage}
