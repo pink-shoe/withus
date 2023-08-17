@@ -41,7 +41,7 @@ export default function AlbumFrame({
     const modalElement = document.querySelector('.modal') as HTMLElement;
 
     if (modalElement) {
-      html2canvas(modalElement).then((canvas) => {
+      html2canvas(modalElement, { logging: true }).then((canvas) => {
         const imgData = canvas.toDataURL('image/png');
 
         // 이미지 다운로드 링크 생성
@@ -159,29 +159,31 @@ export default function AlbumFrame({
                       onClick={() => openModal(image.imgUrl)}
                     />
                   </div>
-                  <Modal openModal={showModal} closeModal={closeModal} isSettingModal={true}>
-                    <div className='flex flex-col items-center'>
-                      {/* QR 코드를 표시하는 부분 */}
-                      <img
-                        src={`https://api.qrserver.com/v1/create-qr-code/?data=${selectedImageUrl}`}
-                        alt='QR Code'
-                      />
-
-                      {/* 이미지 다운로드 버튼 */}
-                      <a
-                        href={selectedImageUrl}
-                        download={`WITHUS_IMG`}
-                        className='mt-4 font-kdisplay text-3xl hover:bg-blue-700 text-white font-bold bg-blue-500 py-2 px-4 rounded'
-                      >
-                        내 컴퓨터에 이미지 저장
-                      </a>
-                    </div>
-                  </Modal>
                 </div>
               ) : null
             )}
           </div>
         )}
+        <Modal openModal={showModal} closeModal={closeModal} isSettingModal={true}>
+          <div className='h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-90 z-50'>
+            <div className='flex flex-col items-center w-96 h-96 bg-white p-8 rounded-lg'>
+              {/* QR 코드를 표시하는 부분 */}
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?data=${selectedImageUrl}`}
+                alt='QR Code'
+              />
+
+              {/* 이미지 다운로드 버튼 */}
+              <a
+                href={selectedImageUrl}
+                download={`WITHUS_IMG`}
+                className='mt-4 font-kdisplay text-3xl hover:bg-blue-700 text-white font-bold bg-blue-500 py-2 px-4 rounded'
+              >
+                내 컴퓨터에 이미지 저장
+              </a>
+            </div>
+          </div>
+        </Modal>
       </div>
     </div>
   );
