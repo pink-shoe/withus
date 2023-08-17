@@ -18,7 +18,6 @@ import { IGameInfo, getGameInfoApi, getGameResultApi, sendCaptureImageApi } from
 import Modal from '@components/common/Modal';
 import MvpModal from '@components/MvpModal/MvpModal';
 import { sendRoundInfoApi } from 'apis/ai';
-// import ExceptionModal from '@components/common/ExceptionModal';
 
 export default function GameRoom() {
   const location = useLocation();
@@ -26,20 +25,21 @@ export default function GameRoom() {
     location.pathname.slice(location.pathname.lastIndexOf('/') + 1, location.pathname.length)
   );
   const navigate = useNavigate();
-
-  const [user, setUser] = useAtom<IUserAtom>(userAtom);
-  const roomInfo = useAtomValue<IRoomAtom>(roomAtom);
-
-  // 모달 만들면서 추가한 부분 겹치는거 확인점
-  const currentRound = roomInfo.room.roomRound;
-  const [remainingTime, setRemainingTime] = useState(3);
-  const [isProblemModal, setIsProblemModal] = useState(false);
-  //
+  const [roundTimer, setRoundTimer] = useState<number>(7);
+  const [canPlay, setCanPlay] = useState<boolean>(true);
   const [gameRoomInfo, setGameRoomInfo] = useState<IGameInfo>();
+  const [currentRound, setCurrentRound] = useState(gameRoomInfo?.room.currentRound);
   const [isHost, setIsHost] = useState<boolean>(false);
   const [chatStatus, setChatStatus] = useState<boolean>(true);
   const [playerList, setPlayerList] = useState<IPlayerInfo[]>([]);
   const { data } = useQuery(['games/info'], () => getGameInfoApi(roomInfo.room.roomId));
+  const [user, setUser] = useAtom<IUserAtom>(userAtom);
+  const roomInfo = useAtomValue<IRoomAtom>(roomAtom);
+  const [readySet, setReadySet] = useState<number[]>([]);
+  const [ruleModal, setRuleModal] = useState(true);
+  const [roundModal, setRoundModal] = useState(false);
+
+  // 모달 만들면서 추가한 부분 겹치는거 확인점
   const getGameData = async () => {
     const result = (await getGameInfoApi(roomInfo.room.roomId)) as IGameInfo;
     if (result) {
@@ -47,174 +47,195 @@ export default function GameRoom() {
       setPlayerList(result.playerInfos);
       setIsHost(result.hostId === user.memberId);
       // 해당 부분은 api 연결 후 추가 확인 필요.
-      if (result.room.currentRound - 1 === result.room.roomRound)
-        await getGameResultApi(result.room.roomId);
     }
   };
 
   // 라운드 변경시 모달창 띄우기
   useEffect(() => {
-    if (currentRound > 0) {
-      async function fetchData() {
-        if (currentRound === 1) {
-          await new Promise((resolve) => setTimeout(resolve, 7000));
-        }
-
-        let timeoutId: NodeJS.Timeout;
-        setIsProblemModal(true);
-
-        if (isProblemModal) {
-          setRemainingTime(3);
-          timeoutId = setTimeout(() => {
-            const updatedTime = remainingTime - 1;
-            setRemainingTime(updatedTime);
-
-            if (updatedTime > 0) {
-              timeoutId = setTimeout(() => {
-                setRemainingTime(updatedTime - 1);
-              }, 1000);
-            } else {
-              // 시간이 다 되면 모달 닫기
-              setIsProblemModal(false);
-            }
-          }, 1000);
-        }
-      }
-
-      fetchData();
-    }
-  }, [currentRound]);
+    setReadySet([]);
+    gameRoomInfo &&
+      gameRoomInfo.room.currentRound &&
+      session &&
+      publisher &&
+      (sendSignal(`${gameRoomInfo.room.currentRound}`, 'ROUND'),
+      setReadySet((prev) => [...prev.filter((v) => v !== user.memberId), user.memberId]));
+  }, [gameRoomInfo]);
 
   useEffect(() => {
     if (data) {
       const gameData = data as IGameInfo;
       setGameRoomInfo(gameData);
+      gameData.room.currentRound && setCurrentRound(gameData.room.currentRound);
       gameData.playerInfos && setPlayerList(gameData.playerInfos);
       gameData.hostId && setIsHost(gameData.hostId === user.memberId);
-      // gameData.shapes.shapeUrl && setShapeURL(gameData.shapes.shapeUrl);
     }
-    console.log(data);
   }, [data]);
 
   const { session, publisher, streamList, onChangeCameraStatus, onChangeMicStatus, sendSignal } =
-    useOpenvidu(
-      user.memberId,
-      // user.nickname,
-      currentPath
-    );
+    useOpenvidu(user.memberId, currentPath);
 
   const onChangeChatStatus = (chatStatus: boolean) => {
     setChatStatus(!chatStatus);
   };
 
   const divRef = useRef<HTMLDivElement>(null);
-  const handleDownload = async () => {
+  const handleSendImage = async () => {
+    gameRoomInfo?.room.currentRound && setCurrentRound(gameRoomInfo?.room.currentRound + 1);
+    if (
+      gameRoomInfo &&
+      gameRoomInfo.room.currentRound &&
+      (gameRoomInfo.room.currentRound < 1 || gameRoomInfo.room.currentRound > 5)
+    ) {
+      setCanPlay(false);
+      return;
+    }
+    setRoundModal(true);
     if (!divRef.current) return;
 
     try {
-      const div = divRef.current;
-      const canvas = await html2canvas(div, { scale: 1 });
-      const gameroom = gameRoomInfo as IGameInfo;
+      if (isHost) {
+        const div = divRef.current;
+        const canvas = await html2canvas(div, { scale: 1 });
+        const gameroom = gameRoomInfo as IGameInfo;
 
-      // flask 쪽 rest api 연결 완료 시 해당 주석 제거 후 api 연결.
-      const result = await sendRoundInfoApi(
-        gameroom.room.roomId,
-        canvas.toDataURL(),
-        gameroom.room.currentRound,
-        gameroom.shapes[currentRound - 1].shapeId
-      );
-      console.log(result);
-      const byteString = atob(canvas.toDataURL().split(',')[1]);
+        // flask 쪽 rest api 연결 완료 시 해당 주석 제거 후 api 연결.
+        if (gameroom.room.currentRound) {
+          const result = await sendRoundInfoApi(
+            gameroom.room.roomId,
+            canvas.toDataURL(),
+            gameroom.room.currentRound,
+            gameroom.shapes[gameroom.room.currentRound - 1].shapeId
+          );
+          if (result) {
+            getGameData();
+            console.log(result);
+          }
+        }
+        const byteString = atob(canvas.toDataURL().split(',')[1]);
 
-      const ab = new ArrayBuffer(byteString.length);
-      const ia = new Uint8Array(ab);
-      for (let i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+          ia[i] = byteString.charCodeAt(i);
+        }
+        const blob = new Blob([ia], {
+          type: 'image/png',
+        });
+        const padded = String(gameroom.room.roomId);
+        const file = new File(
+          [blob],
+          `${padded.padStart(6, '0')}${gameroom.room.currentRound}.png`
+        );
+
+        const formData = new FormData();
+        formData.append('captureImage', file);
+        if (gameroom.room.currentRound) {
+          const imageResult = await sendCaptureImageApi(
+            gameroom.room.roomId,
+            gameroom.room.currentRound,
+            formData
+          );
+          if (imageResult) {
+            if (imageResult.status === 204) {
+              console.log('게임 종료!');
+              sendSignal(`GAMEEND`, 'GAMEEND');
+              setCanPlay(false);
+            }
+          }
+          console.log(imageResult);
+          sendSignal(`${gameroom.room.currentRound}`, 'NEXTROUND');
+          getGameData();
+        }
       }
-      const blob = new Blob([ia], {
-        type: 'image/png',
-      });
-      const padded = String(gameroom.room.roomId);
-      const file = new File([blob], `${padded.padStart(6, '0')}${currentRound}.png`);
-
-      const formData = new FormData();
-      formData.append('captureImage', file);
-      console.log(formData);
-      const imageResult = await sendCaptureImageApi(
-        gameroom.room.roomId,
-        gameroom.room.currentRound,
-        formData
-      );
-      if (imageResult) {
-        sendSignal(`${gameRoomInfo?.room.roomId}`, 'ROUND');
-      }
-      console.log(imageResult);
     } catch (error) {
       console.error('Error converting div to image:', error);
     }
   };
-  // function DataURIToBlob(dataURI: string) {
-  //   const splitDataURI = dataURI.split(',');
-  //   const byteString =
-  //     splitDataURI[0].indexOf('base64') >= 0 ? atob(splitDataURI[1]) : decodeURI(splitDataURI[1]);
-  //   const mimeString = splitDataURI[0].split(':')[1].split(';')[0];
 
-  //   const ia = new Uint8Array(byteString.length);
-  //   for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
-
-  //   return new Blob([ia], { type: mimeString });
-  // }
   const receiveSignal = (type: signalType) => {
     if (session && publisher) {
       publisher.stream.session.on('signal:' + type, (e: any) => {
         const result = JSON.parse(e.data);
         console.log(result);
-        if (result) {
+        if (type === 'GAMEEND') {
+          console.log('게임종료', result);
+          setCanPlay(false);
+        } else if (type === 'ROUND') {
+          setReadySet((prev) => [...prev.filter((v) => v !== result.userId), result.userId]);
+        } else if (type === 'NEXTROUND') {
           getGameData();
-          setRoundModal(true);
+        } else if (result) {
+          getGameData();
         }
       });
     }
   };
   useEffect(() => {
-    session && publisher && receiveSignal('ROUND');
+    session &&
+      publisher &&
+      (receiveSignal('ROUND'), receiveSignal('NEXTROUND'), receiveSignal('GAMEEND'));
   }, [session, publisher]);
 
   useEffect(() => {
     getGameData();
-    console.log('streamlist', streamList);
   }, [streamList]);
 
-  const [ruleModal, setRuleModal] = useState(true);
-  const [roundModal, setRoundModal] = useState(true);
+  useEffect(() => {
+    console.log(readySet, gameRoomInfo?.playerInfos);
+    if (readySet.length === gameRoomInfo?.playerInfos.length) {
+      console.log('라운드 타이머 시작!');
+      setRoundTimer(10);
+      setCanPlay(true);
+    }
+  }, [readySet]);
 
   const closeRuleModal = () => {
     setRuleModal(false);
+    setRoundModal(true);
+    console.log('rule modal 닫기');
   };
-  setTimeout(closeRuleModal, 7000);
+  useEffect(() => {
+    let timer = setTimeout(closeRuleModal, 7000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const closeRoundModal = () => {
     setRoundModal(false);
   };
-  setTimeout(closeRoundModal, 10000);
+  useEffect(() => {
+    if (roundModal) {
+      let timer = setTimeout(closeRoundModal, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [roundModal]);
 
   return (
     <Background backgroundType='NOLOBBY' isLobbyDropdown={false}>
       {/* 최종 라운드가 마무리되면 MVP 모달이 나옴 */}
-      {gameRoomInfo?.playerInfos &&
+      {gameRoomInfo?.room.roomRound &&
         gameRoomInfo?.room.currentRound === gameRoomInfo.room.roomRound && (
           <MvpModal playerList={gameRoomInfo?.playerInfos}></MvpModal>
         )}
-
       {/* 라운드가 변할 때마다 roundModal의 상태가 true가 되도록 해야 함 */}
       {/* 라운드 모달(예시 : Round 1) */}
-      <Modal openModal={roundModal} closeModal={closeRoundModal} isSettingModal={false}>
-        <div className='flex justify-center me-2 mt-11 pb-2 font-edisplay text-6xl'>
-          <span className='text-2xl'>✨</span>
-          Round {gameRoomInfo?.room.currentRound}
-          <span className='text-3xl'>✨</span>
-        </div>
-      </Modal>
+      {currentRound && currentRound >= 1 && currentRound <= 5 && (
+        <Modal openModal={roundModal} closeModal={closeRoundModal} isSettingModal={false}>
+          <div className='flex w-full flex-col justify-center me-2 mt-11 pb-2 font-edisplay text-6xl'>
+            <div className='flex justify-center w-full'>
+              <span className='text-2xl'>✨</span>
+              Round {currentRound}
+              <span className='text-3xl'>✨</span>
+            </div>
+            <div className='flex justify-center items-center mb-7 w-48 h-48 border-2 border-[#8D98FF]'>
+              <img src={gameRoomInfo?.shapes[currentRound - 1].shapeUrl} />
+            </div>
+          </div>
+          {/* <p className='text-[#514148] font-kdisplay font-medium text-2xl mb-10 text-center'>
+          게임 시작
+          <span className='text-blue-500 font-medium text-4xl'>{remainingTime}</span>초 전
+        </p> */}
+        </Modal>
+      )}
       {/* 주의 사항 모달창 */}
       {/* 게임 페이지로 이동한 후 가장 먼저 나오고 7초 후 자동적으로 사라짐 */}
       <Modal openModal={ruleModal} closeModal={closeRuleModal} isSettingModal={false}>
@@ -238,10 +259,10 @@ export default function GameRoom() {
           <Modal openModal={isProblemModal} isSettingModal={false}>
             <div className='animate-shake'>
               <p className='text-[#514148] font-kdisplay font-medium text-4xl mb-10 text-center'>
-                {gameRoomInfo?.room.roomRound} 라운드 문제
+                {roomInfo.room.roomRound}라운드 문제
               </p>
               <div className='flex mb-7 w-48 h-48 border-2 border-[#8D98FF]'>
-                <img src={gameRoomInfo?.shapes[gameRoomInfo.room.currentRound - 1].shapeUrl} />
+                <img src={shapeURL} />
               </div>
               <p className='text-[#514148] font-kdisplay font-medium text-2xl mb-10 text-center'>
                 게임 시작
@@ -266,7 +287,12 @@ export default function GameRoom() {
         </div>
         {/* openvidu 화면 */}
         <div className='w-full'>
-          <Board boardType='GAME'>
+          <Board
+            boardType='GAME'
+            roundTimer={roundTimer}
+            handleSendImage={handleSendImage}
+            canPlay={canPlay}
+          >
             <header className=' h-fit flex items-center'></header>
             <div className='aspect-[4/3]'>
               {publisher && (
@@ -329,14 +355,17 @@ export default function GameRoom() {
                 />
               )}
           </div>
-          <button onClick={handleDownload}>다운로드</button>
+          {/* <button onClick={handleSendImage}>다운로드</button> */}
         </div>
-        <ChatContainer
-          chatStatus={chatStatus}
-          session={session}
-          publisher={publisher}
-          sendSignal={sendSignal}
-        />
+        {(data as IRoomAtom) && playerList && roomInfo && roomInfo.room && (
+          <ChatContainer
+            chatStatus={chatStatus}
+            session={session}
+            publisher={publisher}
+            sendSignal={sendSignal}
+            playerList={playerList}
+          />
+        )}
       </div>
     </Background>
   );

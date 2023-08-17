@@ -1,6 +1,8 @@
 import { OpenVidu } from 'openvidu-browser';
 import { getToken } from 'apis/openviduApi';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { exitRoomApi } from 'apis/roomApi';
+import { useNavigate } from 'router';
 export interface IUser {
   connectionId: string;
   userId: number;
@@ -14,12 +16,13 @@ export type signalType =
   | 'CANCEL_READY'
   | 'UPDATE'
   | 'START'
-  | 'ROUND';
+  | 'ROUND'
+  | 'NEXTROUND'
+  | 'GAMEEND';
 
 export interface IStreamList {
   streamManager: any;
   userId: number;
-  // nickname: string;
 }
 const getConnectionId = (user: IUser) => {
   return user.connectionId;
@@ -30,18 +33,19 @@ const setConnectionId = (user: IUser, conecctionId: string) => {
   return user;
 };
 
-export const useOpenvidu = (
-  userId: number,
-  // nickname: string,
-  gameRoomId: number
-) => {
+export const useOpenvidu = (userId: number, gameRoomId: number) => {
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [publisher, setPublisher] = useState<any>();
   const [session, setSession] = useState<any>();
-
-  const leaveSession = useCallback(() => {
+  const navigate = useNavigate();
+  const leaveSession = useCallback(async () => {
     if (session) {
       session.disconnect();
+      const result: any = await exitRoomApi(gameRoomId);
+      if (result.status <= 300) {
+        sendSignal(`${gameRoomId}`, 'EXIT');
+        navigate('/lobby');
+      }
     }
     setSession(null);
     setPublisher(null);
@@ -138,15 +142,6 @@ export const useOpenvidu = (
     [publisher]
   );
 
-  // const onChangeUserName = useCallback(
-  //   (nickname: string) => {
-  //     setUserName(nickname!);
-  //     console.log(publisher);
-  //     // sendSignalUserChanged({ nickname: nickname! });
-  //   },
-  //   [userName]
-  // );
-
   const sendSignal = (message: string, type: signalType) => {
     if (session && publisher && message) {
       let msg = message.replace(/ +(?= )/g, '');
@@ -156,7 +151,6 @@ export const useOpenvidu = (
             .signal({
               data: JSON.stringify({
                 message: message,
-                // nickname,
                 userId,
                 streamId: publisher.stream.streamId,
               }),
@@ -178,7 +172,6 @@ export const useOpenvidu = (
       {
         streamManager: publisher,
         userId,
-        // nickname,
       },
       ...subscribers.filter((it) => it.userId !== userId),
     ],
@@ -191,8 +184,6 @@ export const useOpenvidu = (
     streamList,
     onChangeCameraStatus,
     onChangeMicStatus,
-    // onChangeUserName,
-    // updateUserStatus,
     sendSignal,
   };
 };
