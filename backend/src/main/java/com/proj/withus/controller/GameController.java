@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import com.proj.withus.domain.dto.ChooseMvpPlayerReq;
+import com.proj.withus.domain.dto.GetMvpPlayerRes;
 import com.proj.withus.exception.CustomException;
 import com.proj.withus.exception.ErrorCode;
 import com.proj.withus.repository.RoomRepository;
@@ -312,14 +313,19 @@ public class GameController {
         List<Player> players = gameService.getPlayersInfo(roomId);
 
         int maxVote = 0;
-        List<Player> mvpPlayers = new ArrayList<>();
+        List<GetMvpPlayerRes> mvpPlayerRes = new ArrayList<>();
+
         for (Player player : players) {
             if (player.getVote() >= maxVote) {
                 maxVote = player.getVote();
-                mvpPlayers.add(player);
+                GetMvpPlayerRes getMvpPlayerRes = GetMvpPlayerRes.builder()
+                    .id(player.getId())
+                    .vote(player.getVote())
+                    .build();
+                mvpPlayerRes.add(getMvpPlayerRes);
             }
         }
 
-        return new ResponseEntity<List<Player>>(mvpPlayers, HttpStatus.OK);
+        return new ResponseEntity<List<GetMvpPlayerRes>>(mvpPlayerRes, HttpStatus.OK);
     }
 }
