@@ -58,10 +58,10 @@ public class RoomServiceImpl implements RoomService {
             }
         }
 
-        roomRepository.findByMemberId(createRoomReq.getId())
-                .ifPresent(room -> {
-                    throw new CustomException(ErrorCode.DUPLICATE_HOST);
-                });
+//        roomRepository.findByMemberId(createRoomReq.getId())
+//                .ifPresent(room -> {
+//                    throw new CustomException(ErrorCode.DUPLICATE_HOST);
+//                });
 
         // Room에 접근
         Room room = new Room();
@@ -89,7 +89,7 @@ public class RoomServiceImpl implements RoomService {
             if (room.get().getCode() == roomCode) {
                 return room;
             }
-            throw new CustomException(ErrorCode.DUPLICATE_MEMBER_IN_ROOM);
+//            throw new CustomException(ErrorCode.DUPLICATE_MEMBER_IN_ROOM);
         }
 //        roomRepository.findByMemberId(memberId)
 //                        .ifPresent(room -> {
