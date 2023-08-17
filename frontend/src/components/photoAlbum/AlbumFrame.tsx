@@ -41,36 +41,24 @@ export default function AlbumFrame({
     const modalElement = document.querySelector('.modal') as HTMLElement;
 
     if (modalElement) {
-      // 이미지 로딩 상태를 추적하는 변수
-      let imagesLoaded = 0;
-      const totalImages = modalElement.querySelectorAll('img').length;
-
-      // 이미지 로딩 완료시 호출되는 함수
-      const imageLoaded = () => {
-        imagesLoaded++;
-        if (imagesLoaded === totalImages) {
-          html2canvas(modalElement).then(async (canvas) => {
-            const blob = await new Promise<Blob>((resolve) => {
-              canvas.toBlob((blob) => {
-                resolve(blob as Blob);
-              });
-            });
-
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'album_image.png'; // 다운로드될 파일 이름 설정
-            a.click();
-
-            window.URL.revokeObjectURL(url);
+      try {
+        const canvas = await html2canvas(modalElement);
+        const blob = await new Promise<Blob>((resolve) => {
+          canvas.toBlob((blob) => {
+            resolve(blob as Blob);
           });
-        }
-      };
+        });
 
-      // 각 이미지의 로딩 완료 이벤트 등록
-      modalElement.querySelectorAll('img').forEach((img) => {
-        img.onload = imageLoaded;
-      });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'album_image.png';
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error('Error capturing or saving the image:', error);
+      }
     }
   };
 
@@ -167,14 +155,12 @@ export default function AlbumFrame({
                       alt={`Image-${index + 1}`}
                       className='w-full h-full object-cover border-8 border-red-300 rounded-xl'
                     />
-                    <div
-                      className='absolute top-1.5 right-2.5 cursor-pointer font-edisplay text-2xl'
+                    <X
+                      className='absolute top-1.5 right-2.5 cursor-pointer font-edisplay w-4 h-4 text-white hover:text-black'
                       onClick={() => onClickX(image.imgId)}
-                    >
-                      X
-                    </div>
+                    />
                     <Save
-                      className='absolute top-1.5 left-2.5 cursor-pointer font-edisplay text-2xl'
+                      className='absolute top-1.5 left-2.5 cursor-pointer font-edisplay w-4 h-4 text-white hover:text-black'
                       onClick={() => openModal(image.imgUrl)}
                     />
                   </div>
