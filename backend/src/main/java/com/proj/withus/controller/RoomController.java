@@ -1,7 +1,9 @@
 package com.proj.withus.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.proj.withus.domain.Member;
@@ -394,7 +396,10 @@ public class RoomController {
         // 랜덤 문제 선정 -> problem 저장
         roomService.makeProblem(room.getId(), room.getRound());
 
+        Map<String, Boolean> answer = new HashMap<>();
+        answer.put("data", true);
+
         // ok
-        return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+        return new ResponseEntity<Map<String, Boolean>>(answer, HttpStatus.OK);
     }
 }
