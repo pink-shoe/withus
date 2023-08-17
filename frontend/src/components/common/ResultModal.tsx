@@ -40,8 +40,8 @@ export default function ResultModal({ openModal }: IResultModalProps) {
     if (result) setResultData(result);
   };
   useEffect(() => {
-    getResultData();
-  }, []);
+    openModal && getResultData();
+  }, [openModal]);
   // 모달창 여는 기능
   // const openModal = () => {
   //   setModalStatus(true);
@@ -196,7 +196,7 @@ export default function ResultModal({ openModal }: IResultModalProps) {
                     <span className='font-medium font-kdisplay text-2xl'>
                       ROUND {result.gameResult.round}
                     </span>
-                    <div className='text-[#112364] mt-2 flex justify-center'>
+                    <div className=' text-[#112364] mt-2 flex justify-center'>
                       <Circle size='60' />
                     </div>
                   </span>

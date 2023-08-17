@@ -4,8 +4,9 @@ import { IPlayerInfo, IRoom } from 'stores/room';
 
 const apiUrl = `/games`;
 export interface ITotalGameResult {
-  gameResult: IGameResult;
+  answerUrl: string;
   captureUrl: string;
+  gameResult: IGameResult;
 }
 export interface IGameResult {
   answer: number;
@@ -29,8 +30,9 @@ export interface IGameInfo {
 
 export interface IMvpInfo {
   playerId: number;
-  vote: number
-}[]
+  vote: number;
+}
+[];
 
 // export interface IMvpResult {
 //   playerId: number;
@@ -81,7 +83,7 @@ export const getMvpResultApi = async (roomId: number) => {
       console.log('MVP 출력 성공:', response.data);
       return response.data;
     } else {
-      console.error(response)
+      console.error(response);
     }
   } catch (error) {
     console.log('MVP 출력 실패:', (error as AxiosError).message);
