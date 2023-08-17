@@ -38,15 +38,11 @@ public class GameServiceImpl implements GameService {
     private final GameResultRepository gameResultRepository;
     private final ShapeRepository shapeRepository;
     private final CaptureRepository captureRepository;
+    private final ProblemRepository problemRepository;
     private final EntityManager entityManager;
 
     @Override
     public Room getRoomInfo(Long memberId) {
-         Room room = playerRepository.findRoomIdByPlayerId(memberId)
-                 .orElseThrow(() -> new CustomException(ErrorCode.PLAYERS_ROOM_IS_NOT_EXIST));
-
-         roomRepository.updateStart(room.getId(), "playing");
-         entityManager.clear();
          return playerRepository.findRoomIdByPlayerId(memberId)
                  .orElseThrow(() -> new CustomException(ErrorCode.PLAYERS_ROOM_IS_NOT_EXIST));
     }
@@ -62,10 +58,13 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public List<Shape> getShapeInfo(int round) {
-        List<Shape> shapes = shapeRepository.findRandomShapes(round);
-        if (shapes.size() != round) {
-            throw new CustomException(ErrorCode.SHAPE_NOT_LOAD);
+    public List<Shape> getShapeInfo(Room room) {
+        List<Problem> problems = problemRepository.findProblemsByRoomIdOrderByRoundAsc(room.getId());
+
+        List<Shape> shapes = new ArrayList<>();
+        for (Problem problem : problems) {
+            shapes.add(shapeRepository.findShapeById(problem.getShapeId())
+                .orElseThrow(() -> new CustomException(ErrorCode.SHAPE_NOT_FOUND)));
         }
         return shapes;
     }

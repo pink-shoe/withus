@@ -22,10 +22,15 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
-#        show_sql: true
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always
+  #        show_sql: true
 #        format_sql: true
 
   security:

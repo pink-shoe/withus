@@ -96,7 +96,7 @@ public class GameController {
             playerInfos.add(playerInfo);
         }
 
-        List<Shape> shapes = gameService.getShapeInfo(room.getRound());
+        List<Shape> shapes = gameService.getShapeInfo(room);
 
         return ResponseEntity.ok(GetGameInfoRes.builder()
                 .room(room)
