@@ -6,12 +6,19 @@ export type boardType = 'GAME' | 'WAIT' | 'LOBBY' | 'ALBUM' | 'LOGIN';
 
 interface IBoardProps {
   boardType: boardType;
+  canPlay?: boolean;
   roundTimer?: number;
   handleSendImage?: () => void;
   children: React.ReactNode;
 }
 
-export default function Board({ boardType, roundTimer, handleSendImage, children }: IBoardProps) {
+export default function Board({
+  boardType,
+  canPlay,
+  roundTimer,
+  handleSendImage,
+  children,
+}: IBoardProps) {
   useEffect(() => {
     console.log('asdf', roundTimer);
   }, [roundTimer]);
@@ -29,6 +36,7 @@ export default function Board({ boardType, roundTimer, handleSendImage, children
                 <Logo
                   logoType={'GAMELOGO'}
                   roundTimer={roundTimer}
+                  canPlay={canPlay}
                   handleSendImage={handleSendImage}
                 />
               )}

@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import './LogoStyle.css';
 import { CountdownCircleTimer, useCountdown } from 'react-countdown-circle-timer';
 import { textShadow } from 'html2canvas/dist/types/css/property-descriptors/text-shadow';
@@ -8,12 +8,13 @@ export type logoType = 'GAMELOGO' | 'LOBBYLOGO' | 'ALBUMLOGO';
 
 interface ILogoProps {
   logoType: logoType;
+  canPlay?: boolean;
   handleSendImage?: () => void;
   roundTimer?: number;
 }
 
-export default function Logo({ logoType, handleSendImage, roundTimer }: ILogoProps) {
-  const [isPlaying, setIsPlaying] = useState(true);
+export default function Logo({ logoType, canPlay, handleSendImage, roundTimer }: ILogoProps) {
+  const [isPlaying, setIsPlaying] = useState(canPlay);
   // 게임 진행 시간은 7초
   const [count, setCount] = useState(roundTimer);
 
@@ -21,8 +22,15 @@ export default function Logo({ logoType, handleSendImage, roundTimer }: ILogoPro
   const stopTimePlaying = () => {
     setIsPlaying(false);
   };
-  setTimeout(stopTimePlaying, 57000);
+  // setTimeout(stopTimePlaying, 57000);
 
+  useEffect(() => {
+    setIsPlaying(canPlay);
+  }, [canPlay]);
+
+  useEffect(() => {
+    console.log(isPlaying, canPlay);
+  }, [isPlaying, canPlay]);
   return (
     <Fragment>
       {logoType === 'GAMELOGO' ? (
@@ -39,7 +47,7 @@ export default function Logo({ logoType, handleSendImage, roundTimer }: ILogoPro
                   size={85}
                   isPlaying={isPlaying}
                   duration={count}
-                  initialRemainingTime={7}
+                  initialRemainingTime={17}
                   isSmoothColorTransition={true}
                   // updateInterval={1}
                   // colors='#aabbcc'
@@ -50,7 +58,10 @@ export default function Logo({ logoType, handleSendImage, roundTimer }: ILogoPro
                     // console.log('Counter is ', count);
                     // console.log('Remaining time is ', remainingTime);
                   }}
-                  onComplete={() => (handleSendImage(), { shouldRepeat: true, delay: 3 })}
+                  onComplete={() => (
+                    (roundTimer === 7 || roundTimer === 10) && handleSendImage(),
+                    { shouldRepeat: true, delay: 3 }
+                  )}
                   strokeWidth={20}
                 >
                   {({ remainingTime }) => (

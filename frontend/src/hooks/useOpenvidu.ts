@@ -1,6 +1,8 @@
 import { OpenVidu } from 'openvidu-browser';
 import { getToken } from 'apis/openviduApi';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { exitRoomApi } from 'apis/roomApi';
+import { useNavigate } from 'router';
 export interface IUser {
   connectionId: string;
   userId: number;
@@ -14,7 +16,9 @@ export type signalType =
   | 'CANCEL_READY'
   | 'UPDATE'
   | 'START'
-  | 'ROUND';
+  | 'ROUND'
+  | 'NEXTROUND'
+  | 'GAMEEND';
 
 export interface IStreamList {
   streamManager: any;
@@ -33,11 +37,15 @@ export const useOpenvidu = (userId: number, gameRoomId: number) => {
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [publisher, setPublisher] = useState<any>();
   const [session, setSession] = useState<any>();
-
-  const leaveSession = useCallback(() => {
+  const navigate = useNavigate();
+  const leaveSession = useCallback(async () => {
     if (session) {
       session.disconnect();
-      sendSignal(`${gameRoomId}`, 'EXIT');
+      const result: any = await exitRoomApi(gameRoomId);
+      if (result.status <= 300) {
+        sendSignal(`${gameRoomId}`, 'EXIT');
+        navigate('/lobby');
+      }
     }
     setSession(null);
     setPublisher(null);
