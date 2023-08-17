@@ -39,8 +39,14 @@
   }
 
   .logo-album {
-    color: black;
-    font-size: 130px;
+    border: 0px none;
+    font-family: 'Baloo Thambi', sans-serif;
+    font-size: 90px;
+    font-weight: 200;
+    letter-spacing: -0.77px;
+    position: absolute;
+    white-space: nowrap;
+    top: -40px;
   }
 }
 
@@ -83,8 +89,14 @@
   }
 
   .logo-album {
-    color: black;
-    font-size: 130px;
+    border: 0px none;
+    font-family: 'Baloo Thambi', sans-serif;
+    font-size: 90px;
+    font-weight: 200;
+    letter-spacing: -0.77px;
+    position: absolute;
+    white-space: nowrap;
+    top: 0;
   }
 }
 
