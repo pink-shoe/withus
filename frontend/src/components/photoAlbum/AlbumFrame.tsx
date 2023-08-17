@@ -41,40 +41,24 @@ export default function AlbumFrame({
     const modalElement = document.querySelector('.modal') as HTMLElement;
 
     if (modalElement) {
-      // 이미지 로딩 상태를 추적하는 변수
-      let imagesLoaded = 0;
-      const totalImages = modalElement.querySelectorAll('img').length;
-
-      // 이미지 로딩 완료시 호출되는 함수
-      const imageLoaded = () => {
-        imagesLoaded++;
-        if (imagesLoaded === totalImages) {
-          // 모든 이미지가 로딩되었을 때 html2canvas 실행
-          html2canvas(modalElement).then(async (canvas) => {
-            // Blob 객체 생성
-            const blob = await new Promise<Blob>((resolve) => {
-              canvas.toBlob((blob) => {
-                resolve(blob as Blob);
-              });
-            });
-
-            // Blob 객체를 링크로 생성하여 이미지 다운로드 수행
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'album_image.png'; // 다운로드될 파일 이름 설정
-            a.click();
-
-            // Blob 객체 생성 후 해제
-            window.URL.revokeObjectURL(url);
+      try {
+        const canvas = await html2canvas(modalElement);
+        const blob = await new Promise<Blob>((resolve) => {
+          canvas.toBlob((blob) => {
+            resolve(blob as Blob);
           });
-        }
-      };
+        });
 
-      // 각 이미지의 로딩 완료 이벤트 등록
-      modalElement.querySelectorAll('img').forEach((img) => {
-        img.onload = imageLoaded;
-      });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'album_image.png';
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error('Error capturing or saving the image:', error);
+      }
     }
   };
 
@@ -171,14 +155,12 @@ export default function AlbumFrame({
                       alt={`Image-${index + 1}`}
                       className='w-full h-full object-cover border-8 border-red-300 rounded-xl'
                     />
-                    <div
-                      className='absolute top-1.5 right-2.5 cursor-pointer font-edisplay text-2xl'
+                    <X
+                      className='absolute top-1.5 right-2.5 cursor-pointer font-edisplay w-4 h-4 text-white hover:text-black'
                       onClick={() => onClickX(image.imgId)}
-                    >
-                      X
-                    </div>
+                    />
                     <Save
-                      className='absolute top-1.5 left-2.5 cursor-pointer font-edisplay text-2xl'
+                      className='absolute top-1.5 left-2.5 cursor-pointer font-edisplay w-4 h-4 text-white hover:text-black'
                       onClick={() => openModal(image.imgUrl)}
                     />
                   </div>
@@ -187,9 +169,13 @@ export default function AlbumFrame({
             )}
           </div>
         )}
-        <Modal openModal={showModal} closeModal={closeModal} isSettingModal={true}>
+        <Modal openModal={showModal} isSettingModal={false}>
           <div className='h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-90 z-50'>
             <div className='flex flex-col items-center w-96 h-96 bg-white p-8 rounded-lg'>
+              <X
+                onClick={closeModal}
+                className='cursor-pointer absolute top-0 right-0 p-2 text-black hover:text-red-100'
+              />
               {/* QR 코드를 표시하는 부분 */}
               <img
                 src={`https://api.qrserver.com/v1/create-qr-code/?data=${selectedImageUrl}`}
@@ -200,7 +186,7 @@ export default function AlbumFrame({
               <a
                 href={selectedImageUrl}
                 download={`WITHUS_IMG`}
-                className='mt-4 font-kdisplay text-3xl hover:bg-blue-700 text-white font-bold bg-blue-500 py-2 px-4 rounded'
+                className='mt-4 font-kdisplay text-2xl hover:bg-blue-700 text-white font-bold bg-blue-500 py-2 px-4 rounded'
               >
                 내 컴퓨터에 이미지 저장
               </a>
