@@ -156,11 +156,11 @@ export default function AlbumFrame({
                       className='w-full h-full object-cover border-8 border-red-300 rounded-xl'
                     />
                     <X
-                      className='absolute top-1.5 right-2.5 cursor-pointer font-edisplay w-4 h-4 text-white hover:text-black'
+                      className='absolute top-1.5 right-2.5 cursor-pointer font-edisplay w-6 h-6 text-white hover:text-black'
                       onClick={() => onClickX(image.imgId)}
                     />
                     <Save
-                      className='absolute top-1.5 left-2.5 cursor-pointer font-edisplay w-4 h-4 text-white hover:text-black'
+                      className='absolute top-1.5 left-2.5 cursor-pointer font-edisplay w-6 h-6 text-white hover:text-black'
                       onClick={() => openModal(image.imgUrl)}
                     />
                   </div>
@@ -172,10 +172,12 @@ export default function AlbumFrame({
         <Modal openModal={showModal} isSettingModal={false}>
           <div className='h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-90 z-50'>
             <div className='flex flex-col items-center w-96 h-96 bg-white p-8 rounded-lg'>
-              <X
-                onClick={closeModal}
-                className='cursor-pointer absolute top-0 right-0 p-2 text-black hover:text-red-100'
-              />
+              <div className='relative'>
+                <X
+                  onClick={closeModal}
+                  className='cursor-pointer absolute w-8 h-8 top-0 right-0 p-2 text-black hover:text-red-100'
+                />
+              </div>
               {/* QR 코드를 표시하는 부분 */}
               <img
                 src={`https://api.qrserver.com/v1/create-qr-code/?data=${selectedImageUrl}`}
