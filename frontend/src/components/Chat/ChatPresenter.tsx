@@ -2,12 +2,14 @@ import React from 'react';
 import { Send } from 'react-feather';
 
 import { RefObject } from 'react';
+import { IPlayerInfo } from 'stores/room';
 interface IChatPresenterProps {
   chatStatus: boolean;
   messageList: any[];
   publisher: any;
   message: string;
   messageRef: RefObject<HTMLDivElement>;
+  playerList: IPlayerInfo[];
   onChangeMessage: (e: any) => void;
   onClickSendMsg: () => void;
 }
@@ -18,6 +20,7 @@ export default function ChatPresenter({
   publisher,
   message,
   messageRef,
+  playerList,
   onChangeMessage,
   onClickSendMsg,
 }: IChatPresenterProps) {
@@ -43,7 +46,7 @@ export default function ChatPresenter({
                 }
               >
                 <div>
-                  {msg.nickname}{' '}
+                  {playerList.find((player) => player.playerId === msg.userId)?.nickname}{' '}
                   {msg.connectionId === publisher.stream.connection.connectionId ? '(나)' : '(님)'}
                 </div>
                 <div

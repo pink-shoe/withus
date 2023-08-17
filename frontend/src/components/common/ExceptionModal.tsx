@@ -7,7 +7,7 @@ import { ErrorContext } from 'stores/error';
 
 export default function ExceptionModal() {
   const [modalStatus, setModalStatus] = useState(false);
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   const navigate = useNavigate();
   const { code, message, setError } = useContext(ErrorContext);
   // 모달창 여는 기능

@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import Logo from './Logo/Logo';
 import './Logo/LogoStyle.css';
 
@@ -6,10 +6,22 @@ export type boardType = 'GAME' | 'WAIT' | 'LOBBY' | 'ALBUM' | 'LOGIN';
 
 interface IBoardProps {
   boardType: boardType;
+  canPlay?: boolean;
+  roundTimer?: number;
+  handleSendImage?: () => void;
   children: React.ReactNode;
 }
 
-export default function Board({ boardType, children }: IBoardProps) {
+export default function Board({
+  boardType,
+  canPlay,
+  roundTimer,
+  handleSendImage,
+  children,
+}: IBoardProps) {
+  useEffect(() => {
+    console.log('asdf', roundTimer);
+  }, [roundTimer]);
   return (
     <Fragment>
       {boardType === 'GAME' ? (
@@ -20,7 +32,14 @@ export default function Board({ boardType, children }: IBoardProps) {
               <div className='drop-shadow-xl rounded-md bg-yellow-100 h-[2.5rem] w-10/12'></div>
             </div>
             <div className='flex justify-center'>
-              <Logo logoType={'GAMELOGO'} />
+              {roundTimer && handleSendImage && (
+                <Logo
+                  logoType={'GAMELOGO'}
+                  roundTimer={roundTimer}
+                  canPlay={canPlay}
+                  handleSendImage={handleSendImage}
+                />
+              )}
             </div>
           </div>
           <div className='flex justify-center align-middle'>
