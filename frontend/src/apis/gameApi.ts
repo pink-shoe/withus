@@ -5,13 +5,13 @@ import { IPlayerInfo, IRoom } from 'stores/room';
 const apiUrl = `/games`;
 export interface ITotalGameResult {
   gameResult: IGameResult;
-  shape: IShape;
+  captureUrl: string;
 }
 export interface IGameResult {
-  captureUrl: string;
+  answer: number;
   correct: boolean;
-  correctRate: number;
-  id: number;
+  gameResultId: number;
+  prediction: number;
   round: number;
 }
 
@@ -21,12 +21,21 @@ export interface IShape {
   shapeUrl: string;
 }
 export interface IGameInfo {
-  // currentRound: number;
   hostId: number;
   playerInfos: IPlayerInfo[];
   room: IRoom;
   shapes: IShape[];
 }
+
+export interface IMvpInfo {
+  playerId: number;
+  vote: number
+}[]
+
+// export interface IMvpResult {
+//   playerId: number;
+//   vote: number;
+// }
 
 // Axios 요청 함수 정의
 export const getGameResultApi = async (roomId: number) => {
@@ -52,28 +61,30 @@ export const sendCaptureImageApi = async (
   return response;
 };
 
-export const electMvpApi = async (roomId: number, playerId: number, votedId: number) => {
+export const electMvpApi = async (roomId: number, votedId: number) => {
   try {
-    const response = await axios.post(apiUrl + `/vote/${roomId}`, { playerId, votedId });
-    console.log('MVP 선택 완료!!', playerId, votedId);
-    return response;
+    const response = await axios.post(apiUrl + `/vote/${roomId}`, {
+      votedId: votedId,
+    });
+    console.log('MVP 선택 성공!!', response.data);
+    return response.data;
   } catch (error) {
-    console.log('MVP 선택 실패 :', (error as AxiosError).message);
-    return error;
+    console.error('MVP 선택 실패!! :', (error as AxiosError).message);
+    throw error;
   }
 };
 
 export const getMvpResultApi = async (roomId: number) => {
   try {
-    const response = await axios.get<IPlayerInfo>(apiUrl + `/vote/${roomId}`);
-    if (response.status === 201) {
+    const response = await axios.get(apiUrl + `/vote/${roomId}`);
+    if (response.status === 200) {
       console.log('MVP 출력 성공:', response.data);
       return response.data;
     } else {
-      console.error(response);
+      console.error(response)
     }
   } catch (error) {
-    console.log('출력 실패:', (error as AxiosError).message);
-    return error;
+    console.log('MVP 출력 실패:', (error as AxiosError).message);
+    throw error;
   }
 };

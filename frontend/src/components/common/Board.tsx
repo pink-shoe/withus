@@ -6,6 +6,7 @@ export type boardType = 'GAME' | 'WAIT' | 'LOBBY' | 'ALBUM' | 'LOGIN';
 
 interface IBoardProps {
   boardType: boardType;
+  currentShapeUrl?: string;
   canPlay?: boolean;
   roundTimer?: number;
   handleSendImage?: () => void;
@@ -14,6 +15,7 @@ interface IBoardProps {
 
 export default function Board({
   boardType,
+  currentShapeUrl,
   canPlay,
   roundTimer,
   handleSendImage,
@@ -34,6 +36,7 @@ export default function Board({
             <div className='flex justify-center'>
               {roundTimer && handleSendImage && (
                 <Logo
+                  currentShapeUrl={currentShapeUrl}
                   logoType={'GAMELOGO'}
                   roundTimer={roundTimer}
                   canPlay={canPlay}

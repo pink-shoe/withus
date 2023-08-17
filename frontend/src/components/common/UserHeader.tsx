@@ -15,6 +15,15 @@ export default function UserHeader({ isLobbyDropdown }: IUserHeaderProps) {
   const onClickLogout = (): void => {
     userLogoutApi(navigate);
   };
+  const onClickUserUpdate = (): void => {
+    navigate('/mypage')
+  }
+  const onClickAlbum = (): void => {
+    navigate('/mypage/photoalbum')
+  }
+  const onClickLobby = (): void => {
+    navigate('/lobby')
+  }
 
   return (
     <div className='w-full absolute'>
@@ -25,11 +34,11 @@ export default function UserHeader({ isLobbyDropdown }: IUserHeaderProps) {
             // '로비'라는 항목이 없음
             <UserDropdown>
               <ul className='hover:text-red-300 font-kdisplay text-xl'>
-                <li className='bg-white text-center rounded-t-lg border-[#FA8D8D] mt-2 border-2 h-9 py-1 px-4 text-[#FA8D8D] hover:text-black'>
-                  <Link to='/mypage'>회원 정보 관리</Link>
+                <li onClick={onClickUserUpdate} className='bg-white text-center rounded-t-lg border-[#FA8D8D] mt-2 border-2 h-9 py-1 px-4 text-[#FA8D8D] hover:text-black'>
+                  회원 정보 관리
                 </li>
-                <li className='bg-white text-center border-[#FA8D8D] border-x-2 h-8 pt-1 text-[#FA8D8D] hover:text-black'>
-                  <Link to='/mypage/photoalbum'>사진첩</Link>
+                <li onClick={onClickAlbum} className='bg-white text-center border-[#FA8D8D] border-x-2 h-8 pt-1 text-[#FA8D8D] hover:text-black'>
+                  사진첩
                 </li>
                 <li
                   className='bg-white text-center rounded-b-lg border-[#FA8D8D] border-2 h-9 p-1 text-[#FA8D8D] hover:text-black'
@@ -43,14 +52,14 @@ export default function UserHeader({ isLobbyDropdown }: IUserHeaderProps) {
             // 로비 이외의 페이지에서 드롭다운
             <UserDropdown>
               <ul className='hover:text-red-300 font-kdisplay text-xl'>
-                <li className='bg-white text-center rounded-t-lg border-[#FA8D8D] mt-2 border-2 h-9 py-1 text-[#FA8D8D] hover:text-black'>
-                  <Link to='/lobby'>로비</Link>
+                <li onClick={onClickLobby} className='bg-white text-center rounded-t-lg border-[#FA8D8D] mt-2 border-2 h-9 py-1 text-[#FA8D8D] hover:text-black'>
+                  로비
                 </li>
-                <li className='bg-white text-center border-[#FA8D8D] border-x-2 border-b-2 h-8 pt-1 px-4 text-[#FA8D8D] hover:text-black'>
-                  <Link to='/mypage'>회원 정보 관리</Link>
+                <li onClick={onClickUserUpdate} className='bg-white text-center border-[#FA8D8D] border-x-2 border-b-2 h-8 pt-1 px-4 text-[#FA8D8D] hover:text-black'>
+                  회원 정보 관리
                 </li>
-                <li className='bg-white text-center border-[#FA8D8D] border-x-2 h-8 pt-1 text-[#FA8D8D] hover:text-black'>
-                  <Link to='/mypage/photoalbum'>사진첩</Link>
+                <li onClick={onClickAlbum} className='bg-white text-center border-[#FA8D8D] border-x-2 h-8 pt-1 text-[#FA8D8D] hover:text-black'>
+                  사진첩
                 </li>
                 <li
                   className='bg-white text-center rounded-b-lg border-[#FA8D8D] border-2 h-9 p-1 text-[#FA8D8D] hover:text-black'

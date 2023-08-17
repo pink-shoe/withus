@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from 'react';
 import { ControlBarPresenter } from './ControlBarPresenter';
 import { useNavigate } from 'react-router-dom';
 import { signalType } from 'hooks/useOpenvidu';
-import { cancelApi, checkStartApi, exitRoomApi, readyApi } from 'apis/roomApi';
+import { cancelApi, checkStartApi, exitRoomApi, readyApi, startGameApi } from 'apis/roomApi';
 
 interface IControlBarProps {
   type: 'WAIT' | 'GAME';
@@ -90,10 +90,15 @@ export const ControlBarContainer: FC<IControlBarProps> = ({
 
   const onClickStartBtn = async () => {
     const result = (await checkStartApi(roomId)) as any;
-    console.log('game start', result);
     if (result.status === 200) {
-      sendSignal(`${roomId}`, 'START');
-      navigate(`/gamerooms/${roomCode}`);
+      const gameStartApiResult = await startGameApi(roomId);
+      if (gameStartApiResult.status === 200) {
+        console.log('game start', gameStartApiResult);
+        if (gameStartApiResult.status === 200) {
+          sendSignal(`${roomId}`, 'START');
+          navigate(`/gamerooms/${roomCode}`);
+        }
+      }
     }
   };
 
