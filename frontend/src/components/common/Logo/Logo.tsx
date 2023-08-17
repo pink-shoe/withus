@@ -7,13 +7,20 @@ import { Divide } from 'react-feather';
 export type logoType = 'GAMELOGO' | 'LOBBYLOGO' | 'ALBUMLOGO';
 
 interface ILogoProps {
+  currentShapeUrl?: string;
   logoType: logoType;
   canPlay?: boolean;
   handleSendImage?: () => void;
   roundTimer?: number;
 }
 
-export default function Logo({ logoType, canPlay, handleSendImage, roundTimer }: ILogoProps) {
+export default function Logo({
+  logoType,
+  canPlay,
+  currentShapeUrl,
+  handleSendImage,
+  roundTimer,
+}: ILogoProps) {
   const [isPlaying, setIsPlaying] = useState(canPlay);
   // 게임 진행 시간은 7초
   const [count, setCount] = useState(roundTimer);
@@ -37,7 +44,9 @@ export default function Logo({ logoType, canPlay, handleSendImage, roundTimer }:
         <div className='logo-game'>
           <span className='text'>[</span>
           <span className='text'>
-            <div className='bg-[#FF8DA3] w-36 h-28 inline-block align-middle rounded-lg ms-5 me-3'></div>
+            <div className=' bg-white border-4 border-[#FF8DA3] w-36 h-28 inline-block items-center justify-center align-middle rounded-lg ms-5 me-3'>
+              <img src={currentShapeUrl} className='w-full h-full' />
+            </div>
             ] with us
           </span>
           <div className='ms-6 inline-block'>

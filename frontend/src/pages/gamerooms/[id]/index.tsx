@@ -218,7 +218,7 @@ export default function GameRoom() {
         )}
       {/* 라운드가 변할 때마다 roundModal의 상태가 true가 되도록 해야 함 */}
       {/* 라운드 모달(예시 : Round 1) */}
-      {currentRound && currentRound >= 1 && currentRound <= 5 && (
+      {currentRound && currentRound >= 1 && currentRound <= 5 && gameRoomInfo?.shapes && (
         <Modal openModal={roundModal} closeModal={closeRoundModal} isSettingModal={false}>
           <div className='flex w-full flex-col justify-center me-2 mt-11 pb-2 font-edisplay text-6xl'>
             <div className='flex justify-center w-full'>
@@ -227,7 +227,10 @@ export default function GameRoom() {
               <span className='text-3xl'>✨</span>
             </div>
             <div className='flex justify-center items-center mb-7 w-48 h-48 border-2 border-[#8D98FF]'>
-              <img src={gameRoomInfo?.shapes[currentRound - 1].shapeUrl} />
+              <img
+                src={gameRoomInfo?.shapes[currentRound - 1].shapeUrl}
+                className='w-full h-full'
+              />
             </div>
           </div>
           {/* <p className='text-[#514148] font-kdisplay font-medium text-2xl mb-10 text-center'>
@@ -287,55 +290,63 @@ export default function GameRoom() {
         </div>
         {/* openvidu 화면 */}
         <div className='w-full'>
-          <Board
-            boardType='GAME'
-            roundTimer={roundTimer}
-            handleSendImage={handleSendImage}
-            canPlay={canPlay}
-          >
-            <header className=' h-fit flex items-center'></header>
-            <div className='aspect-[4/3]'>
-              {publisher && (
-                <div
-                  id='captureDiv'
-                  ref={divRef}
-                  className='aspect-[4/3] grid grid-flow-dense grid-rows-2 grid-cols-2'
-                >
-                  {(data as IGameInfo) &&
-                    playerList &&
-                    gameRoomInfo &&
-                    streamList
-                      .sort((a: any, b: any) => b.userId - a.userId)
-                      ?.map((stream: any, idx: number) => {
-                        const player = playerList.find((player: IPlayerInfo) => {
-                          return player.playerId === stream.userId;
-                        });
-                        return (
-                          // 화면 크기가 커졌을 때,
-                          // 카메라 화면들이 Board 밖으로 나가는 것을 방지하기 위해
-                          // xl: h-[17rem] 추가
-                          <div className='w-full h-full xl:h-[17rem]' key={idx}>
-                            {player && (
-                              <VideoStream
-                                streamManager={stream.streamManager}
-                                name={player.nickname}
-                                isMe={stream.userId === user.memberId}
-                              />
-                            )}
-                          </div>
-                        );
-                      })}
+          {currentRound &&
+            currentRound >= 1 &&
+            currentRound <= 5 &&
+            gameRoomInfo &&
+            gameRoomInfo.shapes[currentRound - 1] &&
+            gameRoomInfo.shapes[currentRound - 1].shapeUrl && (
+              <Board
+                currentShapeUrl={gameRoomInfo?.shapes[currentRound - 1].shapeUrl}
+                boardType='GAME'
+                roundTimer={roundTimer}
+                handleSendImage={handleSendImage}
+                canPlay={canPlay}
+              >
+                <header className=' h-fit flex items-center'></header>
+                <div className='aspect-[4/3]'>
+                  {publisher && (
+                    <div
+                      id='captureDiv'
+                      ref={divRef}
+                      className='aspect-[4/3] grid grid-flow-dense grid-rows-2 grid-cols-2'
+                    >
+                      {(data as IGameInfo) &&
+                        playerList &&
+                        gameRoomInfo &&
+                        streamList
+                          .sort((a: any, b: any) => b.userId - a.userId)
+                          ?.map((stream: any, idx: number) => {
+                            const player = playerList.find((player: IPlayerInfo) => {
+                              return player.playerId === stream.userId;
+                            });
+                            return (
+                              // 화면 크기가 커졌을 때,
+                              // 카메라 화면들이 Board 밖으로 나가는 것을 방지하기 위해
+                              // xl: h-[17rem] 추가
+                              <div className='w-full h-full xl:h-[17rem]' key={idx}>
+                                {player && (
+                                  <VideoStream
+                                    streamManager={stream.streamManager}
+                                    name={player.nickname}
+                                    isMe={stream.userId === user.memberId}
+                                  />
+                                )}
+                              </div>
+                            );
+                          })}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          </Board>
+              </Board>
+            )}
           {/* 인원이 4명 미만이 되면 게임 종료 */}
           {/* {roomInfo.playerInfos.length < 0 ? (
             <ExceptionModal
-              message={'인원이 4명 미만으로 게임이 종료됩니다.'}
+            message={'인원이 4명 미만으로 게임이 종료됩니다.'}
               // openModal={true}
             ></ExceptionModal>
-          ) : (
+            ) : (
             <></>
           )} */}
           <div className='p-2 mt-2 align-bottom'>
