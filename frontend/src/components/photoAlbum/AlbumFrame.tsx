@@ -42,7 +42,9 @@ export default function AlbumFrame({
 
     if (modalElement) {
       try {
-        const canvas = await html2canvas(modalElement);
+        const canvas = await html2canvas(modalElement, {
+          allowTaint: true,
+        });
         const blob = await new Promise<Blob>((resolve) => {
           canvas.toBlob((blob) => {
             resolve(blob as Blob);
