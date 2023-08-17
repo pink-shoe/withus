@@ -5,13 +5,13 @@ import { IPlayerInfo, IRoom } from 'stores/room';
 const apiUrl = `/games`;
 export interface ITotalGameResult {
   gameResult: IGameResult;
-  shape: IShape;
+  captureUrl: string;
 }
 export interface IGameResult {
-  captureUrl: string;
+  answer: number;
   correct: boolean;
-  correctRate: number;
-  id: number;
+  gameResultId: number;
+  prediction: number;
   round: number;
 }
 
@@ -21,7 +21,6 @@ export interface IShape {
   shapeUrl: string;
 }
 export interface IGameInfo {
-  // currentRound: number;
   hostId: number;
   playerInfos: IPlayerInfo[];
   room: IRoom;

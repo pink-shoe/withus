@@ -238,10 +238,6 @@ export default function GameRoom() {
                 />
               </div>
             </div>
-            {/* <p className='text-[#514148] font-kdisplay font-medium text-2xl mb-10 text-center'>
-          게임 시작
-          <span className='text-blue-500 font-medium text-4xl'>{remainingTime}</span>초 전
-        </p> */}
           </Modal>
         )}
       {/* 주의 사항 모달창 */}
@@ -262,23 +258,6 @@ export default function GameRoom() {
         </div>
       </Modal>
       <div className='flex w-full h-full'>
-        {/* 라운드마다 문제 나오는 모달창 */}
-        {/* {isProblemModal && (
-          <Modal openModal={isProblemModal} isSettingModal={false}>
-            <div className='animate-shake'>
-              <p className='text-[#514148] font-kdisplay font-medium text-4xl mb-10 text-center'>
-                {roomInfo.room.roomRound}라운드 문제
-              </p>
-              <div className='flex mb-7 w-48 h-48 border-2 border-[#8D98FF]'>
-                <img src={shapeURL} />
-              </div>
-              <p className='text-[#514148] font-kdisplay font-medium text-2xl mb-10 text-center'>
-                게임 시작
-                <span className='text-blue-500 font-medium text-4xl'>{remainingTime}</span>초 전
-              </p>
-            </div>
-          </Modal>
-        )} */}
         {/* 참가자 목록 */}
         <div className='justify-start bg-white z-40'>
           {(data as IGameInfo) && playerList && gameRoomInfo && gameRoomInfo.room && (
@@ -345,15 +324,6 @@ export default function GameRoom() {
                 </div>
               </Board>
             )}
-          {/* 인원이 4명 미만이 되면 게임 종료 */}
-          {/* {roomInfo.playerInfos.length < 0 ? (
-            <ExceptionModal
-            message={'인원이 4명 미만으로 게임이 종료됩니다.'}
-              // openModal={true}
-            ></ExceptionModal>
-            ) : (
-            <></>
-          )} */}
           <div className='p-2 mt-2 align-bottom'>
             {(data as IGameInfo) &&
               gameRoomInfo &&
@@ -371,7 +341,6 @@ export default function GameRoom() {
                 />
               )}
           </div>
-          {/* <button onClick={handleSendImage}>다운로드</button> */}
         </div>
         {(data as IRoomAtom) && playerList && roomInfo && roomInfo.room && (
           <ChatContainer
