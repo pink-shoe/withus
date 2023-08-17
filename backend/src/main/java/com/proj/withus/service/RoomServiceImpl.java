@@ -141,6 +141,12 @@ public class RoomServiceImpl implements RoomService {
         } else {
             playerRepository.deletePlayerByMemberId(memberId);
         }
+
+        // guest인 경우 탈퇴 처리
+        Member member = memberRepository.findById(memberId).get();
+        if (member.getLoginType().equals("guest")) {
+            memberRepository.delete(member);
+        }
     }
     /*
     update room
