@@ -42,20 +42,36 @@ export default function AlbumFrame({
 
     if (modalElement) {
       try {
-        const canvas = await html2canvas(modalElement);
-        const blob = await new Promise<Blob>((resolve) => {
-          canvas.toBlob((blob) => {
-            resolve(blob as Blob);
-          });
+        // 이미지 로딩 상태를 추적하는 변수
+        let imagesLoaded = 0;
+        const totalImages = modalElement.querySelectorAll('img').length;
+
+        // 이미지 로딩 완료시 호출되는 함수
+        const imageLoaded = () => {
+          imagesLoaded++;
+          if (imagesLoaded === totalImages) {
+            html2canvas(modalElement).then(async (canvas) => {
+              const blob = await new Promise<Blob>((resolve) => {
+                canvas.toBlob((blob) => {
+                  resolve(blob as Blob);
+                });
+              });
+
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'album_image.png';
+              a.click();
+
+              window.URL.revokeObjectURL(url);
+            });
+          }
+        };
+
+        // 각 이미지의 로딩 완료 이벤트 등록
+        modalElement.querySelectorAll('img').forEach((img) => {
+          img.onload = imageLoaded;
         });
-
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'album_image.png';
-        a.click();
-
-        window.URL.revokeObjectURL(url);
       } catch (error) {
         console.error('Error capturing or saving the image:', error);
       }
@@ -171,27 +187,30 @@ export default function AlbumFrame({
         )}
         <Modal openModal={showModal} isSettingModal={false}>
           <div className='h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-90 z-50'>
-            <div className='flex flex-col items-center w-96 h-96 bg-white p-8 rounded-lg'>
+            <div className='flex flex-col items-center w-96 h-96 bg-white p-2 rounded-lg'>
               <div className='relative'>
                 <X
                   onClick={closeModal}
-                  className='cursor-pointer absolute w-8 h-8 top-0 right-0 p-2 text-black hover:text-red-100'
+                  className='cursor-pointer absolute w-8 h-8 top-0 right-0 text-black hover:text-red-100'
                 />
               </div>
-              {/* QR 코드를 표시하는 부분 */}
-              <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?data=${selectedImageUrl}`}
-                alt='QR Code'
-              />
+              {/* 중앙 정렬 */}
+              <div className='flex flex-col items-center justify-center h-full'>
+                {/* QR 코드를 표시하는 부분 */}
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?data=${selectedImageUrl}`}
+                  alt='QR Code'
+                />
 
-              {/* 이미지 다운로드 버튼 */}
-              <a
-                href={selectedImageUrl}
-                download={`WITHUS_IMG`}
-                className='mt-4 font-kdisplay text-2xl hover:bg-blue-700 text-white font-bold bg-blue-500 py-2 px-4 rounded'
-              >
-                내 컴퓨터에 이미지 저장
-              </a>
+                {/* 이미지 다운로드 버튼 */}
+                <a
+                  href={selectedImageUrl}
+                  download={`WITHUS_IMG`}
+                  className='mt-4 font-kdisplay text-2xl hover:bg-blue-700 text-white font-bold bg-blue-500 py-2 px-4 rounded'
+                >
+                  내 컴퓨터에 이미지 저장
+                </a>
+              </div>
             </div>
           </div>
         </Modal>
