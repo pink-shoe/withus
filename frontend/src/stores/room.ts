@@ -6,13 +6,14 @@ export interface IPlayerInfo {
   teamType: number;
 }
 export interface IRoom {
+  currentRound: number;
   roomCode: number;
   roomId: number;
   roomLink: string;
   roomRound: number;
   roomTime: number;
   roomType: string;
-  start: boolean;
+  start: 'no' | 'yes' | 'playing' | 'end';
 }
 export interface IRoomAtom {
   hostId: number;
@@ -25,12 +26,13 @@ export const roomAtom = atom<IRoomAtom>({
   hostId: -1,
   playerInfos: [],
   room: {
+    currentRound: -1,
     roomCode: -1,
     roomId: -1,
     roomLink: '',
     roomRound: -1,
     roomTime: -1,
     roomType: '',
-    start: false,
+    start: 'no',
   },
 });

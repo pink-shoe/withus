@@ -6,12 +6,16 @@ interface IBackgroundProps {
   children: React.ReactNode;
   onChangePhotoFrame: (Number: number) => void;
   onChangeBackground: (Number: number) => void;
+  setFourCut: React.Dispatch<React.SetStateAction<boolean>>;
+  fourCut: boolean;
 }
 
 export default function AlbumBG({
   children,
   onChangePhotoFrame,
   onChangeBackground,
+  setFourCut,
+  fourCut,
 }: IBackgroundProps) {
   const [photoFrameNumber, setPhotoFrameNumber] = useState(1);
   const [backgroundNumber, setBackgroundNumber] = useState(1);
@@ -36,15 +40,15 @@ export default function AlbumBG({
 
   return (
     <div className='min-w-[480px]'>
-      <div className='hover:text-red-300'>
+      <div className='hover:text-red-100'>
         <UserHeader />
       </div>
-      <div className='flex justify-center place-items-center h-full bg-[#F9C7C8]'>
+      <div className='flex justify-center place-items-center h-full bg-red-100'>
         {children}
         <div className='flex flex-col items-end'>
           <p className='rounded w-28 h-8 bg-yellow-100 font-kdisplay flex justify-center items-center'>
             {' '}
-            배경선택{' '}
+            배치 선택{' '}
           </p>
           {BGIMG.map((number) => (
             <ButtonComponent
@@ -52,13 +56,13 @@ export default function AlbumBG({
               type={photoFrameNumber === number ? 'tinyPointed' : 'tiny'}
               onClick={() => ChangePhotoFrame(number)}
             >
-              사진틀{number}
+              사진배치{number}
             </ButtonComponent>
           ))}
           <div className='pt-4' />
           <p className='rounded w-28 h-8 bg-yellow-100 font-kdisplay flex justify-center items-center'>
             {' '}
-            배치선택{' '}
+            배경 선택{' '}
           </p>
           {[1, 2, 3, 4, 5].map((number) => (
             <ButtonComponent
@@ -66,9 +70,28 @@ export default function AlbumBG({
               type={backgroundNumber === number ? 'tinyPointed' : 'tiny'}
               onClick={() => ChangeBackground(number)}
             >
-              배경{number}
+              {number === 1
+                ? '달빛숲'
+                : number === 2
+                ? '평화로운 초원'
+                : number === 3
+                ? '크리스마스 밤'
+                : number === 4
+                ? '눈 덮힌 마을'
+                : '배경 없음'}
             </ButtonComponent>
           ))}
+          <button
+            className={`rounded w-28 h-8 font-kdisplay flex justify-center items-center mt-4 ${
+              fourCut ? 'bg-blue-100 text-black' : 'bg-yellow-100 hover:bg-yellow-200 text-black'
+            }`}
+            onClick={() => {
+              setFourCut((prevValue) => !prevValue);
+              console.log('FourCut 값:', fourCut);
+            }}
+          >
+            {fourCut ? '앨범 보기' : '네컷 저장'}
+          </button>
         </div>
       </div>
     </div>

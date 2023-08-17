@@ -12,7 +12,6 @@ import { ControlBarContainer } from '@components/Controlbar/ControlBarContainer'
 import Board from '@components/common/Board';
 import { getRoomInfoApi } from 'apis/roomApi';
 import { useQuery } from '@tanstack/react-query';
-import ExceptionModal from '@components/common/ExceptionModal';
 
 export default function WaitingRoom() {
   const location = useLocation();
@@ -65,6 +64,7 @@ export default function WaitingRoom() {
     if (session && publisher) {
       publisher.stream.session.on('signal:' + type, (e: any) => {
         const result = JSON.parse(e.data);
+        console.log(result);
         if (type === 'START') navigate(`/gamerooms/${currentPath}`);
         if (result && currentPath) getRoomData();
       });
@@ -82,7 +82,6 @@ export default function WaitingRoom() {
 
   useEffect(() => {
     getRoomData();
-    console.log('streamlist', streamList);
   }, [streamList]);
 
   return (
@@ -94,9 +93,6 @@ export default function WaitingRoom() {
             <ParticipantsContainer
               type={'WAIT'}
               user={user}
-              // userId={userId}
-              // userName={userName}
-              // onChangeUserName={onChangeUserName}
               playerList={playerList}
               hostId={roomInfo.hostId}
               roomRound={roomInfo.room.roomRound}
@@ -135,12 +131,15 @@ export default function WaitingRoom() {
             )}
           </div>
         </div>
-        <ChatContainer
-          chatStatus={chatStatus}
-          session={session}
-          publisher={publisher}
-          sendSignal={sendSignal}
-        />
+        {(data as IRoomAtom) && playerList && roomInfo && roomInfo.room && (
+          <ChatContainer
+            chatStatus={chatStatus}
+            session={session}
+            publisher={publisher}
+            sendSignal={sendSignal}
+            playerList={playerList}
+          />
+        )}
       </div>
       {/* 방장이 방을 나가면 게임 종료 */}
       {/* {roomInfo.playerInfos &&

@@ -67,14 +67,14 @@ export default function ResultModal({ openModal }: IResultModalProps) {
   //   }
   // }
 
-  const [totalResult, setTotalResult] = useState()
-  const getGameData = async () => {
-    const result = (await getGameInfoApi(roomInfo.room.roomId)) as IGameInfo;
-    if (result) {
-      // 해당 부분은 api 연결 후 추가 확인 필요.
-      if (result.currentRound === result.room.roomRound) await getGameResultApi(result.room.roomId);
-    }
-  };
+  // const [totalResult, setTotalResult] = useState()
+  // const getGameData = async () => {
+  //   const result = (await getGameInfoApi(roomInfo.room.roomId)) as IGameInfo;
+  //   if (result) {
+  //     // 해당 부분은 api 연결 후 추가 확인 필요.
+  //     if (result.currentRound === result.room.roomRound) await getGameResultApi(result.room.roomId);
+  //   }
+  // };
 
   function repeatResult(pictures: any, answers: any, results: any) {
     let arr = [];

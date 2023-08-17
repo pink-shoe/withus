@@ -71,17 +71,21 @@ export const ControlBarContainer: FC<IControlBarProps> = ({
   }, [chatStatus, callback]);
 
   const onClickReadyBtn = async () => {
-    sendSignal('준비완료', 'READY');
     const result = (await readyApi(roomId)) as any;
     console.log('change ready', result);
-    if (result.status === 200) setReadyStatus(true);
+    if (result.status === 200) {
+      setReadyStatus(true);
+      sendSignal('준비완료', 'READY');
+    }
   };
 
   const onClickCancelBtn = async () => {
-    sendSignal('준비해제', 'CANCEL_READY');
     const result = (await cancelApi(roomId)) as any;
     console.log('change ready', result);
-    if (result.status === 200) setReadyStatus(false);
+    if (result.status === 200) {
+      setReadyStatus(false);
+      sendSignal('준비해제', 'CANCEL_READY');
+    }
   };
 
   const onClickStartBtn = async () => {

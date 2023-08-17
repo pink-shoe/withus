@@ -15,8 +15,6 @@ interface IParticipantsContainerProps {
   roomRound: number;
   roomType: string;
   sendSignal?: (message: string, type: signalType) => void;
-  // onChangeUserName: (username: string) => void;
-  // onChangeIsUpdateUserName: (status: boolean) => void;
 }
 export default function ParticipantsContainer({
   type,
@@ -47,22 +45,7 @@ export default function ParticipantsContainer({
       // stream에 userName update 처리 필요
     }
   };
-  // useEffect(() => {
-  //   callback.onChangeUserName(userName);
-  // }, [userName, callback]);
 
-  // useEffect(() => {
-  //   callback.onChangeIsUpdateUserName(isUpdateUserName);
-  // }, [isUpdateUserName, callback]);
-
-  // useEffect(() => {
-  //   console.log('plist', pList);
-  //   setPlayerList(pList);
-  //   console.log(playerList);
-  // }, []);
-  // useEffect(() => {
-  //   console.log('players', playerList);
-  // }, [playerList]);
   return (
     <ParticipantsPresenter
       type={type}
