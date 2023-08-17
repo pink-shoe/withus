@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.proj.withus.domain.*;
 import com.proj.withus.domain.dto.*;
 import com.proj.withus.exception.CustomException;
 import com.proj.withus.exception.ErrorCode;
@@ -23,9 +24,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.proj.withus.domain.Player;
-import com.proj.withus.domain.Room;
-import com.proj.withus.domain.Shape;
 import com.proj.withus.util.ImageUtil;
 import com.proj.withus.util.JwtUtil;
 
@@ -118,12 +116,19 @@ public class GameController {
             @PathVariable("round") int round,
             @RequestPart MultipartFile captureImage) {
 
-        // s3 사진 저장 후 url 받기
-        String imageUrl = awsS3Service.uploadFile(captureImage);
+        Capture captureInfo = gameService.getCaptureInfo(roomId, round);
 
-        // 받은 url, roomId, round 정보 DB 저장하기
-        gameService.saveCaptureUrl(roomId, round, imageUrl);
+        System.out.println("-------------------");
+        System.out.println(captureInfo.getCaptureUrl());
+        System.out.println("-----------------------");
 
+        if (captureInfo == null) {
+            // s3 사진 저장 후 url 받기
+            String imageUrl = awsS3Service.uploadFile(captureImage);
+
+            // 받은 url, roomId, round 정보 DB 저장하기
+            gameService.saveCaptureUrl(roomId, round, imageUrl);
+        }
         if (round == roomService.getRoomInfo(roomId).get().getRound()) {
             throw new CustomException(ErrorCode.LAST_ROUND);
         }

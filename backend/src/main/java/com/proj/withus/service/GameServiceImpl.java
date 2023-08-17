@@ -193,4 +193,9 @@ public class GameServiceImpl implements GameService {
     public void saveShape(Shape shape) {
         shapeRepository.save(shape);
     }
+
+    @Override
+    public Capture getCaptureInfo(Long roomId, int round) {
+        return captureRepository.findCaptureByRoomIdAndRound(roomId, round).get();
+    }
 }
