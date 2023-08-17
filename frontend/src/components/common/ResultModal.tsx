@@ -207,43 +207,37 @@ export default function ResultModal({ openModal }: IResultModalProps) {
         <div className='overflow-y-auto h-96'>
           {/* {repeatResult()} */}
           {resultData &&
-            resultData.map((result, i) =>
-              result.gameResult.correct ? (
-                <div className='flex justify-center mb-8' key={i}>
-                  <span className='me-5'>
-                    <span className='font-medium font-kdisplay text-2xl'>
-                      ROUND {result.gameResult.round}
-                    </span>
+            resultData.map((result, i) => (
+              <div className='flex justify-center mb-8' key={i}>
+                <span className='me-5'>
+                  <span className='font-medium font-kdisplay text-2xl whitespace-nowrap'>
+                    ROUND {result.gameResult.round}
+                  </span>
+                  {result.gameResult.correct ? (
                     <div className=' text-[#112364] mt-2 flex justify-center'>
-                      <Circle size='60' />
+                      <Circle size='60' className='z-10' />
                     </div>
-                  </span>
-                  {result.captureUrl && (
-                    <img
-                      className='w-36 h-28 rounded-lg display: inline me-2'
-                      src={result.captureUrl}
-                    />
-                  )}
-                  <img className='w-36 h-28 rounded-lg display: inline' src={result.captureUrl} />
-                </div>
-              ) : (
-                <div className='flex justify-center mb-8' key={i}>
-                  <span className='me-5'>
-                    <span className='font-medium font-kdisplay text-2xl'>
-                      ROUND {result.gameResult.round}
-                    </span>
+                  ) : (
                     <div className='text-[#F84C4C] flex justify-center'>
-                      <X size='80' />
+                      <X size='80' className='z-10' />
                     </div>
-                  </span>
+                  )}
+                  <div className='absolute'>
+                    <img src={result.answerUrl} className='w-20 h-20' />
+                  </div>
+                </span>
+                {result.captureUrl && (
                   <img
-                    className='w-36 h-28 rounded-lg display: inline me-3'
+                    className='w-36 h-28 rounded-lg display: inline me-2'
                     src={result.captureUrl}
                   />
-                  <img className='w-36 h-28 rounded-lg display: inline' src={result.captureUrl} />
-                </div>
-              )
-            )}
+                )}
+                <img
+                  className='w-36 h-28 rounded-lg display: inline'
+                  src={result.predictionShape.shapeUrl}
+                />
+              </div>
+            ))}
         </div>
         <div>{resultButton()}</div>
       </Modal>

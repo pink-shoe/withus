@@ -7,6 +7,7 @@ export interface ITotalGameResult {
   answerUrl: string;
   captureUrl: string;
   gameResult: IGameResult;
+  predictionShape: IShape;
 }
 export interface IGameResult {
   answer: number;
