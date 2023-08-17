@@ -114,7 +114,7 @@ export default function ResultModal({ openModal, sendSignal }: IResultModalProps
                       <X size='80' className='z-10' />
                     </div>
                   )}
-                  <div className='relative top-20 left-[0.38rem]'>
+                  <div className='relative top-[-5rem] left-[0.38rem]'>
                     <img src={result.answerUrl} className='w-20 h-20' />
                   </div>
                 </span>
