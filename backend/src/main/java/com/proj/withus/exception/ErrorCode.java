@@ -35,7 +35,7 @@ public enum ErrorCode {
     VOTE_FAIL(HttpStatus.BAD_REQUEST, "투표가 반영되지 않았습니다."),
 
     LAST_ROUND(HttpStatus.NO_CONTENT, "마지막 라운드 입니다."),
-
+    LACK_OF_PLAYERS(HttpStatus.BAD_REQUEST, "플레이어 수가 부족합니다."),
     /*
     찬희
      */

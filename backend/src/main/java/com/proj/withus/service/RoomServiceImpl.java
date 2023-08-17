@@ -274,6 +274,9 @@ public class RoomServiceImpl implements RoomService {
     }
 
     public String getStartStatus(Long roomId) {
+        if (playerRepository.findAllByRoom_Id(roomId).size() < 4) {
+            throw new CustomException(ErrorCode.LACK_OF_PLAYERS);
+        }
         return roomRepository.findStartStatusByRoomId(roomId);
     }
 
