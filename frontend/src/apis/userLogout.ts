@@ -37,18 +37,17 @@ export async function userLogoutApi(navigate: any) {
       sessionStorage.removeItem('token');
       sessionStorage.removeItem('accessToken');
       const googleLogoutUrl = 'https://accounts.google.com/logout';
-      const redirectUri = `http://localhost:5173/login`;
+      const redirectUri = `https://connectwithus.site/login`;
 
       // Open a new small window for Google logout
       const popup = window.open(googleLogoutUrl, '_blank', 'width=600,height=400');
 
-      // Close the popup and navigate to redirectUri after 0.5 seconds
       setTimeout(() => {
         if (popup) {
           popup.close();
           window.location.href = redirectUri;
         }
-      }, 500); // Wait for 0.5 seconds
+      }, 100);
     }
   } catch (error) {
     console.error('실패:', (error as AxiosError).message);
