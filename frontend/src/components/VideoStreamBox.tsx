@@ -29,18 +29,12 @@ export const VideoStreamBox: FC<IVideoStreamBoxProps> = ({
         <div className='flex'>
           {isMe &&
             (!micStatus ? (
-              // <FontAwesomeIcon
-              //   icon={faMicrophoneSlashIconDefinition}
-              //   color={'red'}
-              //   fontSize={'16px'}
-              // />
               <MicOff className='text-red text-2xl' />
             ) : (
               <></>
             ))}
           {isMe &&
             (!videoStatus ? (
-              // <FontAwesomeIcon icon={faVideoSlashIconDefinition} color={'red'} fontSize={'16px'} />
               <VideoOff className='text-red text-2xl' />
             ) : (
               <></>
