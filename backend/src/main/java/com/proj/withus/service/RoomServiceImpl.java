@@ -111,9 +111,9 @@ public class RoomServiceImpl implements RoomService {
         }
 
         String startStatus = roomRepository.findStartStatusByRoomId(roomRepository.findRoomByCode(roomCode).get().getId());
-        if (startStatus.equals("playing")) {
-            throw new CustomException(ErrorCode.ALREADY_PLAYING);
-        }
+//        if (startStatus.equals("playing")) {
+//            throw new CustomException(ErrorCode.ALREADY_PLAYING);
+//        }
 
         Player player = new Player();
         player.setId(memberId);
