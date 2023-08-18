@@ -1,8 +1,6 @@
 package com.proj.withus.service;
 
-import com.proj.withus.domain.Player;
-import com.proj.withus.domain.Room;
-import com.proj.withus.domain.Shape;
+import com.proj.withus.domain.*;
 import com.proj.withus.domain.dto.GetCaptureImageReq;
 import com.proj.withus.domain.dto.GetTotalGameResultRes;
 
@@ -20,4 +18,5 @@ public interface GameService {
     public List<GetTotalGameResultRes> getTotalGameResult(Long roomId);
     public void saveCaptureUrl(Long roomId, int round, String imageUrl);
     public void saveShape(Shape shape);
+    public Capture getCaptureInfo(Long roomId, int round);
 }
