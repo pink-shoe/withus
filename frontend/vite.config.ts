@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import generouted from '@generouted/react-router/plugin';
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
@@ -12,17 +13,6 @@ export default defineConfig({
       output: './src/router.ts',
     }),
   ],
-  server: {
-    proxy: {
-      '/openvidu/api': {
-        target: 'http://localhost:4443',
-        changeOrigin: true,
-        secure: false,
-        // ws:true,
-        // rewrite:(path=>path.replace())
-      },
-    },
-  },
   resolve: {
     alias: {
       '@src': '/src',
