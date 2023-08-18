@@ -1,5 +1,9 @@
 package com.proj.withus.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,12 +17,12 @@ public class Album {
     @Column(name = "album_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private String imgUrl;
-
-    private String saveAt;
-
+    @JsonIgnore
+    @OneToMany(mappedBy = "album")
+    private List<Image> images = new ArrayList<>();
 }
