@@ -2,6 +2,7 @@
 
 ```
 # pnpm으로 프로젝트 세팅
+cd frontend
 pnpm i
 
 # 만약 pnpm이 없다면 아래 명령어 실행하여 pnpm 설치
@@ -15,15 +16,8 @@ pnpm -v
 # openvidu-call-react docker
 docker run -p 4443:4443 --rm -e OPENVIDU_SECRET=MY_SECRET openvidu/openvidu-dev:2.28.0
 
-# openvidu 서버 처음 실행 시 openvidu-basic-node 폴더 내로 이동 후 아래 명령어 실행
-cd openvidu-basic-node
-npm i
-
-# openvidu 서버 실행 위해 openvidu-basic-node 폴더 내에서 아래 명령어 실행
-node index.js
-
-
 # 프론트 코드는 frontend 폴더 내에서 실행
+cd frontend
 pnpm run dev
 
 ```
