@@ -1,0 +1,7 @@
+{
+	"dependencies": {
+		"html2canvas": "^1.4.1",
+		"react-countdown-circle-timer": "^3.2.1",
+		"react-feather": "^2.0.10"
+	}
+}
