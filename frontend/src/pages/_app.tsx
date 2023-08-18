@@ -1,9 +1,7 @@
 import { Outlet } from 'react-router-dom';
-import ExceptionModal from '@components/common/ExceptionModal';
-import { ErrorContext } from 'stores/error';
-import { useMemo, useState } from 'react';
-import WithAxios from '@components/common/WithAxios';
-// import { Link, useModals, useNavigate, useParams } from '../router';
+import { Modals } from '@generouted/react-router';
+
+import { Link, useModals, useNavigate, useParams } from '../router';
 
 export const Catch = () => {
   return <div>Something went wrong... Caught at _app error boundary</div>;
@@ -11,28 +9,41 @@ export const Catch = () => {
 
 export const Pending = () => <div>Loading from _app...</div>;
 
-export interface IError {
-  code: string;
-  message: string;
-}
 export default function App() {
-  const [error, setError] = useState<{ code: string; message: string }>({ code: '', message: '' });
-  const errorData = useMemo(
-    () => ({ code: error.code, message: error.message, setError }),
-    [error]
-  );
+  const navigate = useNavigate();
+  const modals = useModals();
+  //   const { id, pid } = useParams('/posts/:id/:pid?' as never);
+
+  const a = () => navigate('/posts/:id', { params: { id: 'a' } });
+  const b = () => navigate('/posts/:id', { params: { id: '' } });
+  const c = () => navigate(-1);
+  const d = () => navigate('/posts/:id/deep', { params: { id: 'd' } });
+  const e = () => navigate('/posts/:id/deep', { params: { id: 'e' } });
 
   return (
-    <ErrorContext.Provider value={{ code: errorData.code, message: errorData.message, setError }}>
-      <WithAxios>
-        <section>
-          <main>
-            <Outlet />
-          </main>
-          {/* <Modals /> */}
-        </section>
-        <ExceptionModal />
-      </WithAxios>
-    </ErrorContext.Provider>
+    <section style={{ margin: 24 }}>
+      <header style={{ display: 'flex', gap: 24 }}>
+        <Link to='/'>Home</Link>
+        <Link to={{ pathname: '/about' }}>About</Link>
+        <Link to='/posts'>Posts</Link>
+        <Link to='/posts/:id/:pid?' params={{ id: '1', pid: '2' }}>
+          Posts by id/pid
+        </Link>
+        <Link to='/posts/:id' params={{ id: 'id' }}>
+          Posts by id
+        </Link>
+        <button onClick={() => modals.open('/modal')}>Global modal at current route</button>
+        <button onClick={() => modals.open('/modal', { at: '/about' })}>
+          Global modal at /about
+        </button>
+        <button onClick={e}>navigate to</button>
+      </header>
+
+      <main>
+        <Outlet />
+      </main>
+
+      <Modals />
+    </section>
   );
 }

@@ -2,26 +2,27 @@
   "compilerOptions": {
     "target": "ES6",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable", "ES2015", "ES2016", "ES2017", "ES2018", "ES2019"],
+    "lib": ["ES2020", "DOM", "DOM.Iterable", "ES2015","ES2016","ES2017","ES2018","ES2019"],
     "module": "ESNext",
     "skipLibCheck": true,
 
+    
     "allowJs": true,
     "checkJs": true,
     "declaration": true,
     "outDir": "./dist",
     "baseUrl": "./src",
     "paths": {
-      "@src/*": ["src/*"],
-      "@components/*": ["components/*"],
-      "@pages/*": ["pages/*"],
-      "hooks/*": ["hooks/*"],
-      "lib/*": ["lib/*"],
-      "stores/*": ["stores/*"],
-      "types/*": ["types/*"],
-      "utils/*": ["utils/*"],
-      "apis/*": ["apis/*"],
-      "common/*": ["common/*"]
+      "@src/*":["src/*"],
+      "@components/*":["components/*"],
+      "@pages/*":["pages/*"],
+      "hooks/*":["hooks/*"],
+      "lib/*":["lib/*"],
+      "stores/*":["stores/*"],
+      "types/*":["types/*"],
+      "utils/*":["utils/*"],
+      "apis/*":["apis/*"],
+      "common/*":["common/*"]
     },
 
     /* Bundler mode */
@@ -34,10 +35,9 @@
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noFallthroughCasesInSwitch": false,
-    "allowUnusedLabels": true
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
