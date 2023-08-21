@@ -57,9 +57,9 @@ public class GuestController {
 //            @ApiParam(value = "사용할 닉네임", required = true)
             @RequestBody String nickname) {
         // 일단 회원 등록 먼저
-        Member guest = new Member();
-        guest.setNickname(nickname);
-        guest.setLoginType("guest");
+        Member guest = Member.builder()
+                .nickname(nickname)
+                .loginType("guest").build();
         Member savedGuest = memberService.createMember(guest);
         Long guestId = savedGuest.getId();
 

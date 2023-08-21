@@ -4,13 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Getter @Setter
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Album {
 
     @Id @GeneratedValue

@@ -8,17 +8,18 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Getter;
-import lombok.Setter;
-
 @Entity
-@Getter @Setter
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Problem {
 
 	@Id @GeneratedValue

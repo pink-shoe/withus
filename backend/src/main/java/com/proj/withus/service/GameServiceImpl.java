@@ -1,31 +1,18 @@
 package com.proj.withus.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-
 import com.proj.withus.domain.*;
+import com.proj.withus.domain.dto.GetTotalGameResultRes;
 import com.proj.withus.exception.CustomException;
 import com.proj.withus.exception.ErrorCode;
 import com.proj.withus.repository.*;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-
-import com.proj.withus.domain.dto.GetCaptureImageReq;
-import com.proj.withus.domain.dto.GetTotalGameResultRes;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,11 +26,10 @@ public class GameServiceImpl implements GameService {
     private final ShapeRepository shapeRepository;
     private final CaptureRepository captureRepository;
     private final ProblemRepository problemRepository;
-    private final EntityManager entityManager;
 
     @Override
     public Room getRoomInfo(Long memberId) {
-         return playerRepository.findRoomIdByPlayerId(memberId)
+         return playerRepository.findRoomByPlayerId(memberId)
                  .orElseThrow(() -> new CustomException(ErrorCode.PLAYERS_ROOM_IS_NOT_EXIST));
     }
 
@@ -69,63 +55,6 @@ public class GameServiceImpl implements GameService {
         return shapes;
     }
 
-//    @Override
-//    public boolean sendCaptureInfo(GetCaptureImageReq getCaptureImageReq) {
-//        String url = ""; // flask 서버
-//        RestTemplate restTemplate = new RestTemplate();
-//
-//        MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
-//        requestBody.add("roomId", getCaptureImageReq.getRoomId());
-//        requestBody.add("captureUrl", getCaptureImageReq.getCaptureUrl());
-//        requestBody.add("currentRound", getCaptureImageReq.getCurrentRound());
-//        requestBody.add("shapeId", getCaptureImageReq.getShapeId());
-//
-//        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(requestBody);
-//
-//        ResponseEntity<String> responseEntity = restTemplate.exchange(
-//                url,
-//                HttpMethod.POST,
-//                request,
-//                String.class
-//        );
-//
-//        return responseEntity.getStatusCode().is2xxSuccessful();
-//    }
-
-//    @Override
-//    public boolean getGameResult() {
-//        String url = "";
-//        RestTemplate restTemplate = new RestTemplate();
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        HttpEntity<String> request = new HttpEntity<>(headers);
-//
-//        ResponseEntity<Map> response = restTemplate.exchange(
-//            url,
-//            HttpMethod.GET,
-//            request,
-//            Map.class
-//        );
-//
-//        GameResult gameResult = new GameResult();
-//
-//        gameResult.setRoom(roomRepository.findRoomById((Long) response.getBody().get("roomId"))
-//                .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND)));
-//        gameResult.setRound((int) response.getBody().get("currentRound"));
-//        gameResult.setCaptureUrl(response.getBody().get("captureUrl").toString());
-//        gameResult.setCorrect((Boolean) response.getBody().get("isCorrect"));
-//        gameResult.setCorrectRate((int) response.getBody().get("correctRate"));
-//        gameResult.setShape(shapeRepository.findShapeById((Long) response.getBody().get("shapeId"))
-//                .orElseThrow(() -> new CustomException(ErrorCode.SHAPE_NOT_FOUND)));
-//        Long gameResultId = gameResultRepository.save(gameResult).getId();
-//
-//        if (gameResultId == null) {
-//            return false;
-//        }
-//
-//        return true;
-//    }
-
     // game_result & url join
     @Override
     public String getCaptureUrl(Long resultId) {
@@ -133,9 +62,6 @@ public class GameServiceImpl implements GameService {
         return captureRepository.findCaptureByRoomIdAndRound(gameResult.get().getRoom().getId(), gameResult.get().getRound())
             .map(Capture::getCaptureUrl)
             .orElseThrow(() -> new CustomException(ErrorCode.CAPTURE_IMAGE_NOT_FOUND));
-        // return captureRepository.findCaptureByResultId(resultId)
-        //     .map(Capture::getCaptureUrl)
-        //     .orElseThrow(() -> new CustomException(ErrorCode.CAPTURE_IMAGE_NOT_FOUND));
     }
 
     @Override
@@ -182,10 +108,12 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public void saveCaptureUrl(Long roomId, int round, String imageUrl) {
-        Capture capture = new Capture();
-        capture.setRoom(roomRepository.findRoomById(roomId).orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND)));
-        capture.setRound(round);
-        capture.setCaptureUrl(imageUrl);
+        Capture capture = Capture.builder()
+                .room(roomRepository.findRoomById(roomId)
+                        .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND)))
+                .round(round)
+                .captureUrl(imageUrl)
+                .build();
         captureRepository.save(capture);
     }
 

@@ -2,9 +2,7 @@ package com.proj.withus.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -14,7 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Room {
 
     @Id @GeneratedValue
@@ -46,11 +47,9 @@ public class Room {
     private int currentRound = 1;
 
     @JsonProperty("roomTime")
-//    @ColumnDefault("5")
     @Builder.Default
     private int time = 5;
 
-//    @ColumnDefault("no")
     @Builder.Default
     private String start = "no";
 

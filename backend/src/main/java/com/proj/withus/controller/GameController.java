@@ -195,10 +195,11 @@ public class GameController {
 
         String imgUrl = awsS3Service.uploadFile(image);
 
-        Shape shape = new Shape();
-        shape.setId(shapeId);
-        shape.setShapeLabel(shapeLabel);
-        shape.setShapeUrl(imgUrl);
+        Shape shape = Shape.builder()
+                .id(shapeId)
+                .shapeLabel(shapeLabel)
+                .shapeUrl(imgUrl)
+                .build();
         gameService.saveShape(shape);
 
         return new ResponseEntity<String>("문제 정보 저장 성공", HttpStatus.OK);

@@ -113,10 +113,11 @@ public class SocialServiceImpl implements SocialService {
         JsonElement kakaoAccount = element.getAsJsonObject().get("kakao_account");
         JsonElement profile = kakaoAccount.getAsJsonObject().get("profile");
 
-        Member kakaoMember = new Member();
-        kakaoMember.setEmail(kakaoAccount.getAsJsonObject().get("email").getAsString());
-        kakaoMember.setNickname(profile.getAsJsonObject().get("nickname").getAsString());
-        kakaoMember.setLoginType("kakao");
+        Member kakaoMember = Member.builder()
+                .email(kakaoAccount.getAsJsonObject().get("email").getAsString())
+                .nickname(profile.getAsJsonObject().get("nickname").getAsString())
+                .loginType("kakao")
+                .build();
         
         Optional<Member> member = memberRepository.findByEmail(kakaoMember.getEmail());
         if (!member.isPresent()) {
@@ -177,10 +178,11 @@ public class SocialServiceImpl implements SocialService {
         googleUserInfo.setEmail(response.getBody().get("email").toString());
         googleUserInfo.setLoginType("google");
 
-        Member googleMember = new Member();
-        googleMember.setNickname(googleUserInfo.getNickname());
-        googleMember.setEmail(googleUserInfo.getEmail());
-        googleMember.setLoginType(googleUserInfo.getLoginType());
+        Member googleMember = Member.builder()
+                .nickname(googleUserInfo.getNickname())
+                .email(googleUserInfo.getEmail())
+                .loginType(googleUserInfo.getLoginType())
+                .build();
 
         Optional<Member> member = memberRepository.findByEmail(googleMember.getEmail());
         if (!member.isPresent()) {

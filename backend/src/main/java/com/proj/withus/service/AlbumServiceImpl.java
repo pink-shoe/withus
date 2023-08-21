@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,10 +30,8 @@ public class AlbumServiceImpl implements AlbumService {
                 .ifPresent(album -> {
                    throw new CustomException(ErrorCode.DUPLICATE_ALBUM);
                 });
-        Album album = new Album();
-        album.setMember(member);
+        Album album = Album.builder().member(member).build();
         albumRepository.save(album);
-
     }
 
     public Long getAlbum(Long memberId) {
@@ -60,11 +56,13 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
     public Image saveImage(Long memberId, String imgUrl) {
-        Image image = new Image();
-        image.setImgUrl(imgUrl);
-        image.setAlbum(albumRepository.findAlbumByMemberId(memberId)
-                .orElseThrow(() -> new CustomException(ErrorCode.ALBUM_IS_NOT_EXIST)));
-        image.setSavedAt(LocalDateTime.now().toString());
+        Image image = Image.builder()
+                .imgUrl(imgUrl)
+                .album(albumRepository.findAlbumByMemberId(memberId)
+                        .orElseThrow(() -> new CustomException(ErrorCode.ALBUM_IS_NOT_EXIST)))
+                .savedAt(LocalDateTime.now().toString())
+                .build();
+
         Long imgId = imageRepository.save(image).getId();
         return imageRepository.findImageById(imgId)
                 .orElseThrow(() -> new CustomException(ErrorCode.IMAGE_NOT_SAVED));
