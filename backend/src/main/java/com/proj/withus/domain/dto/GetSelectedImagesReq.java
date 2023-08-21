@@ -2,16 +2,12 @@ package com.proj.withus.domain.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
 @ApiModel(description = "사용자가 선택한 사진 정보")
 public class GetSelectedImagesReq {

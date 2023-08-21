@@ -2,13 +2,11 @@ package com.proj.withus.domain.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@Setter
-@RequiredArgsConstructor
+@Data
+@Builder
 @ApiModel(description = "게스트 로그인")
 public class GuestLoginRes {
 

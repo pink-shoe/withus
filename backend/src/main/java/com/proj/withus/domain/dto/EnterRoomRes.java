@@ -6,15 +6,13 @@ import com.proj.withus.domain.Player;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter @Setter
-@RequiredArgsConstructor
+@Data
+@Builder
 @ApiModel(description = "방 입장 정보")
 public class EnterRoomRes {
 

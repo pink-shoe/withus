@@ -1,16 +1,10 @@
 package com.proj.withus.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter @Setter
-@NoArgsConstructor
+@Data
 @Schema(description = "방 생성 정보")
 public class CreateRoomReq {
 

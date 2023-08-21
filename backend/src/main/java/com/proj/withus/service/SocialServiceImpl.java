@@ -172,11 +172,11 @@ public class SocialServiceImpl implements SocialService {
 
         System.out.println(response.getBody().toString());
 
-        SocialMemberInfo googleUserInfo = new SocialMemberInfo();
-
-        googleUserInfo.setNickname(response.getBody().get("name").toString());
-        googleUserInfo.setEmail(response.getBody().get("email").toString());
-        googleUserInfo.setLoginType("google");
+        SocialMemberInfo googleUserInfo = SocialMemberInfo.builder()
+                .nickname(response.getBody().get("name").toString())
+                .email(response.getBody().get("email").toString())
+                .loginType("google")
+                .build();
 
         Member googleMember = Member.builder()
                 .nickname(googleUserInfo.getNickname())

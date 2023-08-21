@@ -54,7 +54,6 @@ public class GuestController {
     @PostMapping("/room/{room_code}") // 게스트 회원가입 (api 설계서와 다르게 room_code를 추가함)
     public ResponseEntity<?> guestLogin(
             @PathVariable("room_code") int roomCode,
-//            @ApiParam(value = "사용할 닉네임", required = true)
             @RequestBody String nickname) {
         // 일단 회원 등록 먼저
         Member guest = Member.builder()
@@ -67,39 +66,32 @@ public class GuestController {
         String jwtToken = "";
         jwtToken = jwtUtil.generateJwtToken(guestId, guest.getLoginType());
 
-        //
-        GuestLoginRes guestLoginRes = new GuestLoginRes();
         Optional<Room> room = roomService.enterRoom(roomCode, guestId);
         if (!room.isPresent()) {
             return new ResponseEntity<String>("존재하지 않는 방입니다.", HttpStatus.BAD_REQUEST);
         } else {
-            EnterRoomRes enterRoomRes = new EnterRoomRes();
-            enterRoomRes.setRoomId(room.get().getId());
-            enterRoomRes.setRoomType(room.get().getType());
-            enterRoomRes.setCode(String.valueOf(room.get().getCode()));
-            enterRoomRes.setHostId(getHostId(room.get().getId()));
+            EnterRoomRes enterRoomRes = EnterRoomRes.builder()
+                    .roomId(room.get().getId())
+                    .roomType(room.get().getType())
+                    .code(String.valueOf(room.get().getCode()))
+                    .hostId(room.get().getMember().getId()).build();
 
             List<Player> playerList = roomService.getPlayerList(room.get().getId());
             List<PlayerInfoDto> playerInfos = new ArrayList<>();
             for (Player player : playerList) {
-                PlayerInfoDto playerInfo = new PlayerInfoDto();
-                playerInfo.setMemberId(player.getId());
-                playerInfo.setNickname(memberService.getMemberInfo(player.getId()).getNickname());
-                playerInfo.setReady(roomService.getReadyStatus(player.getId()));
-                // PlayerInfoDto.builder()
-                // .memberId(player.getId())
-                // .nickname(memberService.getMemberInfo(player.getId()).getNickname())
-                // .ready(roomService.getReadyStatus(player.getId()))
-                // .build();
+                 PlayerInfoDto playerInfo = PlayerInfoDto.builder()
+                 .memberId(player.getId())
+                 .nickname(memberService.getMemberInfo(player.getId()).getNickname())
+                 .ready(roomService.getReadyStatus(player.getId()))
+                 .build();
 
                 playerInfos.add(playerInfo);
             }
-            // PlayerInfoDto playerInfo = PlayerInfoDto.builder()
-            //     .memberId().build();
             enterRoomRes.setPlayers(playerInfos);
 
-            guestLoginRes.setEnterRoomRes(enterRoomRes);
-            guestLoginRes.setJwtToken(jwtToken);
+            GuestLoginRes guestLoginRes = GuestLoginRes.builder()
+                    .enterRoomRes(enterRoomRes)
+                    .jwtToken(jwtToken).build();
             return new ResponseEntity<GuestLoginRes>(guestLoginRes, HttpStatus.OK);
         }
     }

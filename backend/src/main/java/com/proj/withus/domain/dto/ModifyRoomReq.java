@@ -2,14 +2,13 @@ package com.proj.withus.domain.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
-@Getter
-@Setter
-@RequiredArgsConstructor
+
+@Data
+@Builder
 @ApiModel(description = "방 옵션 수정 정보")
 public class ModifyRoomReq {
 
