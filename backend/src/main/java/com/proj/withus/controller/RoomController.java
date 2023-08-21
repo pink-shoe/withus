@@ -1,52 +1,22 @@
 package com.proj.withus.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import com.proj.withus.domain.Member;
 import com.proj.withus.domain.Player;
-import com.proj.withus.domain.dto.GetRoomInfoRes;
-import com.proj.withus.domain.dto.PlayerInfo;
-import com.proj.withus.domain.dto.PlayerInfoDto;
-import com.proj.withus.exception.CustomException;
-import com.proj.withus.exception.ErrorCode;
-import com.proj.withus.repository.RoomRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.proj.withus.domain.Room;
-import com.proj.withus.domain.dto.CreateRoomReq;
-import com.proj.withus.domain.dto.EnterRoomRes;
-import com.proj.withus.domain.dto.ModifyRoomReq;
-import com.proj.withus.domain.dto.SocialMemberInfo;
+import com.proj.withus.domain.dto.*;
+import com.proj.withus.repository.RoomRepository;
 import com.proj.withus.service.MemberService;
 import com.proj.withus.service.RoomService;
 import com.proj.withus.util.JwtUtil;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.Example;
-import io.swagger.annotations.ExampleProperty;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 @Api(tags = "방 API", description = "게임 방 관련 기능을 처리하는 API (RoomController)")
 @RestController
@@ -163,7 +133,6 @@ public class RoomController {
     @ApiImplicitParams(
         value = {
             @ApiImplicitParam(name = "room_id", value = "참여한 방 번호", required = true, dataType = "Long", paramType = "path"),
-            // @ApiImplicitParam(name = "member_id", value = "회원 id", required = true, dataType = "Long", paramType = "path")
         }
     )
     @DeleteMapping("/{room_id}")
@@ -289,9 +258,6 @@ public class RoomController {
             return new ResponseEntity<String>("게임 준비에 실패했습니다.", HttpStatus.BAD_REQUEST);
         }
 
-        List<Player> readyPlayer = roomService.getReadyPlayers(roomId);
-        // return new ResponseEntity<List<Player>>(readyPlayer, HttpStatus.OK);
-//        return new ResponseEntity<Integer>(roomService.getRoomInfo(roomId).get().getCode(), HttpStatus.OK);
         return new ResponseEntity<String>("게임 준비 완료", HttpStatus.OK);
     }
 
@@ -325,9 +291,6 @@ public class RoomController {
             return new ResponseEntity<String>("게임 준비 취소에 실패했습니다.", HttpStatus.BAD_REQUEST);
         }
 
-        List<Player> readyPlayer = roomService.getReadyPlayers(roomId);
-        // return new ResponseEntity<List<Player>>(readyPlayer, HttpStatus.OK);
-//        return new ResponseEntity<Integer>(roomService.getRoomInfo(roomId).get().getCode(), HttpStatus.OK);
         return new ResponseEntity<String>("게임 준비 취소 완료", HttpStatus.OK);
     }
 
@@ -349,11 +312,6 @@ public class RoomController {
         SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId((String) request.getAttribute("token"));
         Long memberId = socialMemberInfo.getId();
 
-        // Long host = roomService.getHostId(roomId);
-        // if (host == null) {
-        //     return new ResponseEntity<String>("방이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
-        // }
-
         String startState = roomService.getStartStatus(roomId);
         if (startState.equals("no")) {
             return new ResponseEntity<String>("준비되지 않은 플레이어가 있습니다.", HttpStatus.BAD_REQUEST);
@@ -361,8 +319,6 @@ public class RoomController {
             return new ResponseEntity<String>("이미 진행 중인 게임입니다.", HttpStatus.BAD_REQUEST);
         }
 
-        // List<Player> players = roomService.getPlayerList(roomId);
-        // return new ResponseEntity<List<Player>>(players, HttpStatus.OK);
         return new ResponseEntity<Boolean>(true, HttpStatus.OK);
     }
 

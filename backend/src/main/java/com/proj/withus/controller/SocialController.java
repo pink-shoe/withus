@@ -1,17 +1,14 @@
 package com.proj.withus.controller;
 
 import com.proj.withus.domain.dto.SocialMemberInfo;
+import com.proj.withus.service.SocialService;
+import com.proj.withus.util.JwtUtil;
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-
-import com.proj.withus.repository.MemberRepository;
-import com.proj.withus.service.SocialService;
-import com.proj.withus.util.JwtUtil;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,11 +32,6 @@ public class SocialController {
 
     @Autowired
     private RestTemplate restTemplate;
-
-//    @GetMapping("/")
-//    public String index() {
-//        return "<h1>index page</h1>";
-//    }
 
     @ApiOperation(value = "소셜 로그인", notes = "인가 코드, 로그인 타입으로 소셜 로그인을 진행한다.")
     @ResponseBody

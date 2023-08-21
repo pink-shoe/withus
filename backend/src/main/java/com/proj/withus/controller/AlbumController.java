@@ -53,25 +53,6 @@ public class AlbumController {
         return ResponseEntity.ok(albums);
     }
 
-    // @PostMapping("/image/save")
-    // public ResponseEntity<?> saveImages(@RequestHeader("Authorization") String jwtToken, @RequestBody() List<String> imageUrls) {
-    //     SocialMemberInfo socialMemberInfo = jwtUtil.extractMemberId(jwtToken);
-    //     Long memberId = socialMemberInfo.getId();
-    //
-    //    Long albumId = albumService.getAlbum(memberId);
-    //    if (albumId == null) {
-    //        return new ResponseEntity<>("앨범이 존재하지 않음", HttpStatus.BAD_REQUEST);
-    //    }
-    //
-    //     for (String imgUrl : imageUrls) {
-    //         Image saved = albumService.saveImage(memberId, imgUrl);
-    //         if (saved == null) {
-    //             return new ResponseEntity<>("사진이 정상적으로 저장되지 않음", HttpStatus.BAD_REQUEST);
-    //         }
-    //     }
-    //     return new ResponseEntity<>(HttpStatus.OK);
-    // }
-
     @ApiOperation(value = "앨범 사진 삭제", notes = "앨범에 저장된 사진을 삭제한다.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "삭제 성공", response = String.class, examples = @Example(value = @ExampleProperty(mediaType = "application/json", value = "ok"))),
