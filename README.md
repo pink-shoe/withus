@@ -70,7 +70,7 @@
   - 소셜 로그인(구글/카카오)  
     > 플레이어는 소셜 로그인 후 게임 방을 생성할 수 있습니다.
 
-    ![withus 카카오](docs/카카오 로그인.GIF)
+    ![withus 카카오](docs/카카오_로그인.GIF)
   - 게스트  
     > 게스트는 닉네임과 방 코드를 입력해 게임에 참여할 수 있습니다.  
 
@@ -87,9 +87,9 @@
     > 게임 결과가 나오기 전, 플레이어는 게임의 MVP를 투표해 선정할 수 있습니다.  
 
   1. 게스트 ver  
-     ![게스트 시연](docs/게스트 시연.GIF)
+     ![게스트 시연](docs/게스트_시연.GIF)
   2. 로그인 ver  
-     ![withus 방장 시연](docs/방장 시연.GIF)
+     ![withus 방장 시연](docs/방장_시연.GIF)
 
 ### 4. 앨범
   - 사진 조회  
@@ -106,7 +106,7 @@
 ---
 ### [API 명세서 전체 보기](https://docs.google.com/spreadsheets/d/1_ibyCUzroQdF4HLyg2jRdpOz7aF99Q1AtgkwqjBDmMU/edit?usp=sharing)
 
-![withus API 일부](docs/API 명세 일부.PNG)
+![withus API 일부](docs/API_명세_일부.PNG)
 
 ## DB 설계
 
@@ -118,7 +118,7 @@
 
 ---
 
-![withus 아키텍처.png](docs/withus 아키텍처.png)
+![withus 아키텍처.png](docs/withus_아키텍처.png)
 
 <br/> 
 
