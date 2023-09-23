@@ -1,24 +1,24 @@
 server:
   port: 9001
 
-#spring:
-#  datasource:
-#    url: jdbc:h2:tcp://localhost/~/test
-#    username: sa
-#    password:
-#    driver-class-name: org.h2.Driver
-#spring:
-#  datasource:
-#    url: jdbc:mysql://localhost:3306/test_db?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
-#    username: root
-#    password: root
-#    driver-class-name: com.mysql.cj.jdbc.Driver
 spring:
   datasource:
-    url: jdbc:mysql://connectwithus.site:3306/withus
-    username: withus
-    password: withus
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:h2:tcp://localhost/~/test
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  #spring:
+  #  datasource:
+  #    url: jdbc:mysql://localhost:3306/test_db?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+  #    username: root
+  #    password: root
+  #    driver-class-name: com.mysql.cj.jdbc.Driver
+  #spring:
+  #  datasource:
+  #    url: jdbc:mysql://connectwithus.site:3306/withus
+  #    username: withus
+  #    password: withus
+  #    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
@@ -31,7 +31,7 @@ spring:
     init:
       mode: always
   #        show_sql: true
-#        format_sql: true
+  #        format_sql: true
 
   security:
     oauth2:
@@ -65,8 +65,8 @@ spring:
 
 kakao:
   rest-api-key: 7ea82d8a610fe51bcf3eca267069b264
-  redirect-uri: https://connectwithus.site/kakao
-#  redirect-uri: http://localhost:9001/api/oauth/kakao
+  #  redirect-uri: https://connectwithus.site/kakao
+  redirect-uri: http://localhost:9001/api/oauth/kakao
 
 
 logging:
